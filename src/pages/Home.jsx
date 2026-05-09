@@ -205,7 +205,7 @@ const Home = () => {
               variants={{
                 visible: { transition: { staggerChildren: 0.08 } }
               }}
-              className="text-3xl md:text-5xl font-black mb-10 text-secondary-color tracking-tighter leading-none"
+              className="text-3xl md:text-5xl font-black mb-10 text-secondary-color tracking-normal leading-none"
             >
               {["WELCOME", "TO", "COMPLETE", "HEALTHCARE"].map((word, i) => (
                 <motion.span 
@@ -214,7 +214,7 @@ const Home = () => {
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
                   }}
-                  className="inline-block mr-3"
+                  className="inline-block mr-6"
                 >
                   {word === "COMPLETE" || word === "HEALTHCARE" ? (
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#63b158] to-[#08709d]">
@@ -352,24 +352,7 @@ const Home = () => {
                   ))}
                 </div>
 
-                <motion.div
-                  variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                >
-                  <motion.button 
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="group relative bg-white text-[#2563eb] border-[2px] border-[#2563eb] px-12 py-4 rounded-xl font-bold text-[17px] tracking-wide overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl"
-                  >
-                    {/* Continuous Shine effect */}
-                    <motion.div 
-                      initial={{ x: "-100%" }}
-                      animate={{ x: "200%" }}
-                      transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 1, ease: "easeInOut" }}
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2563eb]/20 to-transparent skew-x-[-25deg] z-10"
-                    />
-                    <span className="relative z-20 uppercase">SCHEDULE AN APPOINTMENT</span>
-                  </motion.button>
-                </motion.div>
+
               </motion.div>
             </div>
 
