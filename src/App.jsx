@@ -10,6 +10,7 @@ import About from './pages/About';
 import Locations from './pages/Locations';
 import Contact from './pages/Contact';
 
+
 // Placeholder for other pages
 const PlaceholderPage = ({ title }) => (
   <motion.div 
@@ -51,6 +52,7 @@ const AnimatedRoutes = () => {
         
         <Route path="/locations" element={<Locations />} />
         <Route path="/contact" element={<Contact />} />
+
       </Routes>
     </AnimatePresence>
   );
