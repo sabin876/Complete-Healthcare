@@ -144,8 +144,8 @@ const Home = () => {
                   <p className="text-sm md:text-base font-bold tracking-[0.2em] uppercase text-white/90">
                     Licensed By
                   </p>
-                  <div className="bg-white p-3 rounded-xl shadow-lg">
-                    <img src={dhaLogo} alt="Dubai Health Authority" className="h-12 md:h-16 w-auto object-contain" />
+                  <div className="bg-white p-3 md:p-4 rounded-xl shadow-lg">
+                    <img src={dhaLogo} alt="Dubai Health Authority" className="h-16 md:h-24 w-auto object-contain" />
                   </div>
                 </div>
               </motion.div>
