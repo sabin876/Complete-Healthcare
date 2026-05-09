@@ -13,12 +13,6 @@ import GoogleReviews from '../components/GoogleReviews';
 
 import hero2 from '../assets/hero/hero2.png';
 import hero3 from '../assets/hero/hero3.png';
-import srvPhysio from '../assets/services/physio.png';
-import srvIv from '../assets/services/iv.png';
-import srvNursing from '../assets/services/nursing.png';
-import srvDoctor from '../assets/services/doctor.png';
-import srvElderly from '../assets/services/elderly.png';
-import srvLab from '../assets/services/lab.png';
 import dhaLogo from '../assets/Dubai_Health_Authority_log.png';
 
 const Home = () => {
@@ -55,50 +49,7 @@ const Home = () => {
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
 
-  const services = [
-    {
-      title: "Home Physiotherapy",
-      desc: "Professional physical therapy sessions to restore movement and function in the comfort of your home.",
-      icon: <Activity size={24} />,
-      image: srvPhysio,
-      features: ["Post-Op Rehab", "Pain Management", "Mobility Training"]
-    },
-    {
-      title: "IV Therapy",
-      desc: "Safe and effective intravenous hydration and nutrient therapy administered by expert nurses.",
-      icon: <Droplets size={24} />,
-      image: srvIv,
-      features: ["Hydration Boost", "Vitamin Drips", "Immunity Support"]
-    },
-    {
-      title: "Home Nursing",
-      desc: "Round-the-clock professional nursing care for chronic illness, elderly patients, or recovery.",
-      icon: <Heart size={24} />,
-      image: srvNursing,
-      features: ["Wound Care", "Vitals Monitoring", "Medication Management"]
-    },
-    {
-      title: "Doctor On Call",
-      desc: "Experienced physicians available for home visits at any time of the day or night.",
-      icon: <Stethoscope size={24} />,
-      image: srvDoctor,
-      features: ["Urgent Care", "Routine Checkups", "Specialist Referrals"]
-    },
-    {
-      title: "Elderly Care Givers",
-      desc: "Compassionate caregivers dedicated to supporting the daily needs and well-being of seniors.",
-      icon: <Users size={24} />,
-      image: srvElderly,
-      features: ["Personal Assistance", "Companionship", "Mobility Support"]
-    },
-    {
-      title: "Lab Services",
-      desc: "Accurate diagnostic tests and blood sample collection from the convenience of your home.",
-      icon: <CheckCircle2 size={24} />,
-      image: srvLab,
-      features: ["Fast Results", "Certified Labs", "Sample Collection"]
-    }
-  ];
+
 
   return (
     <main>
@@ -164,26 +115,19 @@ const Home = () => {
                   transition={{ delay: 0.8 }}
                   whileHover={{ 
                     scale: 1.05, 
-                    boxShadow: "0 20px 40px rgba(8, 112, 157, 0.4)",
+                    boxShadow: "0 20px 40px rgba(8, 112, 157, 0.2)",
                   }}
                   whileTap={{ scale: 0.98 }}
-                  className="group relative bg-[#08709d] text-white px-10 py-5 rounded-full font-black text-[15px] uppercase tracking-[0.25em] overflow-hidden shadow-2xl transition-all duration-500"
+                  className="group relative bg-white text-[#08709d] border-2 border-[#08709d] px-12 py-5 rounded-2xl font-black text-[15px] uppercase tracking-[0.2em] overflow-hidden transition-all duration-500"
                 >
-                  {/* Glowing background pulse */}
-                  <motion.div 
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-                    transition={{ repeat: Infinity, duration: 3 }}
-                    className="absolute inset-0 bg-[#63b158]/40 blur-xl group-hover:bg-[#63b158]/60 transition-colors"
-                  />
-                  
-                  {/* Shimmer sweep effect */}
+                  {/* Shine effect */}
                   <motion.div 
                     initial={{ x: "-100%" }}
-                    animate={{ x: "200%" }}
-                    transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 1, ease: "easeInOut" }}
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-25deg] z-10"
+                    whileHover={{ x: "200%" }}
+                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-[#08709d]/10 to-transparent skew-x-[-25deg] z-10"
                   />
-
+                  
                   <span className="relative z-20 flex items-center gap-3">
                     {slides[currentSlide].cta}
                     <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform duration-300" />
@@ -357,69 +301,7 @@ const Home = () => {
 
 
 
-      {/* Services Section */}
-      <section className="py-32 bg-[#f8f9fa] relative overflow-hidden">
-        <div className="container relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-black mb-6 text-secondary-color tracking-tight"
-            >
-              Our Premium <span className="text-[#63b158]">Services</span>
-            </motion.h2>
-            <p className="text-gray-500 text-lg font-medium">
-              We bring clinical excellence directly to your doorstep with our specialized home healthcare solutions.
-            </p>
-          </div>
 
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={{
-              visible: { transition: { staggerChildren: 0.1 } }
-            }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {services.map((service, index) => (
-              <motion.div
-                key={index}
-                variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  visible: { opacity: 1, y: 0 }
-                }}
-                whileHover={{ y: -12 }}
-                className="bg-white rounded-[2rem] overflow-hidden shadow-xl shadow-gray-200/50 group border border-gray-100 transition-all duration-500"
-              >
-                <div className="relative h-64 overflow-hidden">
-                  <img src={service.image} alt={service.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-secondary-color/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="absolute top-6 left-6 w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-primary-color shadow-lg group-hover:bg-[#63b158] group-hover:text-white transition-colors duration-500">
-                    {service.icon}
-                  </div>
-                </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold mb-4 text-secondary-color group-hover:text-primary-color transition-colors">{service.title}</h3>
-                  <p className="text-gray-500 mb-6 line-clamp-2 font-medium">{service.desc}</p>
-                  <ul className="space-y-3 mb-8">
-                    {service.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3 text-sm font-bold text-secondary-color/70">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#63b158]"></div>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <button className="w-full py-4 rounded-xl border-2 border-primary-color/10 text-primary-color font-black text-xs uppercase tracking-widest hover:bg-[#63b158] hover:border-[#63b158] hover:text-white transition-all duration-500">
-                    Learn More
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
 
       {/* The CHC Difference Section */}
       <section className="bg-[#f8f9fa] py-24 relative overflow-hidden">
@@ -471,11 +353,22 @@ const Home = () => {
                   variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
                 >
                   <motion.button 
-                    whileHover={{ scale: 1.05, backgroundColor: "#065d83", boxShadow: "0 20px 40px rgba(8, 112, 157, 0.3)" }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      backgroundColor: "#f0f9ff",
+                      boxShadow: "0 15px 30px rgba(8, 112, 157, 0.1)" 
+                    }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-[#08709d] text-white px-10 py-4 rounded-full font-black text-[13px] tracking-[0.2em] transition-all duration-300 uppercase shadow-xl"
+                    className="group relative bg-white text-[#08709d] border-2 border-[#08709d] px-12 py-4 rounded-2xl font-black text-[13px] tracking-[0.2em] transition-all duration-300 uppercase overflow-hidden"
                   >
-                    SCHEDULE AN APPOINTMENT
+                    {/* Shine effect */}
+                    <motion.div 
+                      initial={{ x: "-100%" }}
+                      whileHover={{ x: "200%" }}
+                      transition={{ duration: 0.8, ease: "easeInOut" }}
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-[#08709d]/10 to-transparent skew-x-[-25deg] z-10"
+                    />
+                    <span className="relative z-20">SCHEDULE AN APPOINTMENT</span>
                   </motion.button>
                 </motion.div>
               </motion.div>
