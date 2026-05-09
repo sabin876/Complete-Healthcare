@@ -189,14 +189,7 @@ const Home = () => {
 
         <div className="container relative z-10">
           <div className="text-center max-w-5xl mx-auto mb-24">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="inline-block px-4 py-1.5 mb-6 rounded-full bg-primary-color/5 border border-primary-color/10 text-primary-color text-[10px] font-black uppercase tracking-[0.4em]"
-            >
-              Excellence In Care
-            </motion.div>
+
             
             <motion.h2 
               initial="hidden"
