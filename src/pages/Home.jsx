@@ -140,12 +140,12 @@ const Home = () => {
                 className="mt-20 flex items-center gap-6"
               >
                 <div className="h-[1px] w-12 bg-white/30 hidden md:block"></div>
-                <div className="flex items-center gap-5">
-                  <p className="text-sm md:text-base font-bold tracking-[0.2em] uppercase text-white/90">
+                <div className="flex items-center gap-5 md:gap-8">
+                  <p className="text-lg md:text-xl font-black tracking-[0.2em] uppercase text-white/90">
                     Licensed By
                   </p>
-                  <div className="bg-white p-3 md:p-4 rounded-xl shadow-lg">
-                    <img src={dhaLogo} alt="Dubai Health Authority" className="h-16 md:h-24 w-auto object-contain" />
+                  <div className="bg-white p-4 md:p-5 rounded-2xl shadow-xl">
+                    <img src={dhaLogo} alt="Dubai Health Authority" className="h-24 md:h-32 w-auto object-contain" />
                   </div>
                 </div>
               </motion.div>
