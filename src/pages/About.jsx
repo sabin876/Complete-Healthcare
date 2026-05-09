@@ -1,169 +1,271 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Award, CheckCircle2, Heart, Users, Shield, Clock, MapPin, ArrowRight } from 'lucide-react';
+import { Award, CheckCircle2, Heart, Users, Shield, Clock, MapPin, ArrowRight, ShieldCheck, Stethoscope, Activity, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const About = () => {
   const team = [
     {
-      name: "Our Skilled Nurses",
+      name: "Skilled Nurses",
       title: "Registered Nurses (RN)",
       bio: "Highly trained professionals dedicated to providing 24/7 care, monitoring vitals, and ensuring patient comfort at home.",
-      image: "/assets/rebrand/corx_nursing_1777566567240.png"
+      image: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=800",
+      color: "#e87c2e"
     },
     {
       name: "Expert Physiotherapists",
       title: "Physical Therapy Specialists",
       bio: "Helping patients regain mobility and strength through customized home-based rehabilitation programs.",
-      image: "/assets/rebrand/corx_physiotherapy_1777566524611.png"
+      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800",
+      color: "#6b3fa0"
     },
     {
       name: "Dedicated Caregivers",
       title: "Home Health Aides",
       bio: "Compassionate support for daily living activities, ensuring a safe and supportive environment for seniors.",
-      image: "/assets/rebrand/corx_elderly_care_1777566610156.png"
+      image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80&w=800",
+      color: "#3a7bd5"
     }
   ];
 
+  const values = [
+    { icon: <ShieldCheck size={28} />, title: "DHA Licensed", desc: "Fully accredited by the Dubai Health Authority for home care." },
+    { icon: <Clock size={28} />, title: "24/7 Support", desc: "Round-the-clock medical assistance whenever you need it." },
+    { icon: <Activity size={28} />, title: "Clinical Excellence", desc: "Hospital-grade care delivered in the comfort of your home." },
+    { icon: <Heart size={28} />, title: "Patient-First", desc: "Every treatment plan is tailored to your unique journey." },
+  ];
+
   return (
-    <main className="pt-0">
-      {/* Page Header */}
-      <section className="bg-secondary-color text-white py-32 relative overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-color rounded-full blur-[150px] -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent-color rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
-        </div>
-        
-        <div className="container relative z-10">
-          <motion.h1 
+    <div style={{
+      fontFamily: "'Helvetica Neue', Arial, sans-serif",
+      background: "linear-gradient(135deg, #2c3e8c 0%, #1a2a6c 50%, #23379b 100%)",
+      minHeight: "100vh",
+      paddingTop: "120px",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {/* Background Dot Texture */}
+      <div style={{
+        position: "absolute", inset: 0, opacity: 0.06,
+        backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+        backgroundSize: "28px 28px",
+        pointerEvents: "none",
+      }} />
+
+      {/* Ambient Glows */}
+      <motion.div
+        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+        transition={{ duration: 12, repeat: Infinity }}
+        style={{
+          position: "absolute", top: "-10%", right: "-5%",
+          width: 600, height: 600, borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div className="container mx-auto px-6 relative z-10 pb-20">
+        {/* Hero Section */}
+        <div style={{ maxWidth: 800, marginBottom: 80 }}>
+          <motion.h1
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-black mb-8 text-white uppercase tracking-tighter"
+            style={{
+              fontSize: "clamp(32px, 5vw, 64px)",
+              fontWeight: 900,
+              color: "#fff",
+              textTransform: "uppercase",
+              letterSpacing: "-0.02em",
+              lineHeight: 1,
+              marginBottom: 24
+            }}
           >
-            About <span className="text-primary-color">Corx</span> Healthcare
+            Bringing Expert Care <br />
+            <span style={{ color: "rgba(255,255,255,0.4)" }}>To Your Home.</span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-2xl text-blue-50 max-w-3xl opacity-90 leading-relaxed font-medium"
-          >
-            Leading the way in premium home healthcare services in Dubai. We bring the hospital to you with compassion and excellence.
-          </motion.p>
-        </div>
-      </section>
-
-      {/* Mission Section */}
-      <section className="py-32 bg-white relative">
-        <div className="container">
-          <div className="flex flex-col lg:flex-row gap-24 items-center">
-            <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="lg:w-1/2"
-            >
-              <h2 className="text-4xl md:text-5xl font-black mb-10 text-secondary-color uppercase tracking-tight">Our Mission & Vision</h2>
-              <p className="text-gray-500 mb-8 text-xl leading-relaxed">
-                At Corx Healthcare, our mission is to redefine the home healthcare experience by providing high-quality, clinical-grade medical services in the sanctuary of our patients' homes.
-              </p>
-              <p className="text-gray-500 mb-12 text-xl leading-relaxed">
-                We envision a world where every individual can access professional medical care without the stress of travel or hospital environments.
-              </p>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                {[
-                  { icon: <Shield size={24} />, text: "DHA Licensed" },
-                  { icon: <Clock size={24} />, text: "24/7 Availability" },
-                  { icon: <Award size={24} />, text: "Expert Team" },
-                  { icon: <Heart size={24} />, text: "Patient-First Care" }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl hover:bg-primary-color hover:text-white transition-all duration-300 group">
-                    <div className="bg-primary-color/10 p-3 rounded-xl text-primary-color group-hover:bg-white/20 group-hover:text-white">
-                      {item.icon}
-                    </div>
-                    <span className="font-black text-lg uppercase tracking-tight">{item.text}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="lg:w-1/2 relative"
-            >
-              <div className="relative z-10 rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
-                <img 
-                  src="/assets/rebrand/corx_team_about_1777566746723.png" 
-                  alt="Corx Healthcare Team" 
-                  className="w-full h-auto hover:scale-110 transition-transform duration-1000"
-                />
-              </div>
-              <div className="absolute -bottom-10 -left-10 bg-primary-color text-white p-10 rounded-[2.5rem] hidden md:block shadow-2xl z-20">
-                <div className="text-6xl font-black mb-2 tracking-tighter">10+</div>
-                <div className="text-sm uppercase tracking-[0.2em] font-black opacity-80">Premium Services</div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-32 bg-gray-50/50">
-        <div className="container">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-6xl mb-6 font-black text-secondary-color uppercase tracking-tighter">Our Dedicated Team</h2>
-            <div className="w-32 h-2 bg-accent-color mx-auto rounded-full mb-8"></div>
-            <p className="text-gray-500 max-w-2xl mx-auto text-xl font-medium">The experts behind our compassionate care.</p>
-          </div>
-
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={{
-              visible: { transition: { staggerChildren: 0.2 } }
+            style={{
+              fontSize: "clamp(16px, 1.5vw, 20px)",
+              color: "rgba(255,255,255,0.8)",
+              lineHeight: 1.6,
+              fontWeight: 400
             }}
           >
-            {team.map((member, index) => (
-              <motion.div 
-                key={member.name}
-                variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  visible: { opacity: 1, y: 0 }
-                }}
-                whileHover={{ y: -15 }}
-                className="bg-white rounded-[3rem] overflow-hidden shadow-2xl group border border-gray-100 flex flex-col h-full"
-              >
-                <div className="h-96 overflow-hidden relative">
-                  <img src={member.image} alt={member.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-secondary-color/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-                <div className="p-12">
-                  <h3 className="text-3xl font-black mb-2 text-secondary-color group-hover:text-primary-color transition-colors">{member.name}</h3>
-                  <p className="text-accent-color font-black mb-8 text-sm uppercase tracking-[0.2em]">{member.title}</p>
-                  <p className="text-gray-500 leading-relaxed italic text-lg opacity-80">
-                    "{member.bio}"
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+            Complete Healthcare is Dubai's leading provider of premium home-based medical services. 
+            We combine clinical excellence with compassionate care to ensure your family's health is always in safe hands.
+          </motion.p>
+        </div>
+
+        {/* Values Grid */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+          gap: 24,
+          marginBottom: 100
+        }}>
+          {values.map((val, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.15)",
+                padding: "32px",
+                borderRadius: "24px",
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <div style={{ color: "#fff", marginBottom: 20 }}>{val.icon}</div>
+              <h3 style={{ color: "#fff", fontSize: 18, fontWeight: 700, marginBottom: 12 }}>{val.title}</h3>
+              <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.6 }}>{val.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Mission & Vision Row */}
+        <div style={{
+          display: "flex",
+          flexDirection: window.innerWidth < 1024 ? "column" : "row",
+          gap: 60,
+          alignItems: "center",
+          marginBottom: 120
+        }}>
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            style={{ flex: 1 }}
+          >
+            <h2 style={{ color: "#fff", fontSize: 32, fontWeight: 900, marginBottom: 28, textTransform: "uppercase" }}>Our Commitment</h2>
+            <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 18, lineHeight: 1.8, marginBottom: 32 }}>
+              We understand that the best place to heal is where you feel most comfortable. Our team of DHA-licensed 
+              professionals brings years of hospital experience directly to your doorstep, providing a seamless 
+              continuum of care for all ages.
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+              <div style={{ background: "#fff", color: "#1a2a6c", padding: "10px 24px", borderRadius: 50, fontWeight: 800, fontSize: 12, letterSpacing: "0.1em" }}>EXCELLENCE</div>
+              <div style={{ background: "rgba(255,255,255,0.1)", color: "#fff", padding: "10px 24px", borderRadius: 50, fontWeight: 800, fontSize: 12, border: "1px solid rgba(255,255,255,0.3)" }}>TRUST</div>
+              <div style={{ background: "rgba(255,255,255,0.1)", color: "#fff", padding: "10px 24px", borderRadius: 50, fontWeight: 800, fontSize: 12, border: "1px solid rgba(255,255,255,0.3)" }}>COMPASSION</div>
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            style={{ flex: 1, position: "relative" }}
+          >
+            <div style={{ 
+              borderRadius: "40px", 
+              overflow: "hidden", 
+              border: "8px solid rgba(255,255,255,0.1)",
+              boxShadow: "0 30px 60px rgba(0,0,0,0.3)"
+            }}>
+              <img 
+                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1200" 
+                alt="Clinic" 
+                style={{ width: "100%", height: "auto", display: "block" }}
+              />
+            </div>
           </motion.div>
         </div>
-      </section>
 
-      <section className="py-24 bg-white text-center">
-        <div className="container">
-          <h2 className="text-4xl md:text-5xl font-black text-secondary-color mb-12 uppercase tracking-tight">Ready to start your journey to health?</h2>
-          <button className="bg-[#08709d] text-white px-12 py-5 rounded-full font-black text-[15px] tracking-[0.2em] uppercase hover:bg-[#1a294a] transition-all shadow-2xl shadow-[#08709d]/20 flex items-center gap-4 mx-auto group">
-            CONTACT US TODAY <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
-          </button>
+        {/* Team Section */}
+        <div style={{ marginBottom: 100 }}>
+          <div style={{ textAlign: "center", marginBottom: 60 }}>
+            <h2 style={{ color: "#fff", fontSize: 32, fontWeight: 900, textTransform: "uppercase", marginBottom: 16 }}>Our Expert Team</h2>
+            <div style={{ width: 60, h: 4, background: "#fff", margin: "0 auto", borderRadius: 2 }}></div>
+          </div>
+          
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: 32
+          }}>
+            {team.map((member, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+                whileHover={{ y: -10 }}
+                style={{
+                  background: "#fff",
+                  borderRadius: "32px",
+                  padding: "40px",
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center"
+                }}
+              >
+                <div style={{ 
+                  width: 120, height: 120, 
+                  borderRadius: "30%", 
+                  overflow: "hidden", 
+                  marginBottom: 24,
+                  border: `4px solid ${member.color}22`
+                }}>
+                  <img src={member.image} alt={member.name} style={{ width: "100%", height: "100%", objectCover: "cover" }} />
+                </div>
+                <h3 style={{ fontSize: 22, fontWeight: 900, color: "#1a2a6c", marginBottom: 4 }}>{member.name}</h3>
+                <p style={{ fontSize: 11, fontWeight: 800, color: member.color, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 20 }}>{member.title}</p>
+                <p style={{ fontSize: 14, color: "#555", lineHeight: 1.6 }}>{member.bio}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </section>
-    </main>
+
+        {/* Call to Action */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          style={{
+            background: "#fff",
+            padding: "60px",
+            borderRadius: "40px",
+            textAlign: "center",
+            boxShadow: "0 40px 100px rgba(0,0,0,0.4)"
+          }}
+        >
+          <h2 style={{ fontSize: 32, fontWeight: 900, color: "#1a2a6c", marginBottom: 20, textTransform: "uppercase" }}>Ready to Experience Better Care?</h2>
+          <p style={{ fontSize: 18, color: "#555", marginBottom: 40, maxWidth: 600, margin: "0 auto 40px" }}>
+            Contact us today to book a consultation or find out more about our home care services.
+          </p>
+          <Link to="/contact" style={{ textDecoration: "none" }}>
+            <motion.button
+              whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(0,0,0,0.15)" }}
+              whileTap={{ scale: 0.95 }}
+              style={{
+                background: "#1a2a6c",
+                color: "#fff",
+                border: "none",
+                padding: "18px 48px",
+                borderRadius: "50px",
+                fontWeight: 900,
+                fontSize: 14,
+                letterSpacing: "0.15em",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 12
+              }}
+            >
+              BOOK NOW <ArrowRight size={18} />
+            </motion.button>
+          </Link>
+        </motion.div>
+      </div>
+    </div>
   );
 };
 

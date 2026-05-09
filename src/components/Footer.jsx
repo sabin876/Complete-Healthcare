@@ -137,15 +137,21 @@ const Footer = () => {
                   <MapPin size={20} />
                 </div>
                 <div>
-                  <p className="text-base font-medium text-blue-100/90 leading-relaxed group-hover:text-white transition-colors">Office 303, Royal Class Building,<br/>DIP, Dubai, UAE</p>
+                  <p className="text-base font-medium text-blue-100/90 leading-relaxed group-hover:text-white transition-colors">
+                    Royal Class Building - Office 303,<br/>
+                    Dubai Investment Park First,<br/>
+                    Green Community Village,<br/>
+                    Dubai - UAE
+                  </p>
                 </div>
               </motion.li>
               <motion.li whileHover={{ x: 5 }} className="flex items-start gap-4 group cursor-pointer">
                 <div className="bg-white/10 p-3 rounded-xl text-[#5fb54a] group-hover:bg-[#5fb54a] group-hover:text-white transition-colors mt-0.5 shadow-md">
                   <Phone size={20} />
                 </div>
-                <div>
-                  <a href="tel:+97143320776" className="text-base font-medium text-blue-100/90 hover:text-white transition-colors block">+971 4 332 0776</a>
+                <div className="flex flex-col gap-1">
+                  <a href="tel:+971547033311" className="text-base font-medium text-blue-100/90 hover:text-white transition-colors block">+971 54 703 3311</a>
+                  <a href="tel:+971502785990" className="text-base font-medium text-blue-100/90 hover:text-white transition-colors block">+971 50 278 5990</a>
                 </div>
               </motion.li>
               <motion.li whileHover={{ x: 5 }} className="flex items-start gap-4 group cursor-pointer">

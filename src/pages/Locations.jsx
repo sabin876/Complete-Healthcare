@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Clock, ExternalLink, Globe, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Clock, ExternalLink, Globe, ArrowRight, ShieldCheck, Navigation } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Locations = () => {
   const regions = [
@@ -9,166 +10,251 @@ const Locations = () => {
       offices: [
         { 
           name: "Main Office - Royal Class", 
-          phone: "+971 4 332 0776", 
+          phones: ["+971 54 703 3311", "+971 50 278 5990"], 
           address: "Office 303, Royal Class Building, Dubai Investment Park (DIP), Dubai, UAE",
           hours: "24/7 Home Services Available"
         }
       ]
     },
     {
-      name: "Service Areas",
+      name: "Coverage Areas",
       offices: [
-        { name: "Dubai Marina & JBR", phone: "800-CORX", address: "Full Home Care Coverage" },
-        { name: "Downtown & Business Bay", phone: "800-CORX", address: "Full Home Care Coverage" },
-        { name: "Palm Jumeirah", phone: "800-CORX", address: "Full Home Care Coverage" },
-        { name: "Jumeirah & Umm Suqeim", phone: "800-CORX", address: "Full Home Care Coverage" },
-        { name: "Mirdif & Al Khawaneej", phone: "800-CORX", address: "Full Home Care Coverage" },
-        { name: "DIP & Jebel Ali", phone: "800-CORX", address: "Full Home Care Coverage" }
+        { name: "Dubai Marina & JBR", desc: "Rapid 30-45min Response Time", address: "Full Home Care Coverage" },
+        { name: "Downtown & Business Bay", desc: "Priority Clinical Support", address: "Full Home Care Coverage" },
+        { name: "Palm Jumeirah", desc: "Concierge Medical Services", address: "Full Home Care Coverage" },
+        { name: "Jumeirah & Umm Suqeim", desc: "Expert Nursing & Physio", address: "Full Home Care Coverage" },
+        { name: "Mirdif & Al Khawaneej", desc: "Family Health Support", address: "Full Home Care Coverage" },
+        { name: "DIP & Jebel Ali", desc: "Local Service Hub", address: "Full Home Care Coverage" }
       ]
     }
   ];
 
   return (
-    <main className="pt-0">
-      {/* Page Header */}
-      <section className="bg-secondary-color text-white py-32 relative overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-color rounded-full blur-[150px] -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent-color rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
-        </div>
-        
-        <div className="container relative z-10">
-          <motion.h1 
+    <div style={{
+      fontFamily: "'Helvetica Neue', Arial, sans-serif",
+      background: "linear-gradient(135deg, #2c3e8c 0%, #1a2a6c 50%, #23379b 100%)",
+      minHeight: "100vh",
+      paddingTop: "120px",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {/* Background Dot Texture */}
+      <div style={{
+        position: "absolute", inset: 0, opacity: 0.06,
+        backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+        backgroundSize: "28px 28px",
+        pointerEvents: "none",
+      }} />
+
+      {/* Ambient Glows */}
+      <motion.div
+        animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.2, 0.1] }}
+        transition={{ duration: 10, repeat: Infinity }}
+        style={{
+          position: "absolute", bottom: "-5%", left: "-5%",
+          width: 500, height: 500, borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div className="container mx-auto px-6 relative z-10 pb-20">
+        {/* Header Section */}
+        <div style={{ maxWidth: 800, marginBottom: 80 }}>
+          <motion.h1
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-black mb-8 text-white uppercase tracking-tighter"
+            style={{
+              fontSize: "clamp(32px, 5vw, 64px)",
+              fontWeight: 900,
+              color: "#fff",
+              textTransform: "uppercase",
+              letterSpacing: "-0.02em",
+              lineHeight: 1,
+              marginBottom: 24
+            }}
           >
-            Our <span className="text-primary-color">Locations</span>
+            Care Delivered <br />
+            <span style={{ color: "rgba(255,255,255,0.4)" }}>Across Dubai.</span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-2xl text-blue-50 max-w-3xl opacity-90 leading-relaxed font-medium"
+            style={{
+              fontSize: "clamp(16px, 1.5vw, 20px)",
+              color: "rgba(255,255,255,0.8)",
+              lineHeight: 1.6,
+              fontWeight: 400
+            }}
           >
-            Headquartered in Dubai, we provide premium home healthcare services across the entire Emirate, 24 hours a day.
+            With our central hub in DIP and rapid response teams stationed throughout the city, 
+            premium medical care is never more than a phone call away.
           </motion.p>
         </div>
-      </section>
 
-      {/* Info Section */}
-      <section className="py-20 bg-white relative">
-        <div className="container">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="bg-gray-50/50 p-10 md:p-16 rounded-[3rem] shadow-2xl flex flex-col md:flex-row items-center gap-12 border border-gray-100 group relative overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 w-2 h-full bg-primary-color"></div>
-            <motion.div 
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="bg-primary-color text-white p-8 rounded-[2rem] shadow-xl group-hover:bg-secondary-color transition-colors"
-            >
-              <Clock size={50} />
-            </motion.div>
-            <div>
-              <h4 className="font-black text-3xl text-secondary-color mb-4 uppercase tracking-tight">24/7 Home Care Availability</h4>
-              <p className="text-gray-500 text-xl leading-relaxed">
-                Our medical teams are stationed across Dubai to ensure rapid response and timely care, no matter where you are located. We bring the clinic to your doorstep.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+        {/* Rapid Response Info */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          style={{
+            background: "rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255,255,255,0.15)",
+            padding: "40px",
+            borderRadius: "32px",
+            backdropFilter: "blur(10px)",
+            display: "flex",
+            flexDirection: window.innerWidth < 768 ? "column" : "row",
+            alignItems: "center",
+            gap: 32,
+            marginBottom: 100
+          }}
+        >
+          <div style={{ 
+            background: "#fff", 
+            color: "#1a2a6c", 
+            padding: "24px", 
+            borderRadius: "24px",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
+          }}>
+            <Clock size={40} />
+          </div>
+          <div>
+            <h2 style={{ color: "#fff", fontSize: 24, fontWeight: 900, marginBottom: 12, textTransform: "uppercase" }}>24/7 Home Care Availability</h2>
+            <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 16, lineHeight: 1.6 }}>
+              Our medical teams are strategically located across Dubai to ensure rapid response times, 
+              bringing clinical excellence directly to your sanctuary, day or night.
+            </p>
+          </div>
+        </motion.div>
 
-      {/* Locations Grid */}
-      <section className="py-32 bg-white">
-        <div className="container">
-          <div className="space-y-32">
-            {regions.map((region, rIdx) => (
-              <div key={region.name}>
-                <motion.h2 
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  className="text-4xl font-black mb-16 flex items-center gap-6 text-secondary-color uppercase tracking-tight"
-                >
-                  <div className="bg-primary-color/10 p-4 rounded-2xl text-primary-color">
-                    {region.name === "Dubai Headquarters" ? <MapPin size={32} /> : <Globe size={32} />}
-                  </div>
-                  {region.name}
-                </motion.h2>
-                
-                <motion.div 
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={{
-                    visible: { transition: { staggerChildren: 0.1 } }
-                  }}
-                >
-                  {region.offices.map((office, oIdx) => (
-                    <motion.div 
-                      key={office.name}
-                      variants={{
-                        hidden: { opacity: 0, y: 30 },
-                        visible: { opacity: 1, y: 0 }
-                      }}
-                      whileHover={{ y: -15 }}
-                      className="bg-white border border-gray-100 rounded-[2.5rem] p-12 shadow-2xl shadow-gray-200/50 hover:shadow-primary-color/10 transition-all duration-500 flex flex-col group h-full relative overflow-hidden"
-                    >
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-primary-color/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
-                      
-                      <h3 className="text-2xl font-black mb-8 text-secondary-color group-hover:text-primary-color transition-colors">{office.name}</h3>
-                      <div className="space-y-6 mb-10 flex-grow">
-                        <div className="flex gap-4 text-gray-500">
-                          <MapPin size={24} className="shrink-0 mt-1 text-primary-color" />
-                          <p className="text-lg font-medium leading-relaxed">{office.address}</p>
-                        </div>
-                        <div className="flex gap-4 text-gray-500">
-                          <Phone size={24} className="shrink-0 text-primary-color" />
-                          <p className="text-xl font-black text-secondary-color group-hover:text-primary-color transition-colors">{office.phone}</p>
-                        </div>
-                        {office.hours && (
-                          <div className="flex gap-4 text-gray-500">
-                            <Clock size={24} className="shrink-0 text-accent-color" />
-                            <p className="text-lg font-black text-accent-color uppercase tracking-widest">{office.hours}</p>
-                          </div>
-                        )}
+        {/* Locations Grid */}
+        <div className="space-y-24">
+          {regions.map((region, rIdx) => (
+            <div key={region.name}>
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 40 }}
+              >
+                <div style={{ color: "#fff", background: "rgba(255,255,255,0.1)", p: 12, borderRadius: 16 }}>
+                  {region.name === "Dubai Headquarters" ? <MapPin size={28} /> : <Globe size={28} />}
+                </div>
+                <h2 style={{ color: "#fff", fontSize: 28, fontWeight: 900, textTransform: "uppercase" }}>{region.name}</h2>
+              </motion.div>
+
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                gap: 24
+              }}>
+                {region.offices.map((office, oIdx) => (
+                  <motion.div
+                    key={office.name}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: oIdx * 0.1 }}
+                    whileHover={{ y: -8 }}
+                    style={{
+                      background: "#fff",
+                      borderRadius: "32px",
+                      padding: "40px",
+                      boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+                      display: "flex",
+                      flexDirection: "column",
+                      height: "100%"
+                    }}
+                  >
+                    <h3 style={{ fontSize: 20, fontWeight: 900, color: "#1a2a6c", marginBottom: 24 }}>{office.name}</h3>
+                    <div style={{ flexGrow: 1, marginBottom: 32 }}>
+                      <div style={{ display: "flex", gap: 16, marginBottom: 20 }}>
+                        <MapPin size={20} style={{ color: "#63b158", flexShrink: 0, marginTop: 4 }} />
+                        <p style={{ fontSize: 14, color: "#555", lineHeight: 1.6 }}>{office.address}</p>
                       </div>
                       
-                      <button className="w-full bg-gray-50 text-secondary-color py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-primary-color hover:text-white transition-all duration-500 flex items-center justify-center gap-3">
-                        GET DIRECTIONS <ExternalLink size={20} />
-                      </button>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+                      {office.phones ? (
+                        <div style={{ display: "flex", gap: 16, marginBottom: 20 }}>
+                          <Phone size={20} style={{ color: "#63b158", flexShrink: 0, marginTop: 4 }} />
+                          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                            {office.phones.map(p => (
+                              <a key={p} href={`tel:${p.replace(/\s/g, '')}`} style={{ fontSize: 16, fontWeight: 800, color: "#1a2a6c", textDecoration: "none" }}>{p}</a>
+                            ))}
+                          </div>
+                        </div>
+                      ) : office.desc && (
+                        <div style={{ display: "flex", gap: 16, marginBottom: 20 }}>
+                          <ShieldCheck size={20} style={{ color: "#2596be", flexShrink: 0, marginTop: 4 }} />
+                          <p style={{ fontSize: 14, fontWeight: 700, color: "#2596be" }}>{office.desc}</p>
+                        </div>
+                      )}
 
-      {/* Map Placeholder */}
-      <section className="h-[600px] bg-gray-100 relative overflow-hidden group py-0">
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-          <div className="text-center group-hover:scale-105 transition-transform duration-1000">
-            <motion.div
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              <MapPin size={80} className="mx-auto text-primary-color/20 mb-8" />
-            </motion.div>
-            <p className="text-gray-400 font-black text-2xl uppercase tracking-[0.3em] max-w-lg mx-auto">Interactive Dubai Map Integration</p>
-          </div>
+                      {office.hours && (
+                        <div style={{ display: "flex", gap: 16 }}>
+                          <Clock size={20} style={{ color: "#e87c2e", flexShrink: 0, marginTop: 4 }} />
+                          <p style={{ fontSize: 12, fontWeight: 800, color: "#e87c2e", textTransform: "uppercase", letterSpacing: "0.1em" }}>{office.hours}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    <motion.button
+                      whileHover={{ scale: 1.02, background: "#1a2a6c", color: "#fff" }}
+                      whileTap={{ scale: 0.98 }}
+                      style={{
+                        background: "#f8f9fa",
+                        color: "#1a2a6c",
+                        border: "none",
+                        padding: "16px",
+                        borderRadius: "16px",
+                        fontWeight: 800,
+                        fontSize: 12,
+                        letterSpacing: "0.1em",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 10,
+                        transition: "all 0.3s"
+                      }}
+                    >
+                      GET DIRECTIONS <Navigation size={16} />
+                    </motion.button>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white pointer-events-none"></div>
-      </section>
-    </main>
+
+        {/* Map Placeholder */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          style={{
+            marginTop: 100,
+            height: 400,
+            background: "rgba(255,255,255,0.05)",
+            borderRadius: "40px",
+            border: "1px solid rgba(255,255,255,0.15)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            padding: 40
+          }}
+        >
+          <div>
+            <MapPin size={60} style={{ color: "rgba(255,255,255,0.2)", marginBottom: 24 }} />
+            <h3 style={{ color: "#fff", fontSize: 24, fontWeight: 900, textTransform: "uppercase", marginBottom: 12 }}>Interactive Coverage Map</h3>
+            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14, letterSpacing: "0.2em", textTransform: "uppercase" }}>Integration in Progress</p>
+          </div>
+        </motion.div>
+      </div>
+    </div>
   );
 };
 

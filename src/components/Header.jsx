@@ -214,7 +214,7 @@ const Header = () => {
             </button>
             <div className="h-8 w-[1px] bg-white/20"></div>
             <motion.a 
-              href="tel:+97143320776" 
+              href="tel:+971547033311" 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center gap-2.5 font-bold text-[13px] uppercase tracking-widest text-white hover:text-accent-color transition-all group"
@@ -236,7 +236,7 @@ const Header = () => {
             </motion.a>
             <div className="h-8 w-[1px] bg-white/20"></div>
             <div className="flex items-center gap-2 font-bold text-[12px] uppercase tracking-widest opacity-80 bg-black/10 px-4 py-2 rounded-lg">
-              <Printer size={16} className="text-accent-color" /> FAX: 614-882-4664
+              <Printer size={16} className="text-accent-color" /> AVAILABLE 24/7
             </div>
           </div>
         </div>
@@ -274,11 +274,11 @@ const Header = () => {
                 <a href="#" className="hover:text-accent-color transition-colors"><Twitter size={24} /></a>
                 <a href="mailto:info@corx.ae" className="hover:text-accent-color transition-colors"><Mail size={24} /></a>
               </div>
-              <a href="tel:+97143320776" className="bg-primary-color text-white text-center py-4 rounded-2xl font-bold uppercase tracking-[0.1em] flex items-center justify-center gap-3 shadow-lg shadow-primary-color/20 hover:bg-secondary-color transition-all">
+              <a href="tel:+971547033311" className="bg-primary-color text-white text-center py-4 rounded-2xl font-bold uppercase tracking-[0.1em] flex items-center justify-center gap-3 shadow-lg shadow-primary-color/20 hover:bg-secondary-color transition-all">
                 <Phone size={20} fill="currentColor" /> Call Now
               </a>
               <div className="text-center font-bold text-gray-400 text-[11px] uppercase tracking-[0.2em]">
-                FAX: 614-882-4664
+                AVAILABLE 24/7
               </div>
             </div>
           </div>
