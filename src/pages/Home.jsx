@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Users, Heart, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, Pill, Flower2, User, Brain, Stethoscope, Droplets, Activity, Clock, Award, Phone, HandHeart, UserCheck, ThumbsUp, ShieldPlus, Leaf, HeartHandshake, Building, Smile, Home as HomeIcon, CalendarDays } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import partner1 from '../assets/our partner2.png';
 import partner3 from '../assets/our partner 3.png';
 import partner4 from '../assets/our partner 4.webp';
@@ -180,7 +181,7 @@ const Home = () => {
       </section>
 
       {/* Welcome/Intro Section */}
-      <section className="pt-48 pb-32 bg-white relative overflow-hidden">
+      <section className="py-64 bg-white relative overflow-hidden">
         {/* WOW Factor: Mesh Gradient Background */}
         <div className="absolute top-0 left-0 w-full h-full opacity-40 pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-color/10 rounded-full blur-[120px] animate-pulse"></div>
@@ -191,34 +192,18 @@ const Home = () => {
           <div className="text-center max-w-5xl mx-auto mb-24">
 
             
-            <motion.h2 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={{
-                visible: { transition: { staggerChildren: 0.08 } }
-              }}
-              className="text-3xl md:text-5xl font-black mb-10 text-secondary-color tracking-normal leading-none"
+            <h2 
+              className="text-3xl md:text-5xl lg:text-6xl font-black mb-12 text-secondary-color tracking-wider leading-tight flex flex-wrap justify-center items-center gap-x-6 md:gap-x-10"
             >
-              {["WELCOME", "TO", "COMPLETE", "HEALTHCARE"].map((word, i) => (
-                <motion.span 
-                  key={i}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  className="inline-block"
-                >
-                  {word === "COMPLETE" || word === "HEALTHCARE" ? (
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#63b158] to-[#08709d] mr-4">
-                      {word}
-                    </span>
-                  ) : (
-                    <span className="mr-4">{word}</span>
-                  )}
-                </motion.span>
-              ))}
-            </motion.h2>
+              <span>WELCOME</span>
+              <span>TO</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#63b158] to-[#08709d]">
+                COMPLETE
+              </span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#63b158] to-[#08709d]">
+                HEALTHCARE
+              </span>
+            </h2>
 
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -234,7 +219,7 @@ const Home = () => {
           </div>
 
           <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-24"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -301,8 +286,41 @@ const Home = () => {
 
 
 
+      {/* Community Voice / Featured Section */}
+      <section className="bg-accent-color py-64 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white/20 rounded-full blur-[100px] -mr-48 -mt-48"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/20 rounded-full blur-[100px] -ml-48 -mb-48"></div>
+        </div>
+        
+        <div className="container relative z-10">
+          <div className="flex flex-col items-center text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-12"
+            >
+              <p className="text-white/70 font-black tracking-[0.4em] uppercase text-xs md:text-sm mb-6">
+                HEALTHCARE EXCELLENCE FEATURE
+              </p>
+              <h2 className="text-white text-4xl md:text-6xl font-black tracking-tight uppercase leading-tight mb-10 max-w-4xl">
+                WHAT THE COMMUNITY SAYS
+              </h2>
+              
+              <Link 
+                to="/contact" 
+                className="inline-block border-2 border-white text-white px-10 py-4 font-bold uppercase tracking-[0.2em] text-xs hover:bg-white hover:text-accent-color transition-all duration-300 shadow-lg hover:shadow-white/10"
+              >
+                READ NOW
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* The CHC Difference Section */}
-      <section className="bg-[#f8f9fa] py-24 relative overflow-hidden">
+      <section className="bg-[#f8f9fa] py-64 relative overflow-hidden">
         <div className="container relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-16">
             {/* Left Content */}
@@ -346,6 +364,28 @@ const Home = () => {
                     </motion.div>
                   ))}
                 </div>
+ 
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-20"
+                >
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="group relative bg-white text-[#2563eb] border-[2px] border-[#2563eb] px-12 py-4 rounded-xl font-bold text-[17px] tracking-wide overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl"
+                  >
+                    {/* Continuous Shine effect */}
+                    <motion.div 
+                      initial={{ x: "-100%" }}
+                      animate={{ x: "200%" }}
+                      transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 1, ease: "easeInOut" }}
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2563eb]/20 to-transparent skew-x-[-25deg] z-10"
+                    />
+                    <span className="relative z-20 uppercase">SCHEDULE AN APPOINTMENT</span>
+                  </motion.button>
+                </motion.div>
 
 
               </motion.div>
@@ -396,8 +436,7 @@ const Home = () => {
 
 
 
-      {/* Spacing Gap */}
-      <div className="h-24 bg-white"></div>
+
 
       {/* Stats / Counter Section */}
       <section className="bg-white py-24 relative border-y border-gray-100">
