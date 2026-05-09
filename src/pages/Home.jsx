@@ -180,7 +180,7 @@ const Home = () => {
       </section>
 
       {/* Welcome/Intro Section */}
-      <section className="py-32 bg-white relative overflow-hidden">
+      <section className="pt-48 pb-32 bg-white relative overflow-hidden">
         {/* WOW Factor: Mesh Gradient Background */}
         <div className="absolute top-0 left-0 w-full h-full opacity-40 pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-color/10 rounded-full blur-[120px] animate-pulse"></div>
@@ -207,13 +207,15 @@ const Home = () => {
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
                   }}
-                  className="inline-block mr-6"
+                  className="inline-block"
                 >
                   {word === "COMPLETE" || word === "HEALTHCARE" ? (
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#63b158] to-[#08709d]">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#63b158] to-[#08709d] mr-4">
                       {word}
                     </span>
-                  ) : word}
+                  ) : (
+                    <span className="mr-4">{word}</span>
+                  )}
                 </motion.span>
               ))}
             </motion.h2>
