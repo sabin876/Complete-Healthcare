@@ -95,8 +95,8 @@ const SocialMedia = () => {
                 {platform.description}
               </p>
               <div 
-                className="flex items-center gap-2 font-bold text-sm uppercase tracking-widest transition-colors"
-                style={{ color: platform.color }}
+                className="flex items-center gap-2 font-bold text-sm uppercase tracking-widest transition-colors hover:text-accent-color"
+                style={{ color: '#63b158' }}
               >
                 Follow Now <ExternalLink size={16} />
               </div>

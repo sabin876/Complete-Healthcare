@@ -48,7 +48,7 @@ const Header = () => {
   return (
     <header className="relative w-full z-50">
       {/* Top Location Bar */}
-      <div className="bg-[#5eb63b] text-white py-2 overflow-hidden whitespace-nowrap border-b border-white/10">
+      <div className="bg-[#63b158] text-white py-2 overflow-hidden whitespace-nowrap border-b border-white/10">
         <div className="flex">
           <motion.div 
             animate={{ x: ["0%", "-50%"] }}
@@ -72,49 +72,93 @@ const Header = () => {
       <div className="bg-white transition-all duration-300 border-b border-gray-100 py-0 shadow-sm">
         <div className="container flex justify-between items-center h-20 md:h-28">
           {/* Logo */}
-          <Link to="/" className="flex items-center hover:opacity-90 transition-opacity h-full">
-            <img src={logo} alt="COMPLETE HEALTHCARE" className="h-[80%] md:h-[90%] w-auto object-contain" />
+          <Link to="/" className="flex items-center h-full -ml-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              transition={{ duration: 1, ease: [0.34, 1.56, 0.64, 1] }}
+              whileHover={{ 
+                scale: 1.05,
+                rotate: [0, -1, 1, -1, 0],
+                transition: { duration: 0.3 } 
+              }}
+              className="relative group h-full flex items-center"
+            >
+              <img src={logo} alt="COMPLETE HEALTHCARE" className="h-[80%] md:h-[90%] w-auto object-contain relative z-10" />
+              
+              {/* Shimmering Shine Effect */}
+              <motion.div 
+                initial={{ x: "-100%", opacity: 0 }}
+                animate={{ x: "200%", opacity: [0, 0.5, 0] }}
+                transition={{ 
+                  repeat: Infinity, 
+                  duration: 2.5, 
+                  repeatDelay: 4,
+                  ease: "easeInOut" 
+                }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg] z-20 pointer-events-none"
+              />
+              
+              {/* Subtitle Glow on hover */}
+              <div className="absolute inset-0 bg-primary-color/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </motion.div>
           </Link>
 
           {/* Tagline (Center - Hidden on Mobile) */}
           <div className="hidden lg:block text-center flex-1 px-8">
-            <div className="overflow-hidden py-1">
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                className="flex justify-center flex-wrap gap-[0.3em]"
-              >
-                {"24/7 PREMIUM HOME HEALTHCARE SERVICES IN DUBAI".split(" ").map((word, i) => (
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              className="flex justify-center flex-wrap gap-x-[0.5em] gap-y-0"
+            >
+              {"24/7 PREMIUM HOME HEALTHCARE SERVICES IN DUBAI".split(" ").map((word, i) => (
+                <div key={i} className="relative overflow-hidden py-1 px-1">
                   <motion.span
-                    key={i}
                     variants={{
-                      hidden: { opacity: 0, y: 20 },
-                      visible: { opacity: 1, y: 0 }
+                      hidden: { y: "110%", opacity: 0 },
+                      visible: { 
+                        y: 0, 
+                        opacity: 1,
+                        transition: { 
+                          duration: 0.8, 
+                          ease: [0.33, 1, 0.68, 1],
+                          delay: i * 0.1 
+                        } 
+                      }
                     }}
-                    transition={{ duration: 0.5, delay: i * 0.05 }}
-                    className="inline-block font-['Montserrat'] font-normal uppercase tracking-[0.1em] hover:text-[#08709d] transition-colors duration-500 cursor-default"
+                    whileHover={{ y: -3, transition: { duration: 0.2 } }}
+                    className="inline-block font-['Montserrat'] font-black uppercase tracking-[0.15em] transition-colors duration-300 cursor-default"
                     style={{ 
-                      color: 'rgb(68, 68, 68)', 
-                      fontSize: '16px', 
-                      lineHeight: '26px',
+                      color: '#2596be', 
+                      fontSize: '15px',
                     }}
                   >
                     {word}
                   </motion.span>
-                ))}
-              </motion.div>
+                </div>
+              ))}
+            </motion.div>
+            
+            {/* Shimmering line beneath tagline */}
+            <div className="relative h-[2px] w-32 mx-auto mt-1 overflow-hidden rounded-full bg-gray-100">
+              <motion.div 
+                initial={{ x: "-100%" }}
+                animate={{ x: "100%" }}
+                transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2596be]/50 to-transparent"
+              />
             </div>
           </div>
 
           {/* Social Icons & Email */}
-          <div className="flex items-center gap-10 text-[#2596be]">
-            <div className="hidden md:flex items-center gap-8">
-              <a href="#" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Facebook size={20} /></a>
-              <a href="#" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Instagram size={20} /></a>
-              <a href="#" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Twitter size={20} /></a>
-              <div className="h-8 w-[1px] bg-gray-200 mx-2"></div>
-              <a href="mailto:info@corx.ae" className="flex items-center gap-2 hover:text-accent-color transition-colors font-bold text-sm tracking-wide">
-                <Mail size={18} className="text-[#2596be]" /> info@corx.ae
+          <div className="flex items-center gap-6 text-[#63b158] mr-12">
+            <div className="hidden md:flex items-center gap-4">
+              <a href="#" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Facebook size={20} style={{ color: '#63b158' }} /></a>
+              <a href="#" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Instagram size={20} style={{ color: '#63b158' }} /></a>
+              <a href="#" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Twitter size={20} style={{ color: '#63b158' }} /></a>
+              <div className="h-8 w-[1px] bg-gray-200 mx-1"></div>
+              <a href="mailto:info@corx.ae" className="flex items-center gap-2 hover:text-accent-color transition-colors font-bold text-sm tracking-wide" style={{ color: '#63b158' }}>
+                <Mail size={18} style={{ color: '#63b158' }} /> info@corx.ae
               </a>
             </div>
             
@@ -169,9 +213,27 @@ const Header = () => {
               <Search size={18} strokeWidth={3} />
             </button>
             <div className="h-8 w-[1px] bg-white/20"></div>
-            <a href="tel:+97143320776" className="flex items-center gap-2.5 font-bold text-[13px] uppercase tracking-widest text-white hover:text-accent-color transition-all">
-              <Phone size={16} fill="currentColor" className="text-white" /> CALL NOW
-            </a>
+            <motion.a 
+              href="tel:+97143320776" 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2.5 font-bold text-[13px] uppercase tracking-widest text-white hover:text-accent-color transition-all group"
+            >
+              <motion.div
+                animate={{ 
+                  rotate: [0, -10, 10, -10, 10, 0],
+                  scale: [1, 1.1, 1, 1.1, 1] 
+                }}
+                transition={{ 
+                  repeat: Infinity, 
+                  duration: 2, 
+                  repeatDelay: 3 
+                }}
+              >
+                <Phone size={16} fill="currentColor" className="text-white group-hover:text-accent-color transition-colors" />
+              </motion.div>
+              CALL NOW
+            </motion.a>
             <div className="h-8 w-[1px] bg-white/20"></div>
             <div className="flex items-center gap-2 font-bold text-[12px] uppercase tracking-widest opacity-80 bg-black/10 px-4 py-2 rounded-lg">
               <Printer size={16} className="text-accent-color" /> FAX: 614-882-4664

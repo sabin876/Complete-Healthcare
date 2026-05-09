@@ -62,11 +62,12 @@ const Footer = () => {
                   key={index} 
                   href={`#${social}`} 
                   whileHover={{ scale: 1.1, y: -5, rotate: 5 }}
-                  className="bg-white/10 p-3.5 rounded-full hover:bg-[#5fb54a] transition-colors duration-300 border border-white/10 text-white shadow-lg"
+                  className="bg-white/10 p-3.5 rounded-full hover:bg-[#5fb54a] transition-colors duration-300 border border-white/10 shadow-lg"
+                  style={{ color: '#63b158' }}
                 >
-                  {social === 'twitter' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>}
-                  {social === 'facebook' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>}
-                  {social === 'instagram' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>}
+                  {social === 'twitter' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#63b158' }}><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>}
+                  {social === 'facebook' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#63b158' }}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>}
+                  {social === 'instagram' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#63b158' }}><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>}
                 </motion.a>
               ))}
             </div>
@@ -149,7 +150,7 @@ const Footer = () => {
               </motion.li>
               <motion.li whileHover={{ x: 5 }} className="flex items-start gap-4 group cursor-pointer">
                 <div className="bg-white/10 p-3 rounded-xl text-[#5fb54a] group-hover:bg-[#5fb54a] group-hover:text-white transition-colors mt-0.5 shadow-md">
-                  <Mail size={20} />
+                  <Mail size={20} style={{ color: '#63b158' }} />
                 </div>
                 <div>
                   <a href="mailto:info@corx.ae" className="text-base font-medium text-blue-100/90 hover:text-white transition-colors block">info@corx.ae</a>

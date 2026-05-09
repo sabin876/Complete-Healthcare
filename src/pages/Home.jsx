@@ -136,19 +136,58 @@ const Home = () => {
               transition={{ duration: 0.8 }}
               className="max-w-4xl"
             >
-              <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6 !text-white">
-                {slides[currentSlide].title}
+              <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6 !text-white flex flex-wrap gap-x-[0.3em]">
+                {slides[currentSlide].title.split(" ").map((word, i) => (
+                  <span key={i} className="relative overflow-hidden inline-block py-2">
+                    <motion.span
+                      initial={{ y: "100%" }}
+                      animate={{ y: 0 }}
+                      transition={{ 
+                        duration: 0.8, 
+                        ease: [0.33, 1, 0.68, 1],
+                        delay: i * 0.05 
+                      }}
+                      className="inline-block"
+                    >
+                      {word}
+                    </motion.span>
+                  </span>
+                ))}
               </h1>
               <p className="text-xl mb-10 text-gray-200 leading-relaxed max-w-2xl">
                 {slides[currentSlide].subtitle}
               </p>
               <div className="flex mt-6">
                 <motion.button 
-                  whileHover={{ scale: 1.05, backgroundColor: "#065d83", boxShadow: "0 20px 40px rgba(8, 112, 157, 0.3)" }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-[#08709d] text-white px-10 py-4 rounded-full font-black text-[14px] uppercase tracking-[0.2em] shadow-2xl transition-all duration-300"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    boxShadow: "0 20px 40px rgba(8, 112, 157, 0.4)",
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group relative bg-[#08709d] text-white px-10 py-5 rounded-full font-black text-[15px] uppercase tracking-[0.25em] overflow-hidden shadow-2xl transition-all duration-500"
                 >
-                  {slides[currentSlide].cta}
+                  {/* Glowing background pulse */}
+                  <motion.div 
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+                    transition={{ repeat: Infinity, duration: 3 }}
+                    className="absolute inset-0 bg-[#63b158]/40 blur-xl group-hover:bg-[#63b158]/60 transition-colors"
+                  />
+                  
+                  {/* Shimmer sweep effect */}
+                  <motion.div 
+                    initial={{ x: "-100%" }}
+                    animate={{ x: "200%" }}
+                    transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 1, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-25deg] z-10"
+                  />
+
+                  <span className="relative z-20 flex items-center gap-3">
+                    {slides[currentSlide].cta}
+                    <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform duration-300" />
+                  </span>
                 </motion.button>
               </div>
               
@@ -213,22 +252,37 @@ const Home = () => {
             </motion.div>
             
             <motion.h2 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true }}
+              variants={{
+                visible: { transition: { staggerChildren: 0.08 } }
+              }}
               className="text-4xl md:text-6xl font-black mb-10 text-secondary-color tracking-tighter leading-none"
             >
-              WELCOME TO <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#64b460] to-[#08709d]">
-                COMPLETE HEALTHCARE
-              </span>
+              {["WELCOME", "TO", "COMPLETE", "HEALTHCARE"].map((word, i) => (
+                <motion.span 
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  className="inline-block mr-3"
+                >
+                  {word === "COMPLETE" || word === "HEALTHCARE" ? (
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#63b158] to-[#08709d]">
+                      {word}
+                    </span>
+                  ) : word}
+                </motion.span>
+              ))}
             </motion.h2>
 
             <motion.p 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
               className="text-gray-400 text-lg leading-relaxed max-w-4xl mx-auto font-medium tracking-tight"
             >
               We have a compassionate group of doctors, nurses, and medical professionals dedicated to serving 
@@ -302,6 +356,70 @@ const Home = () => {
 
 
 
+
+      {/* Services Section */}
+      <section className="py-32 bg-[#f8f9fa] relative overflow-hidden">
+        <div className="container relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-5xl font-black mb-6 text-secondary-color tracking-tight"
+            >
+              Our Premium <span className="text-[#63b158]">Services</span>
+            </motion.h2>
+            <p className="text-gray-500 text-lg font-medium">
+              We bring clinical excellence directly to your doorstep with our specialized home healthcare solutions.
+            </p>
+          </div>
+
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              visible: { transition: { staggerChildren: 0.1 } }
+            }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {services.map((service, index) => (
+              <motion.div
+                key={index}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                whileHover={{ y: -12 }}
+                className="bg-white rounded-[2rem] overflow-hidden shadow-xl shadow-gray-200/50 group border border-gray-100 transition-all duration-500"
+              >
+                <div className="relative h-64 overflow-hidden">
+                  <img src={service.image} alt={service.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-secondary-color/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute top-6 left-6 w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-primary-color shadow-lg group-hover:bg-[#63b158] group-hover:text-white transition-colors duration-500">
+                    {service.icon}
+                  </div>
+                </div>
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold mb-4 text-secondary-color group-hover:text-primary-color transition-colors">{service.title}</h3>
+                  <p className="text-gray-500 mb-6 line-clamp-2 font-medium">{service.desc}</p>
+                  <ul className="space-y-3 mb-8">
+                    {service.features.map((feature, i) => (
+                      <li key={i} className="flex items-center gap-3 text-sm font-bold text-secondary-color/70">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#63b158]"></div>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <button className="w-full py-4 rounded-xl border-2 border-primary-color/10 text-primary-color font-black text-xs uppercase tracking-widest hover:bg-[#63b158] hover:border-[#63b158] hover:text-white transition-all duration-500">
+                    Learn More
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
       {/* The CHC Difference Section */}
       <section className="bg-[#f8f9fa] py-24 relative overflow-hidden">
@@ -414,7 +532,15 @@ const Home = () => {
       {/* Stats / Counter Section */}
       <section className="bg-white py-24 relative border-y border-gray-100">
         <div className="container relative z-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              visible: { transition: { staggerChildren: 0.15 } }
+            }}
+            className="grid grid-cols-2 lg:grid-cols-4 gap-12"
+          >
             {[
               { label: "Happy Patients", value: "2,546", suffix: "+", icon: <Smile size={40} /> },
               { label: "Successful Homecare", value: "1.5", suffix: "M", icon: <HomeIcon size={40} /> },
@@ -423,13 +549,14 @@ const Home = () => {
             ].map((stat, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                whileHover={{ y: -5, scale: 1.05 }}
                 className="flex flex-col items-center text-center group"
               >
-                <div className="mb-6 text-primary-color group-hover:scale-110 group-hover:text-secondary-color transition-all duration-500">
+                <div className="mb-6 text-primary-color group-hover:text-[#63b158] transition-all duration-500">
                   {stat.icon}
                 </div>
 
@@ -438,14 +565,14 @@ const Home = () => {
                     {stat.value}
                   </h3>
                   {stat.suffix && (
-                    <span className="text-2xl md:text-3xl font-black text-primary-color ml-1">{stat.suffix}</span>
+                    <span className="text-2xl md:text-3xl font-black text-[#63b158] ml-1">{stat.suffix}</span>
                   )}
                 </div>
 
                 <p className="text-secondary-color/60 font-black uppercase tracking-[0.25em] text-[10px] md:text-xs">{stat.label}</p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
