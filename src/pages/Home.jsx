@@ -144,9 +144,13 @@ const Home = () => {
                   <p className="text-lg md:text-xl font-black tracking-[0.2em] uppercase text-white/90">
                     Licensed By
                   </p>
-                  <div className="bg-white p-4 md:p-5 rounded-2xl shadow-xl">
-                    <img src={dhaLogo} alt="Dubai Health Authority" className="h-24 md:h-32 w-auto object-contain" />
-                  </div>
+                  <motion.div 
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                    className="bg-white p-5 md:p-6 rounded-3xl shadow-2xl"
+                  >
+                    <img src={dhaLogo} alt="Dubai Health Authority" className="h-32 md:h-44 w-auto object-contain" />
+                  </motion.div>
                 </div>
               </motion.div>
             </motion.div>
