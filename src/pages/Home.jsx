@@ -87,7 +87,7 @@ const Home = () => {
               transition={{ duration: 0.8 }}
               className="max-w-4xl"
             >
-              <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6 !text-white flex flex-wrap gap-x-[0.3em]">
+              <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6 !text-white flex flex-wrap gap-x-[0.3em]">
                 {slides[currentSlide].title.split(" ").map((word, i) => (
                   <span key={i} className="relative overflow-hidden inline-block py-2">
                     <motion.span
@@ -113,21 +113,21 @@ const Home = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.8 }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="group relative bg-white text-[#2563eb] border-[2px] border-[#2563eb] px-10 py-3.5 rounded-xl font-semibold text-[15px] tracking-wide overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group relative bg-white text-[#2563eb] border-[2px] border-[#2563eb] px-12 py-4 rounded-xl font-bold text-[17px] tracking-wide overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl"
                 >
-                  {/* Shine effect */}
+                  {/* Continuous Shine effect */}
                   <motion.div 
                     initial={{ x: "-100%" }}
-                    whileHover={{ x: "200%" }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                    animate={{ x: "200%" }}
+                    transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 1, ease: "easeInOut" }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2563eb]/20 to-transparent skew-x-[-25deg] z-10"
                   />
                   
                   <span className="relative z-20 flex items-center gap-3">
                     {slides[currentSlide].cta}
-                    <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform duration-300" />
+                    <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-300" />
                   </span>
                 </motion.button>
               </div>
@@ -201,7 +201,7 @@ const Home = () => {
               variants={{
                 visible: { transition: { staggerChildren: 0.08 } }
               }}
-              className="text-4xl md:text-6xl font-black mb-10 text-secondary-color tracking-tighter leading-none"
+              className="text-3xl md:text-5xl font-black mb-10 text-secondary-color tracking-tighter leading-none"
             >
               {["WELCOME", "TO", "COMPLETE", "HEALTHCARE"].map((word, i) => (
                 <motion.span 
@@ -352,15 +352,15 @@ const Home = () => {
                   variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
                 >
                   <motion.button 
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative bg-white text-[#2563eb] border-[2px] border-[#2563eb] px-10 py-3.5 rounded-xl font-semibold text-[15px] tracking-wide overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="group relative bg-white text-[#2563eb] border-[2px] border-[#2563eb] px-12 py-4 rounded-xl font-bold text-[17px] tracking-wide overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl"
                   >
-                    {/* Shine effect */}
+                    {/* Continuous Shine effect */}
                     <motion.div 
                       initial={{ x: "-100%" }}
-                      whileHover={{ x: "200%" }}
-                      transition={{ duration: 0.8, ease: "easeInOut" }}
+                      animate={{ x: "200%" }}
+                      transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 1, ease: "easeInOut" }}
                       className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2563eb]/20 to-transparent skew-x-[-25deg] z-10"
                     />
                     <span className="relative z-20 uppercase">SCHEDULE AN APPOINTMENT</span>
