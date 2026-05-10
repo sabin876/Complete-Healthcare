@@ -585,68 +585,97 @@ const Home = () => {
         </div>
       </section>
  
-      {/* Have Any Questions Section (Lower) */}
       <section 
         className="relative overflow-hidden"
         style={{ 
-          background: 'linear-gradient(135deg, #08709d 0%, #1a294a 100%)', 
+          backgroundColor: 'white', 
           padding: '40px 0' 
         }}
       >
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 opacity-20">
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.3, 0.1]
-            }}
-            transition={{ duration: 8, repeat: Infinity }}
-            className="absolute -top-24 -left-24 w-96 h-96 bg-accent-color rounded-full blur-[100px]"
-          />
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.3, 1],
-              opacity: [0.1, 0.2, 0.1]
-            }}
-            transition={{ duration: 10, repeat: Infinity, delay: 2 }}
-            className="absolute -bottom-24 -right-24 w-96 h-96 bg-white rounded-full blur-[100px]"
-          />
-        </div>
 
-        <div className="container relative z-10">
+
+        <div className="container relative z-10" style={{ fontFamily: "'Poppins', sans-serif" }}>
           <div className="flex flex-col items-center text-center">
 
 
             {/* Integrated Stats Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-12 pt-12 border-t border-white/10 w-full max-w-5xl">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.2 }
+                }
+              }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-12 pt-12 w-full max-w-5xl"
+            >
               {[
-                { value: 2546, suffix: "+", label: "Successful Homecare", icon: <Smile size={56} />, decimals: 0 },
-                { value: 1.5, suffix: "M+", label: "Happy Patients", icon: <Heart size={56} />, decimals: 1 },
-                { value: 15, suffix: "+", label: "Years Experience", icon: <Award size={56} />, decimals: 0 },
-                { value: 120, suffix: "+", label: "Professional Nurses", icon: <UserCheck size={56} />, decimals: 0 }
+                { value: 2546, suffix: "+", label: "Successful Homecare", icon: <Smile size={56} />, decimals: 0, color: "#08709d" },
+                { value: 1.5, suffix: "M+", label: "Happy Patients", icon: <Heart size={56} />, decimals: 1, color: "#5eb63b" },
+                { value: 15, suffix: "+", label: "Years Experience", icon: <Award size={56} />, decimals: 0, color: "#08709d" },
+                { value: 120, suffix: "+", label: "Professional Nurses", icon: <UserCheck size={56} />, decimals: 0, color: "#5eb63b" }
               ].map((stat, i) => (
                 <motion.div 
                   key={i}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 + (i * 0.1) }}
-                  whileHover={{ y: -8 }}
+                  initial="rest"
+                  whileHover="hover"
+                  animate="rest"
+                  variants={{
+                    hidden: { opacity: 0, y: 30 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+                  }}
                   className="text-center group"
                 >
-                  <div className="mb-4 text-white/40 group-hover:text-white transition-all duration-500 flex justify-center">
-                    {stat.icon}
-                  </div>
-                  <div className="flex items-baseline justify-center gap-1 mb-2">
-                    <span className="text-5xl md:text-6xl font-black text-white">
+                  <motion.div 
+                    initial={{ scale: 0.8 }}
+                    whileInView={{ scale: 1 }}
+                    className="mb-6 flex justify-center"
+                  >
+                    <motion.div 
+                      variants={{
+                        rest: { y: 0, backgroundColor: "#f9fafb", boxShadow: "0 0 0 rgba(0,0,0,0)" },
+                        hover: { y: -12, backgroundColor: "#ffffff", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.15)" }
+                      }}
+                      className="p-5 rounded-2xl transition-all duration-500 border border-transparent group-hover:border-primary-color/10"
+                    >
+                      <motion.div
+                        variants={{
+                          rest: { color: stat.color },
+                          hover: { color: "#5eb63b" }
+                        }}
+                        className="transition-colors duration-300"
+                      >
+                        {stat.icon}
+                      </motion.div>
+                    </motion.div>
+                  </motion.div>
+                  <div className="flex items-baseline justify-center gap-1 mb-3">
+                    <motion.span 
+                      variants={{
+                        rest: { scale: 1, color: stat.color },
+                        hover: { scale: 1.05, color: stat.color }
+                      }}
+                      className="text-5xl md:text-6xl font-black transition-colors duration-300"
+                    >
                       <Counter value={stat.value} decimals={stat.decimals} />
-                    </span>
-                    <span className="text-xl md:text-2xl font-bold text-white/60">{stat.suffix}</span>
+                    </motion.span>
+                    <span className="text-xl md:text-2xl font-black opacity-60" style={{ color: stat.color }}>{stat.suffix}</span>
                   </div>
-                  <p className="text-xs md:text-sm font-bold text-white/50 uppercase tracking-[0.25em] leading-tight">{stat.label}</p>
+                  <motion.p 
+                    variants={{
+                      rest: { color: "#1a294a" },
+                      hover: { color: "#08709d" }
+                    }}
+                    className="text-xs md:text-sm font-black uppercase tracking-[0.25em] leading-tight transition-colors duration-300"
+                  >
+                    {stat.label}
+                  </motion.p>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
             </div>
 
         </div>
