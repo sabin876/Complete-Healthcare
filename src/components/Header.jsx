@@ -155,7 +155,7 @@ const Header = () => {
       </div>
 
       {/* Main Nav (Vibrant Blue) */}
-      <nav className="bg-[#08709d] text-white shadow-xl relative z-10">
+      <nav className="hidden lg:block bg-[#08709d] text-white shadow-xl relative z-10">
         <div className="container flex justify-between items-center py-0">
           <ul className="flex items-center gap-8 h-16">
             {navLinks.map((link) => (

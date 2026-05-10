@@ -130,13 +130,7 @@ const About = () => {
         </div>
 
         {/* Mission & Vision Row */}
-        <div style={{
-          display: "flex",
-          flexDirection: window.innerWidth < 1024 ? "column" : "row",
-          gap: 60,
-          alignItems: "center",
-          marginBottom: 120
-        }}>
+        <div className="flex flex-col lg:flex-row items-center gap-14 lg:gap-16 mb-24">
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
