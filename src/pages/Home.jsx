@@ -372,7 +372,7 @@ const Home = () => {
         className="relative overflow-hidden"
         style={{ 
           background: 'linear-gradient(135deg, #08709d 0%, #1a294a 100%)', 
-          padding: '80px 0' 
+          padding: '40px 0' 
         }}
       >
         {/* Animated Background Elements */}
@@ -590,7 +590,7 @@ const Home = () => {
         className="relative overflow-hidden"
         style={{ 
           background: 'linear-gradient(135deg, #08709d 0%, #1a294a 100%)', 
-          padding: '80px 0' 
+          padding: '40px 0' 
         }}
       >
         {/* Animated Background Elements */}

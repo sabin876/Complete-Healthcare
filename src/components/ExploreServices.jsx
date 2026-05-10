@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import ivTherapyImg from "../assets/iv_therapy_home.png";
 import labServicesImg from "../assets/lab_services_home.png";
 
@@ -16,8 +17,8 @@ const services = [
         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
       </svg>
     ),
-    // Physiotherapist treating patient's knee/leg at home
     image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&q=80",
+    video: "https://cdn.pixabay.com/video/2024/08/31/229069_large.mp4"
   },
   {
     id: 2,
@@ -31,8 +32,8 @@ const services = [
         <path d="M12 7v4M10 9h4" />
       </svg>
     ),
-    // IV drip bag / intravenous infusion close-up
     image: ivTherapyImg,
+    video: "https://cdn.pixabay.com/video/2022/12/18/143434-782373973_large.mp4"
   },
   {
     id: 3,
@@ -44,8 +45,8 @@ const services = [
         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
       </svg>
     ),
-    // Nurse in uniform attending to patient at home
     image: "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=400&q=80",
+    video: "https://cdn.pixabay.com/video/2020/09/13/49815-458438877_large.mp4"
   },
   {
     id: 4,
@@ -57,8 +58,8 @@ const services = [
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
       </svg>
     ),
-    // Doctor with medical bag making a home visit
     image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80",
+    video: "https://cdn.pixabay.com/video/2020/09/13/49808-458438856_large.mp4"
   },
   {
     id: 5,
@@ -70,8 +71,8 @@ const services = [
         <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
       </svg>
     ),
-    // Caregiver holding hands with elderly patient
     image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&q=80",
+    video: "https://cdn.pixabay.com/video/2016/10/24/6096-188704568_large.mp4"
   },
   {
     id: 6,
@@ -84,8 +85,8 @@ const services = [
         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
       </svg>
     ),
-    // Blood draw / lab test sample collection
     image: labServicesImg,
+    video: "https://cdn.pixabay.com/video/2017/01/01/6973-197914400_large.mp4"
   },
 ];
 
@@ -93,44 +94,52 @@ function ServiceCard({ service, index }) {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <div
+    <motion.div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ 
+        duration: 0.6, 
+        delay: index * 0.15,
+        ease: [0.21, 1.02, 0.47, 0.98] 
+      }}
+      whileHover={{ 
+        y: -10,
+        transition: { duration: 0.3 }
+      }}
       style={{
         background: "#ffffff",
         borderRadius: "16px",
         overflow: "hidden",
         boxShadow: hovered
-          ? "0 20px 40px rgba(0,0,0,0.12)"
-          : "0 4px 16px rgba(0,0,0,0.06)",
-        transform: hovered ? "translateY(-6px)" : "translateY(0)",
-        transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+          ? "0 25px 50px -12px rgba(0, 0, 0, 0.15)"
+          : "0 10px 25px -5px rgba(0, 0, 0, 0.05)",
         cursor: "pointer",
-        animationDelay: `${index * 0.1}s`,
-        animation: "fadeSlideUp 0.6s ease both",
+        position: "relative",
       }}
     >
       {/* Image Area */}
       <div style={{ position: "relative", height: "180px", overflow: "hidden" }}>
-        <img
-          src={service.image}
-          alt={service.title}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={service.image}
           style={{
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            transform: hovered ? "scale(1.06)" : "scale(1)",
-            transition: "transform 0.5s ease",
+            transform: hovered ? "scale(1.1)" : "scale(1)",
+            transition: "transform 0.8s ease",
           }}
-        />
-        {/* Diagonal color overlay */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: `linear-gradient(135deg, transparent 55%, ${service.accent}cc 55%)`,
-          }}
-        />
+        >
+          <source src={service.video} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+
         {/* Icon badge */}
         <div
           style={{
@@ -158,7 +167,7 @@ function ServiceCard({ service, index }) {
       <div style={{ padding: "30px 22px 24px" }}>
         <h3
           style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: "18px",
             fontWeight: "700",
             color: "#1a2e3a",
@@ -170,7 +179,7 @@ function ServiceCard({ service, index }) {
         </h3>
         <p
           style={{
-            fontFamily: "'Lato', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             fontSize: "14px",
             color: "#6b7b85",
             margin: "0 0 20px",
@@ -181,31 +190,29 @@ function ServiceCard({ service, index }) {
         </p>
 
         {/* Read more */}
-        <div
+        <motion.div
+          animate={{ color: hovered ? "#08709d" : "#2c6e6a" }}
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "6px",
-            color: "#2c6e6a",
-            fontFamily: "'Lato', sans-serif",
+            gap: "8px",
+            fontFamily: "'Montserrat', sans-serif",
             fontWeight: "700",
             fontSize: "14px",
             letterSpacing: "0.02em",
           }}
         >
           Read more
-          <span
-            style={{
-              display: "inline-block",
-              transform: hovered ? "translateX(4px)" : "translateX(0)",
-              transition: "transform 0.25s ease",
-            }}
+          <motion.span
+            animate={{ x: hovered ? 6 : 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            style={{ display: "inline-block" }}
           >
             →
-          </span>
-        </div>
+          </motion.span>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -213,20 +220,13 @@ export default function ExploreServices() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;700&display=swap');
-
-        @keyframes fadeSlideUp {
-          from { opacity: 0; transform: translateY(24px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
         .services-section {
-          background: #ffffff;
+          background: #f4f7f9;
           min-height: 100vh;
           padding: 60px 40px;
-          font-family: 'Lato', sans-serif;
+          font-family: 'Montserrat', sans-serif;
         }
 
         .services-grid {
@@ -256,7 +256,6 @@ export default function ExploreServices() {
             gap: "16px",
             maxWidth: "1200px",
             margin: "0 auto 40px",
-            animation: "fadeSlideUp 0.5s ease both",
           }}
         >
           <div
@@ -280,7 +279,7 @@ export default function ExploreServices() {
           </div>
           <h2
             style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
+              fontFamily: "'Montserrat', sans-serif",
               fontSize: "clamp(26px, 3vw, 36px)",
               fontWeight: "700",
               color: "#1a2e3a",
