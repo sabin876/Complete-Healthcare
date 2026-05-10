@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
@@ -51,6 +51,13 @@ const GoogleReviews = () => {
   const prev = () => {
     setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
   };
+
+  useEffect(() => {
+    const autoSlide = setInterval(() => {
+      next();
+    }, 4000); // Slide every 4 seconds
+    return () => clearInterval(autoSlide);
+  }, []);
 
   return (
     <section className="relative overflow-hidden min-h-[800px] flex items-center py-24 group">

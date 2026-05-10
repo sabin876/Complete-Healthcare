@@ -11,6 +11,8 @@ import partner7 from '../assets/our partner 7.png';
 import partner8 from '../assets/our partner 8.png';
 import hero1 from '../assets/hero/hero1.png';
 import GoogleReviews from '../components/GoogleReviews';
+import BlogSection from '../components/BlogSection';
+import ExploreServices from '../components/ExploreServices';
 
 import hero2 from '../assets/hero/hero2.png';
 import hero3 from '../assets/hero/hero3.png';
@@ -339,103 +341,10 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Welcome/Intro Section */}
-      <section 
-        className="relative overflow-hidden"
-        style={{ padding: '40px 0', backgroundColor: 'white' }}
-      >
-        {/* WOW Factor: Mesh Gradient Background */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-40 pointer-events-none">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-color/10 rounded-full blur-[120px] animate-pulse"></div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-color/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-        </div>
+      {/* Explore Services Section */}
+      <ExploreServices />
 
-        <div className="container relative z-10">
-          <div className="text-center max-w-5xl mx-auto mb-24">
 
-            
-            <h2 
-              className="text-3xl md:text-5xl lg:text-6xl font-black mb-12 text-secondary-color tracking-tight leading-tight flex flex-wrap justify-center items-center gap-x-3 md:gap-x-4"
-            >
-              <span>WELCOME</span>
-              <span>TO</span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#63b158] to-[#08709d]">
-                COMPLETE
-              </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#63b158] to-[#08709d]">
-                HEALTHCARE
-              </span>
-            </h2>
-
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="text-gray-400 text-lg leading-relaxed max-w-4xl mx-auto font-medium tracking-tight"
-            >
-              We have a compassionate group of doctors, nurses, and medical professionals dedicated to serving 
-              the healthcare needs of individuals and families in Dubai, providing high-quality 
-              medical services in the comfort of your home.
-            </motion.p>
-          </div>
-
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-24"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={{
-              visible: { transition: { staggerChildren: 0.15 } }
-            }}
-          >
-            {[
-              { icon: <Activity size={20} />, title: "Home", subtitle: "Physiotherapy", color: "from-[#1a294a] to-[#08709d]" },
-              { icon: <Droplets size={20} />, title: "IV", subtitle: "Therapy", color: "from-[#1a294a] to-[#08709d]" },
-              { icon: <Heart size={20} />, title: "Home", subtitle: "Nursing", color: "from-[#1a294a] to-[#08709d]" },
-              { icon: <Stethoscope size={20} />, title: "Doctor", subtitle: "On Call", color: "from-[#1a294a] to-[#08709d]" }
-            ].map((feature, i) => (
-              <motion.div
-                key={i}
-                variants={{
-                  hidden: { opacity: 0, y: 30, scale: 0.95 },
-                  visible: { opacity: 1, y: 0, scale: 1 }
-                }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="relative group"
-              >
-                {/* Glow Effect */}
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-color to-accent-color rounded-full opacity-0 group-hover:opacity-30 blur-md transition duration-500"></div>
-                
-                <div className={`relative bg-gradient-to-br ${feature.color} rounded-full flex items-center p-2 pr-10 shadow-2xl cursor-pointer overflow-hidden border border-white/10`}>
-                  {/* Glassmorphic Shine */}
-                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-white/10 to-transparent pointer-events-none"></div>
-                  
-                  <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white shrink-0 shadow-inner group-hover:bg-white/20 transition-all duration-500">
-                    <motion.div
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ repeat: Infinity, duration: 3, delay: i * 0.4 }}
-                    >
-                      {feature.icon}
-                    </motion.div>
-                  </div>
-                  
-                  <div className="ml-5 text-white uppercase leading-tight">
-                    <div className="text-[9px] font-black text-accent-color tracking-[0.2em] mb-1">{feature.title}</div>
-                    <div className="text-xs font-black tracking-widest whitespace-nowrap">{feature.subtitle}</div>
-                  </div>
-
-                  {/* Arrow on hover */}
-                  <div className="absolute right-4 opacity-0 group-hover:opacity-100 group-hover:right-6 transition-all duration-500 text-white/50">
-                    <ArrowRight size={16} />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-      
 
 
 
@@ -802,6 +711,8 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Blog Section */}
+      <BlogSection />
 
     </main>
   );
