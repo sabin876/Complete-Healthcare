@@ -11,7 +11,7 @@ import partner7 from '../assets/our partner 7.png';
 import partner8 from '../assets/our partner 8.png';
 import hero1 from '../assets/hero/hero1.png';
 import GoogleReviews from '../components/GoogleReviews';
-import BlogSection from '../components/BlogSection';
+
 import ExploreServices from '../components/ExploreServices';
 
 import hero2 from '../assets/hero/hero2.png';
@@ -710,9 +710,6 @@ const Home = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* Blog Section */}
-      <BlogSection />
 
     </main>
   );
