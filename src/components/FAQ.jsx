@@ -2,28 +2,28 @@ import { useState } from "react";
 
 const faqs = [
   {
-    q: "What services does Complete Healthcare provide?",
-    a: "We offer a wide range of home healthcare services including doctor home visits, nursing care, physiotherapy, lab sample collection, IV therapy, wound care, and post-operative recovery support — all delivered by certified professionals to your doorstep.",
+    q: "What services does Corx Home Healthcare offer?",
+    a: "Corx Home Healthcare provides a wide range of services including physiotherapy, nursing care, medical equipment rental, wound care, and medication management, among others.",
   },
   {
-    q: "Are your healthcare professionals licensed?",
-    a: "Yes. All our doctors, nurses, and therapists are fully licensed by the Dubai Health Authority (DHA) or the Ministry of Health and Prevention (MOHAP). You can request credentials at any time.",
+    q: "Who can benefit from Corx Home Healthcare Services?",
+    a: "Our services cater to individuals of all ages who require healthcare assistance in the comfort of their own homes. This includes seniors, individuals recovering from surgery, those with chronic illnesses, and anyone in need of rehabilitation.",
   },
   {
-    q: "How quickly can a doctor visit my home?",
-    a: "In most cases we can arrange a same-day visit within 2–4 hours of booking. For urgent requests, our rapid-response team targets a 60-minute arrival window, subject to location and availability.",
+    q: "How can I request services from Corx Home Healthcare?",
+    a: "You can request our services by contacting us via phone at +971547033311 or by filling out the contact form on our website. Our team will promptly assess your needs and schedule a visit.",
   },
   {
-    q: "Do you provide services during weekends and public holidays?",
-    a: "Absolutely. Our team operates 7 days a week, 365 days a year — including all UAE public holidays. Healthcare needs don't follow a calendar, and neither do we.",
+    q: "Are your caregivers trained and certified?",
+    a: "Yes, all our caregivers are highly trained, certified professionals with experience in their respective fields. We ensure that they undergo rigorous training and background checks to provide the highest quality care.",
   },
   {
-    q: "How can I book an appointment?",
-    a: "You can book via our website, mobile app, WhatsApp, or by calling our 24/7 helpline. Once confirmed, you'll receive a notification with your professional's name, photo, and estimated arrival time.",
+    q: "What are your service hours?",
+    a: "Corx Home Healthcare operates 24 hours a day, 7 days a week, including holidays. We understand that healthcare needs can arise at any time, and our team is dedicated to being there for you whenever you need us.",
   },
   {
-    q: "Do you accept health insurance?",
-    a: "Yes, we work with most major insurance providers operating in the UAE. Please share your insurance card details at the time of booking and our team will verify your coverage before the visit.",
+    q: "How do I pay for Corx Home Healthcare services?",
+    a: "We accept various payment methods including cash, credit/debit cards, and bank transfers. We also work with insurance providers for direct billing whenever possible. Our team will provide you with detailed payment options and assist you with any billing inquiries.",
   },
 ];
 
