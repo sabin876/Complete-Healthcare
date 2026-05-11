@@ -39,7 +39,7 @@ const styles = `
 
   .faq-section {
     background: #f8fafc;
-    padding: 100px 0;
+    padding: 60px 0;
     position: relative;
     overflow: hidden;
   }
@@ -72,7 +72,7 @@ const styles = `
     color: #08709d;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     animation: headerIn 0.4s ease forwards;
   }
   .faq-title {
@@ -80,7 +80,7 @@ const styles = `
     font-weight: 800;
     color: #1a2340;
     text-align: center;
-    margin: 0 0 1rem;
+    margin: 0 0 0.5rem;
     animation: headerIn 0.4s 0.08s ease both;
     letter-spacing: -0.02em;
   }
@@ -89,7 +89,7 @@ const styles = `
     color: #4b5563;
     text-align: center;
     max-width: 600px;
-    margin: 0 auto 3rem;
+    margin: 0 auto 2rem;
     line-height: 1.6;
     animation: headerIn 0.4s 0.15s ease both;
   }
