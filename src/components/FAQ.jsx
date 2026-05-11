@@ -37,11 +37,30 @@ const styles = `
     to   { opacity: 1; transform: translateY(0); }
   }
 
+  .faq-section {
+    background: #f8fafc;
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .faq-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 0% 0%, rgba(8, 112, 157, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(94, 182, 59, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
   .faq-wrap {
-    padding: 4rem 1.5rem;
-    max-width: 900px;
+    padding: 0 1.5rem;
+    max-width: 1000px;
     margin: 0 auto;
     font-family: 'Poppins', sans-serif;
+    position: relative;
+    z-index: 1;
   }
   .faq-eyebrow {
     display: flex;
@@ -182,6 +201,7 @@ export default function FAQ() {
 
   return (
     <>
+    <section className="faq-section">
       <style>{styles}</style>
       <div className="faq-wrap">
         <div className="faq-eyebrow">
@@ -225,6 +245,7 @@ export default function FAQ() {
           <a href="#">Contact our support team</a>
         </p>
       </div>
+    </section>
     </>
   );
 }
