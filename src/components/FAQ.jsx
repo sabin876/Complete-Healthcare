@@ -242,7 +242,7 @@ export default function FAQ() {
 
         <p className="faq-footer">
           Still have questions?{" "}
-          <a href="#">Contact our support team</a>
+          <a href="/contact">Contact our support team</a>
         </p>
       </div>
     </section>
