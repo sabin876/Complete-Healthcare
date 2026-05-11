@@ -13,6 +13,7 @@ import hero1 from '../assets/hero/hero1.png';
 import GoogleReviews from '../components/GoogleReviews';
 
 import ExploreServices from '../components/ExploreServices';
+import FAQ from '../components/FAQ';
 
 import hero2 from '../assets/hero/hero2.png';
 import hero3 from '../assets/hero/hero3.png';
@@ -749,6 +750,9 @@ const Home = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQ />
 
     </main>
   );
