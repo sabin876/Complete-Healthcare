@@ -535,7 +535,7 @@ function PhysiotherapyLanding() {
               {physioConditions.map((c, i) => (
                 <div 
                   key={i} 
-                  className="bg-white border border-gray-100 p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.015)] hover:shadow-[0_15px_40px_rgba(8,112,157,0.05)] hover:border-[#08709d]/20 flex items-start gap-4 cursor-default transition-all duration-300 h-full"
+                  className="bg-white border border-gray-100 p-7 rounded-[22px] shadow-[0_8px_30px_rgba(0,0,0,0.015)] hover:shadow-[0_15px_40px_rgba(8,112,157,0.05)] hover:border-[#08709d]/20 flex items-start gap-5 cursor-default transition-all duration-300 min-h-[145px] h-full"
                   style={{ 
                     opacity: condVisible ? 1 : 0, 
                     transform: condVisible ? "translateY(0)" : "translateY(20px)", 
