@@ -247,12 +247,12 @@ const styles = {
     minHeight: "100vh",
     background: "#f0f4f8",
     fontFamily: "'Segoe UI', sans-serif",
-    padding: "160px 24px 80px", // Padded top to fit navigation header cleanly
+    padding: "120px 24px 60px", // Reduced padding to pull layout higher up the screen
     boxSizing: "border-box",
   },
   header: {
     textAlign: "center",
-    marginBottom: "48px",
+    marginBottom: "32px", // Reduced margin to lift the form cards
   },
   tagline: {
     color: "#2563eb",
