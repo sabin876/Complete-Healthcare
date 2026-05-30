@@ -806,7 +806,7 @@ function LabServicesLanding() {
 
           {/* Section header */}
           <div className="mb-8 flex flex-col items-center text-center mx-auto">
-            <h2 className="text-2xl md:text-[36px] font-black text-[#1a294a] tracking-tight uppercase leading-snug font-poppins max-w-[620px] mb-3.5">
+            <h2 className="text-xl md:text-[28px] font-black text-[#1a294a] tracking-tight uppercase leading-snug font-poppins max-w-[620px] mb-3.5">
               Accurate diagnostic tests &amp; body checkups at your doorstep
             </h2>
             <p className="text-gray-500 text-base md:text-lg leading-relaxed max-w-[580px] font-medium font-sans">
