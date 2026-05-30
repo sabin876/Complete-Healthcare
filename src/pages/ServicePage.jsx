@@ -357,7 +357,7 @@ function PhysiotherapyLanding() {
       <div style={landingStyles.glowGreen} />
 
       {/* ── HERO SECTION ── */}
-      <div className="container mx-auto px-6 max-w-7xl relative z-10 pt-28 pb-20 md:pt-36 md:pb-24">
+      <div className="container mx-auto px-6 max-w-7xl relative z-10 pt-28 pb-32 md:pt-36 md:pb-40">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
           {/* Left Column */}
