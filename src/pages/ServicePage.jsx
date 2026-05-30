@@ -942,7 +942,7 @@ export default function ServicePage({ serviceId }) {
                 </div>
 
                 {/* Refined CTA Action Buttons (Prevent collapse, absolute size consistency) */}
-                <div className="flex flex-wrap gap-4 pt-6 w-full items-center">
+                <div className="flex flex-wrap gap-4 w-full items-center" style={{ marginTop: "48px" }}>
                   <a 
                     href="tel:+971547033311"
                     className="inline-flex items-center justify-center gap-3 bg-[#08709d] hover:bg-[#065679] rounded-full font-bold text-xs md:text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg min-h-[50px] select-none text-center"
