@@ -94,7 +94,7 @@ const About = () => {
     title: {
       fontFamily: "'Montserrat', sans-serif",
       fontSize: "clamp(30px, 4.5vw, 48px)",
-      fontWeight: "900",
+      fontWeight: "400",
       color: "#1a294a",
       lineHeight: "1.15",
       letterSpacing: "-0.01em",
