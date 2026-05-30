@@ -37,7 +37,7 @@ const About = () => {
       fontFamily: "'Poppins', sans-serif",
       background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%)",
       minHeight: "100vh",
-      paddingTop: "140px",
+      paddingTop: "70px",
       paddingBottom: "80px",
       position: "relative",
       overflow: "hidden",
