@@ -247,12 +247,12 @@ const styles = {
     minHeight: "100vh",
     background: "#f0f4f8",
     fontFamily: "'Segoe UI', sans-serif",
-    padding: "40px 24px 60px", // Reduced top padding to pull title and cards higher up since header is relative
+    padding: "20px 24px 60px", // Pushed even higher up the screen
     boxSizing: "border-box",
   },
   header: {
     textAlign: "center",
-    marginBottom: "32px", // Reduced margin to lift the form cards
+    marginBottom: "16px", // Pushed form closer to title
   },
   tagline: {
     color: "#2563eb",
@@ -260,13 +260,13 @@ const styles = {
     fontWeight: "700",
     letterSpacing: "2px",
     textTransform: "uppercase",
-    marginBottom: "12px",
+    marginBottom: "6px", // Tightened margin
   },
   title: {
     fontSize: "clamp(28px, 5vw, 44px)",
     fontWeight: "800",
     color: "#0f172a",
-    margin: "0 0 16px",
+    margin: "0 0 10px", // Tightened margin
   },
   subtitle: {
     color: "#64748b",
