@@ -116,7 +116,7 @@ function InputField({ icon, placeholder, name, type, value, onChange, focused, s
         boxShadow: isFocused ? "0 8px 30px rgba(0,0,0,0.25)" : "0 4px 18px rgba(0,0,0,0.15)",
       }}
     >
-      <span style={{ color: isFocused ? "#1a2a6c" : "#9ca3af", display: "flex", flexShrink: 0, transition: "color 0.25s" }}>
+      <span style={{ color: isFocused ? "#08709d" : "#9ca3af", display: "flex", flexShrink: 0, transition: "color 0.25s" }}>
         {icon}
       </span>
       <input
@@ -132,12 +132,12 @@ function InputField({ icon, placeholder, name, type, value, onChange, focused, s
           background: "transparent",
           border: "none",
           outline: "none",
-          color: "#1a2a6c",
+          color: "#1a294a",
           fontFamily: "'Helvetica Neue', Arial, sans-serif",
           fontSize: 13,
           fontWeight: 600,
           letterSpacing: "0.08em",
-          caretColor: "#1a2a6c",
+          caretColor: "#08709d",
         }}
       />
     </motion.div>
@@ -167,7 +167,7 @@ export default function Contact() {
     <div style={{
       fontFamily: "'Helvetica Neue', Arial, sans-serif",
       minHeight: "100vh",
-      background: "linear-gradient(135deg, #2c3e8c 0%, #1a2a6c 50%, #23379b 100%)",
+      background: "linear-gradient(135deg, #1a294a 0%, #0b3d55 50%, #08709d 100%)",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -364,7 +364,7 @@ export default function Contact() {
                       boxShadow: focused === "message" ? "0 8px 30px rgba(0,0,0,0.25)" : "0 4px 18px rgba(0,0,0,0.15)",
                     }}
                   >
-                    <span style={{ color: focused === "message" ? "#1a2a6c" : "#9ca3af", marginTop: 2, flexShrink: 0, transition: "color 0.25s" }}>
+                    <span style={{ color: focused === "message" ? "#08709d" : "#9ca3af", marginTop: 2, flexShrink: 0, transition: "color 0.25s" }}>
                       <MessageIcon />
                     </span>
                     <textarea
@@ -377,9 +377,9 @@ export default function Contact() {
                       rows={3}
                       style={{
                         flex: 1, background: "transparent", border: "none", outline: "none",
-                        color: "#1a2a6c", fontFamily: "'Helvetica Neue', Arial, sans-serif",
+                        color: "#1a294a", fontFamily: "'Helvetica Neue', Arial, sans-serif",
                         fontSize: 13, fontWeight: 600, letterSpacing: "0.08em",
-                        resize: "none", caretColor: "#1a2a6c", lineHeight: 1.6,
+                        resize: "none", caretColor: "#08709d", lineHeight: 1.6,
                       }}
                     />
                   </motion.div>
@@ -444,16 +444,17 @@ export default function Contact() {
                   >
                     <motion.button
                       onClick={handleSubmit}
-                      whileHover={{ y: -3, boxShadow: "0 10px 30px rgba(0,0,0,0.3)", background: "#e8edff" }}
+                      whileHover={{ y: -3, boxShadow: "0 10px 30px rgba(8,112,157,0.35)", background: "#5eb63b" }}
                       whileTap={{ scale: 0.96 }}
                       style={{
-                        background: "#fff", color: "#1a2a6c",
+                        background: "#08709d", color: "#ffffff",
                         border: "none", borderRadius: 50,
                         padding: "15px 40px",
                         fontFamily: "'Helvetica Neue', Arial, sans-serif",
                         fontWeight: 800, fontSize: 14, letterSpacing: "0.12em",
                         cursor: "pointer",
                         boxShadow: "0 4px 18px rgba(0,0,0,0.18)",
+                        transition: "background 0.25s, color 0.25s",
                       }}
                     >
                       SUBMIT
@@ -502,7 +503,7 @@ export default function Contact() {
                   layout="position"
                   style={{
                     background: isOpen ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0.04)",
-                    border: isOpen ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid rgba(255, 255, 255, 0.12)",
+                    border: isOpen ? "1px solid rgba(94, 182, 59, 0.5)" : "1px solid rgba(255, 255, 255, 0.12)",
                     borderRadius: 16,
                     overflow: "hidden",
                     boxShadow: isOpen ? "0 8px 32px rgba(0,0,0,0.15)" : "0 4px 20px rgba(0,0,0,0.08)",
@@ -510,7 +511,7 @@ export default function Contact() {
                   }}
                   whileHover={{
                     background: "rgba(255, 255, 255, 0.09)",
-                    borderColor: "rgba(255, 255, 255, 0.22)",
+                    borderColor: isOpen ? "rgba(94, 182, 59, 0.6)" : "rgba(255, 255, 255, 0.22)",
                   }}
                 >
                   <button
@@ -542,7 +543,7 @@ export default function Contact() {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: isOpen ? "#ffffff" : "rgba(255,255,255,0.6)",
+                        color: isOpen ? "#5eb63b" : "rgba(255,255,255,0.6)",
                         flexShrink: 0,
                       }}
                     >
