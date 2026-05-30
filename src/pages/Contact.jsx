@@ -146,7 +146,7 @@ export default function Contact() {
 
           {/* Address */}
           <div style={styles.contactCard}>
-            <div style={{ ...styles.iconWrap, color: "#22c55e", background: "#f0fdf4" }}>
+            <div style={{ ...styles.iconWrap, color: "#5eb63b", background: "rgba(94, 182, 59, 0.1)" }}>
               <LocationIcon />
             </div>
             <div>
@@ -171,7 +171,7 @@ export default function Contact() {
 
           {/* Working Hours */}
           <div style={styles.contactCard}>
-            <div style={{ ...styles.iconWrap, color: "#eab308", background: "#fef9c3" }}>
+            <div style={{ ...styles.iconWrap, color: "#08709d", background: "rgba(8, 112, 157, 0.1)" }}>
               <ClockIcon />
             </div>
             <div>
@@ -271,10 +271,15 @@ export default function Contact() {
             />
           </div>
 
-          <button style={styles.submitBtn} onClick={handleSubmit}>
+          <motion.button
+            style={styles.submitBtn}
+            onClick={handleSubmit}
+            whileHover={{ y: -3, boxShadow: "0 10px 30px rgba(8, 112, 157, 0.35)", background: "#5eb63b" }}
+            whileTap={{ scale: 0.97 }}
+          >
             <SendIcon />
             Send Message
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -378,45 +383,48 @@ export default function Contact() {
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "#f0f4f8",
-    fontFamily: "'Segoe UI', sans-serif",
-    padding: "20px 24px 60px", // Pushed even higher up the screen
+    background: "#f8fafc",
+    fontFamily: "'Poppins', sans-serif",
+    padding: "20px 24px 60px",
     boxSizing: "border-box",
   },
   header: {
     textAlign: "center",
-    marginBottom: "16px", // Pushed form closer to title
+    marginBottom: "16px",
   },
   tagline: {
-    color: "#2563eb",
-    fontSize: "14px", // Increased tagline font size
+    color: "#08709d",
+    fontSize: "14px",
     fontWeight: "700",
     letterSpacing: "2px",
     textTransform: "uppercase",
     marginBottom: "6px",
+    fontFamily: "'Montserrat', sans-serif",
   },
   title: {
-    fontSize: "clamp(32px, 6vw, 50px)", // Increased title font size
+    fontSize: "clamp(32px, 6vw, 50px)",
     fontWeight: "800",
-    color: "#0f172a",
+    color: "#1a294a",
     margin: "0 0 10px",
+    fontFamily: "'Montserrat', sans-serif",
   },
   subtitle: {
-    color: "#64748b",
-    fontSize: "17px", // Increased subtitle font size
+    color: "#4b5563",
+    fontSize: "17px",
     lineHeight: "1.7",
-    maxWidth: "540px", // Increased subtitle width
+    maxWidth: "540px",
     margin: "0 auto",
+    fontFamily: "'Poppins', sans-serif",
   },
   content: {
     display: "flex",
     gap: "32px",
-    maxWidth: "1150px", // Increased max width of content to support wider cards
+    maxWidth: "1150px",
     margin: "0 auto",
     flexWrap: "wrap",
   },
   leftPanel: {
-    flex: "1 1 320px", // Increased base width of left card panel
+    flex: "1 1 320px",
     display: "flex",
     flexDirection: "column",
     gap: "12px",
@@ -434,8 +442,8 @@ const styles = {
     width: "36px",
     height: "36px",
     borderRadius: "50%",
-    background: "#eff6ff",
-    color: "#2563eb",
+    background: "rgba(8, 112, 157, 0.1)",
+    color: "#08709d",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -444,25 +452,29 @@ const styles = {
   },
   cardLabel: {
     fontWeight: "700",
-    fontSize: "16px", // Increased label font size
-    color: "#0f172a",
+    fontSize: "16px",
+    color: "#1a294a",
     margin: "0 0 4px",
+    fontFamily: "'Montserrat', sans-serif",
   },
   cardLink: {
-    color: "#2563eb",
-    fontSize: "15px", // Increased link font size
+    color: "#08709d",
+    fontSize: "15px",
     margin: "0 0 2px",
     fontWeight: "500",
+    fontFamily: "'Poppins', sans-serif",
   },
   cardText: {
-    color: "#334155",
-    fontSize: "15px", // Increased text font size
+    color: "#1a294a",
+    fontSize: "15px",
     margin: "0 0 2px",
+    fontFamily: "'Poppins', sans-serif",
   },
   cardSub: {
-    color: "#94a3b8",
-    fontSize: "13.5px", // Increased sub font size
+    color: "#4b5563",
+    fontSize: "13.5px",
     margin: "0",
+    fontFamily: "'Poppins', sans-serif",
   },
   socialSection: {
     marginTop: "8px",
@@ -470,9 +482,10 @@ const styles = {
   },
   socialLabel: {
     fontWeight: "600",
-    fontSize: "16px", // Increased social section label font size
-    color: "#0f172a",
+    fontSize: "16px",
+    color: "#1a294a",
     marginBottom: "12px",
+    fontFamily: "'Montserrat', sans-serif",
   },
   socialIcons: {
     display: "flex",
@@ -482,9 +495,9 @@ const styles = {
     width: "36px",
     height: "36px",
     borderRadius: "50%",
-    border: "1.5px solid #e2e8f0",
+    border: "1.5px solid #e5e7eb",
     background: "#fff",
-    color: "#475569",
+    color: "#1a294a",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
@@ -492,17 +505,18 @@ const styles = {
     transition: "all 0.2s",
   },
   formCard: {
-    flex: "1 1 480px", // Increased base width of the form card
+    flex: "1 1 480px",
     background: "#ffffff",
     borderRadius: "16px",
-    padding: "36px 32px", // Slightly increased internal padding for a larger card feel
+    padding: "36px 32px",
     boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
   },
   formTitle: {
-    fontSize: "24px", // Increased form title size
+    fontSize: "24px",
     fontWeight: "700",
-    color: "#0f172a",
+    color: "#1a294a",
     margin: "0 0 24px",
+    fontFamily: "'Montserrat', sans-serif",
   },
   formRow: {
     display: "flex",
@@ -523,31 +537,32 @@ const styles = {
     marginBottom: "16px",
   },
   label: {
-    fontSize: "15px", // Increased label font size
+    fontSize: "15px",
     fontWeight: "600",
-    color: "#374151",
+    color: "#1a294a",
+    fontFamily: "'Montserrat', sans-serif",
   },
   input: {
-    border: "1.5px solid #e2e8f0",
+    border: "1.5px solid #e5e7eb",
     borderRadius: "8px",
-    padding: "12px 16px", // Increased input padding
-    fontSize: "16px", // Increased input font size
-    color: "#0f172a",
+    padding: "12px 16px",
+    fontSize: "16px",
+    color: "#1a294a",
     background: "#fff",
     outline: "none",
-    fontFamily: "inherit",
+    fontFamily: "'Poppins', sans-serif",
     width: "100%",
     boxSizing: "border-box",
     transition: "border-color 0.2s",
   },
   submitBtn: {
     width: "100%",
-    padding: "16px", // Increased button padding
-    background: "#1e3a5f",
+    padding: "16px",
+    background: "#08709d",
     color: "#fff",
     border: "none",
     borderRadius: "10px",
-    fontSize: "17px", // Increased button font size
+    fontSize: "17px",
     fontWeight: "600",
     cursor: "pointer",
     display: "flex",
@@ -555,7 +570,8 @@ const styles = {
     justifyContent: "center",
     gap: "8px",
     marginTop: "8px",
-    transition: "background 0.2s",
+    fontFamily: "'Montserrat', sans-serif",
+    transition: "all 0.3s ease",
   },
   faqSection: {
     width: "100%",
@@ -570,25 +586,28 @@ const styles = {
     gap: "8px",
     fontSize: "13px",
     fontWeight: "700",
-    color: "#2563eb",
+    color: "#08709d",
     letterSpacing: "2px",
     textTransform: "uppercase",
     marginBottom: "10px",
+    fontFamily: "'Montserrat', sans-serif",
   },
   faqTitle: {
     fontSize: "clamp(22px, 3.5vw, 30px)",
     fontWeight: "800",
-    color: "#0f172a",
+    color: "#1a294a",
     textAlign: "center",
     margin: "0 0 10px 0",
+    fontFamily: "'Montserrat', sans-serif",
   },
   faqSub: {
     fontSize: "14px",
-    color: "#64748b",
+    color: "#4b5563",
     textAlign: "center",
     maxWidth: "560px",
     margin: "0 auto 36px",
     lineHeight: "1.6",
+    fontFamily: "'Poppins', sans-serif",
   },
   faqList: {
     display: "flex",

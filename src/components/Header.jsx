@@ -230,16 +230,34 @@ const Header = () => {
             <div className="h-8 w-[1px] bg-white/20"></div>
             <motion.a 
               href="tel:+971547033311" 
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.95 }}
+              animate={{ scale: [1, 1.03, 1] }}
+              transition={{ scale: { repeat: Infinity, duration: 2, ease: "easeInOut" } }}
               className="flex items-center gap-2.5 font-bold text-[13px] uppercase tracking-widest text-white hover:text-accent-color transition-all group"
             >
-              <Phone size={16} fill="currentColor" /> CALL NOW
+              <motion.span
+                animate={{ rotate: [0, -15, 15, -15, 15, 0] }}
+                transition={{ repeat: Infinity, duration: 1.2, repeatDelay: 3 }}
+                className="flex items-center"
+              >
+                <Phone size={16} fill="currentColor" />
+              </motion.span>
+              CALL NOW
             </motion.a>
             <div className="h-8 w-[1px] bg-white/20"></div>
-            <div className="flex items-center gap-2 font-bold text-[12px] uppercase tracking-widest opacity-80 bg-black/10 px-4 py-2 rounded-lg">
-              <Printer size={16} className="text-accent-color" /> AVAILABLE 24/7
-            </div>
+            <motion.div 
+              animate={{ boxShadow: ["0 0 0px rgba(99,177,88,0)", "0 0 12px rgba(99,177,88,0.4)", "0 0 0px rgba(99,177,88,0)"] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              className="flex items-center gap-3 font-bold text-[12px] uppercase tracking-widest bg-black/15 px-4 py-2 rounded-lg border border-[#63b158]/30 text-white"
+            >
+              {/* Pulsing Live Dot */}
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#63b158] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#63b158]"></span>
+              </span>
+              <span>AVAILABLE 24/7</span>
+            </motion.div>
           </div>
         </div>
       </nav>
