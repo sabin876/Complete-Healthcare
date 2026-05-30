@@ -259,24 +259,28 @@ export const servicesData = {
     ],
     faqs: [
       {
-        q: "Can a doctor visit any hotel in Dubai?",
-        a: "Yes. We provide hotel room doctor visits across all areas of Dubai, including Downtown, Marina, JBR, Palm Jumeirah, Deira, Bur Dubai, and all major hotel districts."
+        q: "How do I call a doctor in Dubai?",
+        a: "You can arrange a doctor at hotel by contacting our team and sharing your hotel location, symptoms, and preferred time. Simply call us at +971547033311 or WhatsApp us, and our team of doctors will arrive at your doorstep within 30 minutes."
       },
       {
-        q: "How quickly will the doctor arrive at my hotel?",
-        a: "Our hotel visit doctors typically arrive within 30–45 minutes of booking confirmation, depending on your hotel's location and current traffic conditions."
+        q: "What conditions can be treated during a hotel doctor visit?",
+        a: "A Doctor at hotel service is commonly arranged for non-emergency conditions such as fever, flu symptoms, stomach discomfort, minor infections, and general health concerns. The doctor will assess your condition and advise on appropriate treatment or further care if required."
       },
       {
-        q: "Can you provide documents for my travel insurance claim?",
-        a: "Yes. Our doctors provide comprehensive medical reports, receipts, and insurance reimbursement documents with DHA stamps to support your travel insurance claim."
+        q: "Is Doctor at hotel service suitable for tourists and business travelers?",
+        a: "Yes, the doctor at hotel service is targeted at tourists, business travelers and locals who want to have medical check-ups without having to leave their hotels. It provides a convenient choice to get professional help and feel comfortable and private."
       },
       {
-        q: "Are your doctors DHA-approved?",
-        a: "Yes. All doctors providing hotel visit consultations are DHA-licensed and authorized to practice in Dubai according to Dubai healthcare regulations."
+        q: "How quickly can a doctor visit my hotel in Dubai?",
+        a: "Visit timing depends on factors such as location, availability, and time of request. Our team coordinates scheduling to arrange a doctor at hotel as promptly as possible while ensuring appropriate care and service quality."
       },
       {
-        q: "What conditions can be treated during a hotel visit?",
-        a: "We treat a wide range of acute conditions including fever, food poisoning, respiratory infections, stomach pain, UTIs, dehydration, travel sickness, and minor injuries."
+        q: "Is the doctor at hotel service available across Dubai?",
+        a: "Yes, a doctor at hotel service can be arranged across major areas such as Downtown Dubai, Business Bay, Dubai Marina, JBR, Al Barsha & Sheikh Zayed Road, Deira & Bur Dubai, and Palm Jumeirah. Availability may vary based on location and time, and our team will confirm scheduling accordingly."
+      },
+      {
+        q: "What if I need a Doctor follow-up visit in my hotel room?",
+        a: "Follow-up visits can be arranged based on your condition and the doctor’s advice. Our team can coordinate additional doctors at your hotel if required, ensuring continuity of care during your stay. Scheduling is flexible and organized according to availability and your medical needs."
       }
     ]
   },
