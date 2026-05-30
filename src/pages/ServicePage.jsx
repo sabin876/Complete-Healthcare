@@ -474,23 +474,6 @@ function PhysiotherapyLanding() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
               </div>
-
-              {/* Overlapping Floating trust badge */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-                className="absolute bottom-6 -left-4 bg-white border border-gray-150 p-4 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.08)] z-10 flex gap-3 items-center max-w-[210px]"
-              >
-                <div className="w-8 h-8 rounded-full bg-[#5eb63b] text-white flex items-center justify-center font-normal text-xs shrink-0">
-                  ✓
-                </div>
-                <div className="text-left">
-                  <p className="m-0 font-normal text-xs text-gray-900 leading-tight">Home &amp; Hotel Visits</p>
-                  <p className="m-0 text-[9.5px] text-gray-400 mt-0.5">Flexible Care Scheduling</p>
-                </div>
-              </motion.div>
             </div>
           </div>
         </div>
