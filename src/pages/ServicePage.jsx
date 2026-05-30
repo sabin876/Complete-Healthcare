@@ -902,7 +902,7 @@ export default function ServicePage({ serviceId }) {
               <div className="lg:col-span-7 space-y-6 flex flex-col items-start text-left">
                 
                 {/* Eyebrow badge container with proper bounds */}
-                <div className="inline-flex bg-[#08709d]/10 border border-[#08709d]/20 text-[#08709d] text-xs md:text-sm font-bold px-4 py-2 rounded-full uppercase tracking-wider select-none">
+                <div className="inline-flex bg-[#08709d]/10 border border-[#08709d]/20 text-[#08709d] text-xs md:text-sm font-bold px-4 py-2 rounded-full uppercase tracking-wider select-none" style={{ marginTop: "48px" }}>
                   {service.eyebrow}
                 </div>
                 
