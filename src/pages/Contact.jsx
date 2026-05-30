@@ -185,10 +185,23 @@ export default function Contact() {
           <div style={styles.socialSection}>
             <p style={styles.socialLabel}>Connect with Us</p>
             <div style={styles.socialIcons}>
-              {[FacebookIcon, TwitterIcon, InstagramIcon, LinkedInIcon, ChatIcon].map((Icon, i) => (
-                <button key={i} style={styles.socialBtn}>
+              {[
+                { Icon: FacebookIcon, url: "https://www.facebook.com/corxhealthcare", label: "Facebook" },
+                { Icon: LinkedInIcon, url: "https://www.linkedin.com/company/corx-healthcare/", label: "LinkedIn" },
+                { Icon: InstagramIcon, url: "https://www.instagram.com/corx_healthcare", label: "Instagram" }
+              ].map(({ Icon, url, label }, i) => (
+                <motion.a 
+                  key={i} 
+                  href={url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={styles.socialBtn}
+                  whileHover={{ y: -4, scale: 1.12, borderColor: "#08709d", color: "#08709d" }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-label={label}
+                >
                   <Icon />
-                </button>
+                </motion.a>
               ))}
             </div>
           </div>
