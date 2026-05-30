@@ -13,7 +13,7 @@ const FloatingCTA = () => {
       ),
       label: 'WhatsApp',
       color: 'bg-[#25D366]',
-      link: 'https://wa.me/97143320776',
+      link: 'https://wa.me/971547033311',
     },
     {
       id: 'call',
