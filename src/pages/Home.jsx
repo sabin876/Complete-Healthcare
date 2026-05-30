@@ -18,6 +18,8 @@ import FAQ from '../components/FAQ';
 import hero2 from '../assets/hero/hero2.png';
 import hero3 from '../assets/hero/hero3.png';
 import dhaLogo from '../assets/Dubai_Health_Authority_log.png';
+import HealthCareBlogSection from '../components/HealthCareBlogSection';
+
 
 /* ── Testimonials Data & Components ────────────────── */
 const testimonialsData = [
@@ -750,6 +752,8 @@ const Home = () => {
           </motion.div>
         </div>
       </section>
+
+      <HealthCareBlogSection />
 
       <FAQ />
 

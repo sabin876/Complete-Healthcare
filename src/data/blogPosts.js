@@ -1,0 +1,200 @@
+export const blogPosts = [
+  {
+    "id": 1,
+    "title": "WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE",
+    "category": "Home Physiotherapy",
+    "date": "April 16, 2026",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE coming soon.</p>"
+  },
+  {
+    "id": 2,
+    "title": "Burnout in Working Professionals: Signs & Solutions",
+    "category": "Home Healthcare",
+    "date": "March 18, 2026",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Burnout in Working Professionals: Signs & Solutions and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Burnout in Working Professionals: Signs & Solutions coming soon.</p>"
+  },
+  {
+    "id": 3,
+    "title": "Doctor at Home vs Hospital Visit: What’s Better in 2026?",
+    "category": "Home Healthcare",
+    "date": "February 12, 2026",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Doctor at Home vs Hospital Visit: What’s Better in 2026? and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Doctor at Home vs Hospital Visit: What’s Better in 2026? coming soon.</p>"
+  },
+  {
+    "id": 4,
+    "title": "Managing Chronic Conditions With Home Healthcare Support",
+    "category": "Home Healthcare",
+    "date": "January 20, 2026",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Managing Chronic Conditions With Home Healthcare Support and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Managing Chronic Conditions With Home Healthcare Support coming soon.</p>"
+  },
+  {
+    "id": 5,
+    "title": "10 Signs Your Loved One Might Need Home Nursing Care",
+    "category": "Home Nursing",
+    "date": "January 6, 2026",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about 10 Signs Your Loved One Might Need Home Nursing Care and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for 10 Signs Your Loved One Might Need Home Nursing Care coming soon.</p>"
+  },
+  {
+    "id": 6,
+    "title": "The Complete Guide to IV Therapy at Home",
+    "category": "Home Healthcare",
+    "date": "December 16, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about The Complete Guide to IV Therapy at Home and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for The Complete Guide to IV Therapy at Home coming soon.</p>"
+  },
+  {
+    "id": 7,
+    "title": "Pediatric Home Healthcare: Ensuring Comfort for Children",
+    "category": "Home Healthcare",
+    "date": "November 12, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Pediatric Home Healthcare: Ensuring Comfort for Children and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Pediatric Home Healthcare: Ensuring Comfort for Children coming soon.</p>"
+  },
+  {
+    "id": 8,
+    "title": "What to Expect From a Doctor at Home Visit",
+    "category": "Home Healthcare",
+    "date": "October 12, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about What to Expect From a Doctor at Home Visit and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for What to Expect From a Doctor at Home Visit coming soon.</p>"
+  },
+  {
+    "id": 9,
+    "title": "Why Home Healthcare Is Becoming Essential in Dubai",
+    "category": "Home Healthcare",
+    "date": "September 12, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Why Home Healthcare Is Becoming Essential in Dubai and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Why Home Healthcare Is Becoming Essential in Dubai coming soon.</p>"
+  },
+  {
+    "id": 10,
+    "title": "Why Post-Surgery Home Care is Essential for Recovery",
+    "category": "Home Healthcare",
+    "date": "August 28, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Why Post-Surgery Home Care is Essential for Recovery and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Why Post-Surgery Home Care is Essential for Recovery coming soon.</p>"
+  },
+  {
+    "id": 11,
+    "title": "Holistic Healing: Physiotherapy Plus Lifestyle Support at Home",
+    "category": "Home Physiotherapy",
+    "date": "August 21, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Holistic Healing: Physiotherapy Plus Lifestyle Support at Home and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Holistic Healing: Physiotherapy Plus Lifestyle Support at Home coming soon.</p>"
+  },
+  {
+    "id": 12,
+    "title": "Why Home Physiotherapy is the Future of Recovery?",
+    "category": "Home Physiotherapy",
+    "date": "July 30, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Why Home Physiotherapy is the Future of Recovery? and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Why Home Physiotherapy is the Future of Recovery? coming soon.</p>"
+  },
+  {
+    "id": 13,
+    "title": "Chronic Pain Solutions in Dubai: How Physiotherapy Can Help?",
+    "category": "Home Physiotherapy",
+    "date": "June 27, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Chronic Pain Solutions in Dubai: How Physiotherapy Can Help? and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Chronic Pain Solutions in Dubai: How Physiotherapy Can Help? coming soon.</p>"
+  },
+  {
+    "id": 14,
+    "title": "Hydration & Energy: The Role of IV Drips in Dubai’s Wellness Trend",
+    "category": "IV Therapy",
+    "date": "June 24, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Hydration & Energy: The Role of IV Drips in Dubai’s Wellness Trend and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Hydration & Energy: The Role of IV Drips in Dubai’s Wellness Trend coming soon.</p>"
+  },
+  {
+    "id": 15,
+    "title": "How Corx Healthcare Is Revolutionizing Doctor on Call Services in Dubai?",
+    "category": "Doctor on Call",
+    "date": "June 17, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about How Corx Healthcare Is Revolutionizing Doctor on Call Services in Dubai? and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for How Corx Healthcare Is Revolutionizing Doctor on Call Services in Dubai? coming soon.</p>"
+  },
+  {
+    "id": 16,
+    "title": "Elderly Care Services in Dubai: Providing Comfort and Dignity at Home",
+    "category": "Elderly Care",
+    "date": "June 13, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about Elderly Care Services in Dubai: Providing Comfort and Dignity at Home and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for Elderly Care Services in Dubai: Providing Comfort and Dignity at Home coming soon.</p>"
+  },
+  {
+    "id": 17,
+    "title": "How IV Therapy Is Changing Healthcare in Dubai: Boost Your Energy Today",
+    "category": "IV Therapy",
+    "date": "June 11, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about How IV Therapy Is Changing Healthcare in Dubai: Boost Your Energy Today and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for How IV Therapy Is Changing Healthcare in Dubai: Boost Your Energy Today coming soon.</p>"
+  },
+  {
+    "id": 18,
+    "title": "The Benefits of Home Nursing Services in Dubai: Care You Can Trust",
+    "category": "Home Nursing",
+    "date": "June 5, 2025",
+    "author": "Corx",
+    "image": "https://www.corx.ae/wp-content/uploads/placeholder.jpg",
+    "excerpt": "Read more about The Benefits of Home Nursing Services in Dubai: Care You Can Trust and how it can help you achieve better health outcomes.",
+    "readTime": "5 min read",
+    "content": "<p>Full content for The Benefits of Home Nursing Services in Dubai: Care You Can Trust coming soon.</p>"
+  }
+];
