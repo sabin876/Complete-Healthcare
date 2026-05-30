@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const PhoneIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -60,7 +61,32 @@ const ChatIcon = () => (
   </svg>
 );
 
+/* ─── FAQ Data ───────────────────────────────────── */
+const faqData = [
+  {
+    question: "How do I book an appointment?",
+    answer: "Simply fill out the form above with your name, email, phone number, and optional message. Our dedicated patient care team will contact you within 15 to 30 minutes to confirm your preferred doctor, consultation time slot, and specific medical needs."
+  },
+  {
+    question: "Can I schedule a home health visit or lab test?",
+    answer: "Yes, absolutely! We offer comprehensive home healthcare services, including home doctor consultancies, skilled nursing care, physiotherapy, and sample collections for laboratory tests in the comfort of your home. Please mention your preference in the message field."
+  },
+  {
+    question: "What happens after I submit the appointment form?",
+    answer: "Once submitted, you will see a confirmation message on your screen. An automated notification is sent to our medical coordinators immediately. A dedicated agent will contact you shortly via phone or WhatsApp to finalize your booking."
+  },
+  {
+    question: "Is 24/7 medical assistance available?",
+    answer: "Yes, Complete Healthcare operates 24 hours a day, 7 days a week. For urgent consultations or late-night medical guidance, you can call our hotlines directly at +971 54 703 3311 or +971 50 278 5990 for immediate assistance."
+  },
+  {
+    question: "Which locations do you serve in the UAE?",
+    answer: "We primarily serve across Dubai, including Dubai Investment Park (DIP), Green Community, Jumeirah, Marina, and surrounding areas. Our home healthcare teams are equipped to reach you anywhere in Dubai rapidly."
+  }
+];
+
 export default function Contact() {
+  const [activeIndex, setActiveIndex] = useState(null);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -76,6 +102,10 @@ export default function Contact() {
 
   const handleSubmit = () => {
     alert("Message sent! We'll be in touch soon.");
+  };
+
+  const toggleFaq = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
   };
 
   return (
@@ -236,6 +266,100 @@ export default function Contact() {
             <SendIcon />
             Send Message
           </button>
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div style={styles.faqSection}>
+        <div style={styles.faqEyebrow}>
+          ⊙ Common Questions
+        </div>
+        <h2 style={styles.faqTitle}>Frequently Asked Questions</h2>
+        <p style={styles.faqSub}>
+          Find answers to the most common questions about booking your appointments and home healthcare visits in Dubai.
+        </p>
+
+        <div style={styles.faqList}>
+          {faqData.map((item, index) => {
+            const isOpen = activeIndex === index;
+            return (
+              <motion.div
+                key={index}
+                layout="position"
+                style={{
+                  background: "transparent",
+                  border: isOpen ? "1.5px solid #2563eb" : "1.5px solid #e2e8f0",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  marginBottom: "12px",
+                  transition: "border-color 0.3s ease",
+                }}
+                whileHover={{
+                  borderColor: isOpen ? "#2563eb" : "#cbd5e1",
+                }}
+              >
+                <button
+                  onClick={() => toggleFaq(index)}
+                  aria-expanded={isOpen}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "16px 20px",
+                    background: "none",
+                    border: "none",
+                    outline: "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    color: "#0f172a",
+                    fontFamily: "inherit",
+                    fontSize: "15px",
+                    fontWeight: 700,
+                    gap: "16px",
+                  }}
+                >
+                  <span>{item.question}</span>
+                  <motion.span
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: isOpen ? "#2563eb" : "#64748b",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </motion.span>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                      <div style={{
+                        padding: "0 20px 20px 20px",
+                        color: "#475569",
+                        fontSize: "14px",
+                        lineHeight: 1.6,
+                        fontWeight: 500,
+                      }}>
+                        {item.answer}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -423,5 +547,43 @@ const styles = {
     gap: "8px",
     marginTop: "8px",
     transition: "background 0.2s",
+  },
+  faqSection: {
+    width: "100%",
+    maxWidth: "800px",
+    margin: "80px auto 0",
+    fontFamily: "inherit",
+  },
+  faqEyebrow: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    fontSize: "13px",
+    fontWeight: "700",
+    color: "#2563eb",
+    letterSpacing: "2px",
+    textTransform: "uppercase",
+    marginBottom: "10px",
+  },
+  faqTitle: {
+    fontSize: "clamp(22px, 3.5vw, 30px)",
+    fontWeight: "800",
+    color: "#0f172a",
+    textAlign: "center",
+    margin: "0 0 10px 0",
+  },
+  faqSub: {
+    fontSize: "14px",
+    color: "#64748b",
+    textAlign: "center",
+    maxWidth: "560px",
+    margin: "0 auto 36px",
+    lineHeight: "1.6",
+  },
+  faqList: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
   },
 };
