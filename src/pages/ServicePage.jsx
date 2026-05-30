@@ -1054,7 +1054,8 @@ export default function ServicePage({ serviceId }) {
         className="relative overflow-hidden"
         style={{ 
           background: 'linear-gradient(135deg, #08709d 0%, #1a294a 100%)', 
-          padding: '60px 0' 
+          padding: '80px 0',
+          marginTop: '80px'
         }}
       >
         {/* Particle circles */}
