@@ -369,7 +369,7 @@ function PhysiotherapyLanding() {
             }}
           >
             {/* Heading */}
-            <h1 className="text-2xl md:text-[38px] lg:text-[40px] font-normal text-[#1a294a] tracking-tight leading-[1.2] uppercase font-montserrat" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <h1 className="text-[22px] md:text-[30px] lg:text-[32px] font-normal text-[#1a294a] tracking-tight leading-[1.2] uppercase font-montserrat" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               Physiotherapy<br />Services in<br /><span style={{ color: "#08709d" }}>Dubai</span>
             </h1>
             
