@@ -487,14 +487,14 @@ function PhysiotherapyLanding() {
           borderBottom: "1px solid #e2e8f0",
           position: "relative",
           zIndex: 10,
-          paddingTop: "140px",
+          paddingTop: "110px",
           paddingBottom: "96px"
         }}
       >
         <div className="container mx-auto px-6 max-w-7xl">
 
           {/* Section header */}
-          <div className="mb-16 space-y-4">
+          <div className="mb-28 space-y-4">
             <div className="inline-flex bg-white border border-gray-200 text-gray-500 text-[10.5px] font-normal px-4 py-2.5 rounded-full uppercase tracking-widest select-none font-poppins shadow-sm">
               ⊙ Managed Conditions
             </div>
