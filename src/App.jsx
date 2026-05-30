@@ -10,6 +10,7 @@ import About from './pages/About';
 import Locations from './pages/Locations';
 import Contact from './pages/Contact';
 import ServicePage from './pages/ServicePage';
+import DoctorAtHomePage from './pages/DoctorAtHomePage';
 
 
 // Placeholder for other pages
@@ -48,7 +49,7 @@ const AnimatedRoutes = () => {
         <Route path="/services/iv-therapy" element={<ServicePage serviceId="iv-therapy" />} />
         <Route path="/services/nursing" element={<ServicePage serviceId="nursing" />} />
         <Route path="/services/doctor-on-call" element={<ServicePage serviceId="doctor-on-call" />} />
-        <Route path="/services/doctor-at-home" element={<ServicePage serviceId="doctor-at-home" />} />
+        <Route path="/services/doctor-at-home" element={<DoctorAtHomePage />} />
         <Route path="/services/doctor-at-office" element={<ServicePage serviceId="doctor-at-office" />} />
         <Route path="/services/doctor-at-hotel" element={<ServicePage serviceId="doctor-at-hotel" />} />
         <Route path="/services/elderly-care" element={<ServicePage serviceId="elderly-care" />} />
