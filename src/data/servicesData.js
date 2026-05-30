@@ -161,6 +161,18 @@ export const servicesData = {
       {
         q: "Is this service covered by medical insurance?",
         a: "We provide detailed medical reports, invoices, and insurance reimbursement forms with DHA stamps, which you can submit to your insurance company for reimbursement according to your policy terms."
+      },
+      {
+        q: "How long does the doctor take to arrive in Dubai?",
+        a: "Our doctor at home visits in Dubai are completed within 30–45 minutes, depending on the patient's location, traffic conditions, and doctor availability."
+      },
+      {
+        q: "What are the charges for a doctor's home visit in Dubai?",
+        a: "At CORX, the consultation cost depends on the location, timing, medical condition, and treatment required. Pricing may vary for late-night visits, IV therapy, laboratory services, or additional procedures."
+      },
+      {
+        q: "Are your doctors DHA-approved?",
+        a: "Yes. All doctors providing home visit consultations are DHA-licensed and authorized to practice in Dubai according to Dubai healthcare regulations."
       }
     ]
   },
