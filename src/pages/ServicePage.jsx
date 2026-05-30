@@ -400,7 +400,7 @@ function PhysiotherapyLanding() {
                     <h4 className="text-[#1a294a] text-[13.5px] font-normal leading-snug font-poppins">
                       {f.title}
                     </h4>
-                    <p className="text-gray-400 text-[11px] font-normal leading-relaxed mt-1 font-poppins">
+                    <p className="text-gray-500 text-[11px] font-medium leading-relaxed mt-1 font-poppins">
                       {f.desc}
                     </p>
                   </div>
