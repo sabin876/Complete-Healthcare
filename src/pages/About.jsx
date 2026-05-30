@@ -81,8 +81,8 @@ const About = () => {
       background: "#ffffff",
       border: "1px solid rgba(8, 112, 157, 0.15)",
       color: "#08709d",
-      fontSize: "12px",
-      fontWeight: "700",
+      fontSize: "10.5px",
+      fontWeight: "400",
       padding: "8px 18px",
       borderRadius: "50px",
       textTransform: "uppercase",
@@ -93,7 +93,7 @@ const About = () => {
     },
     title: {
       fontFamily: "'Montserrat', sans-serif",
-      fontSize: "clamp(30px, 4.5vw, 48px)",
+      fontSize: "clamp(24px, 3.5vw, 36px)",
       fontWeight: "400",
       color: "#1a294a",
       lineHeight: "1.15",
@@ -102,7 +102,7 @@ const About = () => {
       marginBottom: "24px"
     },
     subtitle: {
-      fontSize: "16px",
+      fontSize: "15px",
       color: "#475569",
       lineHeight: "1.75",
       fontWeight: "400",
@@ -129,22 +129,22 @@ const About = () => {
     },
     statVal: {
       fontFamily: "'Montserrat', sans-serif",
-      fontSize: "36px",
-      fontWeight: "900",
+      fontSize: "26px",
+      fontWeight: "400",
       color: "#08709d",
       marginBottom: "4px"
     },
     statLabel: {
-      fontSize: "12.5px",
-      fontWeight: "600",
+      fontSize: "11px",
+      fontWeight: "400",
       color: "#64748b",
       textTransform: "uppercase",
       letterSpacing: "0.02em"
     },
     sectionTitle: {
       fontFamily: "'Montserrat', sans-serif",
-      fontSize: "32px",
-      fontWeight: "800",
+      fontSize: "24px",
+      fontWeight: "400",
       color: "#1a294a",
       textTransform: "uppercase",
       marginBottom: "20px"
@@ -152,8 +152,8 @@ const About = () => {
     pill: {
       padding: "8px 20px",
       borderRadius: "50px",
-      fontSize: "12px",
-      fontWeight: "800",
+      fontSize: "10.5px",
+      fontWeight: "400",
       letterSpacing: "0.06em",
       textTransform: "uppercase"
     },
@@ -174,8 +174,8 @@ const About = () => {
       border: "none",
       padding: "16px 42px",
       borderRadius: "50px",
-      fontWeight: "800",
-      fontSize: "13px",
+      fontWeight: "400",
+      fontSize: "12px",
       letterSpacing: "0.12em",
       cursor: "pointer",
       display: "inline-flex",
@@ -191,8 +191,8 @@ const About = () => {
       border: "2px solid rgba(255,255,255,0.4)",
       padding: "14px 36px",
       borderRadius: "50px",
-      fontWeight: "800",
-      fontSize: "13px",
+      fontWeight: "400",
+      fontSize: "12px",
       letterSpacing: "0.12em",
       cursor: "pointer",
       display: "inline-flex",
@@ -237,7 +237,7 @@ const About = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              style={{ ...styles.subtitle, fontSize: "16.5px", color: "#334155", fontWeight: "500" }}
+              style={{ ...styles.subtitle, fontSize: "14.5px", color: "#334155", fontWeight: "400" }}
             >
               Corx Home Healthcare offers unparalleled home healthcare services, including top-tier physiotherapy, home nursing, compassionate caregivers, and round-the-clock doctor-on-call assistance throughout the Emirates of UAE.
             </motion.p>
@@ -277,11 +277,11 @@ const About = () => {
               transition={{ delay: 0.6 }}
               className="mt-6 bg-white border border-gray-150 p-4 rounded-2xl shadow-sm flex items-center gap-3.5"
             >
-              <div className="w-9 h-9 rounded-full bg-[#5eb63b]/10 text-[#5eb63b] flex items-center justify-center font-bold text-lg">
+              <div className="w-9 h-9 rounded-full bg-[#5eb63b]/10 text-[#5eb63b] flex items-center justify-center font-normal text-sm">
                 ✓
               </div>
-              <p className="text-left text-xs font-semibold text-gray-500 leading-normal m-0 font-sans">
-                <strong className="text-[#1a294a]">Accredited Home Care Partner:</strong> DHA Licensed clinics, clinical protocols, and highly trained specialists.
+              <p className="text-left text-[11px] text-gray-500 leading-normal m-0 font-sans">
+                <span className="text-[#1a294a] font-normal">Accredited Home Care Partner:</span> DHA Licensed clinics, clinical protocols, and highly trained specialists.
               </p>
             </motion.div>
           </div>
@@ -293,8 +293,8 @@ const About = () => {
             <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.15)" }}>
               ⊙ Why Choose Us
             </div>
-            <h2 style={{ ...styles.sectionTitle, fontSize: "32px", marginBottom: "12px" }}>Why Choose Corx Home Healthcare?</h2>
-            <p style={{ color: "#64748b", fontSize: "15px", fontWeight: "500", margin: 0 }}>
+            <h2 style={{ ...styles.sectionTitle, fontSize: "22px", marginBottom: "12px" }}>Why Choose Corx Home Healthcare?</h2>
+            <p style={{ color: "#64748b", fontSize: "13.5px", fontWeight: "400", margin: 0 }}>
               There are many reasons to choose Corx Home Health Care as your healthcare provider of choice.
             </p>
           </div>
@@ -326,14 +326,14 @@ const About = () => {
                 <h3 style={{ 
                   fontFamily: "'Montserrat', sans-serif",
                   color: "#1a294a", 
-                  fontSize: "18px", 
-                  fontWeight: "800", 
+                  fontSize: "14.5px", 
+                  fontWeight: "400", 
                   marginBottom: "12px",
                   textTransform: "uppercase" 
                 }}>
                   {pillar.title}
                 </h3>
-                <p style={{ color: "#4b5563", fontSize: "13.5px", lineHeight: "1.7", fontWeight: "500", margin: 0 }}>
+                <p style={{ color: "#4b5563", fontSize: "12.5px", lineHeight: "1.7", fontWeight: "400", margin: 0 }}>
                   {pillar.desc}
                 </p>
               </motion.div>
@@ -404,12 +404,12 @@ const About = () => {
               transition={{ delay: 0.3 }}
               className="absolute bottom-6 -right-4 bg-white p-4 rounded-2xl border border-gray-150 shadow-[0_15px_30px_rgba(0,0,0,0.06)] z-10 flex gap-3 items-center max-w-[200px]"
             >
-              <div className="w-8 h-8 rounded-full bg-[#5eb63b] text-white flex items-center justify-center font-bold text-sm shrink-0">
+              <div className="w-8 h-8 rounded-full bg-[#5eb63b] text-white flex items-center justify-center font-normal text-xs shrink-0">
                 ★
               </div>
               <div className="text-left">
-                <p className="m-0 font-bold text-xs text-gray-900 leading-tight">5-Star Rated</p>
-                <p className="m-0 text-[10px] text-gray-400 font-semibold mt-0.5">Patient Satisfaction</p>
+                <p className="m-0 font-normal text-xs text-gray-900 leading-tight">5-Star Rated</p>
+                <p className="m-0 text-[9.5px] text-gray-400 mt-0.5">Patient Satisfaction</p>
               </div>
             </motion.div>
           </motion.div>
@@ -427,7 +427,7 @@ const About = () => {
             <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.15)", marginBottom: "16px" }}>
               ⊙ Our Vision
             </div>
-            <h2 style={{ ...styles.sectionTitle, fontSize: "28px", lineHeight: "1.3", marginBottom: "20px" }}>
+            <h2 style={{ ...styles.sectionTitle, fontSize: "20px", lineHeight: "1.3", marginBottom: "20px" }}>
               We are committed to consistently creating and delivering exceptional value for you.
             </h2>
             <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
@@ -478,12 +478,12 @@ const About = () => {
               transition={{ delay: 0.3 }}
               className="absolute top-6 -left-4 bg-white p-4 rounded-2xl border border-gray-150 shadow-[0_15px_30px_rgba(0,0,0,0.06)] z-10 flex gap-3 items-center max-w-[210px]"
             >
-              <div className="w-8 h-8 rounded-full bg-[#08709d] text-white flex items-center justify-center font-bold text-sm shrink-0">
+              <div className="w-8 h-8 rounded-full bg-[#08709d] text-white flex items-center justify-center font-normal text-xs shrink-0">
                 ✓
               </div>
               <div className="text-left">
-                <p className="m-0 font-bold text-xs text-gray-900 leading-tight">Exceptional Value</p>
-                <p className="m-0 text-[10px] text-gray-400 font-semibold mt-0.5">Consistent &amp; Trusted</p>
+                <p className="m-0 font-normal text-xs text-gray-900 leading-tight">Exceptional Value</p>
+                <p className="m-0 text-[9.5px] text-gray-400 mt-0.5">Consistent &amp; Trusted</p>
               </div>
             </motion.div>
           </motion.div>
@@ -511,10 +511,10 @@ const About = () => {
           </div>
 
           <div className="relative z-10 flex flex-col items-center">
-            <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "clamp(24px, 3.5vw, 36px)", fontWeight: "900", color: "#ffffff", marginBottom: "16px", textTransform: "uppercase" }}>
+            <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "clamp(20px, 3vw, 26px)", fontWeight: "400", color: "#ffffff", marginBottom: "16px", textTransform: "uppercase" }}>
               Ready to Experience Better Care?
             </h2>
-            <p style={{ fontSize: "16.5px", color: "rgba(255,255,255,0.85)", marginBottom: "36px", maxWidth: "620px", lineHeight: "1.65", fontWeight: "500" }}>
+            <p style={{ fontSize: "14.5px", color: "rgba(255,255,255,0.85)", marginBottom: "36px", maxWidth: "620px", lineHeight: "1.65", fontWeight: "400" }}>
               Contact us today to book a consultation or find out more about our premium home care services.
             </p>
             
