@@ -8,7 +8,16 @@ import {
   Star, 
   Phone, 
   MessageSquare,
-  ArrowRight 
+  ArrowRight,
+  Award,
+  Activity,
+  Clock,
+  Heart,
+  ShieldCheck,
+  MapPin,
+  Sparkles,
+  ChevronRight,
+  CalendarDays
 } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
 
@@ -224,21 +233,21 @@ const styles = `
 const benefitIcons = [Check, Home, Shield, Star];
 
 const physioFeatures = [
-  { icon: "✓", iconBg: "#e8f4ff", iconColor: "#08709d", title: "DHA-licensed physiotherapists for home visits across Dubai" },
-  { icon: "⊕", iconBg: "#f0fdf4", iconColor: "#5eb63b", title: "Physiotherapy at home, hotel, or office with flexible scheduling" },
-  { icon: "↑", iconBg: "#fefce8", iconColor: "#ca8a04", title: "Personalized treatment plans for faster and safe recovery" },
-  { icon: "★", iconBg: "#fef3c7", iconColor: "#d97706", title: "Transparent pricing with no hidden costs" },
+  { icon: <ShieldCheck size={20} />, iconColor: "#5eb63b", title: "DHA-Licensed Specialists", desc: "licensed physiotherapists for home visits across Dubai" },
+  { icon: <MapPin size={20} />, iconColor: "#38bdf8", title: "Flexible Locations", desc: "Physiotherapy at home, hotel, or office with flexible scheduling" },
+  { icon: <Activity size={20} />, iconColor: "#fb923c", title: "Customized Treatment", desc: "Personalized treatment plans for faster and safe recovery" },
+  { icon: <Award size={20} />, iconColor: "#e11d48", title: "Transparent Pricing", desc: "Premium clinical care with absolutely no hidden costs" },
 ];
 
 const physioConditions = [
-  { icon: "↔", iconBg: "#dbeafe", iconColor: "#08709d", title: "Back and neck pain", desc: "Targeted rehabilitation for stiffness, postural pain, muscular spasm, and reduced function." },
-  { icon: "◎", iconBg: "#dbeafe", iconColor: "#08709d", title: "Knee pain and stiffness", desc: "Structured therapy to improve joint movement, strength, and confidence during walking and activity." },
-  { icon: "↻", iconBg: "#dbeafe", iconColor: "#08709d", title: "Shoulder pain", desc: "Focused treatment for pain, weakness, and limited shoulder movement during daily activities." },
-  { icon: "⚡", iconBg: "#fff7ed", iconColor: "#ea580c", title: "Sports injuries", desc: "Recovery programs for muscle strains, soft tissue injury, overuse problems, and return to activity." },
-  { icon: "○", iconBg: "#dbeafe", iconColor: "#08709d", title: "Arthritis care", desc: "Gentle, progressive treatment to reduce pain, improve movement, and support long-term joint health." },
-  { icon: "+", iconBg: "#dbeafe", iconColor: "#08709d", title: "Post-surgical rehabilitation", desc: "Planned recovery support after orthopaedic procedures with mobility and strengthening progression." },
-  { icon: "△", iconBg: "#dbeafe", iconColor: "#08709d", title: "Deformity correction support", desc: "Rehabilitation care to improve alignment-related movement patterns and functional recovery." },
-  { icon: "●", iconBg: "#1a294a", iconColor: "white", title: "Hip joint replacement recovery", desc: "Stepwise physiotherapy focused on strength, balance, walking confidence, and safe independence." },
+  { icon: <Activity size={22} />, iconColor: "#38bdf8", title: "Back and neck pain", desc: "Targeted rehabilitation for stiffness, postural pain, muscular spasm, and reduced function." },
+  { icon: <Activity size={22} />, iconColor: "#38bdf8", title: "Knee pain and stiffness", desc: "Structured therapy to improve joint movement, strength, and confidence during walking and activity." },
+  { icon: <Activity size={22} />, iconColor: "#38bdf8", title: "Shoulder pain", desc: "Focused treatment for pain, weakness, and limited shoulder movement during daily activities." },
+  { icon: <Sparkles size={22} />, iconColor: "#fb923c", title: "Sports injuries", desc: "Recovery programs for muscle strains, soft tissue injury, overuse problems, and return to activity." },
+  { icon: <Heart size={22} />, iconColor: "#e11d48", title: "Arthritis care", desc: "Gentle, progressive treatment to reduce pain, improve movement, and support long-term joint health." },
+  { icon: <Award size={22} />, iconColor: "#5eb63b", title: "Post-surgical rehabilitation", desc: "Planned recovery support after orthopaedic procedures with mobility and strengthening progression." },
+  { icon: <Award size={22} />, iconColor: "#5eb63b", title: "Deformity correction support", desc: "Rehabilitation care to improve alignment-related movement patterns and functional recovery." },
+  { icon: <ShieldCheck size={22} />, iconColor: "#5eb63b", title: "Hip joint replacement recovery", desc: "Stepwise physiotherapy focused on strength, balance, walking confidence, and safe independence." },
 ];
 
 const TherapistIllustration = () => (
@@ -297,36 +306,81 @@ function PhysiotherapyLanding() {
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
+  const landingStyles = {
+    dotTexture: {
+      position: "absolute",
+      inset: 0,
+      opacity: 0.05,
+      backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+      backgroundSize: "32px 32px",
+      pointerEvents: "none",
+      zIndex: 1
+    },
+    glowTeal: {
+      position: "absolute",
+      top: "-10%",
+      right: "-10%",
+      width: "500px",
+      height: "500px",
+      borderRadius: "50%",
+      background: "radial-gradient(circle, rgba(8, 112, 157, 0.25) 0%, transparent 70%)",
+      filter: "blur(60px)",
+      pointerEvents: "none",
+      zIndex: 1
+    },
+    glowGreen: {
+      position: "absolute",
+      bottom: "-10%",
+      left: "-10%",
+      width: "500px",
+      height: "500px",
+      borderRadius: "50%",
+      background: "radial-gradient(circle, rgba(94, 182, 59, 0.15) 0%, transparent 70%)",
+      filter: "blur(60px)",
+      pointerEvents: "none",
+      zIndex: 1
+    }
+  };
+
   return (
-    <div className="min-h-screen font-poppins relative overflow-hidden" style={{ background: "linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 40%,#f0fdf4 100%)" }}>
-      {/* Soft background glow circles to match other pages */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gray-50/50 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#08709d]/3 rounded-full blur-[120px] pointer-events-none" />
+    <div 
+      className="min-h-screen relative overflow-hidden text-white" 
+      style={{ 
+        fontFamily: "'Poppins', sans-serif",
+        background: "linear-gradient(135deg, #08709d 0%, #1a294a 100%)",
+        paddingTop: "40px"
+      }}
+    >
+      {/* Dynamic Background Effects */}
+      <div style={landingStyles.dotTexture} />
+      <div style={landingStyles.glowTeal} />
+      <div style={landingStyles.glowGreen} />
 
       {/* ── HERO SECTION ── */}
-      <div className="container mx-auto px-6 max-w-7xl relative z-10 pt-24 pb-20 md:pt-36 md:pb-28">
+      <div className="container mx-auto px-6 max-w-7xl relative z-10 pt-28 pb-20 md:pt-36 md:pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
           {/* Left Column */}
           <div 
-            className="lg:col-span-7 space-y-6 flex flex-col items-start text-left transition-all duration-700"
+            className="lg:col-span-7 space-y-7 flex flex-col items-start text-left transition-all duration-700"
             style={{ 
               opacity: visible ? 1 : 0, 
               transform: visible ? "translateY(0)" : "translateY(24px)" 
             }}
           >
             {/* Eyebrow Badge */}
-            <div className="inline-flex bg-white border border-gray-200 text-gray-600 text-xs md:text-sm font-semibold px-4 py-2 rounded-full uppercase tracking-wider select-none shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 backdrop-blur-md text-[#5eb63b] text-[10.5px] font-normal px-4 py-2.5 rounded-full uppercase tracking-widest select-none shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
+              <Sparkles size={12} className="text-[#5eb63b]" />
               DHA-licensed home physiotherapy across Dubai
             </div>
             
             {/* Heading */}
-            <h1 className="text-3xl md:text-5xl lg:text-[52px] font-black text-[#1a294a] tracking-tight leading-[1.15] uppercase font-poppins">
-              Physiotherapy<br />Services in<br /><span className="text-[#08709d]">Dubai</span>
+            <h1 className="text-3xl md:text-5xl lg:text-[46px] font-normal text-white tracking-tight leading-[1.2] uppercase font-montserrat" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              Physiotherapy<br />Services in<br /><span style={{ color: "#5eb63b" }}>Dubai</span>
             </h1>
             
-            {/* Description Paragraphs */}
-            <p className="text-gray-500 text-base leading-relaxed max-w-[480px] font-medium font-sans">
+            {/* Description */}
+            <p className="text-white/80 text-[14.5px] leading-relaxed max-w-[520px] font-normal font-poppins">
               Struggling with pain, stiffness, or difficulty moving? Our physiotherapy services in Dubai are designed to help you recover safely and regain confidence in your daily activities. Whether you need treatment at home, in your hotel, or at your workplace, we provide structured and professional care tailored to your condition.
             </p>
             
@@ -335,20 +389,26 @@ function PhysiotherapyLanding() {
               {physioFeatures.map((f, i) => (
                 <div 
                   key={i} 
-                  className="flex items-center gap-4 bg-white border border-gray-100 p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.015)] transition-all duration-300 hover:shadow-[0_12px_40px_rgba(8,112,157,0.05)] hover:border-[#08709d]/15 min-h-[80px]"
+                  className="flex items-start gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-all duration-300 hover:bg-white/10 hover:border-[#5eb63b]/30 min-h-[90px]"
                   style={{ 
                     opacity: visible ? 1 : 0, 
                     transform: visible ? "translateY(0)" : "translateY(16px)", 
                     transition: `opacity 0.6s ease ${0.2 + i * 0.1}s, transform 0.6s ease ${0.2 + i * 0.1}s` 
                   }}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0 text-lg">
+                  <div 
+                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    style={{ background: "rgba(255, 255, 255, 0.08)", color: f.iconColor, border: "1px solid rgba(255, 255, 255, 0.15)" }}
+                  >
                     {f.icon}
                   </div>
-                  <div className="text-left flex flex-col justify-center">
-                    <h4 className="text-[#1a294a] text-[13px] font-bold leading-snug font-poppins">
+                  <div className="text-left flex flex-col justify-start">
+                    <h4 className="text-white text-[13.5px] font-normal leading-snug font-poppins">
                       {f.title}
                     </h4>
+                    <p className="text-white/60 text-[11px] font-normal leading-relaxed mt-1 font-poppins">
+                      {f.desc}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -356,21 +416,37 @@ function PhysiotherapyLanding() {
             
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-4 pt-6 w-full items-center">
-              <a 
-                href="tel:+971547033311" 
-                className="inline-flex items-center justify-center gap-3 bg-[#08709d] hover:bg-[#065679] rounded-full font-bold text-xs md:text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg min-h-[50px] select-none text-center font-poppins"
-                style={{ color: "white", padding: "13px 28px" }}
-              >
-                Call Us Now
+              <Link to="/contact" style={{ textDecoration: "none" }}>
+                <motion.button
+                  whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(255,255,255,0.15)" }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-white text-[#08709d] rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
+                  style={{ padding: "16px 42px", fontFamily: "'Montserrat', sans-serif", border: "none" }}
+                >
+                  BOOK NOW <ArrowRight size={16} />
+                </motion.button>
+              </Link>
+              
+              <a href="tel:+97143320776" style={{ textDecoration: "none" }}>
+                <motion.button
+                  whileHover={{ scale: 1.05, borderColor: "#ffffff", background: "rgba(255,255,255,0.08)" }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-transparent text-white border-2 border-white/40 rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
+                  style={{ padding: "14px 36px", fontFamily: "'Montserrat', sans-serif" }}
+                >
+                  <Phone size={16} /> CALL NOW
+                </motion.button>
               </a>
-              <a 
-                href="https://wa.me/971547033311" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="inline-flex items-center justify-center gap-3 bg-[#22c55e] hover:bg-[#1db053] rounded-full font-bold text-xs md:text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg min-h-[50px] select-none text-center font-poppins"
-                style={{ color: "white", padding: "13px 28px" }}
-              >
-                WhatsApp Now
+
+              <a href="https://wa.me/971547033311" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+                <motion.button
+                  whileHover={{ scale: 1.05, borderColor: "#22c55e", background: "rgba(34,197,94,0.1)" }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-transparent rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
+                  style={{ padding: "14px 36px", fontFamily: "'Montserrat', sans-serif", color: "#22c55e", borderColor: "rgba(34,197,94,0.4)" }}
+                >
+                  <MessageSquare size={16} /> WHATSAPP
+                </motion.button>
               </a>
             </div>
           </div>
@@ -384,25 +460,71 @@ function PhysiotherapyLanding() {
               transitionDelay: "0.2s"
             }}
           >
-            <TherapistIllustration />
+            <div className="w-full relative">
+              {/* Ambient deep glows */}
+              <div className="absolute inset-0 bg-[#08709d]/20 rounded-[40px] blur-3xl pointer-events-none" />
+              <div className="absolute inset-0 bg-[#5eb63b]/10 rounded-[40px] blur-2xl pointer-events-none" />
+              
+              <div style={{ 
+                borderRadius: "28px", 
+                overflow: "hidden", 
+                border: "4px solid rgba(255,255,255,0.15)",
+                boxShadow: "0 20px 50px rgba(0, 0, 0, 0.35)",
+                position: "relative",
+                zIndex: 5
+              }}>
+                <img 
+                  src="https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=800" 
+                  alt="DHA-licensed physical therapist performing home rehabilitation in Dubai" 
+                  style={{ width: "100%", height: "auto", display: "block" }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
+              </div>
+
+              {/* Overlapping Floating trust badge */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                className="absolute bottom-6 -left-4 bg-white/10 border border-white/15 backdrop-blur-md p-4 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)] z-10 flex gap-3 items-center max-w-[210px]"
+              >
+                <div className="w-8 h-8 rounded-full bg-[#5eb63b] text-white flex items-center justify-center font-normal text-xs shrink-0">
+                  ✓
+                </div>
+                <div className="text-left">
+                  <p className="m-0 font-normal text-xs text-white leading-tight">Home &amp; Hotel Visits</p>
+                  <p className="m-0 text-[9.5px] text-white/60 mt-0.5">Flexible Care Scheduling</p>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* ── CONDITIONS SECTION ── */}
-      <div className="py-20 border-t border-b border-gray-100" style={{ background: "#eef4fb" }}>
+      <div 
+        className="py-24" 
+        style={{ 
+          background: "rgba(255, 255, 255, 0.02)", 
+          borderTop: "1px solid rgba(255, 255, 255, 0.08)", 
+          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+          position: "relative",
+          zIndex: 10
+        }}
+      >
         <div className="container mx-auto px-6 max-w-7xl">
 
           {/* Section header */}
-          <div className="mb-12 space-y-4">
-            <div className="inline-flex bg-white border border-gray-200 text-gray-600 text-xs md:text-sm font-semibold px-4 py-2 rounded-full uppercase tracking-wider select-none font-poppins shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-              Conditions managed with physiotherapy services
+          <div className="mb-16 space-y-4">
+            <div className="inline-flex bg-white/10 border border-white/15 backdrop-blur-md text-white/80 text-[10.5px] font-normal px-4 py-2.5 rounded-full uppercase tracking-widest select-none font-poppins shadow-[0_4px_25px_rgba(0,0,0,0.15)]">
+              ⊙ Managed Conditions
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-              <h2 className="text-2xl md:text-4xl font-black text-[#1a294a] tracking-tight uppercase leading-snug font-poppins">
+              <h2 className="text-2xl md:text-4xl font-normal text-white tracking-tight uppercase leading-snug font-montserrat" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 Professional care for common pain, stiffness, and movement problems
               </h2>
-              <p className="text-gray-500 text-base leading-relaxed font-medium font-sans">
+              <p className="text-white/70 text-[14.5px] leading-relaxed font-normal font-poppins max-w-xl">
                 Physiotherapy plays an important role in managing a wide range of conditions. Early treatment often leads to faster recovery and helps prevent long-term complications.
               </p>
             </div>
@@ -413,21 +535,24 @@ function PhysiotherapyLanding() {
             {physioConditions.map((c, i) => (
               <div 
                 key={i} 
-                className="bg-white border border-gray-100 p-6 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.015)] hover:shadow-[0_15px_40px_rgba(8,112,157,0.06)] hover:border-[#08709d]/15 flex flex-col gap-4 cursor-default transition-all duration-300"
+                className="bg-white/5 border border-white/10 p-6 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.15)] backdrop-blur-md hover:bg-white/10 hover:border-[#5eb63b]/30 flex flex-col gap-4 cursor-default transition-all duration-300"
                 style={{ 
                   opacity: condVisible ? 1 : 0, 
                   transform: condVisible ? "translateY(0)" : "translateY(20px)", 
                   transition: `opacity 0.5s ease ${i * 0.04}s, transform 0.5s ease ${i * 0.04}s` 
                 }}
-                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; }}
+                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-5px)"; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
               >
-                <div className="w-11 h-11 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center text-xl shrink-0">
+                <div 
+                  className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ background: "rgba(255, 255, 255, 0.06)", color: c.iconColor, border: "1px solid rgba(255, 255, 255, 0.1)" }}
+                >
                   {c.icon}
                 </div>
                 <div className="flex flex-col text-left">
-                  <p className="font-bold text-[15px] text-[#1a294a] leading-tight mb-2 font-poppins">{c.title}</p>
-                  <p className="text-[12.5px] text-gray-400 font-medium leading-relaxed font-sans">{c.desc}</p>
+                  <p className="font-normal text-[14px] text-white leading-tight mb-2 font-poppins">{c.title}</p>
+                  <p className="text-[12px] text-white/60 font-normal leading-relaxed font-poppins">{c.desc}</p>
                 </div>
               </div>
             ))}
