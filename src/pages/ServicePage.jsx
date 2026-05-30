@@ -481,13 +481,14 @@ function PhysiotherapyLanding() {
 
       {/* ── CONDITIONS SECTION ── */}
       <div 
-        className="pt-36 pb-24" 
         style={{ 
           background: "#f4f7f9", 
           borderTop: "1px solid #e2e8f0", 
           borderBottom: "1px solid #e2e8f0",
           position: "relative",
-          zIndex: 10
+          zIndex: 10,
+          paddingTop: "140px",
+          paddingBottom: "96px"
         }}
       >
         <div className="container mx-auto px-6 max-w-7xl">
