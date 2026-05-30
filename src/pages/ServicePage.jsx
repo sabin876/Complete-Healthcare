@@ -416,7 +416,7 @@ function PhysiotherapyLanding() {
             
             {/* Action Buttons */}
             <div 
-              className="flex flex-wrap gap-4 pt-8 w-full items-center"
+              className="flex flex-wrap gap-4 pt-14 w-full items-center"
               style={{ marginBottom: "60px" }}
             >
               <Link to="/contact" style={{ textDecoration: "none" }}>
