@@ -4,52 +4,44 @@ import { servicesData } from "../data/servicesData";
 
 const whyCards = [
   {
-    icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
-    title: "DHA Licensed Doctors",
-    desc: "All consultations handled by fully DHA-approved doctors trained to deliver safe, professional healthcare in corporate settings.",
-    badge: "Certified",
+    icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z",
+    title: "Medical Care Without the Hassle",
+    desc: "Skip the waiting rooms and long commutes. With a doctor visiting your office, you get the care you need right when you need it, all without stepping away from your desk for long.",
+    badge: "Hassle-Free",
     badgeColor: "#e1f5ee",
     badgeText: "#5eb63b",
   },
   {
-    icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z",
-    title: "30–45 Min Response",
-    desc: "Fast dispatch across commercial hubs including Downtown Dubai, Business Bay, DIFC, JLT, Media City, and Jumeirah.",
-    badge: "Fast Dispatch",
+    icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
+    title: "Personalized Attention",
+    desc: "Your health deserves undivided attention. Our services offer one-on-one consultations in the comfort of your office, ensuring you get the personalized care you need to stay on top of your health goals.",
+    badge: "1-on-1 Care",
     badgeColor: "#E6F1FB",
     badgeText: "#08709d",
   },
   {
-    icon: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
-    title: "Zero Travel Downtime",
-    desc: "We visit your office directly, eliminating employee transit times and long hospital queue waiting hours.",
-    badge: "Efficient",
+    icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+    title: "Experienced and Reliable Doctors",
+    desc: "We work with trusted and professional medical experts who provide top-quality care. Enjoy the relaxation of mind that comes with knowing your health is in professional hands.",
+    badge: "Trusted Experts",
     badgeColor: "#EEEDFE",
     badgeText: "#534AB7",
   },
   {
-    icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
-    title: "DHA Sick Leaves & Reports",
-    desc: "Instant electronic sick leave certificates and medical reports generated on the spot, ready for HR and insurance.",
-    badge: "HR Ready",
+    icon: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
+    title: "Stay Focused on What Matters",
+    desc: "Your time is worthwhile. On-site medical care lets you handle your health without shuffling your whole day. It’s healthcare developed to match seamlessly into your schedule.",
+    badge: "Time-Saving",
     badgeColor: "#FBEAF0",
     badgeText: "#993556",
   },
   {
-    icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z",
-    title: "Team Wellness Campaigns",
-    desc: "On-site company wellness days, corporate health risk assessments, preventative screenings, and team vaccination camps.",
-    badge: "Wellness",
+    icon: "M22 12h-4l-3 9L9 3l-3 9H2",
+    title: "Flexible and Accessible Services",
+    desc: "Whether you require a one-time consultation or routine health check-ups, our services are flexible to fit your requirements. Healthcare with us at the office is now as convenient as ever.",
+    badge: "Flexible",
     badgeColor: "#FAEEDA",
     badgeText: "#854F0B",
-  },
-  {
-    icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z",
-    title: "Occupational Health Screenings",
-    desc: "Custom health checks and ergonomic postural reviews to optimize workspace safety and employee physical health.",
-    badge: "Workplace Safety",
-    badgeColor: "#e1f5ee",
-    badgeText: "#5eb63b",
   },
 ];
 
@@ -324,16 +316,39 @@ export default function DoctorAtOfficePage() {
           font-family: 'Poppins', sans-serif;
         }
         .dah-btn-white:hover { background: #4ca030; }
+        .dah-change-life {
+          background: linear-gradient(135deg, #08709d 0%, #1a294a 100%);
+          border-radius: 20px; padding: 56px 48px;
+          text-align: center; color: #ffffff;
+          margin-top: 40px; margin-bottom: 40px;
+          box-shadow: 0 10px 30px rgba(8,112,157,0.15);
+        }
+        .dah-change-life h3 {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 16px; font-weight: 800; text-transform: uppercase;
+          letter-spacing: 0.15em; margin-bottom: 12px; color: #5eb63b;
+        }
+        .dah-change-life h2 {
+          font-family: 'Montserrat', sans-serif;
+          font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 900;
+          text-transform: uppercase; margin-bottom: 20px; color: #ffffff;
+          line-height: 1.25;
+        }
+        .dah-change-life p {
+          font-size: 16px; font-weight: 500; color: rgba(255, 255, 255, 0.9);
+          margin-bottom: 28px; font-family: 'Poppins', sans-serif;
+        }
         @media (max-width: 720px) {
           .dah-section { padding: 56px 20px; }
           .dah-intro-grid { grid-template-columns: 1fr; gap: 32px; }
           .dah-cta-banner { padding: 36px 24px; }
           .dah-why-grid { grid-template-columns: 1fr; }
+          .dah-change-life { padding: 36px 20px; }
         }
         ${faqStyles}
       `}</style>
 
-      {/* ── Intro ── */}
+      {/* ── Intro (Hero) ── */}
       <section className="dah-section dah-section-alt">
         <div className="dah-container">
           <div className="dah-intro-grid">
@@ -342,17 +357,14 @@ export default function DoctorAtOfficePage() {
                 <SvgIcon path="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" size={14} color="#5eb63b" />
                 Corx Healthcare Dubai
               </div>
-              <h2 className="dah-title">Reasons to Call Doctor to Office Dubai</h2>
+              <h2 className="dah-title">Doctor at Office Dubai</h2>
               <p className="dah-desc">
-                CORX Healthcare provides premium doctor visit services for corporate offices, workplaces, and businesses across Dubai. Our DHA-licensed corporate doctors conduct consultations, on-site diagnostics, treatments, and generate medical certificates directly at your workplace.
+                It becomes difficult to visit the doctor because of the busy schedules. It is preferred to call the doctor at your workplace to maintain your work and health at the same time. To ensure your health stays a priority without disrupting your day, we are providing doctor at office Dubai. Our professional doctors offer customized treatments and flexible and accessible solutions right in your working space.
               </p>
-              <p className="dah-desc">
-                Support your team's health and productivity with our zero-downtime workplace healthcare. From treating acute flu and headaches to corporate health checkups, flu vaccination camps, and ergonomic posture reviews, we are available on demand.
-              </p>
-              <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 8 }}>
+              <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 24 }}>
                 <a href="tel:+971547033311" className="dah-btn-primary">
                   <SvgIcon path="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" size={16} color="#fff" />
-                  Call Now
+                  Book An Appointment
                 </a>
                 <a href="https://wa.me/971547033311" target="_blank" rel="noopener noreferrer" className="dah-btn-outline">
                   <SvgIcon path="M13 7l5 5m0 0l-5 5m5-5H6" size={16} color="#08709d" />
@@ -389,15 +401,45 @@ export default function DoctorAtOfficePage() {
         </div>
       </section>
 
-      {/* ── Why Choose Us ── */}
+      {/* ── Healthcare Solutions ── */}
       <section className="dah-section">
+        <div className="dah-container">
+          <div className="dah-intro-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "center" }}>
+            <div className="dah-img-wrap" style={{ order: window.innerWidth > 720 ? 1 : 2 }}>
+              <img
+                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&auto=format&fit=crop"
+                alt="Healthcare solutions for busy professionals"
+              />
+            </div>
+            <div style={{ order: window.innerWidth > 720 ? 2 : 1 }}>
+              <div className="dah-label">
+                <SvgIcon path="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" size={14} color="#5eb63b" />
+                Doctor consultation at office in Dubai
+              </div>
+              <h2 className="dah-title">Healthcare Solutions for Busy Professionals</h2>
+              <p className="dah-desc">
+                Managing your health without disturbing your daily working routine is not easy. That’s why taking the assistance of a doctor at your office is a good choice. No matter if there is a sudden health concern or if you want a routien check-up, our Doctor at Office services are tailored to provide our patients on-site medical care.
+              </p>
+              <div style={{ marginTop: 24 }}>
+                <a href="tel:+971547033311" className="dah-btn-primary">
+                  <SvgIcon path="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" size={16} color="#fff" />
+                  Book Now
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Why Choose Us ── */}
+      <section className="dah-section dah-section-alt">
         <div className="dah-container">
           <div style={{ textAlign: "center" }}>
             <div className="dah-label" style={{ display: "inline-flex" }}>
               <SvgIcon path="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" size={14} color="#5eb63b" />
               Corporate Benefits
             </div>
-            <h2 className="dah-title" style={{ margin: "0 auto 12px" }}>Why Businesses Choose Our Doctor at Office Service</h2>
+            <h2 className="dah-title" style={{ margin: "0 auto 12px" }}>Why Choose Us for Office Doctor Services in Dubai?</h2>
             <p style={{ fontSize: 15, color: "#64748b", lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>
               Keep your workforce healthy, motivated, and productive with on-site corporate clinical support.
             </p>
@@ -413,6 +455,20 @@ export default function DoctorAtOfficePage() {
                 <p>{c.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Change Your Life Callout ── */}
+      <section className="dah-section">
+        <div className="dah-container">
+          <div className="dah-change-life">
+            <h3>Change Your Life</h3>
+            <h2>Find your inner peace and Happiness</h2>
+            <p style={{ fontSize: "18px", color: "rgba(255, 255, 255, 0.9)", margin: "0 auto 28px", fontWeight: "600" }}>Book a doctor at office Dubai</p>
+            <a href="tel:+971547033311" className="dah-btn-white" style={{ background: "#ffffff", color: "#08709d" }}>
+              Book Now
+            </a>
           </div>
         </div>
       </section>
@@ -447,16 +503,23 @@ export default function DoctorAtOfficePage() {
         </div>
       </section>
 
-      {/* ── CTA Banner ── */}
+      {/* ── Get in Touch with a Doctor at Office Services in Dubai ── */}
       <section className="dah-section">
         <div className="dah-container">
           <div className="dah-cta-banner">
-            <div>
-              <h2>Need a Corporate Doctor at Your Office in Dubai?</h2>
-              <p>Tailored corporate wellness packages · DHA Licensed · Instant Response</p>
+            <div style={{ flex: "1 1 500px" }}>
+              <div className="dah-label" style={{ background: "rgba(255,255,255,0.15)", color: "#ffffff", marginBottom: "12px" }}>
+                Contact Our Corporate Team
+              </div>
+              <h2 style={{ textTransform: "none", fontSize: "clamp(1.5rem, 2.5vw, 2rem)", maxWidth: "100%" }}>
+                Get in Touch with a Doctor at Office Services in Dubai
+              </h2>
+              <p style={{ color: "rgba(255,255,255,0.9)", lineHeight: "1.6", marginTop: "12px", fontSize: "14.5px" }}>
+                If handling your health feels like an impossible assignment, let us carry the doctor to you. Contact us today to discover better about our Doctor at Office Dubai services and schedule your first visit. Taking care of yourself has never been easier, get the medical care you need, right from your office.
+              </p>
             </div>
-            <a href="tel:+971547033311" className="dah-btn-white">
-              Call Now
+            <a href="tel:+971547033311" className="dah-btn-white" style={{ alignSelf: "center" }}>
+              Book Now
               <SvgIcon path="M13 7l5 5m0 0l-5 5m5-5H6" size={16} color="#fff" />
             </a>
           </div>

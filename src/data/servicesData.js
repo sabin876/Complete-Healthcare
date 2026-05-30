@@ -227,20 +227,28 @@ export const servicesData = {
     ],
     faqs: [
       {
-        q: "Can a doctor visit our office for a group health check?",
-        a: "Yes. We offer corporate health screening packages where our doctors and nurses visit your office to conduct group check-ups, wellness assessments, and occupational health reviews."
+        q: "Which Doctor has more demand in Dubai?",
+        a: "Doctors of any specialisation remain one of the highest paying jobs in Dubai. The most in-demand doctors in Dubai are dermatologists, neurologists, general physicians and specialist doctors."
       },
       {
-        q: "How quickly can a doctor arrive at our office?",
-        a: "Our typical response time is 30–45 minutes from confirmation of the booking, depending on your office location within Dubai."
+        q: "How old are most doctors?",
+        a: "We analyzed more than 810,000 healthcare providers tracked in the Definitive Healthcare PhysicianView product with a reported birth year. The average age of these providers is 53.9 years old as of 2023."
       },
       {
-        q: "Are your office-visit doctors DHA-licensed?",
-        a: "Yes. All our doctors are DHA-licensed and fully authorized to conduct medical consultations and issue official documents in Dubai."
+        q: "Can I carry Viagra to Dubai?",
+        a: "Viagra is a brand name of sildenafil citrate. This drug is not featured on the MoH's list of controlled drugs, so you should be able to take it into Dubai. However, if you are ever unsure then check with your doctor."
       },
       {
-        q: "Can the doctor issue sick leave certificates for employees?",
-        a: "Yes. Our doctors can issue DHA-compliant sick leave certificates and medical reports that are accepted by employers and insurance providers."
+        q: "Can doctors get Dubai citizenship?",
+        a: "Following are the eligibility criteria to apply for UAE citizenship: Exceptional talent or skill: Professionals, artists, doctors, scientists, and investors who contribute significantly to the UAE's development may be eligible."
+      },
+      {
+        q: "Which hospital is free in Dubai?",
+        a: "There are two main governmental hospitals in Bur Dubai and Deira which are Al Mankhool Health Center and HMC. All government hospitals including Al Kuwait Hospital and Rashid Hospital offer free emergency treatment in Dubai."
+      },
+      {
+        q: "Which is the biggest degree in doctor?",
+        a: "The ambitious Doctor of Medicine degree — doctors who intend to have the highest professional achievements generally wish to pursue a DM course."
       }
     ]
   },
