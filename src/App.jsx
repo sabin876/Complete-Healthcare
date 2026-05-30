@@ -50,6 +50,11 @@ const AnimatedRoutes = () => {
         <Route path="/services/physiotherapy" element={<ServicePage serviceId="physiotherapy" />} />
         <Route path="/services/iv-therapy" element={<ServicePage serviceId="iv-therapy" />} />
         <Route path="/services/nursing" element={<ServicePage serviceId="nursing" />} />
+        <Route path="/services/palliative-care" element={<ServicePage serviceId="palliative-care" />} />
+        <Route path="/services/night-care-nurse" element={<ServicePage serviceId="night-care-nurse" />} />
+        <Route path="/services/injection-at-home" element={<ServicePage serviceId="injection-at-home" />} />
+        <Route path="/services/wound-care" element={<ServicePage serviceId="wound-care" />} />
+        <Route path="/services/oxygen-therapy" element={<ServicePage serviceId="oxygen-therapy" />} />
         <Route path="/services/doctor-on-call" element={<ServicePage serviceId="doctor-on-call" />} />
         <Route path="/services/doctor-at-home" element={<DoctorAtHomePage />} />
         <Route path="/services/doctor-at-office" element={<DoctorAtOfficePage />} />

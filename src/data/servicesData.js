@@ -96,6 +96,13 @@ export const servicesData = {
       { title: "Clinical Standards", desc: "Hospital-grade clinical standards, hygiene, and monitoring" },
       { title: "Doctor-Guided", desc: "Close coordination with your family doctor or surgeon" }
     ],
+    locations: [
+      { label: "Palliative Care" },
+      { label: "Night Care Nurse" },
+      { label: "Nurse at Home for Injection" },
+      { label: "Wound Care Services" },
+      { label: "Oxygen Therapy" }
+    ],
     faqs: [
       {
         q: "What clinical duties can a home nurse perform?",
@@ -377,6 +384,206 @@ export const servicesData = {
       {
         q: "How are my lab results delivered to me?",
         a: "Lab results are typically shared digitally through secure channels such as email or messaging, depending on the service provider. The timeline for receiving results may vary based on the type of test performed."
+      }
+    ]
+  },
+  'palliative-care': {
+    title: "Palliative Care at Home",
+    eyebrow: "Compassionate supportive care in Dubai",
+    tagline: "Specialized medical support to enhance comfort, dignity, and quality of life at home.",
+    description: "Facing a serious, chronic, or advanced illness? Our specialized home palliative care team is dedicated to providing comfort, pain relief, and emotional support. Led by DHA-licensed doctors and compassionate nurses, we work closely with your family to ensure the highest quality of life in a familiar and comforting environment.",
+    icon: "Heart",
+    themeColor: "#08709d",
+    floatingBadge: {
+      title: "Compassionate Care",
+      desc: "Specialized pain relief and supportive care at home."
+    },
+    benefits: [
+      { title: "Pain & Symptom Control", desc: "Advanced medical management for pain, nausea, and persistent physical discomfort" },
+      { title: "24/7 Comfort Support", desc: "Compassionate clinical nursing support available day and night" },
+      { title: "Emotional & Family Care", desc: "Counseling, psychological guidance, and relief for family caregivers" },
+      { title: "Doctor-Coordinated", desc: "DHA-licensed physician reviews and tailored clinical management plans" }
+    ],
+    faqs: [
+      {
+        q: "What is home palliative care and how does it help?",
+        a: "Home palliative care is specialized medical care focused on providing relief from the symptoms, pain, and physical/emotional stress of a serious illness. It aims to improve quality of life for both the patient and their family."
+      },
+      {
+        q: "Who is eligible for home palliative care?",
+        a: "Palliative care is appropriate for patients of any age and at any stage in a serious, chronic, or advanced illness, such as cancer, advanced heart or lung disease, kidney failure, or progressive neurological disorders."
+      },
+      {
+        q: "Is palliative care only for end-of-life care?",
+        a: "No. Palliative care can be provided alongside curative treatments. It focuses on comforting and managing symptoms, and it is beneficial at any phase of a chronic condition."
+      },
+      {
+        q: "How does your team manage severe pain at home?",
+        a: "Our DHA-licensed nurses and doctors utilize doctor-prescribed medication plans, regular vitals monitoring, pain-relief therapies, and clinical comfort protocols to effectively manage severe pain in your residence."
+      },
+      {
+        q: "Can I receive palliative care together with other doctor treatments?",
+        a: "Yes. Our team coordinates closely with your primary oncologist, cardiologist, surgeon, or family physician to ensure our palliative support aligns perfectly with your overall medical treatment plan."
+      }
+    ]
+  },
+  'night-care-nurse': {
+    title: "Night Care Nursing Services",
+    eyebrow: "Restful sleep and overnight clinical safety",
+    tagline: "Professional overnight nursing care for continuous monitoring, safety, and peace of mind.",
+    description: "Ensure your loved ones are safe, monitored, and comfortable through the night. Our experienced DHA-licensed night nurses offer professional medical monitoring, midnight medication administration, posture positioning, and urgent emergency response, allowing family members to rest easy knowing their relative is in skilled hands.",
+    icon: "Clock",
+    themeColor: "#08709d",
+    floatingBadge: {
+      title: "Overnight Safety",
+      desc: "DHA-licensed night nurses available for 12h overnight shifts."
+    },
+    benefits: [
+      { title: "Continuous Night Vitals", desc: "Overnight health monitoring, oxygen checks, and clinical safety sweeps" },
+      { title: "Nocturnal Medication", desc: "Timely administration of midnight, late-night, or early-morning clinical doses" },
+      { title: "Fall & Mobility Prevention", desc: "Safe assistance with overnight transfers, transfers to bed, and bathroom trips" },
+      { title: "Rest for Family Caregivers", desc: "Complete peace of mind and quality sleep for family members during the night" }
+    ],
+    faqs: [
+      {
+        q: "What are the typical hours for a night care nurse shift?",
+        a: "A typical night shift runs for 12 hours, commonly from 8:00 PM to 8:00 AM or 9:00 PM to 9:00 AM, but we can customize timing based on your household's specific needs."
+      },
+      {
+        q: "What specific medical tasks can the night nurse perform?",
+        a: "Our night nurses are DHA-registered and fully qualified to monitor vital signs, administer oral or IV medications, manage catheters, assist with feeding tubes, perform wound dressings, and provide emergency BLS (Basic Life Support) if necessary."
+      },
+      {
+        q: "Is overnight nursing care suitable for post-operative recovery?",
+        a: "Absolutely. Post-surgery patients often require frequent pain medication, drainage monitoring, and assistance with repositioning or using the restroom during the first few nights, making a night nurse highly recommended."
+      },
+      {
+        q: "Can we book a night nurse on a regular, long-term basis?",
+        a: "Yes, we support both short-term needs (such as post-discharge recovery) and long-term recurring packages to ensure consistent overnight clinical supervision for elderly or chronic patients."
+      },
+      {
+        q: "How quickly can you arrange a night nurse to visit our home in Dubai?",
+        a: "Depending on nurse availability, we can typically confirm and dispatch a qualified DHA-registered night nurse to your home, hotel, or office within a few hours of booking."
+      }
+    ]
+  },
+  'injection-at-home': {
+    title: "Injection at Home Services",
+    eyebrow: "Accurate, painless injection administration",
+    tagline: "DHA-licensed nursing visits for quick, professional, and sterile injection administration.",
+    description: "Skip the clinic lines and daily travel stress. Our DHA-licensed nurses visit your home, hotel, or office to administer scheduled injections safely and professionally. From intravenous (IV), intramuscular (IM), and subcutaneous (SC) medications to hormone injections and regular therapeutics, we ensure full compliance and clinical precision.",
+    icon: "Activity",
+    themeColor: "#5eb63b",
+    floatingBadge: {
+      title: "At-Home Injections",
+      desc: "Professional injection visits without clinic waiting queues."
+    },
+    benefits: [
+      { title: "Sterile Protocol", desc: "Strict hospital-grade hygiene, disposable clinical kits, and safety compliance" },
+      { title: "All Injection Routes", desc: "Expert administration of intramuscular (IM), subcutaneous (SC), and IV injections" },
+      { title: "Zero Commute Stress", desc: "Avoid daily clinic trips for regular treatments, hormone cycles, or antibiotics" },
+      { title: "Authorized Execution", desc: "Rigorous verification of doctor prescriptions and precise medication dosage" }
+    ],
+    faqs: [
+      {
+        q: "Do I need a doctor's prescription for home injection services?",
+        a: "Yes. For patient safety and legal compliance under DHA regulations, we require a valid doctor's prescription specifying the medication, exact dosage, and administration route."
+      },
+      {
+        q: "What types of injections can your home care nurses administer?",
+        a: "Our nurses can administer all standard clinical injections including insulin, hormone therapies, subcutaneous blood thinners, intramuscular vitamin shots, regular antibiotics, and intravenous medications."
+      },
+      {
+        q: "Does CORX supply the injection medication or do I need to buy it?",
+        a: "Patients typically purchase their prescribed medications from local pharmacies. However, our nurse will arrive with all necessary clinical single-use supplies, including sterile syringes, alcohol swabs, tape, and disposal containers."
+      },
+      {
+        q: "Is it safe and clean to get an injection at home?",
+        a: "Yes, our DHA-licensed nurses follow strict, hospital-grade sterile techniques and hygiene protocols to perform injections, minimizing any risk of clinical contamination or infection."
+      },
+      {
+        q: "Can I schedule daily or weekly visits for recurring injection treatments?",
+        a: "Yes. We offer flexible scheduling packages. A nurse can visit your location daily, weekly, or on specific scheduled days to match your therapeutic course."
+      }
+    ]
+  },
+  'wound-care': {
+    title: "Wound Care at Home",
+    eyebrow: "Advanced clinical dressing & wound healing",
+    tagline: "Specialized nursing care for rapid, infection-free, and professional wound healing.",
+    description: "Struggling with post-surgical incisions, diabetic ulcers, or minor burns? Our DHA-licensed home wound care team provides highly specialized dressing, disinfection, and tissue regeneration support. We utilize state-of-the-art sterile materials and wound-healing techniques to promote rapid recovery while preventing critical hospital infections.",
+    icon: "Shield",
+    themeColor: "#08709d",
+    floatingBadge: {
+      title: "Advanced Wound Dressing",
+      desc: "Specialized wound care from DHA-licensed nurses."
+    },
+    benefits: [
+      { title: "Post-Surgical Healing", desc: "Sterile dressing changes for surgical sutures, surgical clips, and post-op incisions" },
+      { title: "Chronic Ulcer Support", desc: "Advanced management for diabetic foot ulcers, pressure sores, and venous ulcers" },
+      { title: "Sterile Single-Use Kits", desc: "Hospital-grade clinical dressing materials, antiseptic washes, and barriers" },
+      { title: "Progress Reporting", desc: "Continuous documentation of wound healing progress shared with your surgeon" }
+    ],
+    faqs: [
+      {
+        q: "What kinds of wounds do your home care nurses treat?",
+        a: "We treat post-surgical wounds, orthopedic incision lines, diabetic foot ulcers, bedsores (pressure ulcers), minor burns, skin grafts, and wounds requiring specialized compression dressings."
+      },
+      {
+        q: "How often does a wound dressing need to be changed?",
+        a: "This depends entirely on the type, size, and drainage level of the wound. Some surgical wounds require daily dressings, while others may only need changes every 2 to 3 days. Our nurse will establish a clinical schedule after the first assessment."
+      },
+      {
+        q: "Can home wound care prevent infection?",
+        a: "Yes. Getting dressings done at home by a DHA-licensed nurse prevents exposure to drug-resistant hospital-acquired infections. Our team works with complete aseptic techniques to keep wounds clean and sterile."
+      },
+      {
+        q: "What dressing materials and solutions does the nurse bring?",
+        a: "Our nurses come equipped with advanced sterile dressings, non-adherent pads, hydrogels, calcium alginates, antimicrobial silver dressings, and medical-grade saline/cleansers tailored to support cellular repair."
+      },
+      {
+        q: "Can your nurses remove surgical sutures or staples at home?",
+        a: "Yes. With a doctor's written approval or surgeon's instruction, our DHA-licensed nurses can safely perform suture or staple removal in your home once the incision has fully closed."
+      }
+    ]
+  },
+  'oxygen-therapy': {
+    title: "Oxygen Therapy at Home",
+    eyebrow: "Professional respiratory support & oxygenation",
+    tagline: "Safe, regulated oxygen administration and respiratory therapy at your doorstep.",
+    description: "Struggling with shortness of breath, COPD, or recovering from respiratory illness? Our professional home healthcare team provides safe, reliable oxygen therapy setup and nursing monitoring. Led by DHA-licensed clinical practitioners, we ensure accurate flow-rate calibration, pulse oximetry tracking, and equipment management to optimize your lung health and overall vitality.",
+    icon: "Activity",
+    themeColor: "#5eb63b",
+    floatingBadge: {
+      title: "Respiratory Care",
+      desc: "Safe home oxygen support and vital signs tracking."
+    },
+    benefits: [
+      { title: "Flow Calibration", desc: "Precise oxygen flow adjustments in complete alignment with your doctor's script" },
+      { title: "Saturation Tracking", desc: "Continuous monitoring of blood oxygen (SpO2), heart rate, and respiratory rate" },
+      { title: "Equipment Safety", desc: "Nursing supervision of oxygen concentrators, oxygen tanks, nasal cannulas, and masks" },
+      { title: "Nebulizer Integration", desc: "Combination of nebulizer therapy, breathing exercises, and clinical chest physio if needed" }
+    ],
+    faqs: [
+      {
+        q: "Do I need a doctor's prescription for home oxygen therapy?",
+        a: "Yes. Oxygen is a medical gas and must be administered under a doctor's prescription detailing the oxygen flow rate (liters per minute) and duration of use."
+      },
+      {
+        q: "What equipment is used to deliver oxygen at home?",
+        a: "Home oxygen therapy is typically delivered using a stationary oxygen concentrator (which filters oxygen from room air) or portable oxygen cylinders, connected to a nasal cannula or face mask."
+      },
+      {
+        q: "How does a home care nurse assist with my oxygen therapy?",
+        a: "Our nurse will monitor your blood oxygen saturation (SpO2) levels using pulse oximetry, verify that the equipment is functioning properly, track your respiratory rate, check your chest sounds, and ensure you receive the correct therapeutic flow."
+      },
+      {
+        q: "Is it safe to use oxygen therapy equipment at home?",
+        a: "Yes, it is highly safe when handled correctly. Our nurses will educate you and your family on critical safety guidelines, such as keeping oxygen sources away from open flames, heat, or smoking."
+      },
+      {
+        q: "Can you also perform nebulizer treatments during the nursing visit?",
+        a: "Yes. If your doctor has prescribed bronchodilator or steroid medications via a nebulizer for asthma, COPD, or bronchitis, our nurse can set up and administer the treatment during their visit."
       }
     ]
   }

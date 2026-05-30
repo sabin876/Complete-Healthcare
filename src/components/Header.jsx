@@ -41,7 +41,13 @@ const Header = () => {
       dropdown: [
         { name: 'Physiotherapy', path: '/services/physiotherapy', hasArrow: true },
         { name: 'IV Therapy | IV Drip', path: '/services/iv-therapy', hasArrow: true },
-        { name: 'Home Nursing', path: '/services/nursing', hasArrow: true },
+        { name: 'Home Nursing', path: '/services/nursing', hasArrow: true, subItems: [
+          { name: 'Palliative Care', path: '/services/palliative-care' },
+          { name: 'Night Care Nurse', path: '/services/night-care-nurse' },
+          { name: 'Nurse for Injection', path: '/services/injection-at-home' },
+          { name: 'Wound Care Services', path: '/services/wound-care' },
+          { name: 'Oxygen Therapy', path: '/services/oxygen-therapy' },
+        ]},
         { name: 'Doctor On Call', path: '/services/doctor-on-call', hasArrow: true, subItems: [
           { name: 'Doctor at Home', path: '/services/doctor-at-home' },
           { name: 'Doctor at Office', path: '/services/doctor-at-office' },
