@@ -530,33 +530,33 @@ function PhysiotherapyLanding() {
             </div>
           </div>
 
-          {/* Conditions grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {physioConditions.map((c, i) => (
-              <div 
-                key={i} 
-                className="bg-white border border-gray-100 p-6 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.015)] hover:shadow-[0_15px_40px_rgba(8,112,157,0.05)] hover:border-[#08709d]/20 flex flex-col gap-4 cursor-default transition-all duration-300"
-                style={{ 
-                  opacity: condVisible ? 1 : 0, 
-                  transform: condVisible ? "translateY(0)" : "translateY(20px)", 
-                  transition: `opacity 0.5s ease ${i * 0.04}s, transform 0.5s ease ${i * 0.04}s` 
-                }}
-                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-5px)"; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
-              >
+            {/* Conditions grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {physioConditions.map((c, i) => (
                 <div 
-                  className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ background: "rgba(8, 112, 157, 0.06)", color: c.iconColor, border: "1px solid rgba(8, 112, 157, 0.1)" }}
+                  key={i} 
+                  className="bg-white border border-gray-100 p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.015)] hover:shadow-[0_15px_40px_rgba(8,112,157,0.05)] hover:border-[#08709d]/20 flex items-start gap-4 cursor-default transition-all duration-300 h-full"
+                  style={{ 
+                    opacity: condVisible ? 1 : 0, 
+                    transform: condVisible ? "translateY(0)" : "translateY(20px)", 
+                    transition: `opacity 0.5s ease ${i * 0.04}s, transform 0.5s ease ${i * 0.04}s` 
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-5px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
                 >
-                  {c.icon}
+                  <div 
+                    className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
+                    style={{ background: "rgba(8, 112, 157, 0.06)", color: c.iconColor, border: "1px solid rgba(8, 112, 157, 0.1)" }}
+                  >
+                    {c.icon}
+                  </div>
+                  <div className="flex flex-col text-left justify-start">
+                    <p className="font-normal text-[14.5px] text-[#1a294a] leading-tight mb-1.5 font-poppins">{c.title}</p>
+                    <p className="text-[12px] text-[#64748b] font-normal leading-relaxed font-poppins">{c.desc}</p>
+                  </div>
                 </div>
-                <div className="flex flex-col text-left">
-                  <p className="font-normal text-[14px] text-[#1a294a] leading-tight mb-2 font-poppins">{c.title}</p>
-                  <p className="text-[12px] text-[#64748b] font-normal leading-relaxed font-poppins">{c.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
         </div>
       </div>
 
