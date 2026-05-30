@@ -294,15 +294,15 @@ export default function DoctorAtHotelPage() {
         }
         .dah-service-item {
           display: flex; align-items: flex-start; gap: 12px;
-          background: #fff; border: 1px solid #EEEEEE; border-radius: 10px; padding: 16px 20px;
-          transition: border-color 0.2s, background 0.2s;
+          background: #08709d; border: 1px solid #08709d; border-radius: 10px; padding: 16px 20px;
+          transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
         }
-        .dah-service-item:hover { border-color: #08709d; background: #f0f8fc; }
+        .dah-service-item:hover { border-color: #5eb63b; background: #065f84; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(8,112,157,0.15); }
         .dah-service-icon {
-          width: 32px; height: 32px; border-radius: 8px; background: #e8f4f8;
+          width: 32px; height: 32px; border-radius: 8px; background: rgba(255, 255, 255, 0.15);
           display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
         }
-        .dah-service-item span { font-size: 14px; font-weight: 500; color: #333333; line-height: 1.5; font-family: 'Poppins', sans-serif; }
+        .dah-service-item span { font-size: 14px; font-weight: 500; color: #ffffff; line-height: 1.5; font-family: 'Poppins', sans-serif; }
         
         .dah-cta-banner {
           background: linear-gradient(135deg, #08709d 0%, #1a294a 100%);
@@ -433,7 +433,7 @@ export default function DoctorAtHotelPage() {
             {reasons.map((r, i) => (
               <div key={i} className="dah-service-item">
                 <div className="dah-service-icon">
-                  <SvgIcon path={reasonIcons[i] || reasonIcons[0]} size={18} color="#08709d" />
+                  <SvgIcon path={reasonIcons[i] || reasonIcons[0]} size={18} color="#ffffff" />
                 </div>
                 <span>{r}</span>
               </div>
