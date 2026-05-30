@@ -992,8 +992,10 @@ export default function ServicePage({ serviceId }) {
               className="relative group"
             >
               <a 
-                href="/profile.pdf" 
+                href="/Company-Profile.pdf" 
+                download="Company-Profile.pdf"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="relative overflow-hidden bg-white text-secondary-color rounded-full font-bold uppercase tracking-wider text-sm shadow-xl hover:shadow-white/20 transition-all duration-500 flex items-center gap-3 z-10 hover:-translate-y-1"
                 style={{ padding: '18px 45px', color: '#1a294a', backgroundColor: 'white' }}
               >
