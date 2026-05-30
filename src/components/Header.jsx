@@ -190,83 +190,76 @@ const Header = () => {
                 {link.dropdown && link.name === 'Services' && (
                   <AnimatePresence>
                     {isServicesOpen && (
-                      <motion.ul 
-                        initial={{ opacity: 0, y: 15, rotateX: -10 }}
-                        animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                        exit={{ opacity: 0, y: 10, transition: { duration: 0.15 } }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                        style={{ perspective: 1000, transformOrigin: "top center" }}
-                        className="absolute top-full left-0 bg-[#1681a5] text-white shadow-[0_20px_50px_rgba(8,112,157,0.3)] py-0 min-w-[320px] z-[100] border border-[#1b93ba] rounded-b-md overflow-hidden"
+                      <motion.div
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
+                        className="absolute top-full left-0 z-[100] flex shadow-[0_20px_50px_rgba(8,112,157,0.35)] rounded-b-md overflow-hidden border border-[#1b93ba]"
                       >
-                        {link.dropdown.map((sub, idx) => (
-                          <motion.li 
-                            key={sub.name} 
-                            initial={{ opacity: 0, x: -15 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.3, delay: idx * 0.05, ease: "easeOut" }}
-                            className={idx < link.dropdown.length - 1 ? 'border-b border-white/20' : ''}
-                          >
-                            {/* If item has subItems, split: name navigates, arrow toggles */}
-                            {sub.subItems ? (
-                              <div className="group flex justify-between items-center px-6 py-3.5 text-[18px] font-bold tracking-normal hover:bg-[#137494] transition-all duration-300 relative overflow-hidden">
+                        {/* Left panel — services list */}
+                        <ul className="bg-[#1681a5] min-w-[240px]">
+                          {link.dropdown.map((sub, idx) => (
+                            <li
+                              key={sub.name}
+                              className={idx < link.dropdown.length - 1 ? 'border-b border-white/15' : ''}
+                            >
+                              {sub.subItems ? (
+                                /* Doctor On Call row — name navigates, chevron toggles right panel */
+                                <div
+                                  className={`flex justify-between items-center px-5 py-3.5 cursor-pointer transition-all duration-200 ${openSubMenu === sub.name ? 'bg-[#0f6989]' : 'hover:bg-[#137494]'}`}
+                                  onClick={(e) => { e.stopPropagation(); setOpenSubMenu(openSubMenu === sub.name ? null : sub.name); }}
+                                >
+                                  <Link
+                                    to={sub.path}
+                                    onClick={(e) => { e.stopPropagation(); setIsServicesOpen(false); setOpenSubMenu(null); }}
+                                    className={`text-[15px] font-bold tracking-wide flex-1 ${openSubMenu === sub.name ? 'text-[#63e8a0]' : 'text-white'}`}
+                                  >
+                                    {sub.name}
+                                  </Link>
+                                  <ChevronDown
+                                    size={16}
+                                    className={`transition-transform duration-300 ml-2 shrink-0 ${openSubMenu === sub.name ? 'rotate-180 text-[#63e8a0]' : 'text-white/70'}`}
+                                  />
+                                </div>
+                              ) : (
                                 <Link
                                   to={sub.path}
-                                  onClick={() => setIsServicesOpen(false)}
-                                  className="relative z-10 transform group-hover:translate-x-2 transition-transform duration-300 text-white flex items-center gap-2 flex-1"
+                                  onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
+                                  className="flex items-center px-5 py-3.5 text-[15px] font-bold text-white tracking-wide hover:bg-[#137494] transition-all duration-200"
                                 >
-                                  <span className="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                                   {sub.name}
                                 </Link>
-                                <button
-                                  onClick={(e) => { e.stopPropagation(); setOpenSubMenu(openSubMenu === sub.name ? null : sub.name); }}
-                                  className="relative z-10 p-1 text-white/70 hover:text-white transition-colors"
-                                >
-                                  <ChevronDown size={18} className={`transition-transform duration-300 ${openSubMenu === sub.name ? 'rotate-180' : ''}`} />
-                                </button>
-                                <div className="absolute inset-0 w-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></div>
-                              </div>
-                            ) : (
-                              <Link
-                                to={sub.path}
-                                onClick={() => setIsServicesOpen(false)}
-                                className="group flex justify-between items-center px-6 py-3.5 text-[18px] font-bold tracking-normal hover:bg-[#137494] transition-all duration-300 relative overflow-hidden"
-                              >
-                                <span className="relative z-10 transform group-hover:translate-x-2 transition-transform duration-300 text-white flex items-center gap-2">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                                  {sub.name}
-                                </span>
-                                {sub.hasArrow && <ChevronDown size={20} className="-rotate-90 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 relative z-10 text-white" />}
-                                <div className="absolute inset-0 w-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></div>
-                              </Link>
-                            )}
-                            {/* Animated sub-items */}
-                            <AnimatePresence>
-                              {sub.subItems && openSubMenu === sub.name && (
-                                <motion.ul
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: 'auto', opacity: 1 }}
-                                  exit={{ height: 0, opacity: 0 }}
-                                  transition={{ duration: 0.25, ease: 'easeInOut' }}
-                                  className="overflow-hidden bg-[#0f6989] border-t border-white/10"
-                                >
-                                  {sub.subItems.map((child, cIdx) => (
-                                    <li key={cIdx}>
-                                      <Link
-                                        to={child.path}
-                                        onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
-                                        className="group flex items-center gap-2.5 px-8 py-2.5 text-[13px] font-semibold tracking-wide text-white/80 hover:text-white hover:bg-[#137494] transition-all duration-200"
-                                      >
-                                        <span className="w-1 h-1 rounded-full bg-white/50 group-hover:bg-white transition-colors duration-200 shrink-0"></span>
-                                        {child.name}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </motion.ul>
                               )}
-                            </AnimatePresence>
-                          </motion.li>
-                        ))}
-                      </motion.ul>
+                            </li>
+                          ))}
+                        </ul>
+
+                        {/* Right panel — sub-items */}
+                        <AnimatePresence>
+                          {openSubMenu && link.dropdown.find(s => s.name === openSubMenu)?.subItems && (
+                            <motion.ul
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -10 }}
+                              transition={{ duration: 0.2, ease: 'easeOut' }}
+                              className="bg-[#1a8fba] min-w-[220px] border-l border-white/15"
+                            >
+                              {link.dropdown.find(s => s.name === openSubMenu).subItems.map((child, cIdx) => (
+                                <li key={cIdx} className={cIdx < link.dropdown.find(s => s.name === openSubMenu).subItems.length - 1 ? 'border-b border-white/15' : ''}>
+                                  <Link
+                                    to={child.path}
+                                    onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
+                                    className="flex items-center px-6 py-3.5 text-[15px] font-bold text-white hover:bg-[#137494] transition-all duration-200"
+                                  >
+                                    {child.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </motion.ul>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
                     )}
                   </AnimatePresence>
                 )}
