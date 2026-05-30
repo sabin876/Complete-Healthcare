@@ -379,7 +379,7 @@ function PhysiotherapyLanding() {
             </p>
             
             {/* 2x2 Clean Feature Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full pt-10">
               {physioFeatures.map((f, i) => (
                 <div 
                   key={i} 
