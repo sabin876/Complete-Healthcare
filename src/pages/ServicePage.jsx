@@ -916,6 +916,22 @@ export default function ServicePage({ serviceId }) {
                   {service.description}
                 </p>
                 
+                {/* Location List (e.g. Doctor on Call) */}
+                {service.locations && (
+                  <ul className="flex flex-col gap-3 w-full" style={{ marginTop: "20px" }}>
+                    {service.locations.map((loc, i) => (
+                      <li key={i} className="flex items-center gap-3">
+                        <span className="w-6 h-6 rounded-full bg-[#08709d]/10 flex items-center justify-center shrink-0">
+                          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                            <path d="M2.5 6.5L5.5 9.5L10.5 3.5" stroke="#08709d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </span>
+                        <span className="text-[#1a294a] text-[15px] font-semibold">{loc.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
                 {/* 2x2 Clean Benefit Grid (Optimized heights & start alignments) */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full" style={{ marginTop: "48px" }}>
                   {service.benefits.map((benefit, idx) => {

@@ -126,6 +126,11 @@ export const servicesData = {
     description: "Facing an acute illness, fever, or stomach pain? Skip the long hospital wait times. Our licensed doctors are available 24 hours a day to provide immediate medical consultation, on-the-spot diagnostics, and treatment plans in your home, hotel room, or workplace in under 45 minutes.",
     icon: "Stethoscope",
     themeColor: "#08709d",
+    locations: [
+      { label: "Doctor at Home" },
+      { label: "Doctor at Office" },
+      { label: "Doctor at Hotel" }
+    ],
     floatingBadge: {
       title: "Urgent Medical Consultation",
       desc: "Qualified medical doctors at your doorstep day or night."
