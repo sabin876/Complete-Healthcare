@@ -496,7 +496,7 @@ function PhysiotherapyLanding() {
           borderBottom: "1px solid #e2e8f0",
           position: "relative",
           zIndex: 10,
-          paddingTop: "110px",
+          paddingTop: "70px",
           paddingBottom: "96px"
         }}
       >
