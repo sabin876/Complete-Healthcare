@@ -368,12 +368,6 @@ function PhysiotherapyLanding() {
               transform: visible ? "translateY(0)" : "translateY(24px)" 
             }}
           >
-            {/* Eyebrow Badge */}
-            <div className="inline-flex items-center gap-2 bg-gray-50 border border-gray-150 text-gray-500 text-[10.5px] font-normal px-4 py-2.5 rounded-full uppercase tracking-widest select-none shadow-sm">
-              <Sparkles size={12} className="text-gray-400" />
-              DHA-licensed home physiotherapy across Dubai
-            </div>
-            
             {/* Heading */}
             <h1 className="text-3xl md:text-5xl lg:text-[46px] font-normal text-[#1a294a] tracking-tight leading-[1.2] uppercase font-montserrat" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               Physiotherapy<br />Services in<br /><span style={{ color: "#08709d" }}>Dubai</span>
