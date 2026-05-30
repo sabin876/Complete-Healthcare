@@ -11,6 +11,8 @@ import Locations from './pages/Locations';
 import Contact from './pages/Contact';
 import ServicePage from './pages/ServicePage';
 import DoctorAtHomePage from './pages/DoctorAtHomePage';
+import DoctorAtOfficePage from './pages/DoctorAtOfficePage';
+import DoctorAtHotelPage from './pages/DoctorAtHotelPage';
 
 
 // Placeholder for other pages
@@ -50,8 +52,8 @@ const AnimatedRoutes = () => {
         <Route path="/services/nursing" element={<ServicePage serviceId="nursing" />} />
         <Route path="/services/doctor-on-call" element={<ServicePage serviceId="doctor-on-call" />} />
         <Route path="/services/doctor-at-home" element={<DoctorAtHomePage />} />
-        <Route path="/services/doctor-at-office" element={<ServicePage serviceId="doctor-at-office" />} />
-        <Route path="/services/doctor-at-hotel" element={<ServicePage serviceId="doctor-at-hotel" />} />
+        <Route path="/services/doctor-at-office" element={<DoctorAtOfficePage />} />
+        <Route path="/services/doctor-at-hotel" element={<DoctorAtHotelPage />} />
         <Route path="/services/elderly-care" element={<ServicePage serviceId="elderly-care" />} />
         <Route path="/services/lab-services" element={<ServicePage serviceId="lab-services" />} />
         
