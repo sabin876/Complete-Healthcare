@@ -278,12 +278,12 @@ export default function DoctorAtHomePage() {
           display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 20px; margin-top: 48px;
         }
         .dah-why-card {
-          background: #fff; border: 1px solid #EEEEEE; border-radius: 14px; padding: 28px 24px;
-          transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+          background: #08709d; border: 1px solid #08709d; border-radius: 14px; padding: 28px 24px;
+          transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
         }
-        .dah-why-card:hover { border-color: #08709d; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(8,112,157,0.1); }
+        .dah-why-card:hover { border-color: #5eb63b; background: #065f84; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(8,112,157,0.15); }
         .dah-icon-wrap {
-          width: 48px; height: 48px; border-radius: 12px; background: #e8f4f8;
+          width: 48px; height: 48px; border-radius: 12px; background: rgba(255, 255, 255, 0.15);
           display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
         }
         .dah-badge {
@@ -292,22 +292,22 @@ export default function DoctorAtHomePage() {
           padding: 3px 10px; border-radius: 100px; margin-bottom: 10px;
           font-family: 'Poppins', sans-serif;
         }
-        .dah-why-card h3 { font-size: 16px; font-weight: 700; color: #1a294a; margin-bottom: 8px; font-family: 'Montserrat', sans-serif; }
-        .dah-why-card p { font-size: 14px; line-height: 1.7; color: #666666; font-family: 'Poppins', sans-serif; }
+        .dah-why-card h3 { font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 8px; font-family: 'Montserrat', sans-serif; }
+        .dah-why-card p { font-size: 14px; line-height: 1.7; color: rgba(255, 255, 255, 0.9); font-family: 'Poppins', sans-serif; }
         .dah-services-grid {
           display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 12px; margin-top: 48px;
         }
         .dah-service-item {
           display: flex; align-items: center; gap: 12px;
-          background: #fff; border: 1px solid #EEEEEE; border-radius: 10px; padding: 14px 16px;
-          transition: border-color 0.2s, background 0.2s;
+          background: #08709d; border: 1px solid #08709d; border-radius: 10px; padding: 14px 16px;
+          transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
         }
-        .dah-service-item:hover { border-color: #08709d; background: #f0f8fc; }
+        .dah-service-item:hover { border-color: #5eb63b; background: #065f84; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(8,112,157,0.15); }
         .dah-service-icon {
-          width: 36px; height: 36px; border-radius: 8px; background: #e8f4f8;
+          width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.15);
           display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        .dah-service-item span { font-size: 13.5px; font-weight: 500; color: #333333; line-height: 1.4; font-family: 'Poppins', sans-serif; }
+        .dah-service-item span { font-size: 13.5px; font-weight: 500; color: #ffffff; line-height: 1.4; font-family: 'Poppins', sans-serif; }
         .dah-cta-banner {
           background: linear-gradient(135deg, #08709d 0%, #1a294a 100%);
           border-radius: 20px; padding: 56px 48px;
@@ -410,7 +410,7 @@ export default function DoctorAtHomePage() {
             {whyCards.map((c) => (
               <div key={c.title} className="dah-why-card">
                 <div className="dah-icon-wrap">
-                  <SvgIcon path={c.icon} size={22} color="#08709d" />
+                  <SvgIcon path={c.icon} size={22} color="#ffffff" />
                 </div>
                 <span className="dah-badge" style={{ background: c.badgeColor, color: c.badgeText }}>{c.badge}</span>
                 <h3>{c.title}</h3>
@@ -442,7 +442,7 @@ export default function DoctorAtHomePage() {
             {services.map((s, i) => (
               <div key={s} className="dah-service-item">
                 <div className="dah-service-icon">
-                  <SvgIcon path={serviceIcons[i] || serviceIcons[0]} size={18} color="#08709d" />
+                  <SvgIcon path={serviceIcons[i] || serviceIcons[0]} size={18} color="#ffffff" />
                 </div>
                 <span>{s}</span>
               </div>
