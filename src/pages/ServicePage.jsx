@@ -409,7 +409,7 @@ function PhysiotherapyLanding() {
             </div>
             
             {/* Action Buttons */}
-            <div className="flex flex-wrap gap-4 pt-6 w-full items-center">
+            <div className="flex flex-wrap gap-4 pt-8 w-full items-center">
               <Link to="/contact" style={{ textDecoration: "none" }}>
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(8,112,157,0.15)" }}
@@ -426,7 +426,7 @@ function PhysiotherapyLanding() {
                   whileHover={{ scale: 1.05, borderColor: "#08709d", background: "rgba(8,112,157,0.05)" }}
                   whileTap={{ scale: 0.95 }}
                   className="bg-transparent text-[#08709d] border-2 border-[#08709d]/30 rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
-                  style={{ padding: "14px 36px", fontFamily: "'Montserrat', sans-serif" }}
+                  style={{ padding: "14px 42px", fontFamily: "'Montserrat', sans-serif" }}
                 >
                   <Phone size={16} /> CALL NOW
                 </motion.button>
@@ -436,8 +436,8 @@ function PhysiotherapyLanding() {
                 <motion.button
                   whileHover={{ scale: 1.05, borderColor: "#22c55e", background: "rgba(34,197,94,0.08)" }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-transparent rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
-                  style={{ padding: "14px 36px", fontFamily: "'Montserrat', sans-serif", color: "#22c55e", borderColor: "rgba(34,197,94,0.3)" }}
+                  className="bg-transparent border-2 rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
+                  style={{ padding: "14px 42px", fontFamily: "'Montserrat', sans-serif", color: "#22c55e", borderColor: "rgba(34,197,94,0.3)" }}
                 >
                   <MessageSquare size={16} /> WHATSAPP
                 </motion.button>
