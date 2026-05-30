@@ -881,14 +881,19 @@ export default function ServicePage({ serviceId }) {
   const [openIndex, setOpenIndex] = useState(null);
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
 
+  const isDoctorSubPage = ['doctor-at-home', 'doctor-at-office', 'doctor-at-hotel'].includes(activeId);
+
   return (
     <div className="bg-white min-h-screen">
       
-      {/* 1. Refined Landing Hero Section */}
+      {/* 1. Refined Landing Hero Section — hidden for doctor sub-pages */}
       {activeId === 'physiotherapy' ? (
         <PhysiotherapyLanding />
       ) : activeId === 'lab-services' ? (
         <LabServicesLanding />
+      ) : isDoctorSubPage ? (
+        /* Top spacer so FAQ clears the fixed navbar */
+        <div style={{ paddingTop: '100px' }} />
       ) : (
         <section className="relative pt-24 pb-20 md:pt-36 md:pb-28 overflow-hidden bg-white border-b border-gray-100">
           {/* Soft background glow circles */}
@@ -1033,8 +1038,8 @@ export default function ServicePage({ serviceId }) {
         </section>
       )}
 
-      {/* 2. Have Any Question? Section */}
-      <section 
+      {/* 2. Have Any Question? Section — hidden for doctor sub-pages */}
+      {!isDoctorSubPage && <section 
         className="relative overflow-hidden"
         style={{ 
           background: 'linear-gradient(135deg, #08709d 0%, #1a294a 100%)', 
@@ -1123,7 +1128,7 @@ export default function ServicePage({ serviceId }) {
             </motion.div>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* 3. Dynamic Accordion FAQ Section */}
       <section className="faq-section">
