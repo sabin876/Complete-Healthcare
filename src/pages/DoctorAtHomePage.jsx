@@ -91,7 +91,7 @@ const serviceIcons = [
   "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
 ];
 
-function SvgIcon({ path, size = 22, color = "#0ea5e9" }) {
+function SvgIcon({ path, size = 22, color = "#08709d" }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <path d={path} />
@@ -218,8 +218,7 @@ export default function DoctorAtHomePage() {
   const service = servicesData["doctor-at-home"];
 
   return (
-    <div style={{ fontFamily: "'DM Sans','Helvetica Neue',Arial,sans-serif", background: "#f8fafc", color: "#0f172a", paddingTop: "100px" }}>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+    <div style={{ fontFamily: "'Poppins', sans-serif", background: "#F8F9FA", color: "#333333", paddingTop: "100px" }}>
       <style>{`
         * { box-sizing: border-box; }
         a { text-decoration: none; }
@@ -228,36 +227,40 @@ export default function DoctorAtHomePage() {
         .dah-container { max-width: 1100px; margin: 0 auto; }
         .dah-label {
           display: inline-flex; align-items: center; gap: 8px;
-          background: #e1f5ee; color: #0F6E56;
+          background: #e8f4ec; color: #5eb63b;
           font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
           text-transform: uppercase; padding: 5px 14px; border-radius: 100px;
-          margin-bottom: 16px;
+          margin-bottom: 16px; font-family: 'Poppins', sans-serif;
         }
         .dah-title {
-          font-family: 'DM Serif Display', Georgia, serif;
-          font-size: clamp(1.7rem, 3vw, 2.3rem);
-          font-weight: 400; line-height: 1.2; color: #0d1b2a; margin-bottom: 16px;
+          font-family: 'Montserrat', sans-serif;
+          font-size: clamp(1.6rem, 3vw, 2.2rem);
+          font-weight: 800; line-height: 1.15; color: #1a294a; margin-bottom: 16px;
+          text-transform: uppercase; letter-spacing: -0.01em;
         }
-        .dah-desc { font-size: 15px; line-height: 1.8; color: #475569; max-width: 640px; margin-bottom: 20px; }
+        .dah-desc { font-size: 15px; line-height: 1.8; color: #666666; max-width: 640px; margin-bottom: 20px; font-family: 'Poppins', sans-serif; }
         .dah-btn-primary {
           display: inline-flex; align-items: center; gap: 8px;
-          background: #0ea5e9; color: #fff; font-size: 14px; font-weight: 600;
+          background: #08709d; color: #fff; font-size: 14px; font-weight: 600;
           padding: 13px 28px; border-radius: 8px; border: none; cursor: pointer;
           transition: background 0.2s, transform 0.15s; text-decoration: none;
+          font-family: 'Poppins', sans-serif;
         }
-        .dah-btn-primary:hover { background: #0284c7; transform: translateY(-1px); }
+        .dah-btn-primary:hover { background: #065f84; transform: translateY(-1px); }
         .dah-btn-outline {
           display: inline-flex; align-items: center; gap: 8px;
-          background: transparent; color: #0ea5e9; font-size: 14px; font-weight: 600;
-          padding: 13px 28px; border-radius: 8px; border: 1.5px solid #0ea5e9;
+          background: transparent; color: #08709d; font-size: 14px; font-weight: 600;
+          padding: 13px 28px; border-radius: 8px; border: 1.5px solid #08709d;
           cursor: pointer; transition: background 0.2s; text-decoration: none;
+          font-family: 'Poppins', sans-serif;
         }
-        .dah-btn-outline:hover { background: #e0f2fe; }
+        .dah-btn-outline:hover { background: #e8f4f8; }
         .dah-trust-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
         .dah-trust-chip {
           display: flex; align-items: center; gap: 6px;
-          font-size: 13px; font-weight: 600; color: #0F6E56;
-          background: #e1f5ee; padding: 6px 14px; border-radius: 100px;
+          font-size: 13px; font-weight: 600; color: #5eb63b;
+          background: #e8f4ec; padding: 6px 14px; border-radius: 100px;
+          font-family: 'Poppins', sans-serif;
         }
         .dah-intro-grid {
           display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
@@ -267,62 +270,64 @@ export default function DoctorAtHomePage() {
         .dah-stat-pill {
           position: absolute; bottom: 24px; left: 24px;
           background: rgba(255,255,255,0.95); border-radius: 12px; padding: 14px 20px;
-          display: flex; align-items: center; gap: 12px; border: 1px solid #e2e8f0;
+          display: flex; align-items: center; gap: 12px; border: 1px solid #EEEEEE;
         }
-        .dah-stat-num { font-family: 'DM Serif Display',serif; font-size: 22px; color: #0d1b2a; }
-        .dah-stat-lbl { font-size: 11px; color: #64748b; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+        .dah-stat-num { font-family: 'Montserrat', sans-serif; font-size: 22px; color: #1a294a; font-weight: 800; }
+        .dah-stat-lbl { font-size: 11px; color: #666666; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; font-family: 'Poppins', sans-serif; }
         .dah-why-grid {
           display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 20px; margin-top: 48px;
         }
         .dah-why-card {
-          background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 28px 24px;
-          transition: border-color 0.2s, transform 0.2s;
+          background: #fff; border: 1px solid #EEEEEE; border-radius: 14px; padding: 28px 24px;
+          transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
         }
-        .dah-why-card:hover { border-color: #7dd3fc; transform: translateY(-3px); }
+        .dah-why-card:hover { border-color: #08709d; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(8,112,157,0.1); }
         .dah-icon-wrap {
-          width: 48px; height: 48px; border-radius: 12px; background: #e0f2fe;
+          width: 48px; height: 48px; border-radius: 12px; background: #e8f4f8;
           display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
         }
         .dah-badge {
           display: inline-block; font-size: 11px; font-weight: 700;
           letter-spacing: 0.07em; text-transform: uppercase;
           padding: 3px 10px; border-radius: 100px; margin-bottom: 10px;
+          font-family: 'Poppins', sans-serif;
         }
-        .dah-why-card h3 { font-size: 16px; font-weight: 700; color: #0d1b2a; margin-bottom: 8px; }
-        .dah-why-card p { font-size: 14px; line-height: 1.7; color: #64748b; }
+        .dah-why-card h3 { font-size: 16px; font-weight: 700; color: #1a294a; margin-bottom: 8px; font-family: 'Montserrat', sans-serif; }
+        .dah-why-card p { font-size: 14px; line-height: 1.7; color: #666666; font-family: 'Poppins', sans-serif; }
         .dah-services-grid {
           display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 12px; margin-top: 48px;
         }
         .dah-service-item {
           display: flex; align-items: center; gap: 12px;
-          background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px;
+          background: #fff; border: 1px solid #EEEEEE; border-radius: 10px; padding: 14px 16px;
           transition: border-color 0.2s, background 0.2s;
         }
-        .dah-service-item:hover { border-color: #7dd3fc; background: #f0f9ff; }
+        .dah-service-item:hover { border-color: #08709d; background: #f0f8fc; }
         .dah-service-icon {
-          width: 36px; height: 36px; border-radius: 8px; background: #e0f2fe;
+          width: 36px; height: 36px; border-radius: 8px; background: #e8f4f8;
           display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        .dah-service-item span { font-size: 13.5px; font-weight: 500; color: #1e293b; line-height: 1.4; }
+        .dah-service-item span { font-size: 13.5px; font-weight: 500; color: #333333; line-height: 1.4; font-family: 'Poppins', sans-serif; }
         .dah-cta-banner {
-          background: linear-gradient(135deg, #0d1b2a 0%, #0c2d4a 100%);
+          background: linear-gradient(135deg, #08709d 0%, #1a294a 100%);
           border-radius: 20px; padding: 56px 48px;
           display: flex; align-items: center; justify-content: space-between;
           gap: 32px; flex-wrap: wrap;
         }
         .dah-cta-banner h2 {
-          font-family: 'DM Serif Display',serif;
-          font-size: clamp(1.4rem,2.5vw,1.9rem); color: #f0f9ff;
-          font-weight: 400; max-width: 480px;
+          font-family: 'Montserrat', sans-serif;
+          font-size: clamp(1.4rem,2.5vw,1.9rem); color: #ffffff;
+          font-weight: 800; max-width: 480px; text-transform: uppercase;
         }
-        .dah-cta-banner p { font-size: 14px; color: rgba(240,249,255,0.6); margin-top: 8px; }
+        .dah-cta-banner p { font-size: 14px; color: rgba(255,255,255,0.75); margin-top: 8px; font-family: 'Poppins', sans-serif; }
         .dah-btn-white {
           display: inline-flex; align-items: center; gap: 8px;
-          background: #fff; color: #0d1b2a; font-size: 14px; font-weight: 700;
+          background: #5eb63b; color: #fff; font-size: 14px; font-weight: 700;
           padding: 14px 32px; border-radius: 8px; border: none; cursor: pointer;
           transition: background 0.2s; white-space: nowrap; text-decoration: none;
+          font-family: 'Poppins', sans-serif;
         }
-        .dah-btn-white:hover { background: #e0f2fe; }
+        .dah-btn-white:hover { background: #4ca030; }
         @media (max-width: 720px) {
           .dah-section { padding: 56px 20px; }
           .dah-intro-grid { grid-template-columns: 1fr; gap: 32px; }
@@ -338,7 +343,7 @@ export default function DoctorAtHomePage() {
           <div className="dah-intro-grid">
             <div>
               <div className="dah-label">
-                <SvgIcon path="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" size={14} color="#0F6E56" />
+                <SvgIcon path="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" size={14} color="#5eb63b" />
                 Corx Healthcare Dubai
               </div>
               <h2 className="dah-title">Reasons to Call Doctor at Home Dubai</h2>
@@ -354,14 +359,14 @@ export default function DoctorAtHomePage() {
                   Call Now
                 </a>
                 <a href="https://wa.me/971547033311" target="_blank" rel="noopener noreferrer" className="dah-btn-outline">
-                  <SvgIcon path="M13 7l5 5m0 0l-5 5m5-5H6" size={16} color="#0ea5e9" />
-                  Book Now
+                  <SvgIcon path="M13 7l5 5m0 0l-5 5m5-5H6" size={16} color="#08709d" />
+                  WhatsApp Now
                 </a>
               </div>
               <div className="dah-trust-row">
                 {["DHA Licensed", "24/7 Available", "30 Min Response", "500+ Doctors"].map(t => (
                   <div key={t} className="dah-trust-chip">
-                    <SvgIcon path="M5 13l4 4L19 7" size={13} color="#0F6E56" />
+                    <SvgIcon path="M5 13l4 4L19 7" size={13} color="#5eb63b" />
                     {t}
                   </div>
                 ))}
@@ -393,7 +398,7 @@ export default function DoctorAtHomePage() {
         <div className="dah-container">
           <div style={{ textAlign: "center" }}>
             <div className="dah-label" style={{ display: "inline-flex" }}>
-              <SvgIcon path="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" size={14} color="#0F6E56" />
+              <SvgIcon path="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" size={14} color="#5eb63b" />
               Why Choose Us
             </div>
             <h2 className="dah-title" style={{ margin: "0 auto 12px" }}>Why Patients Choose Our Doctor at Home Service</h2>
@@ -405,7 +410,7 @@ export default function DoctorAtHomePage() {
             {whyCards.map((c) => (
               <div key={c.title} className="dah-why-card">
                 <div className="dah-icon-wrap">
-                  <SvgIcon path={c.icon} size={22} color="#0ea5e9" />
+                  <SvgIcon path={c.icon} size={22} color="#08709d" />
                 </div>
                 <span className="dah-badge" style={{ background: c.badgeColor, color: c.badgeText }}>{c.badge}</span>
                 <h3>{c.title}</h3>
@@ -422,7 +427,7 @@ export default function DoctorAtHomePage() {
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
             <div>
               <div className="dah-label">
-                <SvgIcon path="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" size={14} color="#0F6E56" />
+                <SvgIcon path="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" size={14} color="#5eb63b" />
                 What We Treat
               </div>
               <h2 className="dah-title">Features of Our Doctor at Home Services</h2>
@@ -437,7 +442,7 @@ export default function DoctorAtHomePage() {
             {services.map((s, i) => (
               <div key={s} className="dah-service-item">
                 <div className="dah-service-icon">
-                  <SvgIcon path={serviceIcons[i] || serviceIcons[0]} size={18} color="#0ea5e9" />
+                  <SvgIcon path={serviceIcons[i] || serviceIcons[0]} size={18} color="#08709d" />
                 </div>
                 <span>{s}</span>
               </div>
@@ -454,9 +459,9 @@ export default function DoctorAtHomePage() {
               <h2>Need a Doctor at Your Doorstep in Dubai?</h2>
               <p>Available 24/7 · DHA Licensed · 30–45 min response across all Dubai areas</p>
             </div>
-            <a href="tel:+971547033311" className="dah-btn-white">
+              <a href="tel:+971547033311" className="dah-btn-white">
               Call Now
-              <SvgIcon path="M13 7l5 5m0 0l-5 5m5-5H6" size={16} color="#0d1b2a" />
+              <SvgIcon path="M13 7l5 5m0 0l-5 5m5-5H6" size={16} color="#fff" />
             </a>
           </div>
         </div>
