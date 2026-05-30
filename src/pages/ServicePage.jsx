@@ -310,8 +310,8 @@ function PhysiotherapyLanding() {
     dotTexture: {
       position: "absolute",
       inset: 0,
-      opacity: 0.05,
-      backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+      opacity: 0.03,
+      backgroundImage: "radial-gradient(circle, #08709d 1px, transparent 1px)",
       backgroundSize: "32px 32px",
       pointerEvents: "none",
       zIndex: 1
@@ -323,7 +323,7 @@ function PhysiotherapyLanding() {
       width: "500px",
       height: "500px",
       borderRadius: "50%",
-      background: "radial-gradient(circle, rgba(8, 112, 157, 0.25) 0%, transparent 70%)",
+      background: "radial-gradient(circle, rgba(8, 112, 157, 0.08) 0%, transparent 70%)",
       filter: "blur(60px)",
       pointerEvents: "none",
       zIndex: 1
@@ -335,7 +335,7 @@ function PhysiotherapyLanding() {
       width: "500px",
       height: "500px",
       borderRadius: "50%",
-      background: "radial-gradient(circle, rgba(94, 182, 59, 0.15) 0%, transparent 70%)",
+      background: "radial-gradient(circle, rgba(94, 182, 59, 0.06) 0%, transparent 70%)",
       filter: "blur(60px)",
       pointerEvents: "none",
       zIndex: 1
@@ -344,10 +344,10 @@ function PhysiotherapyLanding() {
 
   return (
     <div 
-      className="min-h-screen relative overflow-hidden text-white" 
+      className="min-h-screen relative overflow-hidden text-[#1a294a]" 
       style={{ 
         fontFamily: "'Poppins', sans-serif",
-        background: "linear-gradient(135deg, #08709d 0%, #1a294a 100%)",
+        background: "transparent",
         paddingTop: "40px"
       }}
     >
@@ -369,18 +369,18 @@ function PhysiotherapyLanding() {
             }}
           >
             {/* Eyebrow Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 backdrop-blur-md text-[#5eb63b] text-[10.5px] font-normal px-4 py-2.5 rounded-full uppercase tracking-widest select-none shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
-              <Sparkles size={12} className="text-[#5eb63b]" />
+            <div className="inline-flex items-center gap-2 bg-gray-50 border border-gray-150 text-gray-500 text-[10.5px] font-normal px-4 py-2.5 rounded-full uppercase tracking-widest select-none shadow-sm">
+              <Sparkles size={12} className="text-gray-400" />
               DHA-licensed home physiotherapy across Dubai
             </div>
             
             {/* Heading */}
-            <h1 className="text-3xl md:text-5xl lg:text-[46px] font-normal text-white tracking-tight leading-[1.2] uppercase font-montserrat" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-              Physiotherapy<br />Services in<br /><span style={{ color: "#5eb63b" }}>Dubai</span>
+            <h1 className="text-3xl md:text-5xl lg:text-[46px] font-normal text-[#1a294a] tracking-tight leading-[1.2] uppercase font-montserrat" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              Physiotherapy<br />Services in<br /><span style={{ color: "#08709d" }}>Dubai</span>
             </h1>
             
             {/* Description */}
-            <p className="text-white/80 text-[14.5px] leading-relaxed max-w-[520px] font-normal font-poppins">
+            <p className="text-gray-500 text-[14.5px] leading-relaxed max-w-[520px] font-normal font-poppins">
               Struggling with pain, stiffness, or difficulty moving? Our physiotherapy services in Dubai are designed to help you recover safely and regain confidence in your daily activities. Whether you need treatment at home, in your hotel, or at your workplace, we provide structured and professional care tailored to your condition.
             </p>
             
@@ -389,7 +389,7 @@ function PhysiotherapyLanding() {
               {physioFeatures.map((f, i) => (
                 <div 
                   key={i} 
-                  className="flex items-start gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.15)] transition-all duration-300 hover:bg-white/10 hover:border-[#5eb63b]/30 min-h-[90px]"
+                  className="flex items-start gap-4 bg-white border border-gray-100 p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_12px_40px_rgba(8,112,157,0.06)] hover:border-[#08709d]/20 min-h-[90px]"
                   style={{ 
                     opacity: visible ? 1 : 0, 
                     transform: visible ? "translateY(0)" : "translateY(16px)", 
@@ -398,15 +398,15 @@ function PhysiotherapyLanding() {
                 >
                   <div 
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: "rgba(255, 255, 255, 0.08)", color: f.iconColor, border: "1px solid rgba(255, 255, 255, 0.15)" }}
+                    style={{ background: "rgba(8, 112, 157, 0.06)", color: f.iconColor, border: "1px solid rgba(8, 112, 157, 0.1)" }}
                   >
                     {f.icon}
                   </div>
                   <div className="text-left flex flex-col justify-start">
-                    <h4 className="text-white text-[13.5px] font-normal leading-snug font-poppins">
+                    <h4 className="text-[#1a294a] text-[13.5px] font-normal leading-snug font-poppins">
                       {f.title}
                     </h4>
-                    <p className="text-white/60 text-[11px] font-normal leading-relaxed mt-1 font-poppins">
+                    <p className="text-gray-400 text-[11px] font-normal leading-relaxed mt-1 font-poppins">
                       {f.desc}
                     </p>
                   </div>
@@ -418,9 +418,9 @@ function PhysiotherapyLanding() {
             <div className="flex flex-wrap gap-4 pt-6 w-full items-center">
               <Link to="/contact" style={{ textDecoration: "none" }}>
                 <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(255,255,255,0.15)" }}
+                  whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(8,112,157,0.15)" }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-white text-[#08709d] rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
+                  className="bg-[#08709d] text-white rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
                   style={{ padding: "16px 42px", fontFamily: "'Montserrat', sans-serif", border: "none" }}
                 >
                   BOOK NOW <ArrowRight size={16} />
@@ -429,9 +429,9 @@ function PhysiotherapyLanding() {
               
               <a href="tel:+97143320776" style={{ textDecoration: "none" }}>
                 <motion.button
-                  whileHover={{ scale: 1.05, borderColor: "#ffffff", background: "rgba(255,255,255,0.08)" }}
+                  whileHover={{ scale: 1.05, borderColor: "#08709d", background: "rgba(8,112,157,0.05)" }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-transparent text-white border-2 border-white/40 rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
+                  className="bg-transparent text-[#08709d] border-2 border-[#08709d]/30 rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
                   style={{ padding: "14px 36px", fontFamily: "'Montserrat', sans-serif" }}
                 >
                   <Phone size={16} /> CALL NOW
@@ -440,10 +440,10 @@ function PhysiotherapyLanding() {
 
               <a href="https://wa.me/971547033311" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
                 <motion.button
-                  whileHover={{ scale: 1.05, borderColor: "#22c55e", background: "rgba(34,197,94,0.1)" }}
+                  whileHover={{ scale: 1.05, borderColor: "#22c55e", background: "rgba(34,197,94,0.08)" }}
                   whileTap={{ scale: 0.95 }}
                   className="bg-transparent rounded-full uppercase tracking-widest text-[12px] font-normal flex items-center justify-center gap-2"
-                  style={{ padding: "14px 36px", fontFamily: "'Montserrat', sans-serif", color: "#22c55e", borderColor: "rgba(34,197,94,0.4)" }}
+                  style={{ padding: "14px 36px", fontFamily: "'Montserrat', sans-serif", color: "#22c55e", borderColor: "rgba(34,197,94,0.3)" }}
                 >
                   <MessageSquare size={16} /> WHATSAPP
                 </motion.button>
@@ -462,14 +462,14 @@ function PhysiotherapyLanding() {
           >
             <div className="w-full relative">
               {/* Ambient deep glows */}
-              <div className="absolute inset-0 bg-[#08709d]/20 rounded-[40px] blur-3xl pointer-events-none" />
-              <div className="absolute inset-0 bg-[#5eb63b]/10 rounded-[40px] blur-2xl pointer-events-none" />
+              <div className="absolute inset-0 bg-[#08709d]/10 rounded-[40px] blur-3xl pointer-events-none" />
+              <div className="absolute inset-0 bg-[#5eb63b]/5 rounded-[40px] blur-2xl pointer-events-none" />
               
               <div style={{ 
                 borderRadius: "28px", 
                 overflow: "hidden", 
-                border: "4px solid rgba(255,255,255,0.15)",
-                boxShadow: "0 20px 50px rgba(0, 0, 0, 0.35)",
+                border: "4px solid rgba(255,255,255,0.8)",
+                boxShadow: "0 20px 50px rgba(8,112,157,0.08)",
                 position: "relative",
                 zIndex: 5
               }}>
@@ -487,14 +487,14 @@ function PhysiotherapyLanding() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
-                className="absolute bottom-6 -left-4 bg-white/10 border border-white/15 backdrop-blur-md p-4 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.25)] z-10 flex gap-3 items-center max-w-[210px]"
+                className="absolute bottom-6 -left-4 bg-white border border-gray-150 p-4 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.08)] z-10 flex gap-3 items-center max-w-[210px]"
               >
                 <div className="w-8 h-8 rounded-full bg-[#5eb63b] text-white flex items-center justify-center font-normal text-xs shrink-0">
                   ✓
                 </div>
                 <div className="text-left">
-                  <p className="m-0 font-normal text-xs text-white leading-tight">Home &amp; Hotel Visits</p>
-                  <p className="m-0 text-[9.5px] text-white/60 mt-0.5">Flexible Care Scheduling</p>
+                  <p className="m-0 font-normal text-xs text-gray-900 leading-tight">Home &amp; Hotel Visits</p>
+                  <p className="m-0 text-[9.5px] text-gray-400 mt-0.5">Flexible Care Scheduling</p>
                 </div>
               </motion.div>
             </div>
@@ -506,9 +506,9 @@ function PhysiotherapyLanding() {
       <div 
         className="py-24" 
         style={{ 
-          background: "rgba(255, 255, 255, 0.02)", 
-          borderTop: "1px solid rgba(255, 255, 255, 0.08)", 
-          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+          background: "#f4f7f9", 
+          borderTop: "1px solid #e2e8f0", 
+          borderBottom: "1px solid #e2e8f0",
           position: "relative",
           zIndex: 10
         }}
@@ -517,14 +517,14 @@ function PhysiotherapyLanding() {
 
           {/* Section header */}
           <div className="mb-16 space-y-4">
-            <div className="inline-flex bg-white/10 border border-white/15 backdrop-blur-md text-white/80 text-[10.5px] font-normal px-4 py-2.5 rounded-full uppercase tracking-widest select-none font-poppins shadow-[0_4px_25px_rgba(0,0,0,0.15)]">
+            <div className="inline-flex bg-white border border-gray-200 text-gray-500 text-[10.5px] font-normal px-4 py-2.5 rounded-full uppercase tracking-widest select-none font-poppins shadow-sm">
               ⊙ Managed Conditions
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-              <h2 className="text-2xl md:text-4xl font-normal text-white tracking-tight uppercase leading-snug font-montserrat" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <h2 className="text-2xl md:text-4xl font-normal text-[#1a294a] tracking-tight uppercase leading-snug font-montserrat" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 Professional care for common pain, stiffness, and movement problems
               </h2>
-              <p className="text-white/70 text-[14.5px] leading-relaxed font-normal font-poppins max-w-xl">
+              <p className="text-gray-500 text-[14.5px] leading-relaxed font-normal font-poppins max-w-xl">
                 Physiotherapy plays an important role in managing a wide range of conditions. Early treatment often leads to faster recovery and helps prevent long-term complications.
               </p>
             </div>
@@ -535,7 +535,7 @@ function PhysiotherapyLanding() {
             {physioConditions.map((c, i) => (
               <div 
                 key={i} 
-                className="bg-white/5 border border-white/10 p-6 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.15)] backdrop-blur-md hover:bg-white/10 hover:border-[#5eb63b]/30 flex flex-col gap-4 cursor-default transition-all duration-300"
+                className="bg-white border border-gray-100 p-6 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.015)] hover:shadow-[0_15px_40px_rgba(8,112,157,0.05)] hover:border-[#08709d]/20 flex flex-col gap-4 cursor-default transition-all duration-300"
                 style={{ 
                   opacity: condVisible ? 1 : 0, 
                   transform: condVisible ? "translateY(0)" : "translateY(20px)", 
@@ -546,13 +546,13 @@ function PhysiotherapyLanding() {
               >
                 <div 
                   className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ background: "rgba(255, 255, 255, 0.06)", color: c.iconColor, border: "1px solid rgba(255, 255, 255, 0.1)" }}
+                  style={{ background: "rgba(8, 112, 157, 0.06)", color: c.iconColor, border: "1px solid rgba(8, 112, 157, 0.1)" }}
                 >
                   {c.icon}
                 </div>
                 <div className="flex flex-col text-left">
-                  <p className="font-normal text-[14px] text-white leading-tight mb-2 font-poppins">{c.title}</p>
-                  <p className="text-[12px] text-white/60 font-normal leading-relaxed font-poppins">{c.desc}</p>
+                  <p className="font-normal text-[14px] text-[#1a294a] leading-tight mb-2 font-poppins">{c.title}</p>
+                  <p className="text-[12px] text-[#64748b] font-normal leading-relaxed font-poppins">{c.desc}</p>
                 </div>
               </div>
             ))}
