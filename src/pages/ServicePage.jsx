@@ -917,7 +917,7 @@ export default function ServicePage({ serviceId }) {
                 </p>
                 
                 {/* 2x2 Clean Benefit Grid (Optimized heights & start alignments) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full" style={{ marginTop: "48px" }}>
                   {service.benefits.map((benefit, idx) => {
                     const BenefitIcon = benefitIcons[idx % benefitIcons.length];
                     return (
