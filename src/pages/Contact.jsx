@@ -61,6 +61,13 @@ const ChatIcon = () => (
   </svg>
 );
 
+const ClockIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+
 /* ─── FAQ Data ───────────────────────────────────── */
 const faqData = [
   {
@@ -124,51 +131,53 @@ export default function Contact() {
       <div style={styles.content}>
         {/* Left: Contact Info */}
         <div style={styles.leftPanel}>
-          {/* Phone */}
+          {/* Emergency */}
           <div style={styles.contactCard}>
             <div style={styles.iconWrap}>
               <PhoneIcon />
             </div>
             <div>
-              <p style={styles.cardLabel}>Phone</p>
-              <p style={styles.cardLink}>9049200041 (India)</p>
-              <p style={styles.cardLink}>9049200061 (India)</p>
-              <p style={styles.cardSub}>Available for appointments</p>
+              <p style={styles.cardLabel}>Emergency</p>
+              <a href="tel:+971547033311" style={styles.cardLink}>+971-547-033311</a>
+              <a href="tel:+97143320776" style={{ ...styles.cardLink, display: "block" }}>+971-433-20776</a>
+              <p style={styles.cardSub}>Call us 24/7 for immediate medical aid</p>
             </div>
           </div>
 
-          {/* Email */}
+          {/* Address */}
+          <div style={styles.contactCard}>
+            <div style={{ ...styles.iconWrap, color: "#22c55e", background: "#f0fdf4" }}>
+              <LocationIcon />
+            </div>
+            <div>
+              <p style={styles.cardLabel}>Address</p>
+              <p style={styles.cardText}>Office 303, Royal Class Building</p>
+              <p style={styles.cardSub}>DIP, Dubai, United Arab Emirates</p>
+            </div>
+          </div>
+
+          {/* Email & Website */}
           <div style={styles.contactCard}>
             <div style={styles.iconWrap}>
               <EmailIcon />
             </div>
             <div>
-              <p style={styles.cardLabel}>Email</p>
-              <p style={styles.cardSub}>Online support available</p>
+              <p style={styles.cardLabel}>Email & Website</p>
+              <a href="mailto:info@corx.ae" style={styles.cardLink}>info@corx.ae</a>
+              <a href="https://www.corx.ae" target="_blank" rel="noopener noreferrer" style={{ ...styles.cardLink, display: "block" }}>www.corx.ae</a>
+              <p style={styles.cardSub}>Online support & information</p>
             </div>
           </div>
 
-          {/* Dubai Clinic */}
+          {/* Working Hours */}
           <div style={styles.contactCard}>
-            <div style={{ ...styles.iconWrap, color: "#22c55e" }}>
-              <LocationIcon />
+            <div style={{ ...styles.iconWrap, color: "#eab308", background: "#fef9c3" }}>
+              <ClockIcon />
             </div>
             <div>
-              <p style={styles.cardLabel}>Dubai Clinic</p>
-              <p style={styles.cardText}>Canadian Specialist Hospital</p>
-              <p style={styles.cardSub}>Dubai, United Arab Emirates</p>
-            </div>
-          </div>
-
-          {/* Pune Clinic */}
-          <div style={styles.contactCard}>
-            <div style={{ ...styles.iconWrap, color: "#22c55e" }}>
-              <LocationIcon />
-            </div>
-            <div>
-              <p style={styles.cardLabel}>Pune Clinic (India)</p>
-              <p style={styles.cardText}>Sunshine Childrens Clinic, Majestique BIZNOW Bldg</p>
-              <p style={styles.cardSub}>Kondhwa, Pune, Maharashtra</p>
+              <p style={styles.cardLabel}>Working Hours</p>
+              <p style={styles.cardText}>Mon-Sat: 8:00 - 17:00</p>
+              <p style={{ ...styles.cardSub, color: "#dc2626", fontWeight: "700" }}>Sunday: Emergency Only</p>
             </div>
           </div>
 
