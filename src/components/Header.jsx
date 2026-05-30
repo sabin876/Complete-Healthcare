@@ -9,6 +9,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [openSubMenu, setOpenSubMenu] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -205,34 +206,64 @@ const Header = () => {
                             transition={{ duration: 0.3, delay: idx * 0.05, ease: "easeOut" }}
                             className={idx < link.dropdown.length - 1 ? 'border-b border-white/20' : ''}
                           >
-                            <Link 
-                              to={sub.path} 
-                              onClick={() => setIsServicesOpen(false)}
-                              className="group flex justify-between items-center px-6 py-3.5 text-[18px] font-bold tracking-normal hover:bg-[#137494] transition-all duration-300 relative overflow-hidden"
-                            >
-                              <span className="relative z-10 transform group-hover:translate-x-2 transition-transform duration-300 text-white flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                                {sub.name}
-                              </span>
-                              {sub.hasArrow && <ChevronDown size={20} className="-rotate-90 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 relative z-10 text-white" />}
-                              <div className="absolute inset-0 w-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></div>
-                            </Link>
-                            {sub.subItems && (
-                              <ul className="bg-[#0f6989] border-t border-white/10">
-                                {sub.subItems.map((child, cIdx) => (
-                                  <li key={cIdx}>
-                                    <Link
-                                      to={child.path}
-                                      onClick={() => setIsServicesOpen(false)}
-                                      className="group flex items-center gap-2.5 px-8 py-2.5 text-[13px] font-semibold tracking-wide text-white/80 hover:text-white hover:bg-[#137494] transition-all duration-200"
-                                    >
-                                      <span className="w-1 h-1 rounded-full bg-white/50 group-hover:bg-white transition-colors duration-200 shrink-0"></span>
-                                      {child.name}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
+                            {/* If item has subItems, split: name navigates, arrow toggles */}
+                            {sub.subItems ? (
+                              <div className="group flex justify-between items-center px-6 py-3.5 text-[18px] font-bold tracking-normal hover:bg-[#137494] transition-all duration-300 relative overflow-hidden">
+                                <Link
+                                  to={sub.path}
+                                  onClick={() => setIsServicesOpen(false)}
+                                  className="relative z-10 transform group-hover:translate-x-2 transition-transform duration-300 text-white flex items-center gap-2 flex-1"
+                                >
+                                  <span className="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                                  {sub.name}
+                                </Link>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); setOpenSubMenu(openSubMenu === sub.name ? null : sub.name); }}
+                                  className="relative z-10 p-1 text-white/70 hover:text-white transition-colors"
+                                >
+                                  <ChevronDown size={18} className={`transition-transform duration-300 ${openSubMenu === sub.name ? 'rotate-180' : ''}`} />
+                                </button>
+                                <div className="absolute inset-0 w-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></div>
+                              </div>
+                            ) : (
+                              <Link
+                                to={sub.path}
+                                onClick={() => setIsServicesOpen(false)}
+                                className="group flex justify-between items-center px-6 py-3.5 text-[18px] font-bold tracking-normal hover:bg-[#137494] transition-all duration-300 relative overflow-hidden"
+                              >
+                                <span className="relative z-10 transform group-hover:translate-x-2 transition-transform duration-300 text-white flex items-center gap-2">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                                  {sub.name}
+                                </span>
+                                {sub.hasArrow && <ChevronDown size={20} className="-rotate-90 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 relative z-10 text-white" />}
+                                <div className="absolute inset-0 w-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></div>
+                              </Link>
                             )}
+                            {/* Animated sub-items */}
+                            <AnimatePresence>
+                              {sub.subItems && openSubMenu === sub.name && (
+                                <motion.ul
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: 'auto', opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                                  className="overflow-hidden bg-[#0f6989] border-t border-white/10"
+                                >
+                                  {sub.subItems.map((child, cIdx) => (
+                                    <li key={cIdx}>
+                                      <Link
+                                        to={child.path}
+                                        onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
+                                        className="group flex items-center gap-2.5 px-8 py-2.5 text-[13px] font-semibold tracking-wide text-white/80 hover:text-white hover:bg-[#137494] transition-all duration-200"
+                                      >
+                                        <span className="w-1 h-1 rounded-full bg-white/50 group-hover:bg-white transition-colors duration-200 shrink-0"></span>
+                                        {child.name}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </motion.ul>
+                              )}
+                            </AnimatePresence>
                           </motion.li>
                         ))}
                       </motion.ul>
