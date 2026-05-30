@@ -907,7 +907,7 @@ export default function ServicePage({ serviceId }) {
                 </div>
                 
                 {/* Heading */}
-                <h1 className="text-3xl md:text-5xl lg:text-[52px] font-black text-[#1a294a] tracking-tight leading-[1.1] uppercase">
+                <h1 className="text-2xl md:text-[38px] lg:text-[40px] font-black text-[#1a294a] tracking-tight leading-[1.1] uppercase">
                   {service.title} in Dubai
                 </h1>
                 
