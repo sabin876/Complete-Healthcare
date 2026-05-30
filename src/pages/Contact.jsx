@@ -256,34 +256,34 @@ const styles = {
   },
   tagline: {
     color: "#2563eb",
-    fontSize: "12px",
+    fontSize: "14px", // Increased tagline font size
     fontWeight: "700",
     letterSpacing: "2px",
     textTransform: "uppercase",
-    marginBottom: "6px", // Tightened margin
+    marginBottom: "6px",
   },
   title: {
-    fontSize: "clamp(28px, 5vw, 44px)",
+    fontSize: "clamp(32px, 6vw, 50px)", // Increased title font size
     fontWeight: "800",
     color: "#0f172a",
-    margin: "0 0 10px", // Tightened margin
+    margin: "0 0 10px",
   },
   subtitle: {
     color: "#64748b",
-    fontSize: "15px",
+    fontSize: "17px", // Increased subtitle font size
     lineHeight: "1.7",
-    maxWidth: "480px",
+    maxWidth: "540px", // Increased subtitle width
     margin: "0 auto",
   },
   content: {
     display: "flex",
     gap: "32px",
-    maxWidth: "1000px",
+    maxWidth: "1150px", // Increased max width of content to support wider cards
     margin: "0 auto",
     flexWrap: "wrap",
   },
   leftPanel: {
-    flex: "1 1 280px",
+    flex: "1 1 320px", // Increased base width of left card panel
     display: "flex",
     flexDirection: "column",
     gap: "12px",
@@ -311,24 +311,24 @@ const styles = {
   },
   cardLabel: {
     fontWeight: "700",
-    fontSize: "14px",
+    fontSize: "16px", // Increased label font size
     color: "#0f172a",
     margin: "0 0 4px",
   },
   cardLink: {
     color: "#2563eb",
-    fontSize: "13px",
+    fontSize: "15px", // Increased link font size
     margin: "0 0 2px",
     fontWeight: "500",
   },
   cardText: {
     color: "#334155",
-    fontSize: "13px",
+    fontSize: "15px", // Increased text font size
     margin: "0 0 2px",
   },
   cardSub: {
     color: "#94a3b8",
-    fontSize: "12px",
+    fontSize: "13.5px", // Increased sub font size
     margin: "0",
   },
   socialSection: {
@@ -337,7 +337,7 @@ const styles = {
   },
   socialLabel: {
     fontWeight: "600",
-    fontSize: "14px",
+    fontSize: "16px", // Increased social section label font size
     color: "#0f172a",
     marginBottom: "12px",
   },
@@ -359,14 +359,14 @@ const styles = {
     transition: "all 0.2s",
   },
   formCard: {
-    flex: "1 1 380px",
+    flex: "1 1 480px", // Increased base width of the form card
     background: "#ffffff",
     borderRadius: "16px",
-    padding: "32px 28px",
+    padding: "36px 32px", // Slightly increased internal padding for a larger card feel
     boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
   },
   formTitle: {
-    fontSize: "20px",
+    fontSize: "24px", // Increased form title size
     fontWeight: "700",
     color: "#0f172a",
     margin: "0 0 24px",
@@ -390,15 +390,15 @@ const styles = {
     marginBottom: "16px",
   },
   label: {
-    fontSize: "13px",
+    fontSize: "15px", // Increased label font size
     fontWeight: "600",
     color: "#374151",
   },
   input: {
     border: "1.5px solid #e2e8f0",
     borderRadius: "8px",
-    padding: "10px 14px",
-    fontSize: "14px",
+    padding: "12px 16px", // Increased input padding
+    fontSize: "16px", // Increased input font size
     color: "#0f172a",
     background: "#fff",
     outline: "none",
@@ -409,12 +409,12 @@ const styles = {
   },
   submitBtn: {
     width: "100%",
-    padding: "14px",
+    padding: "16px", // Increased button padding
     background: "#1e3a5f",
     color: "#fff",
     border: "none",
     borderRadius: "10px",
-    fontSize: "15px",
+    fontSize: "17px", // Increased button font size
     fontWeight: "600",
     cursor: "pointer",
     display: "flex",
