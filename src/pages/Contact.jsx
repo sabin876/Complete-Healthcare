@@ -247,7 +247,7 @@ const styles = {
     minHeight: "100vh",
     background: "#f0f4f8",
     fontFamily: "'Segoe UI', sans-serif",
-    padding: "120px 24px 60px", // Reduced padding to pull layout higher up the screen
+    padding: "40px 24px 60px", // Reduced top padding to pull title and cards higher up since header is relative
     boxSizing: "border-box",
   },
   header: {
