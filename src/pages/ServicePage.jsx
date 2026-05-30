@@ -1008,26 +1008,7 @@ export default function ServicePage({ serviceId }) {
                     </svg>
                   </div>
 
-                  {/* Floating overlay pill */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="absolute bottom-8 -left-6 bg-white p-4 rounded-2xl border border-gray-150 shadow-[0_15px_35px_rgba(0,0,0,0.07)] max-w-[280px] z-20 flex gap-3.5 items-start"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-[#5eb63b]/15 text-[#5eb63b] flex items-center justify-center font-bold shrink-0 text-md">
-                      +
-                    </div>
-                    <div className="flex flex-col text-left">
-                      <h4 className="text-secondary-color font-bold text-[13px] leading-tight mb-1">
-                        {service.floatingBadge.title}
-                      </h4>
-                      <p className="text-gray-400 text-xs font-semibold leading-relaxed">
-                        {service.floatingBadge.desc}
-                      </p>
-                    </div>
-                  </motion.div>
-                  
+
                 </div>
               </div>
 
