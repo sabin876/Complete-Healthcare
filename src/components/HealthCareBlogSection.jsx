@@ -14,7 +14,7 @@ export default function HealthCareBlogSection() {
 
   return (
     <section id="insights" style={{
-      fontFamily: "'Inter', 'Open Sans', sans-serif",
+      fontFamily: "'Poppins', sans-serif",
       backgroundColor: "#ffffff",
       padding: "100px 24px",
     }}>

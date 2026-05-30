@@ -33,7 +33,7 @@ const BlogDetails = () => {
           margin-bottom: 1rem;
         }
         .blog-content p {
-          font-family: 'Inter', sans-serif;
+          font-family: 'Poppins', sans-serif;
           font-size: 1.125rem;
           line-height: 1.8;
           color: #4a4a4a;
@@ -44,7 +44,7 @@ const BlogDetails = () => {
           padding-left: 1.5rem;
         }
         .blog-content li {
-          font-family: 'Inter', sans-serif;
+          font-family: 'Poppins', sans-serif;
           font-size: 1.125rem;
           color: #4a4a4a;
           margin-bottom: 0.75rem;
