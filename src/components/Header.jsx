@@ -41,7 +41,11 @@ const Header = () => {
         { name: 'Physiotherapy', path: '/services/physiotherapy', hasArrow: true },
         { name: 'IV Therapy | IV Drip', path: '/services/iv-therapy', hasArrow: true },
         { name: 'Home Nursing', path: '/services/nursing', hasArrow: true },
-        { name: 'Doctor On Call', path: '/services/doctor-on-call', hasArrow: true },
+        { name: 'Doctor On Call', path: '/services/doctor-on-call', hasArrow: true, subItems: [
+          { name: 'Doctor at Home', path: '/services/doctor-on-call' },
+          { name: 'Doctor at Office', path: '/services/doctor-on-call' },
+          { name: 'Doctor at Hotel', path: '/services/doctor-on-call' },
+        ]},
         { name: 'Elderly Home Care', path: '/services/elderly-care', hasArrow: false },
         { name: 'Lab Test at Home', path: '/services/lab-services', hasArrow: false },
       ]
@@ -213,6 +217,22 @@ const Header = () => {
                               {sub.hasArrow && <ChevronDown size={20} className="-rotate-90 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 relative z-10 text-white" />}
                               <div className="absolute inset-0 w-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></div>
                             </Link>
+                            {sub.subItems && (
+                              <ul className="bg-[#0f6989] border-t border-white/10">
+                                {sub.subItems.map((child, cIdx) => (
+                                  <li key={cIdx}>
+                                    <Link
+                                      to={child.path}
+                                      onClick={() => setIsServicesOpen(false)}
+                                      className="group flex items-center gap-2.5 px-8 py-2.5 text-[13px] font-semibold tracking-wide text-white/80 hover:text-white hover:bg-[#137494] transition-all duration-200"
+                                    >
+                                      <span className="w-1 h-1 rounded-full bg-white/50 group-hover:bg-white transition-colors duration-200 shrink-0"></span>
+                                      {child.name}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
                           </motion.li>
                         ))}
                       </motion.ul>
