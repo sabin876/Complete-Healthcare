@@ -1,58 +1,28 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Award, CheckCircle2, Heart, Users, Clock, ArrowRight, ShieldCheck, Activity, Phone, MessageSquare, Star } from 'lucide-react';
+import { Award, CheckCircle2, Heart, Clock, ArrowRight, ShieldCheck, Activity, Phone, MessageSquare, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const About = () => {
-  const team = [
-    {
-      name: "Skilled Nurses",
-      title: "Registered Nurses (RN)",
-      bio: "Highly trained DHA-licensed professionals dedicated to providing round-the-clock clinical care, managing medication, monitoring vitals, and ensuring absolute patient safety at home.",
-      image: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=800",
-      color: "#08709d"
-    },
-    {
-      name: "Expert Physiotherapists",
-      title: "Physical Therapy Specialists",
-      bio: "DHA-licensed physical rehabilitation experts helping patients recover mobility, manage chronic pain, and rebuild strength through fully customized home-based therapy programs.",
-      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800",
-      color: "#5eb63b"
-    },
-    {
-      name: "Dedicated Caregivers",
-      title: "Home Health Aides",
-      bio: "Compassionate caregivers providing reliable support for daily living activities, personal hygiene, and safety, creating a warm and supportive home environment for your loved ones.",
-      image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80&w=800",
-      color: "#1a294a"
-    }
-  ];
-
-  const values = [
+  const choosePillars = [
     { 
-      icon: <ShieldCheck size={26} />, 
-      title: "DHA Licensed Care", 
-      desc: "Fully certified and accredited by the Dubai Health Authority for home care compliance.",
+      icon: <ShieldCheck size={28} />, 
+      title: "Integrity", 
+      desc: "We maintain the highest standards of professional ethics, transparency, and clinical honesty, ensuring your family can fully trust every nurse, therapist, and caregiver in your home.",
       color: "#08709d" 
     },
     { 
-      icon: <Clock size={26} />, 
-      title: "24/7 Availability", 
-      desc: "Round-the-clock clinical monitoring and home nursing assistance whenever required.",
-      color: "#5eb63b"
-    },
-    { 
-      icon: <Activity size={26} />, 
-      title: "Clinical Excellence", 
-      desc: "Hospital-standard medical support and protocols tailored to a home environment.",
-      color: "#1a294a"
-    },
-    { 
-      icon: <Heart size={26} />, 
-      title: "Compassionate Focus", 
-      desc: "Care plans customized uniquely around patient autonomy, recovery, and absolute dignity.",
+      icon: <Clock size={28} />, 
+      title: "Commitment", 
+      desc: "We are devoted round-the-clock to delivering comprehensive home care services that prioritize patient safety, promote recovery, and preserve autonomy in Dubai.",
       color: "#e11d48"
     },
+    { 
+      icon: <Award size={28} />, 
+      title: "Excellence and Awards", 
+      desc: "We set new clinical benchmarks in home healthcare, supported by DHA-licensed medical specialists, physician-guided teams, and a proven history of patient satisfaction.",
+      color: "#5eb63b"
+    }
   ];
 
   const stats = [
@@ -142,7 +112,7 @@ const About = () => {
       background: "rgba(255, 255, 255, 0.75)",
       border: "1px solid rgba(8, 112, 157, 0.08)",
       borderRadius: "24px",
-      padding: "28px",
+      padding: "32px",
       boxShadow: "0 10px 30px rgba(8, 112, 157, 0.03)",
       backdropFilter: "blur(12px)",
       transition: "all 0.3s ease",
@@ -186,26 +156,6 @@ const About = () => {
       fontWeight: "800",
       letterSpacing: "0.06em",
       textTransform: "uppercase"
-    },
-    teamCard: {
-      background: "#ffffff",
-      border: "1px solid rgba(0, 0, 0, 0.05)",
-      borderRadius: "24px",
-      padding: "36px 28px",
-      boxShadow: "0 10px 35px rgba(8, 112, 157, 0.03)",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      textAlign: "center",
-      transition: "all 0.3s ease"
-    },
-    teamColorBadge: {
-      fontSize: "11px",
-      fontWeight: "800",
-      letterSpacing: "0.15em",
-      textTransform: "uppercase",
-      marginBottom: "16px",
-      fontFamily: "'Montserrat', sans-serif"
     },
     ctaSection: {
       background: "linear-gradient(135deg, #08709d 0%, #1a294a 100%)",
@@ -261,8 +211,8 @@ const About = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         
-        {/* ── 1. HERO HEADER (USER COPY INTEGRATION) ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+        {/* ── 1. HERO HEADER (WHO WE ARE) ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-20">
           <div className="lg:col-span-7 text-left">
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -302,7 +252,7 @@ const About = () => {
             </motion.p>
           </div>
 
-          {/* ── 2. INTERACTIVE STATS GRID ── */}
+          {/* ── INTERACTIVE STATS GRID ── */}
           <div className="lg:col-span-5 w-full">
             <div className="grid grid-cols-2 gap-4">
               {stats.map((st, i) => (
@@ -337,49 +287,61 @@ const About = () => {
           </div>
         </div>
 
-        {/* ── 3. VALUES ROW ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20" style={{ marginTop: "40px" }}>
-          {values.map((val, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              whileHover={{ y: -6, borderColor: `${val.color}33`, boxShadow: "0 12px 35px rgba(8, 112, 157, 0.06)" }}
-              style={styles.card}
-            >
-              <div style={{ 
-                color: val.color, 
-                background: `${val.color}12`, 
-                width: "48px", 
-                height: "48px", 
-                borderRadius: "12px", 
-                display: "flex", 
-                alignItems: "center", 
-                justifyContent: "center",
-                marginBottom: "20px" 
-              }}>
-                {val.icon}
-              </div>
-              <h3 style={{ 
-                fontFamily: "'Montserrat', sans-serif",
-                color: "#1a294a", 
-                fontSize: "16px", 
-                fontWeight: "800", 
-                marginBottom: "10px",
-                textTransform: "uppercase" 
-              }}>
-                {val.title}
-              </h3>
-              <p style={{ color: "#64748b", fontSize: "13px", lineHeight: "1.6", fontWeight: "500", margin: 0 }}>
-                {val.desc}
-              </p>
-            </motion.div>
-          ))}
+        {/* ── 2. WHY CHOOSE CORX HOME HEALTHCARE? ── */}
+        <div className="mb-24" style={{ paddingTop: "20px" }}>
+          <div style={{ textAlign: "left", marginBottom: "40px" }}>
+            <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.15)" }}>
+              ⊙ Why Choose Us
+            </div>
+            <h2 style={{ ...styles.sectionTitle, fontSize: "32px", marginBottom: "12px" }}>Why Choose Corx Home Healthcare?</h2>
+            <p style={{ color: "#64748b", fontSize: "15px", fontWeight: "500", margin: 0 }}>
+              There are many reasons to choose Corx Home Health Care as your healthcare provider of choice.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {choosePillars.map((pillar, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -6, borderColor: `${pillar.color}33`, boxShadow: "0 12px 35px rgba(8, 112, 157, 0.06)" }}
+                style={styles.card}
+              >
+                <div style={{ 
+                  color: pillar.color, 
+                  background: `${pillar.color}12`, 
+                  width: "56px", 
+                  height: "56px", 
+                  borderRadius: "16px", 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  marginBottom: "24px" 
+                }}>
+                  {pillar.icon}
+                </div>
+                <h3 style={{ 
+                  fontFamily: "'Montserrat', sans-serif",
+                  color: "#1a294a", 
+                  fontSize: "18px", 
+                  fontWeight: "800", 
+                  marginBottom: "12px",
+                  textTransform: "uppercase" 
+                }}>
+                  {pillar.title}
+                </h3>
+                <p style={{ color: "#4b5563", fontSize: "13.5px", lineHeight: "1.7", fontWeight: "500", margin: 0 }}>
+                  {pillar.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
-        {/* ── 4. MISSION & COMMITMENT ROW ── */}
+        {/* ── 3. OUR MISSION SECTION ── */}
         <div className="flex flex-col lg:flex-row items-center gap-14 lg:gap-16 mb-24" style={{ paddingTop: "20px" }}>
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -388,29 +350,24 @@ const About = () => {
             style={{ flex: 1 }}
             className="text-left"
           >
-            <h2 style={styles.sectionTitle}>Our Commitment</h2>
-            <p style={{ color: "#475569", fontSize: "16px", lineHeight: "1.8", marginBottom: "28px" }}>
-              We understand that the best environment to recover and sustain health is within the comforting sanctuary of your own home. Our team of DHA-licensed medical professionals brings hospital-standard expertise directly to you, providing comprehensive care across Dubai with maximum convenience.
+            <div style={styles.badge}>
+              ⊙ Our Mission
+            </div>
+            <h2 style={{ ...styles.sectionTitle, fontSize: "28px", lineHeight: "1.3", marginBottom: "20px" }}>
+              Our mission is to elevate health and well-being by delivering unparalleled comprehensive healthcare.
+            </h2>
+            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
+              At Corx Home Healthcare, first and foremost, our mission is to elevate health and overall well-being by delivering unparalleled, comprehensive healthcare solutions. With this clear commitment at our core, we not only strive for excellence but also stand as a national leader dedicated to enriching lives and providing optimal care for your loved ones. Based in Dubai, United Arab Emirates, we therefore proudly serve individuals across Dubai and the wider UAE as a trusted and dependable home healthcare provider.
             </p>
-            <div className="flex flex-col gap-3 mb-8">
-              <div className="flex items-center gap-3.5">
-                <CheckCircle2 size={18} className="text-[#5eb63b] shrink-0" />
-                <span className="text-[14.5px] font-bold text-gray-700">DHA Licensed Home Nurses &amp; Physiotherapists</span>
-              </div>
-              <div className="flex items-center gap-3.5">
-                <CheckCircle2 size={18} className="text-[#5eb63b] shrink-0" />
-                <span className="text-[14.5px] font-bold text-gray-700">Individualized Care Plans Designed For Autonomy</span>
-              </div>
-              <div className="flex items-center gap-3.5">
-                <CheckCircle2 size={18} className="text-[#5eb63b] shrink-0" />
-                <span className="text-[14.5px] font-bold text-gray-700">24/7 Hotlines &amp; Emergency Support</span>
-              </div>
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-              <span style={{ ...styles.pill, background: "rgba(8, 112, 157, 0.1)", color: "#08709d" }}>CLINICAL EXCELLENCE</span>
-              <span style={{ ...styles.pill, background: "rgba(94, 182, 59, 0.1)", color: "#5eb63b" }}>TRUST &amp; SAFETY</span>
-              <span style={{ ...styles.pill, background: "rgba(26, 41, 74, 0.1)", color: "#1a294a" }}>COMPASSION FIRST</span>
-            </div>
+            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
+              Through a carefully integrated and patient-centric approach, we consistently deliver comprehensive home healthcare services led by a highly skilled, physician-guided clinical team. In particular, we focus on supporting patients who prefer the comfort of their own homes for treatment, recovery, and rehabilitation. In doing so, we ensure continuity of care, promote familiarity, and preserve dignity throughout their daily lives.
+            </p>
+            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
+              Recognizing, above all, that there truly is no place like home, we continuously prioritize quality improvement initiatives. Consequently, we enhance patient safety, increase satisfaction, and support long-term health outcomes, while simultaneously maintaining the highest standards of care within a familiar and reassuring environment.
+            </p>
+            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "0" }}>
+              Moreover, our overarching goal is to provide round-the-clock access to premier healthcare services. By doing so, we consistently deliver exceptional clinical outcomes and, at the same time, set new benchmarks in patient experience across home care, corporate healthcare, and on-demand medical services not only in the UAE but across the entire GCC region.
+            </p>
           </motion.div>
           
           <motion.div
@@ -458,7 +415,7 @@ const About = () => {
           </motion.div>
         </div>
 
-        {/* ── 4.5. OUR VISION ROW (USER COPY INTEGRATION) ── */}
+        {/* ── 4. OUR VISION SECTION ── */}
         <div className="flex flex-col lg:flex-row-reverse items-center gap-14 lg:gap-16 mb-24" style={{ paddingTop: "20px" }}>
           <motion.div
             initial={{ opacity: 0, x: 30 }}
@@ -532,48 +489,7 @@ const About = () => {
           </motion.div>
         </div>
 
-        {/* ── 5. EXPERT TEAM SECTION ── */}
-        <div style={{ marginBottom: "60px" }}>
-          <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <span style={{ fontSize: "12px", fontWeight: "800", color: "#5eb63b", textTransform: "uppercase", letterSpacing: "0.15em", fontFamily: "'Montserrat', sans-serif" }}>PROFESSIONAL STAFF</span>
-            <h2 style={{ ...styles.sectionTitle, marginTop: "8px", marginBottom: "12px" }}>Our Expert Team</h2>
-            <p style={{ color: "#64748b", fontSize: "14.5px", maxWidth: "600px", margin: "0 auto", lineHeight: "1.6" }}>
-              Highly licensed medical and physical therapy experts dedicated to safety, recovery, and daily home support.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.12 }}
-                whileHover={{ y: -8, boxShadow: "0 15px 40px rgba(8, 112, 157, 0.08)" }}
-                style={styles.teamCard}
-              >
-                <div style={{ 
-                  width: "120px", 
-                  height: "120px", 
-                  borderRadius: "50%", 
-                  overflow: "hidden", 
-                  marginBottom: "24px",
-                  border: `4px solid ${member.color}18`,
-                  padding: "4px",
-                  background: "#ffffff"
-                }}>
-                  <img src={member.image} alt={member.name} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
-                </div>
-                <h3 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "20px", fontWeight: "900", color: "#1a294a", marginBottom: "4px" }}>{member.name}</h3>
-                <span style={{ ...styles.teamColorBadge, color: member.color }}>{member.title}</span>
-                <p style={{ fontSize: "13.5px", color: "#64748b", lineHeight: "1.65", margin: 0, fontWeight: "500" }}>{member.bio}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── 6. DYNAMIC CTA BANNER ── */}
+        {/* ── 5. DYNAMIC CTA BANNER ── */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
