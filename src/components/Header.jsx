@@ -43,9 +43,9 @@ const Header = () => {
         { name: 'IV Therapy | IV Drip', path: '/services/iv-therapy', hasArrow: true },
         { name: 'Home Nursing', path: '/services/nursing', hasArrow: true },
         { name: 'Doctor On Call', path: '/services/doctor-on-call', hasArrow: true, subItems: [
-          { name: 'Doctor at Home', path: '/services/doctor-on-call' },
-          { name: 'Doctor at Office', path: '/services/doctor-on-call' },
-          { name: 'Doctor at Hotel', path: '/services/doctor-on-call' },
+          { name: 'Doctor at Home', path: '/services/doctor-at-home' },
+          { name: 'Doctor at Office', path: '/services/doctor-at-office' },
+          { name: 'Doctor at Hotel', path: '/services/doctor-at-hotel' },
         ]},
         { name: 'Elderly Home Care', path: '/services/elderly-care', hasArrow: false },
         { name: 'Lab Test at Home', path: '/services/lab-services', hasArrow: false },

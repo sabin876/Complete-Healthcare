@@ -176,6 +176,110 @@ export const servicesData = {
       }
     ]
   },
+  'doctor-at-home': {
+    title: "Doctor at Home",
+    eyebrow: "24/7 doctor home visits in Dubai",
+    tagline: "A licensed doctor at your doorstep in 30–45 minutes, day or night.",
+    description: "Don't let illness force you out of the comfort of your home. Our DHA-licensed doctors visit your residence in Dubai within 30–45 minutes, providing on-the-spot diagnosis, treatment, prescriptions, and medical certificates — all from the comfort of your home.",
+    icon: "Stethoscope",
+    themeColor: "#08709d",
+    benefits: [
+      { title: "Fast Home Arrival", desc: "Doctor at your door within 30–45 minutes of booking" },
+      { title: "Full Diagnosis", desc: "On-site vitals, ECG, blood glucose & rapid diagnostic checks" },
+      { title: "Official Prescriptions", desc: "DHA-compliant e-prescriptions accepted at all pharmacies" },
+      { title: "24/7 Availability", desc: "Round-the-clock service including weekends & public holidays" }
+    ],
+    faqs: [
+      {
+        q: "How long does the doctor take to arrive in Dubai?",
+        a: "Our doctor at home visits in Dubai are completed within 30–45 minutes, depending on the patient's location, traffic conditions, and doctor availability."
+      },
+      {
+        q: "What are the charges for a doctor's home visit in Dubai?",
+        a: "At CORX, the consultation cost depends on the location, timing, medical condition, and treatment required. Pricing may vary for late-night visits, IV therapy, laboratory services, or additional procedures."
+      },
+      {
+        q: "Are your doctors DHA-approved?",
+        a: "Yes. All doctors providing home visit consultations are DHA-licensed and authorized to practice in Dubai according to Dubai healthcare regulations."
+      },
+      {
+        q: "What conditions can a home visit doctor treat?",
+        a: "We treat acute, non-life-threatening conditions including fever, flu, respiratory infections, food poisoning, UTIs, ear/eye infections, back pain, and mild asthma."
+      },
+      {
+        q: "Can the doctor issue a sick leave certificate?",
+        a: "Yes. Our DHA-licensed doctors can issue official sick leave certificates and medical reports accepted by employers and insurance companies."
+      }
+    ]
+  },
+  'doctor-at-office': {
+    title: "Doctor at Office",
+    eyebrow: "Corporate medical visits across Dubai",
+    tagline: "Professional medical care delivered directly to your workplace in Dubai.",
+    description: "Keep your team healthy and productive. Our DHA-licensed doctors visit your office, corporate campus, or workplace across Dubai to provide on-site consultations, health screenings, medical certificates, and treatment — without disrupting your workday.",
+    icon: "Briefcase",
+    themeColor: "#08709d",
+    benefits: [
+      { title: "Zero Downtime", desc: "Doctor comes to your office — no hospital queues or travel" },
+      { title: "Corporate Packages", desc: "Tailored health plans for teams, SMEs, and large enterprises" },
+      { title: "On-Site Diagnostics", desc: "Vitals, ECG, blood glucose & rapid tests done at your desk" },
+      { title: "Medical Certificates", desc: "Official DHA-certified documents for insurance & HR records" }
+    ],
+    faqs: [
+      {
+        q: "Can a doctor visit our office for a group health check?",
+        a: "Yes. We offer corporate health screening packages where our doctors and nurses visit your office to conduct group check-ups, wellness assessments, and occupational health reviews."
+      },
+      {
+        q: "How quickly can a doctor arrive at our office?",
+        a: "Our typical response time is 30–45 minutes from confirmation of the booking, depending on your office location within Dubai."
+      },
+      {
+        q: "Are your office-visit doctors DHA-licensed?",
+        a: "Yes. All our doctors are DHA-licensed and fully authorized to conduct medical consultations and issue official documents in Dubai."
+      },
+      {
+        q: "Can the doctor issue sick leave certificates for employees?",
+        a: "Yes. Our doctors can issue DHA-compliant sick leave certificates and medical reports that are accepted by employers and insurance providers."
+      }
+    ]
+  },
+  'doctor-at-hotel': {
+    title: "Doctor at Hotel",
+    eyebrow: "Hotel room medical visits in Dubai",
+    tagline: "Feeling unwell while travelling? A doctor at your hotel room in 30–45 minutes.",
+    description: "Travelling to Dubai and feeling unwell? Skip the unfamiliar hospital and let our DHA-licensed doctors come directly to your hotel room. We provide prompt, professional medical consultations, on-site diagnostics, prescriptions, and medical documentation — so you can recover in comfort and get back to enjoying Dubai.",
+    icon: "Building",
+    themeColor: "#08709d",
+    benefits: [
+      { title: "Hotel Room Visits", desc: "Doctor arrives at any hotel in Dubai within 30–45 minutes" },
+      { title: "Tourist-Friendly", desc: "English-speaking doctors familiar with international patient care" },
+      { title: "Travel Insurance Docs", desc: "Detailed medical reports compatible with travel insurance claims" },
+      { title: "24/7 Availability", desc: "Available any time — day or night, weekends & public holidays" }
+    ],
+    faqs: [
+      {
+        q: "Can a doctor visit any hotel in Dubai?",
+        a: "Yes. We provide hotel room doctor visits across all areas of Dubai, including Downtown, Marina, JBR, Palm Jumeirah, Deira, Bur Dubai, and all major hotel districts."
+      },
+      {
+        q: "How quickly will the doctor arrive at my hotel?",
+        a: "Our hotel visit doctors typically arrive within 30–45 minutes of booking confirmation, depending on your hotel's location and current traffic conditions."
+      },
+      {
+        q: "Can you provide documents for my travel insurance claim?",
+        a: "Yes. Our doctors provide comprehensive medical reports, receipts, and insurance reimbursement documents with DHA stamps to support your travel insurance claim."
+      },
+      {
+        q: "Are your doctors DHA-approved?",
+        a: "Yes. All doctors providing hotel visit consultations are DHA-licensed and authorized to practice in Dubai according to Dubai healthcare regulations."
+      },
+      {
+        q: "What conditions can be treated during a hotel visit?",
+        a: "We treat a wide range of acute conditions including fever, food poisoning, respiratory infections, stomach pain, UTIs, dehydration, travel sickness, and minor injuries."
+      }
+    ]
+  },
   'elderly-care': {
     title: "Elderly Home Care Services",
     eyebrow: "Compassionate senior care & companionship",
