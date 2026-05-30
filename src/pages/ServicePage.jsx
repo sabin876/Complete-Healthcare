@@ -412,7 +412,10 @@ function PhysiotherapyLanding() {
             </div>
             
             {/* Action Buttons */}
-            <div className="flex flex-wrap gap-4 pt-8 w-full items-center">
+            <div 
+              className="flex flex-wrap gap-4 pt-8 w-full items-center"
+              style={{ marginBottom: "60px" }}
+            >
               <Link to="/contact" style={{ textDecoration: "none" }}>
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(8,112,157,0.15)" }}
