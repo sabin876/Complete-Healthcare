@@ -477,17 +477,43 @@ export default function Contact() {
             margin: "0 auto",
           }}
         >
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            fontSize: 14,
+            fontWeight: 700,
+            color: "#5eb63b",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            marginBottom: 12,
+          }}>
+            ⊙ Common Questions
+          </div>
+
           <h2 style={{
             fontWeight: 800,
-            fontSize: "clamp(22px, 3.5vw, 32px)",
+            fontSize: "clamp(24px, 3.5vw, 36px)",
             letterSpacing: "0.04em",
             textAlign: "center",
             textTransform: "uppercase",
             color: "#ffffff",
-            marginBottom: 40,
+            margin: "0 0 12px 0",
           }}>
             Frequently Asked Questions
           </h2>
+
+          <p style={{
+            fontSize: "clamp(14px, 1.8vw, 15px)",
+            color: "rgba(255, 255, 255, 0.7)",
+            textAlign: "center",
+            maxWidth: 600,
+            margin: "0 auto 40px",
+            lineHeight: 1.6,
+          }}>
+            Find answers to the most common questions about booking your appointments and home healthcare visits in Dubai.
+          </p>
 
           <div style={{
             display: "flex",
@@ -502,15 +528,13 @@ export default function Contact() {
                   key={index}
                   layout="position"
                   style={{
-                    background: isOpen ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0.04)",
+                    background: "transparent",
                     border: isOpen ? "1px solid rgba(94, 182, 59, 0.5)" : "1px solid rgba(255, 255, 255, 0.12)",
                     borderRadius: 16,
                     overflow: "hidden",
-                    boxShadow: isOpen ? "0 8px 32px rgba(0,0,0,0.15)" : "0 4px 20px rgba(0,0,0,0.08)",
-                    transition: "background-color 0.3s ease, border-color 0.3s ease",
+                    transition: "border-color 0.3s ease",
                   }}
                   whileHover={{
-                    background: "rgba(255, 255, 255, 0.09)",
                     borderColor: isOpen ? "rgba(94, 182, 59, 0.6)" : "rgba(255, 255, 255, 0.22)",
                   }}
                 >
