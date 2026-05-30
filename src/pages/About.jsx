@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Award, CheckCircle2, Heart, Clock, ArrowRight, ShieldCheck, Activity, Phone, MessageSquare, Star } from 'lucide-react';
+import { Award, CheckCircle2, Heart, Clock, ArrowRight, ShieldCheck, Activity, Phone, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const About = () => {
@@ -9,7 +9,7 @@ const About = () => {
       icon: <ShieldCheck size={28} />, 
       title: "Integrity", 
       desc: "We maintain the highest standards of professional ethics, transparency, and clinical honesty, ensuring your family can fully trust every nurse, therapist, and caregiver in your home.",
-      color: "#08709d" 
+      color: "#5eb63b" 
     },
     { 
       icon: <Clock size={28} />, 
@@ -21,7 +21,7 @@ const About = () => {
       icon: <Award size={28} />, 
       title: "Excellence and Awards", 
       desc: "We set new clinical benchmarks in home healthcare, supported by DHA-licensed medical specialists, physician-guided teams, and a proven history of patient satisfaction.",
-      color: "#5eb63b"
+      color: "#38bdf8"
     }
   ];
 
@@ -35,7 +35,7 @@ const About = () => {
   const styles = {
     pageWrapper: {
       fontFamily: "'Poppins', sans-serif",
-      background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%)",
+      background: "linear-gradient(135deg, #08709d 0%, #1a294a 100%)",
       minHeight: "100vh",
       paddingTop: "70px",
       paddingBottom: "80px",
@@ -45,8 +45,8 @@ const About = () => {
     dotTexture: {
       position: "absolute",
       inset: 0,
-      opacity: 0.15,
-      backgroundImage: "radial-gradient(circle, #08709d 1px, transparent 1px)",
+      opacity: 0.06,
+      backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
       backgroundSize: "32px 32px",
       pointerEvents: "none",
       zIndex: 1
@@ -58,7 +58,7 @@ const About = () => {
       width: "550px",
       height: "550px",
       borderRadius: "50%",
-      background: "radial-gradient(circle, rgba(8,112,157,0.08) 0%, transparent 70%)",
+      background: "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
       filter: "blur(60px)",
       pointerEvents: "none",
       zIndex: 1
@@ -70,7 +70,7 @@ const About = () => {
       width: "500px",
       height: "500px",
       borderRadius: "50%",
-      background: "radial-gradient(circle, rgba(94,182,59,0.06) 0%, transparent 70%)",
+      background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
       filter: "blur(50px)",
       pointerEvents: "none",
       zIndex: 1
@@ -78,16 +78,16 @@ const About = () => {
     badge: {
       display: "inline-flex",
       alignItems: "center",
-      background: "#ffffff",
-      border: "1px solid rgba(8, 112, 157, 0.15)",
-      color: "#08709d",
+      background: "rgba(255, 255, 255, 0.08)",
+      border: "1px solid rgba(255, 255, 255, 0.2)",
+      color: "#ffffff",
       fontSize: "10.5px",
       fontWeight: "400",
       padding: "8px 18px",
       borderRadius: "50px",
       textTransform: "uppercase",
       letterSpacing: "0.08em",
-      boxShadow: "0 4px 12px rgba(8, 112, 157, 0.05)",
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
       marginBottom: "20px",
       fontFamily: "'Montserrat', sans-serif"
     },
@@ -95,7 +95,7 @@ const About = () => {
       fontFamily: "'Montserrat', sans-serif",
       fontSize: "clamp(24px, 3.5vw, 36px)",
       fontWeight: "400",
-      color: "#1a294a",
+      color: "#ffffff",
       lineHeight: "1.15",
       letterSpacing: "-0.01em",
       textTransform: "uppercase",
@@ -103,41 +103,41 @@ const About = () => {
     },
     subtitle: {
       fontSize: "15px",
-      color: "#475569",
+      color: "rgba(255, 255, 255, 0.85)",
       lineHeight: "1.75",
       fontWeight: "400",
       marginBottom: "16px"
     },
     card: {
-      background: "rgba(255, 255, 255, 0.75)",
-      border: "1px solid rgba(8, 112, 157, 0.08)",
+      background: "rgba(255, 255, 255, 0.06)",
+      border: "1px solid rgba(255, 255, 255, 0.15)",
       borderRadius: "24px",
       padding: "32px",
-      boxShadow: "0 10px 30px rgba(8, 112, 157, 0.03)",
-      backdropFilter: "blur(12px)",
+      boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+      backdropFilter: "blur(16px)",
       transition: "all 0.3s ease",
       textAlign: "left"
     },
     statCard: {
-      background: "rgba(255, 255, 255, 0.8)",
-      border: "1px solid rgba(8, 112, 157, 0.08)",
+      background: "rgba(255, 255, 255, 0.06)",
+      border: "1px solid rgba(255, 255, 255, 0.15)",
       borderRadius: "20px",
       padding: "24px 16px",
-      boxShadow: "0 8px 24px rgba(8, 112, 157, 0.02)",
+      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.08)",
       textAlign: "center",
-      backdropFilter: "blur(10px)"
+      backdropFilter: "blur(12px)"
     },
     statVal: {
       fontFamily: "'Montserrat', sans-serif",
       fontSize: "26px",
       fontWeight: "400",
-      color: "#08709d",
+      color: "#5eb63b",
       marginBottom: "4px"
     },
     statLabel: {
       fontSize: "11px",
       fontWeight: "400",
-      color: "#64748b",
+      color: "rgba(255, 255, 255, 0.7)",
       textTransform: "uppercase",
       letterSpacing: "0.02em"
     },
@@ -145,7 +145,7 @@ const About = () => {
       fontFamily: "'Montserrat', sans-serif",
       fontSize: "24px",
       fontWeight: "400",
-      color: "#1a294a",
+      color: "#ffffff",
       textTransform: "uppercase",
       marginBottom: "20px"
     },
@@ -158,14 +158,16 @@ const About = () => {
       textTransform: "uppercase"
     },
     ctaSection: {
-      background: "linear-gradient(135deg, #08709d 0%, #1a294a 100%)",
+      background: "rgba(255, 255, 255, 0.05)",
+      border: "1px solid rgba(255, 255, 255, 0.12)",
       padding: "56px 36px",
       borderRadius: "32px",
       textAlign: "center",
-      boxShadow: "0 25px 60px rgba(8, 112, 157, 0.15)",
+      boxShadow: "0 25px 60px rgba(0, 0, 0, 0.15)",
       position: "relative",
       overflow: "hidden",
-      marginTop: "80px"
+      marginTop: "80px",
+      backdropFilter: "blur(16px)"
     },
     ctaButton: {
       fontFamily: "'Montserrat', sans-serif",
@@ -188,7 +190,7 @@ const About = () => {
       fontFamily: "'Montserrat', sans-serif",
       background: "transparent",
       color: "#ffffff",
-      border: "2px solid rgba(255,255,255,0.4)",
+      border: "2px solid rgba(255, 255, 255, 0.4)",
       padding: "14px 36px",
       borderRadius: "50px",
       fontWeight: "400",
@@ -230,14 +232,14 @@ const About = () => {
             >
               Home Health Care <br />
               Service Provider <br />
-              <span style={{ color: "#08709d" }}>Across The Dubai.</span>
+              <span style={{ color: "#5eb63b" }}>Across The Dubai.</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              style={{ ...styles.subtitle, fontSize: "14.5px", color: "#334155", fontWeight: "400" }}
+              style={{ ...styles.subtitle, fontSize: "14.5px", color: "rgba(255, 255, 255, 0.85)", fontWeight: "400" }}
             >
               Corx Home Healthcare offers unparalleled home healthcare services, including top-tier physiotherapy, home nursing, compassionate caregivers, and round-the-clock doctor-on-call assistance throughout the Emirates of UAE.
             </motion.p>
@@ -261,7 +263,7 @@ const About = () => {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.2 + i * 0.08 }}
-                  whileHover={{ y: -5, boxShadow: "0 12px 30px rgba(8, 112, 157, 0.06)" }}
+                  whileHover={{ y: -5, background: "rgba(255, 255, 255, 0.12)" }}
                   style={styles.statCard}
                 >
                   <div style={styles.statVal}>{st.val}</div>
@@ -270,31 +272,17 @@ const About = () => {
               ))}
             </div>
 
-            {/* Overlapping Quick Trust Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="mt-6 bg-white border border-gray-150 p-4 rounded-2xl shadow-sm flex items-center gap-3.5"
-            >
-              <div className="w-9 h-9 rounded-full bg-[#5eb63b]/10 text-[#5eb63b] flex items-center justify-center font-normal text-sm">
-                ✓
-              </div>
-              <p className="text-left text-[11px] text-gray-500 leading-normal m-0 font-sans">
-                <span className="text-[#1a294a] font-normal">Accredited Home Care Partner:</span> DHA Licensed clinics, clinical protocols, and highly trained specialists.
-              </p>
-            </motion.div>
           </div>
         </div>
 
         {/* ── 2. WHY CHOOSE CORX HOME HEALTHCARE? ── */}
         <div className="mb-24" style={{ paddingTop: "20px" }}>
           <div style={{ textAlign: "left", marginBottom: "40px" }}>
-            <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.15)" }}>
+            <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.3)" }}>
               ⊙ Why Choose Us
             </div>
             <h2 style={{ ...styles.sectionTitle, fontSize: "22px", marginBottom: "12px" }}>Why Choose Corx Home Healthcare?</h2>
-            <p style={{ color: "#64748b", fontSize: "13.5px", fontWeight: "400", margin: 0 }}>
+            <p style={{ color: "rgba(255, 255, 255, 0.75)", fontSize: "13.5px", fontWeight: "400", margin: 0 }}>
               There are many reasons to choose Corx Home Health Care as your healthcare provider of choice.
             </p>
           </div>
@@ -307,25 +295,26 @@ const About = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -6, borderColor: `${pillar.color}33`, boxShadow: "0 12px 35px rgba(8, 112, 157, 0.06)" }}
+                whileHover={{ y: -6, background: "rgba(255, 255, 255, 0.12)", boxShadow: "0 12px 35px rgba(0, 0, 0, 0.15)" }}
                 style={styles.card}
               >
                 <div style={{ 
                   color: pillar.color, 
-                  background: `${pillar.color}12`, 
+                  background: "rgba(255, 255, 255, 0.08)", 
                   width: "56px", 
                   height: "56px", 
                   borderRadius: "16px", 
                   display: "flex", 
                   alignItems: "center", 
                   justifyContent: "center",
-                  marginBottom: "24px" 
+                  marginBottom: "24px",
+                  border: "1px solid rgba(255, 255, 255, 0.15)"
                 }}>
                   {pillar.icon}
                 </div>
                 <h3 style={{ 
                   fontFamily: "'Montserrat', sans-serif",
-                  color: "#1a294a", 
+                  color: "#ffffff", 
                   fontSize: "14.5px", 
                   fontWeight: "400", 
                   marginBottom: "12px",
@@ -333,7 +322,7 @@ const About = () => {
                 }}>
                   {pillar.title}
                 </h3>
-                <p style={{ color: "#4b5563", fontSize: "12.5px", lineHeight: "1.7", fontWeight: "400", margin: 0 }}>
+                <p style={{ color: "rgba(255, 255, 255, 0.75)", fontSize: "12.5px", lineHeight: "1.7", fontWeight: "400", margin: 0 }}>
                   {pillar.desc}
                 </p>
               </motion.div>
@@ -353,19 +342,19 @@ const About = () => {
             <div style={styles.badge}>
               ⊙ Our Mission
             </div>
-            <h2 style={{ ...styles.sectionTitle, fontSize: "28px", lineHeight: "1.3", marginBottom: "20px" }}>
+            <h2 style={{ ...styles.sectionTitle, fontSize: "20px", lineHeight: "1.3", marginBottom: "20px" }}>
               Our mission is to elevate health and well-being by delivering unparalleled comprehensive healthcare.
             </h2>
-            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
+            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
               At Corx Home Healthcare, first and foremost, our mission is to elevate health and overall well-being by delivering unparalleled, comprehensive healthcare solutions. With this clear commitment at our core, we not only strive for excellence but also stand as a national leader dedicated to enriching lives and providing optimal care for your loved ones. Based in Dubai, United Arab Emirates, we therefore proudly serve individuals across Dubai and the wider UAE as a trusted and dependable home healthcare provider.
             </p>
-            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
+            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
               Through a carefully integrated and patient-centric approach, we consistently deliver comprehensive home healthcare services led by a highly skilled, physician-guided clinical team. In particular, we focus on supporting patients who prefer the comfort of their own homes for treatment, recovery, and rehabilitation. In doing so, we ensure continuity of care, promote familiarity, and preserve dignity throughout their daily lives.
             </p>
-            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
+            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
               Recognizing, above all, that there truly is no place like home, we continuously prioritize quality improvement initiatives. Consequently, we enhance patient safety, increase satisfaction, and support long-term health outcomes, while simultaneously maintaining the highest standards of care within a familiar and reassuring environment.
             </p>
-            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "0" }}>
+            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "0" }}>
               Moreover, our overarching goal is to provide round-the-clock access to premier healthcare services. By doing so, we consistently deliver exceptional clinical outcomes and, at the same time, set new benchmarks in patient experience across home care, corporate healthcare, and on-demand medical services not only in the UAE but across the entire GCC region.
             </p>
           </motion.div>
@@ -378,13 +367,13 @@ const About = () => {
             className="w-full max-w-[480px]"
           >
             {/* Ambient deep glow behind image */}
-            <div className="absolute inset-0 bg-[#08709d]/5 rounded-[40px] blur-2xl pointer-events-none" />
+            <div className="absolute inset-0 bg-[#08709d]/10 rounded-[40px] blur-2xl pointer-events-none" />
             
             <div style={{ 
               borderRadius: "28px", 
               overflow: "hidden", 
-              border: "4px solid rgba(255,255,255,0.8)",
-              boxShadow: "0 20px 50px rgba(8, 112, 157, 0.08)",
+              border: "4px solid rgba(255,255,255,0.15)",
+              boxShadow: "0 20px 50px rgba(0, 0, 0, 0.2)",
               position: "relative",
               zIndex: 5
             }}>
@@ -393,7 +382,7 @@ const About = () => {
                 alt="Corx Professional Home Healthcare in Dubai" 
                 style={{ width: "100%", height: "auto", display: "block" }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
             </div>
 
             {/* Overlapping Floating trust badge */}
@@ -402,14 +391,14 @@ const About = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="absolute bottom-6 -right-4 bg-white p-4 rounded-2xl border border-gray-150 shadow-[0_15px_30px_rgba(0,0,0,0.06)] z-10 flex gap-3 items-center max-w-[200px]"
+              className="absolute bottom-6 -right-4 bg-white/10 border border-white/15 backdrop-blur-md p-4 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.15)] z-10 flex gap-3 items-center max-w-[200px]"
             >
               <div className="w-8 h-8 rounded-full bg-[#5eb63b] text-white flex items-center justify-center font-normal text-xs shrink-0">
                 ★
               </div>
               <div className="text-left">
-                <p className="m-0 font-normal text-xs text-gray-900 leading-tight">5-Star Rated</p>
-                <p className="m-0 text-[9.5px] text-gray-400 mt-0.5">Patient Satisfaction</p>
+                <p className="m-0 font-normal text-xs text-white leading-tight">5-Star Rated</p>
+                <p className="m-0 text-[9.5px] text-white/60 mt-0.5">Patient Satisfaction</p>
               </div>
             </motion.div>
           </motion.div>
@@ -424,22 +413,22 @@ const About = () => {
             style={{ flex: 1 }}
             className="text-left"
           >
-            <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.15)", marginBottom: "16px" }}>
+            <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.3)", marginBottom: "16px" }}>
               ⊙ Our Vision
             </div>
             <h2 style={{ ...styles.sectionTitle, fontSize: "20px", lineHeight: "1.3", marginBottom: "20px" }}>
               We are committed to consistently creating and delivering exceptional value for you.
             </h2>
-            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
+            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
               At Corx Home Healthcare, first and foremost, we are committed to consistently creating and delivering exceptional value for you. With this guiding principle, our vision is to set the standard as the foremost provider of compassionate and tailored healthcare services, delivered within the comfort and convenience of our patients’ homes.
             </p>
-            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
+            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
               Through this commitment, we are dedicated to elevating the quality of life for our patients by delivering comprehensive, dependable, and expert care. In doing so, we actively foster independence, promote overall wellness, and preserve personal dignity at every stage of care.
             </p>
-            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
+            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
               Furthermore, supported by our skilled and devoted team, we continuously aspire to surpass the expectations of our patients and their families. As a result, we aim to positively influence not only health outcomes but also overall happiness and peace of mind.
             </p>
-            <p style={{ color: "#475569", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "0" }}>
+            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "0" }}>
               Additionally, and beyond traditional healthcare, we seek to become the top choice for outdoor enthusiasts looking for extraordinary nightlife experiences that transcend conventional boundaries. By combining innovation with nature, we remain committed to offering unparalleled adventures and creating unforgettable moments, all while embracing the beauty of the natural environment.
             </p>
           </motion.div>
@@ -452,13 +441,13 @@ const About = () => {
             className="w-full max-w-[480px]"
           >
             {/* Ambient green glow behind illustration */}
-            <div className="absolute inset-0 bg-[#5eb63b]/5 rounded-[40px] blur-2xl pointer-events-none" />
+            <div className="absolute inset-0 bg-[#5eb63b]/10 rounded-[40px] blur-2xl pointer-events-none" />
             
             <div style={{ 
               borderRadius: "28px", 
               overflow: "hidden", 
-              border: "4px solid rgba(255,255,255,0.8)",
-              boxShadow: "0 20px 50px rgba(94, 182, 59, 0.06)",
+              border: "4px solid rgba(255,255,255,0.15)",
+              boxShadow: "0 20px 50px rgba(0, 0, 0, 0.2)",
               position: "relative",
               zIndex: 5
             }}>
@@ -467,7 +456,7 @@ const About = () => {
                 alt="Corx Vision for Care and Innovation" 
                 style={{ width: "100%", height: "auto", display: "block" }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
             </div>
 
             {/* Overlapping Floating badge */}
@@ -476,14 +465,14 @@ const About = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="absolute top-6 -left-4 bg-white p-4 rounded-2xl border border-gray-150 shadow-[0_15px_30px_rgba(0,0,0,0.06)] z-10 flex gap-3 items-center max-w-[210px]"
+              className="absolute top-6 -left-4 bg-white/10 border border-white/15 backdrop-blur-md p-4 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.15)] z-10 flex gap-3 items-center max-w-[210px]"
             >
               <div className="w-8 h-8 rounded-full bg-[#08709d] text-white flex items-center justify-center font-normal text-xs shrink-0">
                 ✓
               </div>
               <div className="text-left">
-                <p className="m-0 font-normal text-xs text-gray-900 leading-tight">Exceptional Value</p>
-                <p className="m-0 text-[9.5px] text-gray-400 mt-0.5">Consistent &amp; Trusted</p>
+                <p className="m-0 font-normal text-xs text-white leading-tight">Exceptional Value</p>
+                <p className="m-0 text-[9.5px] text-white/60 mt-0.5">Consistent &amp; Trusted</p>
               </div>
             </motion.div>
           </motion.div>
