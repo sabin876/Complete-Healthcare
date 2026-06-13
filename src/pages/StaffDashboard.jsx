@@ -170,22 +170,22 @@ const StaffDashboard = () => {
             onKeyDown={(e) => e.key === 'Enter' && handleActionClick('leave')}
             whileHover={{ scale: 1.03, boxShadow: "0 15px 30px rgba(8,112,157,0.12)", borderColor: "#08709d" }}
             whileTap={{ scale: 0.98 }}
-            className="w-full max-w-[360px] md:max-w-none mx-auto min-h-[300px] md:min-h-[340px] h-full bg-white border border-gray-200 hover:border-[#08709d]/50 rounded-3xl p-6 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
+            className="w-full max-w-[360px] md:max-w-none mx-auto min-h-[300px] md:min-h-[340px] h-full bg-white border border-gray-200 hover:border-[#08709d]/50 rounded-3xl p-7 md:p-8 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
           >
             {/* Themed Accent Badge */}
             <span className="absolute top-4 right-4 px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#08709d]/10 text-[#08709d] uppercase tracking-wider">
               Leave
             </span>
-            <div className="w-12 h-12 bg-[#08709d]/10 text-[#08709d] rounded-2xl flex items-center justify-center mb-4 mt-2 shrink-0 shadow-inner">
+            <div className="w-12 h-12 bg-[#08709d]/10 text-[#08709d] rounded-2xl flex items-center justify-center mb-5 mt-1 shrink-0 shadow-inner">
               <Calendar size={22} />
             </div>
-            <h3 className="text-base font-bold text-gray-800 uppercase tracking-wide mb-1.5">
+            <h3 className="text-base font-bold text-gray-800 uppercase tracking-wide mb-3">
               Apply for Leave
             </h3>
-            <p className="text-gray-400 text-[11px] font-semibold leading-relaxed mb-1">
+            <p className="text-gray-400 text-[11px] font-semibold leading-relaxed mb-4">
               Submit your annual, sick, casual, or emergency vacation days. Specify start and end dates, view automated duration calculations, and attach any supporting medical or travel documents.
             </p>
-            <div className="mt-auto pt-5 w-full shrink-0 flex justify-center">
+            <div className="mt-auto pt-1 w-full shrink-0 flex justify-center">
               <div className="w-[240px] h-[54px] bg-gradient-to-r from-[#08709d] to-[#0ea5e9] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#08709d]/15 hover:shadow-[#08709d]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
                 Start Application <ChevronRight size={14} />
               </div>
@@ -200,22 +200,22 @@ const StaffDashboard = () => {
             onKeyDown={(e) => e.key === 'Enter' && handleActionClick('ot')}
             whileHover={{ scale: 1.03, boxShadow: "0 15px 30px rgba(94,182,59,0.12)", borderColor: "#5eb63b" }}
             whileTap={{ scale: 0.98 }}
-            className="w-full max-w-[360px] md:max-w-none mx-auto min-h-[300px] md:min-h-[340px] h-full bg-white border border-gray-200 hover:border-[#5eb63b]/50 rounded-3xl p-6 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
+            className="w-full max-w-[360px] md:max-w-none mx-auto min-h-[300px] md:min-h-[340px] h-full bg-white border border-gray-200 hover:border-[#5eb63b]/50 rounded-3xl p-7 md:p-8 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
           >
             {/* Themed Accent Badge */}
             <span className="absolute top-4 right-4 px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#5eb63b]/10 text-[#5eb63b] uppercase tracking-wider">
               Claims
             </span>
-            <div className="w-12 h-12 bg-[#5eb63b]/10 text-[#5eb63b] rounded-2xl flex items-center justify-center mb-4 mt-2 shrink-0 shadow-inner">
+            <div className="w-12 h-12 bg-[#5eb63b]/10 text-[#5eb63b] rounded-2xl flex items-center justify-center mb-5 mt-1 shrink-0 shadow-inner">
               <Clock size={22} />
             </div>
-            <h3 className="text-base font-bold text-gray-800 uppercase tracking-wide mb-1.5">
+            <h3 className="text-base font-bold text-gray-800 uppercase tracking-wide mb-3">
               Apply for OT
             </h3>
-            <p className="text-gray-400 text-[11px] font-semibold leading-relaxed mb-1">
+            <p className="text-gray-400 text-[11px] font-semibold leading-relaxed mb-4">
               Log and claim your completed overtime duty shifts. Enter active shift extension details, log patient coverage allocations, and upload shift proofs directly for fast HR processing.
             </p>
-            <div className="mt-auto pt-5 w-full shrink-0 flex justify-center">
+            <div className="mt-auto pt-1 w-full shrink-0 flex justify-center">
               <div className="w-[240px] h-[54px] bg-gradient-to-r from-[#5eb63b] to-[#7ed321] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#5eb63b]/15 hover:shadow-[#5eb63b]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
                 Log Hours <ChevronRight size={14} />
               </div>
@@ -230,22 +230,22 @@ const StaffDashboard = () => {
             onKeyDown={(e) => e.key === 'Enter' && handleActionClick('increment')}
             whileHover={{ scale: 1.03, boxShadow: "0 15px 30px rgba(230,126,34,0.12)", borderColor: "#e67e22" }}
             whileTap={{ scale: 0.98 }}
-            className="w-full max-w-[360px] md:max-w-none mx-auto min-h-[300px] md:min-h-[340px] h-full bg-white border border-gray-200 hover:border-[#e67e22]/50 rounded-3xl p-6 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
+            className="w-full max-w-[360px] md:max-w-none mx-auto min-h-[300px] md:min-h-[340px] h-full bg-white border border-gray-200 hover:border-[#e67e22]/50 rounded-3xl p-7 md:p-8 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
           >
             {/* Themed Accent Badge */}
             <span className="absolute top-4 right-4 px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#e67e22]/10 text-[#e67e22] uppercase tracking-wider">
               Review
             </span>
-            <div className="w-12 h-12 bg-[#e67e22]/10 text-[#e67e22] rounded-2xl flex items-center justify-center mb-4 mt-2 shrink-0 shadow-inner">
+            <div className="w-12 h-12 bg-[#e67e22]/10 text-[#e67e22] rounded-2xl flex items-center justify-center mb-5 mt-1 shrink-0 shadow-inner">
               <CreditCard size={22} />
             </div>
-            <h3 className="text-base font-bold text-gray-800 uppercase tracking-wide mb-1.5">
+            <h3 className="text-base font-bold text-gray-800 uppercase tracking-wide mb-3">
               Salary Increment
             </h3>
-            <p className="text-gray-400 text-[11px] font-semibold leading-relaxed mb-1">
+            <p className="text-gray-400 text-[11px] font-semibold leading-relaxed mb-4">
               Submit formal reviews for merit-based performance appraisals, senior role promotions, or market rate adjustments. Detail your achievements and attach DHA certification updates.
             </p>
-            <div className="mt-auto pt-5 w-full shrink-0 flex justify-center">
+            <div className="mt-auto pt-1 w-full shrink-0 flex justify-center">
               <div className="w-[240px] h-[54px] bg-gradient-to-r from-[#e67e22] to-[#f39c12] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#e67e22]/15 hover:shadow-[#e67e22]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
                 Submit Review <ChevronRight size={14} />
               </div>
