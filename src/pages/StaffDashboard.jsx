@@ -180,8 +180,8 @@ const StaffDashboard = () => {
             <p className="text-gray-400 text-[11px] font-semibold leading-relaxed mb-1">
               Submit your annual, sick, or casual vacation days.
             </p>
-            <div className="mt-auto pt-5 w-full shrink-0">
-              <div className="w-full h-[54px] bg-gradient-to-r from-[#08709d] to-[#0ea5e9] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#08709d]/15 hover:shadow-[#08709d]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
+            <div className="mt-auto pt-5 w-full shrink-0 flex justify-center">
+              <div className="w-[240px] h-[54px] bg-gradient-to-r from-[#08709d] to-[#0ea5e9] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#08709d]/15 hover:shadow-[#08709d]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
                 Start Application <ChevronRight size={14} />
               </div>
             </div>
@@ -210,8 +210,8 @@ const StaffDashboard = () => {
             <p className="text-gray-400 text-[11px] font-semibold leading-relaxed mb-1">
               Request approval for completed overtime shift hours.
             </p>
-            <div className="mt-auto pt-5 w-full shrink-0">
-              <div className="w-full h-[54px] bg-gradient-to-r from-[#5eb63b] to-[#7ed321] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#5eb63b]/15 hover:shadow-[#5eb63b]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
+            <div className="mt-auto pt-5 w-full shrink-0 flex justify-center">
+              <div className="w-[240px] h-[54px] bg-gradient-to-r from-[#5eb63b] to-[#7ed321] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#5eb63b]/15 hover:shadow-[#5eb63b]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
                 Log Hours <ChevronRight size={14} />
               </div>
             </div>
@@ -240,8 +240,8 @@ const StaffDashboard = () => {
             <p className="text-gray-400 text-[11px] font-semibold leading-relaxed mb-1">
               Request review for merit or role-promotion increments.
             </p>
-            <div className="mt-auto pt-5 w-full shrink-0">
-              <div className="w-full h-[54px] bg-gradient-to-r from-[#e67e22] to-[#f39c12] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#e67e22]/15 hover:shadow-[#e67e22]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
+            <div className="mt-auto pt-5 w-full shrink-0 flex justify-center">
+              <div className="w-[240px] h-[54px] bg-gradient-to-r from-[#e67e22] to-[#f39c12] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#e67e22]/15 hover:shadow-[#e67e22]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
                 Submit Review <ChevronRight size={14} />
               </div>
             </div>
