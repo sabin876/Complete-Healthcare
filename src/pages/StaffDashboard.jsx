@@ -181,8 +181,8 @@ const StaffDashboard = () => {
               Submit your annual, sick, or casual vacation days.
             </p>
             <div className="mt-auto pt-5 w-full shrink-0">
-              <div className="w-full py-5 rounded-full text-xs font-bold uppercase tracking-widest text-white bg-[#08709d] hover:bg-[#065d83] transition-all duration-300 shadow-[0_4px_14px_rgba(8,112,157,0.25)] flex items-center justify-center gap-1">
-                Start Application <ChevronRight size={12} />
+              <div className="w-full h-[54px] bg-gradient-to-r from-[#08709d] to-[#0ea5e9] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#08709d]/15 hover:shadow-[#08709d]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
+                Start Application <ChevronRight size={14} />
               </div>
             </div>
           </motion.div>
@@ -211,8 +211,8 @@ const StaffDashboard = () => {
               Request approval for completed overtime shift hours.
             </p>
             <div className="mt-auto pt-5 w-full shrink-0">
-              <div className="w-full py-5 rounded-full text-xs font-bold uppercase tracking-widest text-white bg-[#5eb63b] hover:bg-[#529d48] transition-all duration-300 shadow-[0_4px_14px_rgba(94,182,59,0.25)] flex items-center justify-center gap-1">
-                Log Hours <ChevronRight size={12} />
+              <div className="w-full h-[54px] bg-gradient-to-r from-[#5eb63b] to-[#7ed321] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#5eb63b]/15 hover:shadow-[#5eb63b]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
+                Log Hours <ChevronRight size={14} />
               </div>
             </div>
           </motion.div>
@@ -241,8 +241,8 @@ const StaffDashboard = () => {
               Request review for merit or role-promotion increments.
             </p>
             <div className="mt-auto pt-5 w-full shrink-0">
-              <div className="w-full py-5 rounded-full text-xs font-bold uppercase tracking-widest text-white bg-[#e67e22] hover:bg-[#cf6e1b] transition-all duration-300 shadow-[0_4px_14px_rgba(230,126,34,0.25)] flex items-center justify-center gap-1">
-                Submit Review <ChevronRight size={12} />
+              <div className="w-full h-[54px] bg-gradient-to-r from-[#e67e22] to-[#f39c12] rounded-[14px] text-sm font-bold uppercase tracking-[0.1em] text-white flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#e67e22]/15 hover:shadow-[#e67e22]/25 hover:scale-[1.02] active:scale-[0.99] cursor-pointer">
+                Submit Review <ChevronRight size={14} />
               </div>
             </div>
           </motion.div>
