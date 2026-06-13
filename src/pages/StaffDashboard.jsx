@@ -288,7 +288,7 @@ const StaffDashboard = () => {
             >
               {/* MODAL: LEAVE */}
               {activeModal === 'leave' && (
-                <form onSubmit={(e) => handleFormSubmit(e, 'Leave Application')} className="w-full flex flex-col max-h-[85vh] overflow-y-auto p-8 md:p-9 gap-5 bg-white">
+                <form onSubmit={(e) => handleFormSubmit(e, 'Leave Application')} className="w-full flex flex-col max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-9 gap-5 bg-white">
                   {/* Modal Header */}
                   <div className="flex flex-col items-center text-center justify-center shrink-0 relative mb-2">
                     <h2 className="text-2xl font-bold text-[#1a294a] tracking-tight leading-none font-['Montserrat']">Apply for Leave</h2>
@@ -303,7 +303,7 @@ const StaffDashboard = () => {
                   </div>
 
                   {/* Staff Info Grid */}
-                  <div className="grid grid-cols-2 gap-4 shrink-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
                     <div className="flex flex-col gap-1.5 text-left">
                       <label className="text-[15px] font-semibold text-[#1a294a] font-['Montserrat']">Name of Staff</label>
                       <input 
@@ -330,7 +330,7 @@ const StaffDashboard = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 shrink-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
                     <div className="flex flex-col gap-1.5 text-left">
                       <label className="text-[15px] font-semibold text-[#1a294a] font-['Montserrat']">Department</label>
                       <input 
@@ -381,7 +381,7 @@ const StaffDashboard = () => {
                   </div>
 
                   {/* Dates Row */}
-                  <div className="grid grid-cols-2 gap-4 shrink-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
                     <div className="flex flex-col gap-1.5 text-left">
                       <label className="text-[15px] font-semibold text-[#1a294a] font-['Montserrat']">Start Date</label>
                       <input 
@@ -475,7 +475,7 @@ const StaffDashboard = () => {
                   <div className="mt-4 flex flex-col items-center w-full shrink-0">
                     <motion.button
                       type="submit"
-                      className="w-[280px] h-[54px] bg-gradient-to-r from-[#08709d] to-[#0ea5e9] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#08709d]/15 hover:shadow-[#08709d]/25"
+                      className="w-full max-w-[280px] h-[54px] bg-gradient-to-r from-[#08709d] to-[#0ea5e9] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#08709d]/15 hover:shadow-[#08709d]/25"
                       whileHover={{ scale: 1.02, boxShadow: "0 10px 25px rgba(8, 112, 157, 0.3)" }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -488,7 +488,7 @@ const StaffDashboard = () => {
                     <button
                       type="button"
                       onClick={handleCloseModal}
-                      className="w-[280px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
+                      className="w-full max-w-[280px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
                     >
                       Cancel
                     </button>
@@ -498,7 +498,7 @@ const StaffDashboard = () => {
 
               {/* MODAL: OT */}
               {activeModal === 'ot' && (
-                <form onSubmit={(e) => handleFormSubmit(e, 'Overtime (OT) Request')} className="w-full flex flex-col max-h-[85vh] overflow-y-auto p-8 md:p-9 gap-5 bg-white">
+                <form onSubmit={(e) => handleFormSubmit(e, 'Overtime (OT) Request')} className="w-full flex flex-col max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-9 gap-5 bg-white">
                   {/* Modal Header */}
                   <div className="flex flex-col items-center text-center justify-center shrink-0 relative mb-2">
                     <h2 className="text-2xl font-bold text-[#1a294a] tracking-tight leading-none font-['Montserrat']">Apply for OT</h2>
@@ -513,7 +513,7 @@ const StaffDashboard = () => {
                   </div>
 
                   {/* Staff Info Grid */}
-                  <div className="grid grid-cols-2 gap-4 shrink-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
                     <div className="flex flex-col gap-1.5 text-left">
                       <label className="text-[15px] font-semibold text-[#1a294a] font-['Montserrat']">Name of Staff</label>
                       <input 
@@ -540,7 +540,7 @@ const StaffDashboard = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 shrink-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
                     <div className="flex flex-col gap-1.5 text-left">
                       <label className="text-[15px] font-semibold text-[#1a294a] font-['Montserrat']">Department</label>
                       <input 
@@ -591,7 +591,7 @@ const StaffDashboard = () => {
                   </div>
 
                   {/* Date and Hours */}
-                  <div className="grid grid-cols-2 gap-4 shrink-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
                     <div className="flex flex-col gap-1.5 text-left">
                       <label className="text-[15px] font-semibold text-[#1a294a] font-['Montserrat']">Date of Duty</label>
                       <input 
@@ -670,7 +670,7 @@ const StaffDashboard = () => {
                   <div className="mt-4 flex flex-col items-center w-full shrink-0">
                     <motion.button
                       type="submit"
-                      className="w-[280px] h-[54px] bg-gradient-to-r from-[#5eb63b] to-[#7ed321] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#5eb63b]/15 hover:shadow-[#5eb63b]/25"
+                      className="w-full max-w-[280px] h-[54px] bg-gradient-to-r from-[#5eb63b] to-[#7ed321] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#5eb63b]/15 hover:shadow-[#5eb63b]/25"
                       whileHover={{ scale: 1.02, boxShadow: "0 10px 25px rgba(94, 182, 59, 0.3)" }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -683,7 +683,7 @@ const StaffDashboard = () => {
                     <button
                       type="button"
                       onClick={handleCloseModal}
-                      className="w-[280px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
+                      className="w-full max-w-[280px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
                     >
                       Cancel
                     </button>
@@ -693,7 +693,7 @@ const StaffDashboard = () => {
 
               {/* MODAL: SALARY INCREMENT */}
               {activeModal === 'increment' && (
-                <form onSubmit={(e) => handleFormSubmit(e, 'Salary Increment Review')} className="w-full flex flex-col max-h-[85vh] overflow-y-auto p-8 md:p-9 gap-5 bg-white">
+                <form onSubmit={(e) => handleFormSubmit(e, 'Salary Increment Review')} className="w-full flex flex-col max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-9 gap-5 bg-white">
                   {/* Modal Header */}
                   <div className="flex flex-col items-center text-center justify-center shrink-0 relative mb-2">
                     <h2 className="text-2xl font-bold text-[#1a294a] tracking-tight leading-none font-['Montserrat']">Salary Increment</h2>
@@ -708,7 +708,7 @@ const StaffDashboard = () => {
                   </div>
 
                   {/* Staff Info Grid */}
-                  <div className="grid grid-cols-2 gap-4 shrink-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
                     <div className="flex flex-col gap-1.5 text-left">
                       <label className="text-[15px] font-semibold text-[#1a294a] font-['Montserrat']">Name of Staff</label>
                       <input 
@@ -735,7 +735,7 @@ const StaffDashboard = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 shrink-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
                     <div className="flex flex-col gap-1.5 text-left">
                       <label className="text-[15px] font-semibold text-[#1a294a] font-['Montserrat']">Department</label>
                       <input 
@@ -853,7 +853,7 @@ const StaffDashboard = () => {
                   <div className="mt-4 flex flex-col items-center w-full shrink-0">
                     <motion.button
                       type="submit"
-                      className="w-[280px] h-[54px] bg-gradient-to-r from-[#e67e22] to-[#f39c12] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#e67e22]/15 hover:shadow-[#e67e22]/25"
+                      className="w-full max-w-[280px] h-[54px] bg-gradient-to-r from-[#e67e22] to-[#f39c12] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#e67e22]/15 hover:shadow-[#e67e22]/25"
                       whileHover={{ scale: 1.02, boxShadow: "0 10px 25px rgba(230, 126, 34, 0.3)" }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -866,7 +866,7 @@ const StaffDashboard = () => {
                     <button
                       type="button"
                       onClick={handleCloseModal}
-                      className="w-[280px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
+                      className="w-full max-w-[280px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
                     >
                       Cancel
                     </button>

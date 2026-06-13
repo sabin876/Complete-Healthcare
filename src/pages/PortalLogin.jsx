@@ -96,7 +96,7 @@ const PortalLogin = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-[460px] z-10 bg-white border border-gray-100 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-gray-200/50 flex flex-col justify-center my-8 relative"
+          className="w-full max-w-[460px] z-10 bg-white border border-gray-100 rounded-3xl p-6 sm:p-10 shadow-2xl shadow-gray-200/50 flex flex-col justify-center my-8 relative"
         >
           {/* Top colored accent line */}
           <div className="absolute top-0 left-10 right-10 h-1 bg-gradient-to-r from-[#08709d] to-[#5eb63b] rounded-b-full" />
