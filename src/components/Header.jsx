@@ -148,7 +148,7 @@ const Header = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-6 text-[#63b158] mr-12">
+          <div className="flex items-center gap-3 text-[#63b158] mr-4 md:mr-8">
             <div className="hidden md:flex items-center gap-4">
               <a href="https://www.facebook.com/corxhealthcare" target="_blank" rel="noopener noreferrer" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Facebook size={20} style={{ color: '#63b158' }} /></a>
               <a href="https://www.instagram.com/corx_healthcare" target="_blank" rel="noopener noreferrer" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Instagram size={20} style={{ color: '#63b158' }} /></a>
@@ -158,6 +158,13 @@ const Header = () => {
                 <Mail size={18} style={{ color: '#63b158' }} /> info@corx.ae
               </a>
             </div>
+            {/* Portal button always visible on mobile */}
+            <Link
+              to="/portal"
+              className="lg:hidden flex items-center justify-center font-semibold text-[12px] uppercase tracking-wider bg-[#5eb63b] px-4 py-2 rounded-full text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-md shadow-[#5eb63b]/30"
+            >
+              PORTAL
+            </Link>
             <button className="lg:hidden p-2 text-secondary-color" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
             </button>
