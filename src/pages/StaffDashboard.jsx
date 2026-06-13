@@ -155,7 +155,7 @@ const StaffDashboard = () => {
 
 
         {/* 3-Button Grid (Action Cards) */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 shrink-0">
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center justify-center shrink-0">
           
           {/* Card Button 1: Apply for Leave */}
           <motion.div
@@ -165,7 +165,7 @@ const StaffDashboard = () => {
             onKeyDown={(e) => e.key === 'Enter' && handleActionClick('leave')}
             whileHover={{ scale: 1.03, boxShadow: "0 15px 30px rgba(8,112,157,0.12)", borderColor: "#08709d" }}
             whileTap={{ scale: 0.98 }}
-            className="min-h-[320px] md:min-h-[360px] h-full bg-white border border-gray-200 hover:border-[#08709d]/50 rounded-3xl p-6 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
+            className="w-full max-w-[360px] md:max-w-none mx-auto min-h-[320px] md:min-h-[360px] h-full bg-white border border-gray-200 hover:border-[#08709d]/50 rounded-3xl p-6 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
           >
             {/* Themed Accent Badge */}
             <span className="absolute top-4 right-4 px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#08709d]/10 text-[#08709d] uppercase tracking-wider">
@@ -195,7 +195,7 @@ const StaffDashboard = () => {
             onKeyDown={(e) => e.key === 'Enter' && handleActionClick('ot')}
             whileHover={{ scale: 1.03, boxShadow: "0 15px 30px rgba(94,182,59,0.12)", borderColor: "#5eb63b" }}
             whileTap={{ scale: 0.98 }}
-            className="min-h-[320px] md:min-h-[360px] h-full bg-white border border-gray-200 hover:border-[#5eb63b]/50 rounded-3xl p-6 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
+            className="w-full max-w-[360px] md:max-w-none mx-auto min-h-[320px] md:min-h-[360px] h-full bg-white border border-gray-200 hover:border-[#5eb63b]/50 rounded-3xl p-6 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
           >
             {/* Themed Accent Badge */}
             <span className="absolute top-4 right-4 px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#5eb63b]/10 text-[#5eb63b] uppercase tracking-wider">
@@ -225,7 +225,7 @@ const StaffDashboard = () => {
             onKeyDown={(e) => e.key === 'Enter' && handleActionClick('increment')}
             whileHover={{ scale: 1.03, boxShadow: "0 15px 30px rgba(230,126,34,0.12)", borderColor: "#e67e22" }}
             whileTap={{ scale: 0.98 }}
-            className="min-h-[320px] md:min-h-[360px] h-full bg-white border border-gray-200 hover:border-[#e67e22]/50 rounded-3xl p-6 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
+            className="w-full max-w-[360px] md:max-w-none mx-auto min-h-[320px] md:min-h-[360px] h-full bg-white border border-gray-200 hover:border-[#e67e22]/50 rounded-3xl p-6 flex flex-col items-center text-center cursor-pointer transition-all shadow-sm outline-none shrink-0 relative overflow-hidden"
           >
             {/* Themed Accent Badge */}
             <span className="absolute top-4 right-4 px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#e67e22]/10 text-[#e67e22] uppercase tracking-wider">
