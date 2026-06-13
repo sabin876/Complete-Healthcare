@@ -181,7 +181,7 @@ const StaffDashboard = () => {
               Submit your annual, sick, or casual vacation days.
             </p>
             <div className="mt-auto pt-5 w-full shrink-0">
-              <div className="w-full py-5 rounded-full text-xs font-bold uppercase tracking-widest text-white bg-[#08709d] hover:bg-[#065d83] transition-all duration-300 shadow-[0_4px_14px_rgba(8,112,157,0.25)] flex items-center justify-center gap-1">
+              <div className="w-full h-[64px] rounded-full text-xs font-bold uppercase tracking-widest text-white bg-[#08709d] hover:bg-[#065d83] transition-all duration-300 shadow-[0_4px_14px_rgba(8,112,157,0.25)] flex items-center justify-center gap-1">
                 Start Application <ChevronRight size={12} />
               </div>
             </div>
@@ -211,7 +211,7 @@ const StaffDashboard = () => {
               Request approval for completed overtime shift hours.
             </p>
             <div className="mt-auto pt-5 w-full shrink-0">
-              <div className="w-full py-5 rounded-full text-xs font-bold uppercase tracking-widest text-white bg-[#5eb63b] hover:bg-[#529d48] transition-all duration-300 shadow-[0_4px_14px_rgba(94,182,59,0.25)] flex items-center justify-center gap-1">
+              <div className="w-full h-[64px] rounded-full text-xs font-bold uppercase tracking-widest text-white bg-[#5eb63b] hover:bg-[#529d48] transition-all duration-300 shadow-[0_4px_14px_rgba(94,182,59,0.25)] flex items-center justify-center gap-1">
                 Log Hours <ChevronRight size={12} />
               </div>
             </div>
@@ -241,7 +241,7 @@ const StaffDashboard = () => {
               Request review for merit or role-promotion increments.
             </p>
             <div className="mt-auto pt-5 w-full shrink-0">
-              <div className="w-full py-5 rounded-full text-xs font-bold uppercase tracking-widest text-white bg-[#e67e22] hover:bg-[#cf6e1b] transition-all duration-300 shadow-[0_4px_14px_rgba(230,126,34,0.25)] flex items-center justify-center gap-1">
+              <div className="w-full h-[64px] rounded-full text-xs font-bold uppercase tracking-widest text-white bg-[#e67e22] hover:bg-[#cf6e1b] transition-all duration-300 shadow-[0_4px_14px_rgba(230,126,34,0.25)] flex items-center justify-center gap-1">
                 Submit Review <ChevronRight size={12} />
               </div>
             </div>
