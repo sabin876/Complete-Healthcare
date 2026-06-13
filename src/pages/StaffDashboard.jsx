@@ -470,7 +470,7 @@ const StaffDashboard = () => {
                   <div className="mt-4 flex flex-col items-center w-full shrink-0">
                     <motion.button
                       type="submit"
-                      className="w-[320px] h-[54px] bg-gradient-to-r from-[#08709d] to-[#0ea5e9] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#08709d]/15 hover:shadow-[#08709d]/25"
+                      className="w-[280px] h-[54px] bg-gradient-to-r from-[#08709d] to-[#0ea5e9] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#08709d]/15 hover:shadow-[#08709d]/25"
                       whileHover={{ scale: 1.02, boxShadow: "0 10px 25px rgba(8, 112, 157, 0.3)" }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -483,7 +483,7 @@ const StaffDashboard = () => {
                     <button
                       type="button"
                       onClick={handleCloseModal}
-                      className="w-[320px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
+                      className="w-[280px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
                     >
                       Cancel
                     </button>
@@ -665,7 +665,7 @@ const StaffDashboard = () => {
                   <div className="mt-4 flex flex-col items-center w-full shrink-0">
                     <motion.button
                       type="submit"
-                      className="w-[320px] h-[54px] bg-gradient-to-r from-[#5eb63b] to-[#7ed321] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#5eb63b]/15 hover:shadow-[#5eb63b]/25"
+                      className="w-[280px] h-[54px] bg-gradient-to-r from-[#5eb63b] to-[#7ed321] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#5eb63b]/15 hover:shadow-[#5eb63b]/25"
                       whileHover={{ scale: 1.02, boxShadow: "0 10px 25px rgba(94, 182, 59, 0.3)" }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -678,7 +678,7 @@ const StaffDashboard = () => {
                     <button
                       type="button"
                       onClick={handleCloseModal}
-                      className="w-[320px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
+                      className="w-[280px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
                     >
                       Cancel
                     </button>
@@ -848,7 +848,7 @@ const StaffDashboard = () => {
                   <div className="mt-4 flex flex-col items-center w-full shrink-0">
                     <motion.button
                       type="submit"
-                      className="w-[320px] h-[54px] bg-gradient-to-r from-[#e67e22] to-[#f39c12] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#e67e22]/15 hover:shadow-[#e67e22]/25"
+                      className="w-[280px] h-[54px] bg-gradient-to-r from-[#e67e22] to-[#f39c12] text-white border-none rounded-[14px] text-sm font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-[#e67e22]/15 hover:shadow-[#e67e22]/25"
                       whileHover={{ scale: 1.02, boxShadow: "0 10px 25px rgba(230, 126, 34, 0.3)" }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -861,7 +861,7 @@ const StaffDashboard = () => {
                     <button
                       type="button"
                       onClick={handleCloseModal}
-                      className="w-[320px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
+                      className="w-[280px] h-[48px] border-[1.5px] border-gray-200 hover:border-gray-300 text-gray-500 hover:text-gray-700 bg-transparent rounded-[12px] text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer mt-3"
                     >
                       Cancel
                     </button>
