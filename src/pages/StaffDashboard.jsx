@@ -91,6 +91,11 @@ const StaffDashboard = () => {
       <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-[#08709d]/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-[#5eb63b]/5 rounded-full blur-[100px] pointer-events-none" />
       
+      {/* Transparent Brand Watermark beside cards */}
+      <div className="absolute right-[-80px] xl:right-12 top-[55%] -translate-y-1/2 w-[380px] h-[380px] opacity-[0.035] pointer-events-none select-none z-0 hidden lg:block">
+        <img src={logo} alt="" className="w-full h-full object-contain" />
+      </div>
+      
       {/* Header */}
       <header className="bg-white border-b border-gray-200 h-20 px-6 flex items-center justify-between sticky top-0 z-40 shrink-0 shadow-sm">
         <div className="flex items-center gap-4">
