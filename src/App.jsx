@@ -13,6 +13,8 @@ import ServicePage from './pages/ServicePage';
 import DoctorAtHomePage from './pages/DoctorAtHomePage';
 import DoctorAtOfficePage from './pages/DoctorAtOfficePage';
 import DoctorAtHotelPage from './pages/DoctorAtHotelPage';
+import PortalLogin from './pages/PortalLogin';
+import StaffDashboard from './pages/StaffDashboard';
 
 
 // Placeholder for other pages
@@ -64,23 +66,36 @@ const AnimatedRoutes = () => {
         
         <Route path="/locations" element={<Locations />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/portal" element={<PortalLogin />} />
+        <Route path="/portal/dashboard" element={<StaffDashboard />} />
 
       </Routes>
     </AnimatePresence>
   );
 };
 
+const MainLayout = ({ children }) => {
+  const location = useLocation();
+  const isPortal = location.pathname.startsWith('/portal');
+
+  return (
+    <div className="flex flex-col min-h-screen overflow-x-hidden">
+      {!isPortal && <Header />}
+      <div className="flex-grow">
+        {children}
+      </div>
+      {!isPortal && <Footer />}
+      {!isPortal && <FloatingCTA />}
+    </div>
+  );
+};
+
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen overflow-x-hidden">
-        <Header />
-        <div className="flex-grow">
-          <AnimatedRoutes />
-        </div>
-        <Footer />
-        <FloatingCTA />
-      </div>
+      <MainLayout>
+        <AnimatedRoutes />
+      </MainLayout>
     </Router>
   );
 }

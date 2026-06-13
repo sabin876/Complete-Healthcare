@@ -2,15 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
-const DevelopmentPopup = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const DevelopmentPopup = ({ isOpen: controlledIsOpen, onClose }) => {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (controlledIsOpen === undefined) {
+      const timer = setTimeout(() => {
+        setInternalIsOpen(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [controlledIsOpen]);
+
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
+
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      setInternalIsOpen(false);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -21,7 +33,7 @@ const DevelopmentPopup = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsOpen(false)}
+            onClick={handleClose}
             className="fixed inset-0 bg-black/50 z-[9998]"
           />
 
@@ -35,7 +47,7 @@ const DevelopmentPopup = () => {
             <div className="p-10 text-center relative">
               {/* Close Button */}
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={handleClose}
                 className="absolute top-4 right-4 p-2 text-white/50 hover:text-white transition-colors"
               >
                 <X size={20} />
@@ -55,7 +67,7 @@ const DevelopmentPopup = () => {
               <motion.button
                 whileHover={{ scale: 1.05, backgroundColor: "#065d83", boxShadow: "0 20px 40px rgba(8, 112, 157, 0.3)" }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setIsOpen(false)}
+                onClick={handleClose}
                 className="w-full py-4 bg-[#08709d] text-white text-[15px] font-black uppercase tracking-[0.2em] rounded-full transition-all shadow-xl"
               >
                 Continue

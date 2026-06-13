@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, Search, Printer, ArrowRight, Linkedin } from 'lucide-react';
+import { Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, Search, Printer, ArrowRight, Linkedin, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.webp';
@@ -296,18 +296,12 @@ const Header = () => {
               CALL NOW
             </motion.a>
             <div className="h-8 w-[1px] bg-white/20"></div>
-            <motion.div 
-              animate={{ boxShadow: ["0 0 0px rgba(99,177,88,0)", "0 0 12px rgba(99,177,88,0.4)", "0 0 0px rgba(99,177,88,0)"] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="flex items-center gap-3 font-bold text-[12px] uppercase tracking-widest bg-black/15 px-4 py-2 rounded-lg border border-[#63b158]/30 text-white"
+            <Link 
+              to="/portal"
+              className="flex items-center justify-center font-semibold text-[13px] uppercase tracking-wider bg-[#5eb63b] px-6 py-2.5 rounded-full text-white cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 shadow-md shadow-[#5eb63b]/30 hover:shadow-lg hover:shadow-[#5eb63b]/40"
             >
-              {/* Pulsing Live Dot */}
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#63b158] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#63b158]"></span>
-              </span>
-              <span>AVAILABLE 24/7</span>
-            </motion.div>
+              PORTAL
+            </Link>
           </div>
         </div>
       </nav>
@@ -357,6 +351,15 @@ const Header = () => {
                 )}
               </div>
             ))}
+            <div className="mt-6">
+              <Link
+                to="/portal"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full flex items-center justify-center font-semibold text-[14px] uppercase tracking-widest bg-[#5eb63b] py-3.5 rounded-full text-white cursor-pointer transition-all duration-300 hover:scale-[1.02] shadow-md shadow-[#5eb63b]/30"
+              >
+                PORTAL
+              </Link>
+            </div>
           </div>
         </div>
       </div>
