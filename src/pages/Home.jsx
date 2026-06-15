@@ -290,16 +290,14 @@ const Home = () => {
                   transition={{ delay: 0.8 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="group relative bg-white text-[#2563eb] border-[2px] border-[#2563eb] px-12 py-4 rounded-xl font-bold text-[17px] tracking-wide overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl"
+                  className="group relative green-shimmer-btn text-white font-bold text-[17px] tracking-wide overflow-hidden transition-all duration-300 shadow-md"
+                  style={{
+                    border: 'none',
+                    padding: '12px 24px',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                  }}
                 >
-                  {/* Continuous Shine effect */}
-                  <motion.div 
-                    initial={{ x: "-100%" }}
-                    animate={{ x: "200%" }}
-                    transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 1, ease: "easeInOut" }}
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2563eb]/20 to-transparent skew-x-[-25deg] z-10"
-                  />
-                  
                   <span className="relative z-20 flex items-center gap-3">
                     {slides[currentSlide].cta}
                     <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-300" />

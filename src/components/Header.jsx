@@ -161,7 +161,8 @@ const Header = () => {
             {/* Portal button always visible on mobile */}
             <Link
               to="/portal"
-              className="lg:hidden flex items-center justify-center font-semibold text-[12px] uppercase tracking-wider bg-[#5eb63b] px-4 py-2 rounded-full text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-md shadow-[#5eb63b]/30"
+              className="lg:hidden flex items-center justify-center font-semibold text-[11px] uppercase tracking-wider green-shimmer-btn text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-md"
+              style={{ padding: '8px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
             >
               PORTAL
             </Link>
@@ -305,7 +306,8 @@ const Header = () => {
             <div className="h-8 w-[1px] bg-white/20"></div>
             <Link 
               to="/portal"
-              className="flex items-center justify-center font-semibold text-[13px] uppercase tracking-wider bg-[#5eb63b] px-6 py-2.5 rounded-full text-white cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 shadow-md shadow-[#5eb63b]/30 hover:shadow-lg hover:shadow-[#5eb63b]/40"
+              className="flex items-center justify-center font-semibold text-[12px] uppercase tracking-wider green-shimmer-btn text-white cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+              style={{ padding: '10px 24px', borderRadius: '8px', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
             >
               PORTAL
             </Link>
@@ -362,7 +364,8 @@ const Header = () => {
               <Link
                 to="/portal"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full flex items-center justify-center font-semibold text-[14px] uppercase tracking-widest bg-[#5eb63b] py-3.5 rounded-full text-white cursor-pointer transition-all duration-300 hover:scale-[1.02] shadow-md shadow-[#5eb63b]/30"
+                className="w-full flex items-center justify-center font-semibold text-[13px] uppercase tracking-widest green-shimmer-btn text-white cursor-pointer transition-all duration-300 hover:scale-[1.02] shadow-md"
+                style={{ padding: '12px 24px', borderRadius: '8px', border: 'none' }}
               >
                 PORTAL
               </Link>

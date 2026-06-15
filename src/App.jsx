@@ -1,9 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingCTA from './components/FloatingCTA';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 import Home from './pages/Home';
 import About from './pages/About';
@@ -15,6 +16,7 @@ import DoctorAtOfficePage from './pages/DoctorAtOfficePage';
 import DoctorAtHotelPage from './pages/DoctorAtHotelPage';
 import PortalLogin from './pages/PortalLogin';
 import StaffDashboard from './pages/StaffDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 
 
 // Placeholder for other pages
@@ -38,6 +40,26 @@ const PlaceholderPage = ({ title }) => (
     </div>
   </motion.div>
 );
+
+/* ─── Protected Route ─────────────────────────────────────────────────────
+   Requires the user to be logged in AND have the correct role.
+   If not logged in → /portal
+   If wrong role → redirect to appropriate dashboard
+────────────────────────────────────────────────────────────────────────── */
+const ProtectedRoute = ({ children, requiredRole }) => {
+  const { currentUser } = useAuth();
+
+  if (!currentUser) {
+    return <Navigate to="/portal" replace />;
+  }
+
+  if (requiredRole && currentUser.role !== requiredRole) {
+    // Redirect to the correct dashboard
+    return <Navigate to={currentUser.role === 'admin' ? '/portal/admin' : '/portal/dashboard'} replace />;
+  }
+
+  return children;
+};
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -66,8 +88,25 @@ const AnimatedRoutes = () => {
         
         <Route path="/locations" element={<Locations />} />
         <Route path="/contact" element={<Contact />} />
+
+        {/* Portal Routes */}
         <Route path="/portal" element={<PortalLogin />} />
-        <Route path="/portal/dashboard" element={<StaffDashboard />} />
+        <Route
+          path="/portal/dashboard"
+          element={
+            <ProtectedRoute requiredRole="staff">
+              <StaffDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/portal/admin"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
 
       </Routes>
     </AnimatePresence>
@@ -92,11 +131,13 @@ const MainLayout = ({ children }) => {
 
 function App() {
   return (
-    <Router>
-      <MainLayout>
-        <AnimatedRoutes />
-      </MainLayout>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <MainLayout>
+          <AnimatedRoutes />
+        </MainLayout>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -106,3 +106,29 @@ img {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Custom premium shimmer button */
+@keyframes shimmer { 
+  0% { background-position: -200% center; } 
+  100% { background-position: 200% center; } 
+}
+.admin-shimmer-btn {
+  background: linear-gradient(120deg, #08709d 0%, #0d9ed6 35%, #38bdf8 50%, #0d9ed6 65%, #08709d 100%);
+  background-size: 220% auto;
+  animation: shimmer 2.6s linear infinite;
+  transition: all 0.2s ease-in-out;
+}
+.admin-shimmer-btn:hover { 
+  box-shadow: 0 6px 24px rgba(8,112,157,0.35); 
+}
+
+/* Green shimmer button design */
+.green-shimmer-btn {
+  background: linear-gradient(120deg, #5eb63b 0%, #76cb53 35%, #91dc6f 50%, #76cb53 65%, #5eb63b 100%);
+  background-size: 220% auto;
+  animation: shimmer 2.6s linear infinite;
+  transition: all 0.2s ease-in-out;
+}
+.green-shimmer-btn:hover { 
+  box-shadow: 0 6px 24px rgba(94,182,59,0.35); 
+}

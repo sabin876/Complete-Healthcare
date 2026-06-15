@@ -1,37 +1,48 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Eye, EyeOff, ArrowLeft, Shield, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Lock, Eye, EyeOff, ArrowLeft, Shield, CheckCircle2, ShieldCheck, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import loginHero from '../assets/portal_login_hero.png';
 import logo from '../assets/logo.webp';
 
 const PortalLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
+  const [staffId, setStaffId] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
-  const navigate = useNavigate();
 
   // Focus tracking for premium icon coloring
   const [isIdFocused, setIsIdFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
+  const navigate = useNavigate();
+  const { login, loginError, setLoginError } = useAuth();
+
   const handleLogin = (e) => {
     e.preventDefault();
+    setLoginError('');
     setIsLoading(true);
-    
-    // Simulate API call
+
+    // Short delay for UX feel, then validate
     setTimeout(() => {
+      const user = login(staffId, password);
       setIsLoading(false);
-      setLoginSuccess(true);
-      
-      // Navigate to dashboard after success
-      setTimeout(() => {
-        navigate('/portal/dashboard');
-      }, 1500);
-    }, 1500);
+
+      if (user) {
+        setLoginSuccess(true);
+        setTimeout(() => {
+          if (user.role === 'admin') {
+            navigate('/portal/admin');
+          } else {
+            navigate('/portal/dashboard');
+          }
+        }, 1500);
+      }
+      // loginError is set inside AuthContext if credentials are wrong
+    }, 900);
   };
 
   return (
@@ -137,6 +148,21 @@ const PortalLogin = () => {
                 </p>
               </div>
 
+              {/* Error Alert */}
+              <AnimatePresence>
+                {loginError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, height: 0 }}
+                    animate={{ opacity: 1, y: 0, height: 'auto' }}
+                    exit={{ opacity: 0, y: -8, height: 0 }}
+                    className="flex items-center gap-3 bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-xl text-xs font-bold mb-5"
+                  >
+                    <AlertCircle size={16} className="shrink-0" />
+                    {loginError}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {/* Login Form */}
               <form onSubmit={handleLogin} className="flex flex-col gap-6">
                 
@@ -154,9 +180,9 @@ const PortalLogin = () => {
                     />
                     <input
                       type="text"
-                      placeholder="ADM-109283"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="e.g. ADMIN-001 or STF-CO1234"
+                      value={staffId}
+                      onChange={(e) => { setStaffId(e.target.value); setLoginError(''); }}
                       onFocus={() => setIsIdFocused(true)}
                       onBlur={() => setIsIdFocused(false)}
                       required
@@ -193,7 +219,7 @@ const PortalLogin = () => {
                       type={showPassword ? 'text' : 'password'}
                       placeholder="••••••••"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => { setPassword(e.target.value); setLoginError(''); }}
                       onFocus={() => setIsPasswordFocused(true)}
                       onBlur={() => setIsPasswordFocused(false)}
                       required
@@ -262,6 +288,11 @@ const PortalLogin = () => {
                 <ShieldCheck size={14} className="text-[#5eb63b]" />
                 <span>Secure End-to-End Encrypted Session</span>
               </div>
+
+              {/* Hint for admin */}
+              <p className="text-center text-[10px] text-gray-300 font-semibold mt-4">
+                Admin: <span className="font-mono">ADMIN-001</span> / <span className="font-mono">Admin@2024</span>
+              </p>
             </>
           )}
         </motion.div>
