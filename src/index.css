@@ -142,6 +142,10 @@ img {
 
 /* Custom Chat button style */
 .chat-with-us-btn {
+  position: fixed !important;
+  bottom: 2rem !important;
+  right: 2rem !important;
+  z-index: 100 !important;
   background: linear-gradient(135deg, #08709d 0%, #1681a5 100%) !important;
   color: #ffffff !important;
   font-family: 'Montserrat', sans-serif !important;
@@ -152,9 +156,9 @@ img {
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
   box-shadow: 0 10px 30px rgba(8, 112, 157, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-  position: relative;
   overflow: hidden;
 }
+
 
 .chat-with-us-btn::before {
   content: '';
