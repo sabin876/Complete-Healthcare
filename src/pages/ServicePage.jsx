@@ -441,7 +441,7 @@ function PhysiotherapyLanding() {
                 </motion.button>
               </a>
 
-              <a href="https://wa.me/971547033311" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+              <a href="https://wa.me/97143320776" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
                 <motion.button
                   whileHover={{ scale: 1.05, borderColor: "#22c55e", background: "rgba(34,197,94,0.08)" }}
                   whileTap={{ scale: 0.95 }}
@@ -775,7 +775,7 @@ function LabServicesLanding() {
                 Call Us Now
               </a>
               <a 
-                href="https://wa.me/971547033311" 
+                href="https://wa.me/97143320776" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="inline-flex items-center justify-center gap-3 bg-[#22c55e] hover:bg-[#1db053] rounded-full font-bold text-xs md:text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg min-h-[50px] select-none text-center font-poppins"
@@ -974,7 +974,7 @@ export default function ServicePage({ serviceId }) {
                   </a>
                   
                   <a 
-                    href="https://wa.me/971547033311"
+                    href="https://wa.me/97143320776"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-3 bg-[#25d366] hover:bg-[#20ba5a] rounded-full font-bold text-xs md:text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg min-h-[50px] select-none text-center"
@@ -1087,7 +1087,7 @@ export default function ServicePage({ serviceId }) {
                 className="text-white text-lg md:text-xl font-medium max-w-3xl leading-relaxed"
                 style={{ color: 'rgba(255, 255, 255, 0.9)' }}
               >
-                Call Us at <a href="tel:+97143320776" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 4 332 0776</a> or WhatsApp Us at <a href="https://wa.me/971547033311" target="_blank" rel="noopener noreferrer" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 54 703 3311</a> for doctor on call service.
+                Call Us at <a href="tel:+97143320776" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 4 332 0776</a> or WhatsApp Us at <a href="https://wa.me/97143320776" target="_blank" rel="noopener noreferrer" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 4 332 0776</a> for doctor on call service.
               </motion.p>
             </div>
             

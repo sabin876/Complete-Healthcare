@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .vercel
+diff.txt
+diff_utf8.txt
+

@@ -1,10 +1,9 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  LogOut, Calendar, Clock, CreditCard, ChevronDown, CheckCircle2, X,
-  Paperclip, ArrowUpRight, Bell, Sun, Moon, Zap, TrendingUp,
-  LayoutDashboard, FileText, ClipboardList, Bell as BellIcon,
-  RefreshCw, ChevronRight, Menu, AlertCircle, CalendarDays, User, Flag,
+  LogOut, Calendar, Clock, ChevronDown, CheckCircle2, X,
+  Paperclip, ArrowUpRight, Sun, Moon, Zap, TrendingUp,
+  ClipboardList, CalendarDays, User,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -46,16 +45,7 @@ const calculateDays = (start, end) => {
   return d > 0 ? `${d} day${d !== 1 ? 's' : ''}` : '0 days';
 };
 
-/* ── Nav items ───────────────────────────────────────────────────────────── */
-const NAV = [
-  { id: 'dashboard',   label: 'Dashboard',              icon: LayoutDashboard },
-  { id: 'leave',       label: 'Leave Report',            icon: Calendar        },
-  { id: 'ot',          label: 'OT Report',               icon: Clock           },
-  { id: 'salary',      label: 'Salary Increment Report', icon: TrendingUp      },
-  { id: 'notice',      label: 'Notice Report',           icon: BellIcon        },
-  { id: 'duty',        label: 'Duty Replacement Report', icon: RefreshCw       },
-  { id: 'tasks',       label: 'My Tasks',                icon: ClipboardList   },
-];
+
 
 /* ── Form helpers ────────────────────────────────────────────────────────── */
 const inputCls = "w-full border border-[#E8EDF2] focus:border-[#08709d] focus:outline-none focus:ring-2 focus:ring-[#08709d]/10 transition-all px-4 py-3 rounded-xl bg-white text-[#1a294a] text-sm placeholder:text-[#6B7A90]/50";
@@ -174,16 +164,9 @@ const StaffDashboard = () => {
     leaveApplications, createLeaveApplication,
     otApplications, createOtApplication,
     salaryApplications, createSalaryApplication,
-    noticeApplications, createNoticeApplication,
-    dutyApplications, createDutyApplication,
   } = useAuth();
 
-  /* ── Route guard ── */
-  if (!currentUser)                    { navigate('/portal', { replace: true }); return null; }
-  if (currentUser.role === 'admin')    { navigate('/portal/admin', { replace: true }); return null; }
-
-  const [activeNav,    setActiveNav]    = useState('dashboard');
-  const [sidebarOpen,  setSidebarOpen]  = useState(false);
+  const [activeTab,    setActiveTab]    = useState('leave'); // 'leave' | 'ot' | 'salary'
   const [activeModal,  setActiveModal]  = useState(null);
   const [successMsg,   setSuccessMsg]   = useState(null);
 
@@ -206,20 +189,15 @@ const StaffDashboard = () => {
   const [incFile,  setIncFile]  = useState(null);
   const incFileRef = useRef(null);
 
-  /* ── Notice form ── */
-  const [noticeTitle,   setNoticeTitle]   = useState('');
-  const [noticeMessage, setNoticeMessage] = useState('');
-
-  /* ── Duty Replacement form ── */
-  const [dutyDate,        setDutyDate]        = useState('');
-  const [dutyReplacement, setDutyReplacement] = useState('');
-  const [dutyReason,      setDutyReason]      = useState('');
-
   /* ── Shared staff fields ── */
   const [staffName,     setStaffName]     = useState(currentUser?.name || '');
   const [staffId,       setStaffId]       = useState(currentUser?.id   || '');
   const [staffDep,      setStaffDep]      = useState(currentUser?.department || '');
   const [staffPosition, setStaffPosition] = useState(currentUser?.position   || '');
+
+  /* ── Route guard ── */
+  if (!currentUser)                    { navigate('/portal', { replace: true }); return null; }
+  if (currentUser.role === 'admin')    { navigate('/portal/admin', { replace: true }); return null; }
 
   const handleLogout = () => { logout(); navigate('/portal'); };
 
@@ -229,8 +207,6 @@ const StaffDashboard = () => {
     setLeaveStart(''); setLeaveEnd(''); setLeaveFile(null);
     setOtDate(''); setOtHours(''); setOtFile(null);
     setIncFile(null);
-    setNoticeTitle(''); setNoticeMessage('');
-    setDutyDate(''); setDutyReplacement(''); setDutyReason('');
   };
 
   const submitForm = (e, type, record) => {
@@ -238,8 +214,6 @@ const StaffDashboard = () => {
     if (type === 'leave')  createLeaveApplication(record);
     if (type === 'ot')     createOtApplication(record);
     if (type === 'salary') createSalaryApplication(record);
-    if (type === 'notice') createNoticeApplication(record);
-    if (type === 'duty')   createDutyApplication(record);
     closeModal();
     setSuccessMsg('Your request has been submitted to HR successfully.');
     setTimeout(() => setSuccessMsg(null), 5000);
@@ -249,73 +223,10 @@ const StaffDashboard = () => {
   const myLeaves    = (leaveApplications || []).filter(r => r.staffId?.trim().toLowerCase() === currentUser?.id?.trim().toLowerCase());
   const myOts       = (otApplications || []).filter(r => r.staffId?.trim().toLowerCase() === currentUser?.id?.trim().toLowerCase());
   const mySalaries  = (salaryApplications || []).filter(r => r.staffId?.trim().toLowerCase() === currentUser?.id?.trim().toLowerCase());
-  const myNotices   = (noticeApplications || []).filter(r => r.staffId?.trim().toLowerCase() === currentUser?.id?.trim().toLowerCase());
-  const myDuties    = (dutyApplications || []).filter(r => r.staffId?.trim().toLowerCase() === currentUser?.id?.trim().toLowerCase());
 
   const greeting = getGreeting();
   const initials  = getInitials(currentUser?.name);
   const myTasks   = getTasksForStaff ? getTasksForStaff(currentUser?.id) : [];
-
-  /* ── Nav click ── */
-  const goTo = (id) => { setActiveNav(id); setSidebarOpen(false); };
-
-  /* ── Sidebar nav item ── */
-  const NavItem = ({ item }) => {
-    const active = activeNav === item.id;
-    return (
-      <button onClick={() => goTo(item.id)}
-        style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%', padding: '11px 16px', borderRadius: '12px', border: 'none', cursor: 'pointer', transition: 'all 0.18s', textAlign: 'left', background: active ? B.primary : 'transparent', color: active ? 'white' : B.muted, fontFamily: "'Poppins',sans-serif" }}>
-        <item.icon size={17} style={{ flexShrink: 0 }} />
-        <span style={{ fontSize: '13px', fontWeight: active ? 600 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>
-        {active && <ChevronRight size={14} style={{ marginLeft: 'auto', flexShrink: 0 }} />}
-      </button>
-    );
-  };
-
-  /* ── Sidebar ── */
-  const Sidebar = ({ mobile }) => (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '24px 12px', gap: '4px', overflowY: 'auto' }}>
-      {/* Logo area */}
-      <div style={{ padding: '0 8px 20px', borderBottom: `1px solid ${B.border}`, marginBottom: '8px' }}>
-        <img src={logo} alt="Complete Healthcare" style={{ height: '38px', objectFit: 'contain' }} />
-        <div style={{ marginTop: '10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: `linear-gradient(135deg, ${B.secondary}, ${B.primary})`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12px', fontWeight: 600 }}>
-              {initials}
-            </div>
-            <div>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: B.secondary, margin: 0 }}>{currentUser?.name || 'Staff'}</p>
-              <p style={{ fontSize: '10px', color: B.muted, margin: 0 }}>{currentUser?.position || currentUser?.department || 'Staff Member'}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Nav items */}
-      {NAV.map(item => <NavItem key={item.id} item={item} />)}
-
-      {/* Logout at bottom */}
-      <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: `1px solid ${B.border}` }}>
-        <button onClick={handleLogout}
-          style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 16px', borderRadius: '12px', border: 'none', cursor: 'pointer', background: '#FFF5F5', color: '#dc3545', fontSize: '13px', fontWeight: 500, fontFamily: "'Poppins',sans-serif", transition: 'all 0.2s' }}
-          onMouseEnter={e => e.currentTarget.style.background = '#FFECEC'}
-          onMouseLeave={e => e.currentTarget.style.background = '#FFF5F5'}>
-          <LogOut size={16} /> Sign Out
-        </button>
-      </div>
-    </div>
-  );
-
-  /* ── Page title map ── */
-  const PAGE_TITLES = {
-    dashboard: 'Dashboard',
-    leave:     'Leave Report',
-    ot:        'OT Report',
-    salary:    'Salary Increment Report',
-    notice:    'Notice Report',
-    duty:      'Duty Replacement Report',
-    tasks:     'My Tasks',
-  };
 
   return (
     <div style={{ fontFamily: "'Poppins',sans-serif", minHeight: '100vh', background: B.bg, display: 'flex', flexDirection: 'column' }}>
@@ -323,17 +234,20 @@ const StaffDashboard = () => {
       {/* Brand stripe */}
       <div style={{ height: '4px', background: `linear-gradient(90deg, ${B.secondary}, ${B.primary}, ${B.accent})`, flexShrink: 0 }} />
 
-      {/* Top header (mobile only shows hamburger) */}
-      <header style={{ height: '64px', background: B.white, borderBottom: `1.5px solid ${B.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', boxShadow: '0 2px 12px rgba(8,112,157,0.06)', flexShrink: 0, position: 'sticky', top: 0, zIndex: 30 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+      {/* Top Header */}
+      <header style={{ height: '64px', background: B.white, borderBottom: `1.5px solid ${B.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', boxShadow: '0 2px 12px rgba(8,112,157,0.06)', flexShrink: 0, position: 'sticky', top: 0, zIndex: 30 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <img src={logo} alt="Complete Healthcare" style={{ height: '36px', objectFit: 'contain' }} />
+          <div style={{ width: '1px', height: '24px', background: B.border }} />
           <div>
-            <h1 style={{ fontSize: '15px', fontWeight: 600, color: B.secondary, margin: 0 }}>{PAGE_TITLES[activeNav]}</h1>
+            <h1 style={{ fontSize: '15px', fontWeight: 600, color: B.secondary, margin: 0 }}>Staff Portal</h1>
             <p style={{ fontSize: '11px', color: B.muted, margin: 0 }}>{formatDate()}</p>
           </div>
         </div>
+
         {/* Right side controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {/* Right: greeting pill */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          {/* Greeting pill */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: B.lightBlue, border: `1px solid ${B.primary}20`, padding: '6px 14px 6px 6px', borderRadius: '999px' }}>
             <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: `linear-gradient(135deg, ${B.secondary}, ${B.primary})`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '11px', fontWeight: 600 }}>
               {initials}
@@ -343,270 +257,239 @@ const StaffDashboard = () => {
               {greeting.text}
             </span>
           </div>
-          {/* Mobile hamburger */}
-          <button onClick={() => setSidebarOpen(p => !p)} className="lg:hidden"
-            style={{ width: '36px', height: '36px', borderRadius: '10px', background: B.lightBlue, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: B.primary }}>
-            <Menu size={18} />
+
+          {/* Sign Out Button */}
+          <button onClick={handleLogout}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '38px', padding: '0 16px', borderRadius: '10px', background: '#FFF5F5', color: '#dc3545', border: '1px solid #dc354520', fontSize: '12px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', fontFamily: "'Poppins',sans-serif" }}
+            onMouseEnter={e => e.currentTarget.style.background = '#FFECEC'}
+            onMouseLeave={e => e.currentTarget.style.background = '#FFF5F5'}>
+            <LogOut size={14} /> Sign Out
           </button>
         </div>
       </header>
 
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-
-        {/* ── Mobile Sidebar Drawer ── */}
-        <AnimatePresence>
-          {sidebarOpen && (
-            <>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSidebarOpen(false)}
-                style={{ position: 'fixed', inset: 0, background: 'rgba(26,41,74,0.4)', zIndex: 40, backdropFilter: 'blur(4px)' }} />
-              <motion.aside initial={{ x: 260 }} animate={{ x: 0 }} exit={{ x: 260 }} transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                style={{ position: 'fixed', right: 0, top: 0, bottom: 0, width: '260px', background: B.white, zIndex: 50, boxShadow: '-4px 0 30px rgba(26,41,74,0.15)', overflowY: 'auto' }}>
-                <Sidebar mobile />
-              </motion.aside>
-            </>
-          )}
-        </AnimatePresence>
-
-        {/* ── Main Content ── */}
-        <main style={{ flex: 1, overflowY: 'auto', padding: '28px 24px 48px' }}>
+      {/* Main Content Area */}
+      <main style={{ flex: 1, overflowY: 'auto', padding: '28px 24px 48px' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
           {/* Success toast */}
           <AnimatePresence>
             {successMsg && (
               <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                style={{ background: B.lightGreen, border: `1px solid ${B.accent}40`, color: B.accent, padding: '13px 18px', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', fontWeight: 500, marginBottom: '20px' }}>
+                style={{ background: B.lightGreen, border: `1px solid ${B.accent}40`, color: B.accent, padding: '13px 18px', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', fontWeight: 500 }}>
                 <CheckCircle2 size={16} style={{ flexShrink: 0 }} />{successMsg}
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* ═══════════ DASHBOARD HOME ═══════════ */}
-          {activeNav === 'dashboard' && (
-            <motion.div key="dashboard" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
-              {/* Greeting */}
-              <div style={{ marginBottom: '28px' }}>
-                <p style={{ fontSize: '13px', color: B.muted, marginBottom: '4px' }}>
-                  <greeting.Icon size={13} style={{ display: 'inline', marginRight: '6px', color: B.primary }} />
-                  {greeting.text}
-                </p>
-                <h2 style={{ fontSize: 'clamp(20px,3vw,28px)', fontWeight: 700, color: B.secondary, margin: 0 }}>
-                  Hey, {currentUser?.name?.split(' ')[0] || 'there'}! 👋
-                </h2>
+          {/* Welcome Banner */}
+          <div style={{ background: B.white, border: `1.5px solid ${B.border}`, borderRadius: '24px', padding: '28px', display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 10px rgba(26,41,74,0.04)' }}>
+            <div>
+              <p style={{ fontSize: '13px', color: B.muted, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <greeting.Icon size={14} style={{ color: B.primary }} />
+                {greeting.text}
+              </p>
+              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, color: B.secondary, margin: 0 }}>
+                Hey, {currentUser?.name?.split(' ')[0] || 'there'}! 👋
+              </h2>
+              <p style={{ fontSize: '13px', color: B.muted, marginTop: '4px', marginBottom: 0 }}>
+                Logged in as <strong style={{ color: B.secondary }}>{currentUser?.position || 'Staff'}</strong> ({currentUser?.department || 'Medical Consultancy'})
+              </p>
+            </div>
+
+            {/* Quick Stats Pill */}
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <div style={{ background: B.lightBlue, padding: '12px 20px', borderRadius: '16px', border: `1px solid ${B.primary}15` }}>
+                <span style={{ fontSize: '11px', color: B.muted, display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>My Tasks</span>
+                <strong style={{ fontSize: '20px', color: B.primary }}>{myTasks.length}</strong>
               </div>
-
-              {/* Quick-action cards */}
-              <div style={{ marginBottom: '12px' }}>
-                <p style={{ fontSize: '11px', fontWeight: 600, color: B.muted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>Quick Actions</p>
+              <div style={{ background: B.lightGreen, padding: '12px 20px', borderRadius: '16px', border: `1px solid ${B.accent}15` }}>
+                <span style={{ fontSize: '11px', color: B.muted, display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Requests Submitted</span>
+                <strong style={{ fontSize: '20px', color: B.accent }}>{myLeaves.length + myOts.length + mySalaries.length}</strong>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5" style={{ marginBottom: '32px' }}>
-                {[
-                  { modal: 'leave',  color: B.primary,   bg: B.lightBlue,  icon: <Calendar size={22} />,  label: 'Apply for Leave',     sub: 'Submit annual, sick or emergency leave' },
-                  { modal: 'ot',     color: B.accent,    bg: B.lightGreen, icon: <Clock size={22} />,     label: 'Apply for OT',         sub: 'Log overtime and claim shift hours' },
-                  { modal: 'salary', color: B.secondary, bg: '#EAECF3',    icon: <TrendingUp size={22} />,label: 'Salary Increment',     sub: 'Submit your appraisal or review' },
-                ].map(card => (
-                  <motion.div key={card.modal} whileHover={{ y: -4, boxShadow: `0 16px 36px ${card.color}18` }} whileTap={{ scale: 0.98 }}
-                    onClick={() => openModal(card.modal)}
-                    style={{ background: B.white, border: `1.5px solid ${B.border}`, borderRadius: '18px', padding: '22px', cursor: 'pointer', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 10px rgba(26,41,74,0.06)', transition: 'all 0.2s' }}>
-                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: `linear-gradient(90deg, ${card.color}, ${card.color}80)` }} />
-                    <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: card.color, marginBottom: '14px' }}>{card.icon}</div>
-                    <p style={{ fontSize: '14px', fontWeight: 600, color: B.secondary, margin: '0 0 4px' }}>{card.label}</p>
-                    <p style={{ fontSize: '12px', color: B.muted, margin: '0 0 16px', lineHeight: 1.5 }}>{card.sub}</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: 600, color: card.color }}>
-                      Apply now <ArrowUpRight size={13} />
-                    </div>
-                  </motion.div>
-                ))}
+            </div>
+          </div>
+
+          {/* Quick Actions Grid */}
+          <div>
+            <p style={{ fontSize: '11px', fontWeight: 600, color: B.muted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>Quick Actions</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {[
+                { modal: 'leave',  color: B.primary,   bg: B.lightBlue,  icon: <Calendar size={22} />,  label: 'Apply for Leave',     sub: 'Submit annual, sick or emergency leave' },
+                { modal: 'ot',     color: B.accent,    bg: B.lightGreen, icon: <Clock size={22} />,     label: 'Apply for OT',         sub: 'Log overtime and claim shift hours' },
+                { modal: 'salary', color: B.secondary, bg: '#EAECF3',    icon: <TrendingUp size={22} />,label: 'Salary Increment',     sub: 'Submit your appraisal or review' },
+              ].map(card => (
+                <motion.div key={card.modal} whileHover={{ y: -4, boxShadow: `0 16px 36px ${card.color}18` }} whileTap={{ scale: 0.98 }}
+                  onClick={() => openModal(card.modal)}
+                  style={{ background: B.white, border: `1.5px solid ${B.border}`, borderRadius: '18px', padding: '22px', cursor: 'pointer', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 10px rgba(26,41,74,0.06)', transition: 'all 0.2s' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: `linear-gradient(90deg, ${card.color}, ${card.color}80)` }} />
+                  <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: card.color, marginBottom: '14px' }}>{card.icon}</div>
+                  <p style={{ fontSize: '14px', fontWeight: 600, color: B.secondary, margin: '0 0 4px' }}>{card.label}</p>
+                  <p style={{ fontSize: '12px', color: B.muted, margin: '0 0 16px', lineHeight: 1.5 }}>{card.sub}</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', fontWeight: 600, color: card.color }}>
+                    Apply now <ArrowUpRight size={13} />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Assigned Tasks Section */}
+          <div>
+            <p style={{ fontSize: '11px', fontWeight: 600, color: B.muted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>Assigned Tasks</p>
+            {myTasks.length === 0 ? (
+              <div style={{ background: B.white, border: `1.5px solid ${B.border}`, borderRadius: '18px' }}>
+                <EmptyState icon={ClipboardList} text="No tasks assigned to you yet. Check back later." />
               </div>
-
-              {/* Also shortcut to notice & duty */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {[
-                  { modal: 'notice', color: '#7c3aed', bg: '#F3EEFF', icon: <BellIcon size={20} />, label: 'Submit a Notice',          sub: 'Send a notice to HR or management' },
-                  { modal: 'duty',   color: '#0891b2', bg: '#E0F7FA', icon: <RefreshCw size={20} />,label: 'Duty Replacement Request', sub: 'Request a replacement for your shift' },
-                ].map(card => (
-                  <motion.div key={card.modal} whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }}
-                    onClick={() => openModal(card.modal)}
-                    style={{ background: B.white, border: `1.5px solid ${B.border}`, borderRadius: '18px', padding: '20px', cursor: 'pointer', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', gap: '16px', boxShadow: '0 2px 10px rgba(26,41,74,0.06)', transition: 'all 0.2s' }}>
-                    <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '3px', background: card.color }} />
-                    <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: card.color, flexShrink: 0 }}>{card.icon}</div>
-                    <div>
-                      <p style={{ fontSize: '14px', fontWeight: 600, color: B.secondary, margin: '0 0 2px' }}>{card.label}</p>
-                      <p style={{ fontSize: '12px', color: B.muted, margin: 0 }}>{card.sub}</p>
-                    </div>
-                    <ArrowUpRight size={16} style={{ marginLeft: 'auto', color: B.muted, flexShrink: 0 }} />
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {/* ═══════════ LEAVE REPORT ═══════════ */}
-          {activeNav === 'leave' && (
-            <motion.div key="leave" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
-              <SectionHeader title="Leave Report" sub="Track all your leave applications and their status" />
-              <ReportTable
-                emptyIcon={Calendar} emptyText="No leave applications yet. Click 'Apply' to submit one."
-                applyLabel="Apply for Leave" onApply={() => openModal('leave')}
-                headers={['Leave Type', 'Start Date', 'End Date', 'Duration', 'Status', 'Submitted']}
-                rows={myLeaves.map(r => (
-                  <>
-                    <Td>{r.leaveType}</Td>
-                    <Td>{r.leaveStart}</Td>
-                    <Td>{r.leaveEnd}</Td>
-                    <Td>{calculateDays(r.leaveStart, r.leaveEnd)}</Td>
-                    <td style={{ padding: '13px 20px' }}><Badge label={r.status} color={STATUS_CFG[r.status]?.color || B.muted} bg={STATUS_CFG[r.status]?.bg || B.bg} /></td>
-                    <Td>{new Date(r.submittedAt).toLocaleDateString('en-GB')}</Td>
-                  </>
-                ))}
-              />
-            </motion.div>
-          )}
-
-          {/* ═══════════ OT REPORT ═══════════ */}
-          {activeNav === 'ot' && (
-            <motion.div key="ot" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
-              <SectionHeader title="OT Report" sub="All your overtime submissions and claim status" />
-              <ReportTable
-                emptyIcon={Clock} emptyText="No OT claims yet. Click 'Apply' to log your hours."
-                applyLabel="Log OT Hours" onApply={() => openModal('ot')}
-                headers={['Shift Type', 'Date of Duty', 'OT Hours', 'Status', 'Submitted']}
-                rows={myOts.map(r => (
-                  <>
-                    <Td>{r.otType}</Td>
-                    <Td>{r.otDate}</Td>
-                    <Td mono>{r.otHours} hrs</Td>
-                    <td style={{ padding: '13px 20px' }}><Badge label={r.status} color={STATUS_CFG[r.status]?.color || B.muted} bg={STATUS_CFG[r.status]?.bg || B.bg} /></td>
-                    <Td>{new Date(r.submittedAt).toLocaleDateString('en-GB')}</Td>
-                  </>
-                ))}
-              />
-            </motion.div>
-          )}
-
-          {/* ═══════════ SALARY REPORT ═══════════ */}
-          {activeNav === 'salary' && (
-            <motion.div key="salary" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
-              <SectionHeader title="Salary Increment Report" sub="Your salary review and appraisal request history" />
-              <ReportTable
-                emptyIcon={TrendingUp} emptyText="No increment requests yet. Submit your first appraisal."
-                applyLabel="Submit Review" onApply={() => openModal('salary')}
-                headers={['Appraisal Type', 'Status', 'Submitted']}
-                rows={mySalaries.map(r => (
-                  <>
-                    <Td>{r.incType}</Td>
-                    <td style={{ padding: '13px 20px' }}><Badge label={r.status} color={STATUS_CFG[r.status]?.color || B.muted} bg={STATUS_CFG[r.status]?.bg || B.bg} /></td>
-                    <Td>{new Date(r.submittedAt).toLocaleDateString('en-GB')}</Td>
-                  </>
-                ))}
-              />
-            </motion.div>
-          )}
-
-          {/* ═══════════ NOTICE REPORT ═══════════ */}
-          {activeNav === 'notice' && (
-            <motion.div key="notice" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
-              <SectionHeader title="Notice Report" sub="All notices you have submitted to HR or management" />
-              <ReportTable
-                emptyIcon={BellIcon} emptyText="No notices submitted yet."
-                applyLabel="Submit Notice" onApply={() => openModal('notice')}
-                headers={['Notice Title', 'Message Preview', 'Status', 'Submitted']}
-                rows={myNotices.map(r => (
-                  <>
-                    <Td>{r.noticeTitle}</Td>
-                    <td style={{ padding: '13px 20px', fontSize: '12px', color: B.muted, maxWidth: '240px' }}>
-                      <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.noticeMessage}</span>
-                    </td>
-                    <td style={{ padding: '13px 20px' }}><Badge label={r.status} color={STATUS_CFG[r.status]?.color || B.muted} bg={STATUS_CFG[r.status]?.bg || B.bg} /></td>
-                    <Td>{new Date(r.submittedAt).toLocaleDateString('en-GB')}</Td>
-                  </>
-                ))}
-              />
-            </motion.div>
-          )}
-
-          {/* ═══════════ DUTY REPLACEMENT REPORT ═══════════ */}
-          {activeNav === 'duty' && (
-            <motion.div key="duty" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
-              <SectionHeader title="Duty Replacement Report" sub="Shift replacement requests and their approval status" />
-              <ReportTable
-                emptyIcon={RefreshCw} emptyText="No duty replacement requests yet."
-                applyLabel="Request Replacement" onApply={() => openModal('duty')}
-                headers={['Duty Date', 'Replacement Staff', 'Reason', 'Status', 'Submitted']}
-                rows={myDuties.map(r => (
-                  <>
-                    <Td>{r.dutyDate}</Td>
-                    <Td>{r.dutyReplacement}</Td>
-                    <td style={{ padding: '13px 20px', fontSize: '12px', color: B.muted, maxWidth: '200px' }}>
-                      <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.dutyReason}</span>
-                    </td>
-                    <td style={{ padding: '13px 20px' }}><Badge label={r.status} color={STATUS_CFG[r.status]?.color || B.muted} bg={STATUS_CFG[r.status]?.bg || B.bg} /></td>
-                    <Td>{new Date(r.submittedAt).toLocaleDateString('en-GB')}</Td>
-                  </>
-                ))}
-              />
-            </motion.div>
-          )}
-
-          {/* ═══════════ MY TASKS ═══════════ */}
-          {activeNav === 'tasks' && (
-            <motion.div key="tasks" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
-              <SectionHeader title="My Tasks" sub="Tasks assigned to you by the admin" />
-              {myTasks.length === 0 ? (
-                <div style={{ background: B.white, border: `1.5px solid ${B.border}`, borderRadius: '18px' }}>
-                  <EmptyState icon={ClipboardList} text="No tasks assigned to you yet. Check back later." />
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {myTasks.map((task, i) => {
-                    const pc = PRIORITY_CFG[task.priority] || PRIORITY_CFG.Medium;
-                    const sc = STATUS_CFG[task.status]    || STATUS_CFG.Pending;
-                    return (
-                      <motion.div key={task.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                        style={{ background: B.white, border: `1.5px solid ${B.border}`, borderRadius: '16px', padding: '18px 20px', boxShadow: '0 2px 8px rgba(26,41,74,0.05)' }}>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                          <div style={{ flex: 1, minWidth: '200px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '6px' }}>
-                              <span style={{ fontSize: '14px', fontWeight: 600, color: B.secondary }}>{task.title}</span>
-                              <Badge label={pc.label} color={pc.color} bg={pc.bg} />
-                            </div>
-                            {task.description && <p style={{ fontSize: '13px', color: B.muted, margin: '0 0 10px', lineHeight: 1.6 }}>{task.description}</p>}
-                            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                              {task.dueDate && (
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: B.muted }}>
-                                  <CalendarDays size={12} style={{ color: B.primary }} />
-                                  Due: {new Date(task.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                </span>
-                              )}
-                              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: B.muted }}>
-                                <User size={12} style={{ color: B.primary }} /> From: {task.assignedByName}
-                              </span>
-                            </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {myTasks.map((task, i) => {
+                  const pc = PRIORITY_CFG[task.priority] || PRIORITY_CFG.Medium;
+                  const sc = STATUS_CFG[task.status]    || STATUS_CFG.Pending;
+                  return (
+                    <motion.div key={task.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+                      style={{ background: B.white, border: `1.5px solid ${B.border}`, borderRadius: '16px', padding: '18px 20px', boxShadow: '0 2px 8px rgba(26,41,74,0.05)' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <div style={{ flex: 1, minWidth: '200px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '6px' }}>
+                            <span style={{ fontSize: '14px', fontWeight: 600, color: B.secondary }}>{task.title}</span>
+                            <Badge label={task.priority} color={pc.color} bg={pc.bg} />
                           </div>
-                          {/* Status selector */}
-                          <div style={{ position: 'relative', flexShrink: 0 }}>
-                            <select value={task.status} onChange={e => updateTaskStatus(task.id, e.target.value)}
-                              style={{ height: '36px', paddingLeft: '12px', paddingRight: '28px', borderRadius: '10px', border: `1.5px solid ${sc.color}40`, background: sc.bg, color: sc.color, fontSize: '12px', fontWeight: 600, appearance: 'none', cursor: 'pointer', outline: 'none', fontFamily: "'Poppins',sans-serif" }}>
-                              <option>Pending</option>
-                              <option>In Progress</option>
-                              <option>Completed</option>
-                            </select>
-                            <ChevronDown size={12} style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: sc.color }} />
+                          {task.description && <p style={{ fontSize: '13px', color: B.muted, margin: '0 0 10px', lineHeight: 1.6 }}>{task.description}</p>}
+                          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                            {task.dueDate && (
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: B.muted }}>
+                                <CalendarDays size={12} style={{ color: B.primary }} />
+                                Due: {new Date(task.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                              </span>
+                            )}
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: B.muted }}>
+                              <User size={12} style={{ color: B.primary }} /> From: {task.assignedByName}
+                            </span>
                           </div>
                         </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              )}
-            </motion.div>
-          )}
-        </main>
+                        {/* Status selector */}
+                        <div style={{ position: 'relative', flexShrink: 0 }}>
+                          <select value={task.status} onChange={e => updateTaskStatus(task.id, e.target.value)}
+                            style={{ height: '36px', paddingLeft: '12px', paddingRight: '28px', borderRadius: '10px', border: `1.5px solid ${sc.color}40`, background: sc.bg, color: sc.color, fontSize: '12px', fontWeight: 600, appearance: 'none', cursor: 'pointer', outline: 'none', fontFamily: "'Poppins',sans-serif" }}>
+                            <option>Pending</option>
+                            <option>In Progress</option>
+                            <option>Completed</option>
+                          </select>
+                          <ChevronDown size={12} style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: sc.color }} />
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
-        {/* ── Desktop Sidebar ── */}
-        <aside className="hidden lg:block" style={{ width: '240px', background: B.white, borderLeft: `1.5px solid ${B.border}`, flexShrink: 0, overflowY: 'auto' }}>
-          <Sidebar />
-        </aside>
-      </div>
+          {/* Request & Application History (Tabbed Layout) */}
+          <div>
+            <p style={{ fontSize: '11px', fontWeight: 600, color: B.muted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>My Applications & Request History</p>
+            <div style={{ background: B.white, border: `1.5px solid ${B.border}`, borderRadius: '24px', padding: '24px', boxShadow: '0 2px 10px rgba(26,41,74,0.04)' }}>
+
+              {/* Tab headers */}
+              <div style={{ display: 'flex', gap: '8px', borderBottom: `1.5px solid ${B.border}`, paddingBottom: '12px', marginBottom: '20px', overflowX: 'auto' }}>
+                {[
+                  { id: 'leave', label: 'Leaves', count: myLeaves.length, icon: Calendar },
+                  { id: 'ot', label: 'OT Claims', count: myOts.length, icon: Clock },
+                  { id: 'salary', label: 'Salary Reviews', count: mySalaries.length, icon: TrendingUp }
+                ].map(tab => {
+                  const Icon = tab.icon;
+                  const active = activeTab === tab.id;
+                  return (
+                    <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                      style={{
+                        padding: '8px 16px',
+                        borderRadius: '10px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        fontWeight: active ? 600 : 500,
+                        background: active ? B.lightBlue : 'transparent',
+                        color: active ? B.primary : B.muted,
+                        transition: 'all 0.15s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        whiteSpace: 'nowrap'
+                      }}>
+                      <Icon size={14} />
+                      {tab.label}
+                      <span style={{
+                        fontSize: '11px',
+                        background: active ? B.primary : B.border,
+                        color: active ? 'white' : B.muted,
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                        fontWeight: 600
+                      }}>{tab.count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Tab Panels */}
+              <div style={{ minHeight: '160px' }}>
+                {activeTab === 'leave' && (
+                  <ReportTable
+                    emptyIcon={Calendar} emptyText="No leave applications yet. Click 'Apply for Leave' above to submit one."
+                    applyLabel="Apply for Leave" onApply={() => openModal('leave')}
+                    headers={['Leave Type', 'Start Date', 'End Date', 'Duration', 'Status', 'Submitted']}
+                    rows={myLeaves.map(r => (
+                      <>
+                        <Td>{r.leaveType}</Td>
+                        <Td>{r.leaveStart}</Td>
+                        <Td>{r.leaveEnd}</Td>
+                        <Td>{calculateDays(r.leaveStart, r.leaveEnd)}</Td>
+                        <td style={{ padding: '13px 20px' }}><Badge label={r.status} color={STATUS_CFG[r.status]?.color || B.muted} bg={STATUS_CFG[r.status]?.bg || B.bg} /></td>
+                        <Td>{new Date(r.submittedAt).toLocaleDateString('en-GB')}</Td>
+                      </>
+                    ))}
+                  />
+                )}
+
+                {activeTab === 'ot' && (
+                  <ReportTable
+                    emptyIcon={Clock} emptyText="No OT claims yet. Click 'Apply for OT' above to log your hours."
+                    applyLabel="Log OT Hours" onApply={() => openModal('ot')}
+                    headers={['Shift Type', 'Date of Duty', 'OT Hours', 'Status', 'Submitted']}
+                    rows={myOts.map(r => (
+                      <>
+                        <Td>{r.otType}</Td>
+                        <Td>{r.otDate}</Td>
+                        <Td mono>{r.otHours} hrs</Td>
+                        <td style={{ padding: '13px 20px' }}><Badge label={r.status} color={STATUS_CFG[r.status]?.color || B.muted} bg={STATUS_CFG[r.status]?.bg || B.bg} /></td>
+                        <Td>{new Date(r.submittedAt).toLocaleDateString('en-GB')}</Td>
+                      </>
+                    ))}
+                  />
+                )}
+
+                {activeTab === 'salary' && (
+                  <ReportTable
+                    emptyIcon={TrendingUp} emptyText="No increment requests yet. Submit your first appraisal review above."
+                    applyLabel="Submit Review" onApply={() => openModal('salary')}
+                    headers={['Appraisal Type', 'Status', 'Submitted']}
+                    rows={mySalaries.map(r => (
+                      <>
+                        <Td>{r.incType}</Td>
+                        <td style={{ padding: '13px 20px' }}><Badge label={r.status} color={STATUS_CFG[r.status]?.color || B.muted} bg={STATUS_CFG[r.status]?.bg || B.bg} /></td>
+                        <Td>{new Date(r.submittedAt).toLocaleDateString('en-GB')}</Td>
+                      </>
+                    ))}
+                  />
+                )}
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </main>
 
       {/* ════════════════════════ MODALS ════════════════════════ */}
       <AnimatePresence>
@@ -715,36 +598,7 @@ const StaffDashboard = () => {
                   </form>
                 )}
 
-                {/* ── NOTICE MODAL ── */}
-                {activeModal === 'notice' && (
-                  <form onSubmit={e => submitForm(e, 'notice', { staffName, staffId, noticeTitle, noticeMessage })} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                    <ModalHeader title="Submit Notice" icon={<BellIcon size={18} />} color="#7c3aed" onClose={closeModal} />
-                    <div className="grid grid-cols-2 gap-4">
-                      <Field label="Your Name"><input className={inputCls} style={inputStyle} required value={staffName} onChange={e => setStaffName(e.target.value)} /></Field>
-                      <Field label="Staff ID"><input className={inputCls} style={inputStyle} required value={staffId} onChange={e => setStaffId(e.target.value)} /></Field>
-                    </div>
-                    <Field label="Notice Title"><input className={inputCls} style={inputStyle} required value={noticeTitle} onChange={e => setNoticeTitle(e.target.value)} placeholder="e.g. Request for Schedule Change" /></Field>
-                    <Field label="Notice Message"><textarea className={inputCls} required value={noticeMessage} onChange={e => setNoticeMessage(e.target.value)} placeholder="Write your notice details here…" style={{ minHeight: '110px', height: 'auto', resize: 'none' }} /></Field>
-                    <ModalFooter color="#7c3aed" grad="linear-gradient(135deg,#5b21b6,#7c3aed)" label="Submit Notice" onCancel={closeModal} />
-                  </form>
-                )}
 
-                {/* ── DUTY REPLACEMENT MODAL ── */}
-                {activeModal === 'duty' && (
-                  <form onSubmit={e => submitForm(e, 'duty', { staffName, staffId, dutyDate, dutyReplacement, dutyReason })} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                    <ModalHeader title="Duty Replacement Request" icon={<RefreshCw size={18} />} color="#0891b2" onClose={closeModal} />
-                    <div className="grid grid-cols-2 gap-4">
-                      <Field label="Your Name"><input className={inputCls} style={inputStyle} required value={staffName} onChange={e => setStaffName(e.target.value)} /></Field>
-                      <Field label="Staff ID"><input className={inputCls} style={inputStyle} required value={staffId} onChange={e => setStaffId(e.target.value)} /></Field>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <Field label="Duty Date"><input type="date" className={inputCls} style={inputStyle} required value={dutyDate} onChange={e => setDutyDate(e.target.value)} /></Field>
-                      <Field label="Replacement Staff Name"><input className={inputCls} style={inputStyle} required value={dutyReplacement} onChange={e => setDutyReplacement(e.target.value)} placeholder="Name of replacement" /></Field>
-                    </div>
-                    <Field label="Reason"><textarea className={inputCls} required value={dutyReason} onChange={e => setDutyReason(e.target.value)} placeholder="Explain why you need a replacement…" style={{ minHeight: '90px', height: 'auto', resize: 'none' }} /></Field>
-                    <ModalFooter color="#0891b2" grad="linear-gradient(135deg,#0e7490,#0891b2)" label="Submit Request" onCancel={closeModal} />
-                  </form>
-                )}
 
               </div>
             </motion.div>
@@ -756,12 +610,6 @@ const StaffDashboard = () => {
 };
 
 /* ── Shared modal sub-components ─────────────────────────────────────────── */
-const SectionHeader = ({ title, sub }) => (
-  <div style={{ marginBottom: '20px' }}>
-    <h2 style={{ fontSize: '20px', fontWeight: 700, color: B.secondary, margin: '0 0 4px' }}>{title}</h2>
-    <p style={{ fontSize: '13px', color: B.muted, margin: 0 }}>{sub}</p>
-  </div>
-);
 
 const ModalHeader = ({ title, icon, color, onClose }) => (
   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>

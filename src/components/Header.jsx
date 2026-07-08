@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.webp';
+import tollfree from '../assets/tollfree.png';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -35,6 +36,7 @@ const Header = () => {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'About us', path: '/about' },
+    { name: 'Our Team', path: '/team' },
     { 
       name: 'Services', 
       path: '#',
@@ -58,6 +60,7 @@ const Header = () => {
       ]
     },
     { name: 'Book Appointment', path: '/contact' },
+    { name: 'Contact us', path: '/contact' },
     { name: 'Blog', path: '#' },
     { 
       name: 'Language', 
@@ -96,7 +99,7 @@ const Header = () => {
       <div className="bg-white transition-all duration-300 border-b border-gray-100 py-0 shadow-sm">
         <div className="container flex justify-between items-center h-20 md:h-28">
           {/* Logo */}
-          <Link to="/" className="flex items-center h-full -ml-4">
+          <Link to="/" className="flex items-center h-full ml-2">
             <motion.div
               initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
@@ -156,6 +159,10 @@ const Header = () => {
               <div className="h-8 w-[1px] bg-gray-200 mx-1"></div>
               <a href="mailto:info@corx.ae" className="flex items-center gap-2 hover:text-accent-color transition-colors font-bold text-sm tracking-wide" style={{ color: '#63b158' }}>
                 <Mail size={18} style={{ color: '#63b158' }} /> info@corx.ae
+              </a>
+              <div className="h-8 w-[1px] bg-gray-200 ml-5 mr-2"></div>
+              <a href="tel:8002679" className="hover:scale-105 transition-transform duration-200 ml-2">
+                <img src={tollfree} alt="Toll Free" className="h-12 md:h-16 w-auto object-contain" />
               </a>
             </div>
             {/* Portal button always visible on mobile */}

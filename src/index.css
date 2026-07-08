@@ -2,6 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;600&family=Poppins:wght@400;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+@theme {
+  --color-primary-color: #08709d;
+  --color-secondary-color: #1a294a;
+  --color-accent-color: #5eb63b;
+  --color-bg-alt: #f8f9fa;
+}
+
 :root {
   --primary-color: #08709d;
   --secondary-color: #1a294a;

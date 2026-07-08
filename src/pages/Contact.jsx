@@ -141,7 +141,7 @@ export default function Contact() {
               <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
                 <a href="tel:+971547033311" style={styles.cardLink}>+971 54 703 3311</a>
                 <a 
-                  href="https://wa.me/971547033311" 
+                  href="https://wa.me/97143320776" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   style={{

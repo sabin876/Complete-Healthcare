@@ -19,6 +19,8 @@ import hero2 from '../assets/hero/hero2.png';
 import hero3 from '../assets/hero/hero3.png';
 import dhaLogo from '../assets/Dubai_Health_Authority_log.png';
 import HealthCareBlogSection from '../components/HealthCareBlogSection';
+import kajalPhoto from '../assets/kajal.png';
+import { Calendar, GraduationCap, IdCard, MapPin } from 'lucide-react';
 
 
 /* ── Testimonials Data & Components ────────────────── */
@@ -190,29 +192,153 @@ const Counter = ({ value, duration = 2, decimals = 0 }) => {
   return <motion.span ref={nodeRef}>{rounded}</motion.span>;
 };
 
+const doctorsData = [
+  {
+    name: "Kajal Jaiswal",
+    specialty: "Healthcare Assistant",
+    department: "Gynaecology Department",
+    nmcNo: "17070",
+    degree: "Diploma in Healthcare Support",
+    image: kajalPhoto
+  },
+  {
+    name: "Marisel Vi.R",
+    specialty: "Assistant Nurse",
+    department: "ENT Department",
+    nmcNo: "7768",
+    degree: "Diploma in Nursing",
+    image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Jaya Kumari",
+    specialty: "Physiotherapist",
+    department: "Orthopedic Department",
+    nmcNo: "21749",
+    degree: "DHA Certified Physiotherapist",
+    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Dr. Pradeep Adhikari",
+    specialty: "Consultant Pediatrician",
+    department: "Paediatric & Neonatology",
+    nmcNo: "12903",
+    degree: "MBBS, MD (Pediatrics)",
+    image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Dr. Ramesh Koirala",
+    specialty: "Consultant Neurologist",
+    department: "Neurology Department",
+    nmcNo: "6754",
+    degree: "MBBS, MD, DM (Neurology)",
+    image: "https://images.unsplash.com/photo-1605684954278-9f17d2673d34?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Dr. Sabina Shrestha",
+    specialty: "Consultant Psychiatrist",
+    department: "Psychiatry Department",
+    nmcNo: "14210",
+    degree: "MBBS, MD (Psychiatry)",
+    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Dr. Binod Singh",
+    specialty: "Consultant Surgeon",
+    department: "Surgery Department",
+    nmcNo: "8945",
+    degree: "MBBS, MS (Surgery)",
+    image: "https://images.unsplash.com/photo-1582750433449-6493b2063346?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Dr. Smriti KC",
+    specialty: "Medical Officer",
+    department: "Medical Officer",
+    nmcNo: "20956",
+    degree: "MBBS",
+    image: "https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  }
+];
+
+const departments = [
+  "All",
+  "ENT Department",
+  "Gynaecology Department",
+  "Internal Medicine",
+  "Neurology Department",
+  "Orthopedic Department",
+  "Pathology Department",
+  "Paediatric & Neonatology",
+  "Psychiatry Department",
+  "Surgery Department",
+  "Ophthalmology Department",
+  "OT Department",
+  "Gastroenterology Department",
+  "Dental Department",
+  "Radiology Department",
+  "Medical Officer"
+];
+
 const Home = () => {
   const slides = [
     {
-      title: "Trusted Home Healthcare Services In Dubai",
-      subtitle: "Corx Healthcare is dedicated to providing high-quality medical services in the comfort of your home, delivering compassionate care with clinical excellence.",
+      badgeNode: (
+        <span className="flex items-center gap-2">
+          <Heart size={16} className="text-red-500 fill-red-500 animate-pulse" />
+          <span className="text-white/95">Trusted by</span>
+          <span className="text-[#2ebd6e] font-black">5,00,000+</span>
+          <span className="text-white/95">Happy Patients</span>
+        </span>
+      ),
+      titlePre: "Your Health is Our ",
+      titleHighlight: "Priority",
+      titlePost: "",
+      subtitle: "Providing quality healthcare services with compassion and excellence. Your trusted partner in health and wellness.",
       image: hero1,
-      cta: "Book Appointment Now"
+      cta1: "Book Appointment",
+      cta2: "Our Services"
     },
     {
-      title: "24/7 Availability & DHA Licensed",
-      subtitle: "Fully accredited healthcare provider in Dubai. Round-the-clock medical assistance for all your needs.",
+      badgeNode: (
+        <span className="flex items-center gap-2">
+          <Shield size={16} className="text-[#2ebd6e] fill-[#2ebd6e]/10" />
+          <span className="text-white/95">Licensed by</span>
+          <span className="text-[#2ebd6e] font-black">DHA Dubai</span>
+          <span className="text-white/95">Authority</span>
+        </span>
+      ),
+      titlePre: "Clinical Excellence ",
+      titleHighlight: "At Home",
+      titlePost: "",
+      subtitle: "DHA licensed healthcare provider in Dubai. Full-service home nursing, doctor-on-call, and expert therapy at your convenience.",
       image: hero2,
-      cta: "Book Appointment Now"
+      cta1: "Book Appointment",
+      cta2: "Our Services"
     },
     {
-      title: "Expert Care at Your Doorstep",
-      subtitle: "Our team of expert doctors, nurses, and therapists are committed to your health and well-being.",
+      badgeNode: (
+        <span className="flex items-center gap-2">
+          <Users size={16} className="text-[#2ebd6e] fill-[#2ebd6e]/10" />
+          <span className="text-white/95">Expert Medical</span>
+          <span className="text-[#2ebd6e] font-black">Specialists</span>
+          <span className="text-white/95">On Call</span>
+        </span>
+      ),
+      titlePre: "Professional Care ",
+      titleHighlight: "At Your Doorstep",
+      titlePost: "",
+      subtitle: "Our team of dedicated doctors, nursing professionals, and physiotherapists are committed to your health 24/7.",
       image: hero3,
-      cta: "Book Appointment Now"
+      cta1: "Book Appointment",
+      cta2: "Our Services"
     }
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [selectedDept, setSelectedDept] = useState("All");
+
+  const filteredDoctors = selectedDept === "All"
+    ? doctorsData
+    : doctorsData.filter(doc => doc.department === selectedDept);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -229,124 +355,216 @@ const Home = () => {
   return (
     <main>
       {/* Hero Slider */}
-      <section className="relative h-[85vh] flex items-center overflow-hidden bg-black">
+      <section className="relative min-h-[95vh] flex items-center py-20 md:py-28 overflow-hidden bg-black">
         <AnimatePresence mode='wait'>
           <motion.div 
             key={currentSlide}
-            initial={{ opacity: 0, scale: 1.1 }}
+            initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.05 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
             className="absolute inset-0 z-0"
           >
             <img 
               src={slides[currentSlide].image} 
-              alt={slides[currentSlide].title}
-              className="w-full h-full object-cover brightness-[0.5] contrast-[1.1]"
+              alt={slides[currentSlide].titlePre + slides[currentSlide].titleHighlight + slides[currentSlide].titlePost}
+              className="w-full h-full object-cover brightness-[0.4] contrast-[1.05]"
             />
-            {/* Vibrant Teal/Blue Gradient Overlay to match target design */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#08709d]/90 via-[#08709d]/70 to-[#5fb54a]/40 mix-blend-multiply"></div>
-            {/* Soft Gradients for additional depth and text legibility */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+            {/* Deep Blue Overlay matching the reference design */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0c2e56]/95 via-[#0b2848]/85 to-[#071f3b]/95 mix-blend-multiply"></div>
+            {/* Soft dark vignettes */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
           </motion.div>
         </AnimatePresence>
         
-        <div className="container relative z-10 text-white -mt-12 md:-mt-20">
+        <div className="container relative z-10 text-white">
           <AnimatePresence mode='wait'>
             <motion.div 
               key={currentSlide}
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 50 }}
-              transition={{ duration: 0.8 }}
-              className="max-w-4xl"
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -25 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="max-w-4xl text-left relative top-[-35px] md:top-[-80px]"
             >
-              <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6 !text-white flex flex-wrap gap-x-[0.3em]">
-                {slides[currentSlide].title.split(" ").map((word, i) => (
-                  <span key={i} className="relative overflow-hidden inline-block py-2">
-                    <motion.span
-                      initial={{ y: "100%" }}
-                      animate={{ y: 0 }}
-                      transition={{ 
-                        duration: 0.8, 
-                        ease: [0.33, 1, 0.68, 1],
-                        delay: i * 0.05 
-                      }}
-                      className="inline-block"
-                    >
-                      {word}
-                    </motion.span>
-                  </span>
-                ))}
+              {/* Badge matching Reference Design */}
+              <div 
+                className="inline-flex items-center text-xs md:text-sm font-semibold tracking-wider mb-3 shadow-md text-white"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  padding: '6px 16px',
+                  borderRadius: '30px',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                }}
+              >
+                {slides[currentSlide].badgeNode}
+              </div>
+
+              {/* Title matching Reference Design */}
+              <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.15] mb-6 !text-white tracking-tight">
+                {slides[currentSlide].titlePre}
+                <span className="text-[#2ebd6e] font-black">
+                  {slides[currentSlide].titleHighlight}
+                </span>
+                {slides[currentSlide].titlePost}
               </h1>
-              <p className="text-xl mb-10 text-gray-200 leading-relaxed max-w-2xl">
+
+              {/* Subtitle matching Reference Design */}
+              <p className="text-base md:text-lg text-white/80 leading-relaxed mb-10 max-w-2xl font-normal drop-shadow-sm">
                 {slides[currentSlide].subtitle}
               </p>
-              <div className="flex mt-6">
-                <motion.button 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="group relative green-shimmer-btn text-white font-bold text-[17px] tracking-wide overflow-hidden transition-all duration-300 shadow-md"
+
+              {/* Action Buttons matching Reference Design */}
+              <div className="flex flex-wrap gap-4 mt-6">
+                <Link 
+                  to="/contact" 
+                  className="inline-flex items-center gap-2 hover:scale-[1.02] text-white font-semibold text-base transition-all duration-200 cursor-pointer shadow-md"
                   style={{
-                    border: 'none',
+                    backgroundColor: '#004e92',
                     padding: '12px 24px',
-                    borderRadius: '12px',
-                    cursor: 'pointer',
+                    borderRadius: '8px',
+                    border: '1px solid transparent',
                   }}
                 >
-                  <span className="relative z-20 flex items-center gap-3">
-                    {slides[currentSlide].cta}
-                    <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-300" />
-                  </span>
-                </motion.button>
+                  <CalendarDays size={20} />
+                  {slides[currentSlide].cta1}
+                </Link>
+
+                <a 
+                  href="#services" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="inline-flex items-center gap-2 hover:scale-[1.02] text-white font-semibold text-base transition-all duration-200 cursor-pointer hover:bg-white/10"
+                  style={{
+                    backgroundColor: 'transparent',
+                    padding: '12px 24px',
+                    borderRadius: '8px',
+                    border: '1px solid #ffffff',
+                  }}
+                >
+                  <Stethoscope size={20} />
+                  {slides[currentSlide].cta2}
+                </a>
               </div>
-              
-              {/* License Info */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-                className="mt-28 flex items-center gap-6"
-              >
-                <div className="h-[1px] w-12 bg-white/30 hidden md:block"></div>
-                <div className="flex items-center gap-5 md:gap-8">
-                  <p className="text-lg md:text-xl font-black tracking-[0.2em] uppercase text-white/90">
-                    Licensed By
-                  </p>
-                  <motion.img 
-                    src={dhaLogo} 
-                    alt="Dubai Health Authority" 
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                    className="h-32 md:h-44 w-auto object-contain bg-white p-5 md:p-6 rounded-3xl shadow-2xl" 
-                  />
-                </div>
-              </motion.div>
             </motion.div>
           </AnimatePresence>
+
+          {/* Separator Divider Line matching Reference Design */}
+          <div className="w-full h-[1px] bg-white/15 my-8"></div>
+
+          {/* Stats Bar matching Reference Design (Animated & Spaced) */}
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.12,
+                  delayChildren: 0.2
+                }
+              }
+            }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-12 text-left"
+          >
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 15, scale: 0.95 },
+                visible: { 
+                  opacity: 1, 
+                  y: 0, 
+                  scale: 1,
+                  transition: { type: "spring", stiffness: 120, damping: 14 } 
+                }
+              }}
+            >
+              <h3 className="text-3xl md:text-5xl font-extrabold text-white leading-none">
+                <Counter value={2546} duration={2} />+
+              </h3>
+              <p className="text-xs md:text-sm text-gray-300 font-medium mt-1">Successful Homecare</p>
+            </motion.div>
+
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 15, scale: 0.95 },
+                visible: { 
+                  opacity: 1, 
+                  y: 0, 
+                  scale: 1,
+                  transition: { type: "spring", stiffness: 120, damping: 14 } 
+                }
+              }}
+            >
+              <h3 className="text-3xl md:text-5xl font-extrabold text-white leading-none">
+                <Counter value={1.5} duration={2} decimals={1} />M+
+              </h3>
+              <p className="text-xs md:text-sm text-gray-300 font-medium mt-1">Happy Patients</p>
+            </motion.div>
+
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 15, scale: 0.95 },
+                visible: { 
+                  opacity: 1, 
+                  y: 0, 
+                  scale: 1,
+                  transition: { type: "spring", stiffness: 120, damping: 14 } 
+                }
+              }}
+            >
+              <h3 className="text-3xl md:text-5xl font-extrabold text-white leading-none">
+                <Counter value={15} duration={2} />+
+              </h3>
+              <p className="text-xs md:text-sm text-gray-300 font-medium mt-1">Years Experience</p>
+            </motion.div>
+
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 15, scale: 0.95 },
+                visible: { 
+                  opacity: 1, 
+                  y: 0, 
+                  scale: 1,
+                  transition: { type: "spring", stiffness: 120, damping: 14 } 
+                }
+              }}
+            >
+              <h3 className="text-3xl md:text-5xl font-extrabold text-white leading-none">
+                <Counter value={120} duration={2} />+
+              </h3>
+              <p className="text-xs md:text-sm text-gray-300 font-medium mt-1">Professional</p>
+            </motion.div>
+          </motion.div>
         </div>
 
-        {/* Slider Controls */}
-        <div className="absolute bottom-10 right-10 z-20 flex gap-4">
-          <button onClick={prevSlide} className="p-4 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all border border-white/20">
-            <ChevronLeft size={24} />
-          </button>
-          <button onClick={nextSlide} className="p-4 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all border border-white/20">
-            <ChevronRight size={24} />
-          </button>
-        </div>
+        {/* Side Absolute Carousel Controls matching Reference Design */}
+        <button 
+          onClick={prevSlide} 
+          className="absolute left-6 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/5 hover:bg-white/15 backdrop-blur-md rounded-full text-white transition-all duration-300 border border-white/10 hover:scale-110 active:scale-95 shadow-2xl hidden md:flex items-center justify-center cursor-pointer"
+        >
+          <ChevronLeft size={22} strokeWidth={2.5} />
+        </button>
+        <button 
+          onClick={nextSlide} 
+          className="absolute right-6 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/5 hover:bg-white/15 backdrop-blur-md rounded-full text-white transition-all duration-300 border border-white/10 hover:scale-110 active:scale-95 shadow-2xl hidden md:flex items-center justify-center cursor-pointer"
+        >
+          <ChevronRight size={22} strokeWidth={2.5} />
+        </button>
 
-        {/* Slide Indicators */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+        {/* Slide Indicators matching Reference Design */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2.5">
           {slides.map((_, i) => (
             <button 
               key={i} 
               onClick={() => setCurrentSlide(i)}
-              className={`h-2 transition-all rounded-full ${i === currentSlide ? 'w-12 bg-primary-color' : 'w-4 bg-white/30'}`}
+              className={`h-2 transition-all duration-300 rounded-full ${i === currentSlide ? 'w-8 bg-[#2ebd6e] shadow-[0_0_8px_rgba(46,189,110,0.5)]' : 'w-2 bg-white/30 hover:bg-white/50'}`}
             ></button>
           ))}
         </div>
@@ -354,19 +572,6 @@ const Home = () => {
 
       {/* Explore Services Section */}
       <ExploreServices />
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       {/* Community Voice / Featured Section */}
       <section 
@@ -416,7 +621,7 @@ const Home = () => {
                 className="text-white text-lg md:text-xl font-medium max-w-3xl leading-relaxed"
                 style={{ color: 'rgba(255, 255, 255, 0.9)' }}
               >
-                Call Us at <a href="tel:+97143320776" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 4 332 0776</a> or WhatsApp Us at <a href="https://wa.me/971547033311" target="_blank" rel="noopener noreferrer" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 54 703 3311</a> for doctor on call service.
+                Call Us at <a href="tel:+97143320776" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 4 332 0776</a> or WhatsApp Us at <a href="https://wa.me/97143320776" target="_blank" rel="noopener noreferrer" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 4 332 0776</a> for doctor on call service.
               </motion.p>
             </div>
             
@@ -587,100 +792,152 @@ const Home = () => {
           </div>
         </div>
       </section>
- 
+
+      {/* Meet Our Doctors Section */}
       <section 
-        className="relative overflow-hidden"
-        style={{ 
-          backgroundColor: 'white', 
-          padding: '40px 0' 
-        }}
+        id="team" 
+        className="py-20 bg-gray-50 border-t border-gray-100"
+        style={{ fontFamily: "'Poppins', sans-serif" }}
       >
-
-
-        <div className="container relative z-10" style={{ fontFamily: "'Poppins', sans-serif" }}>
-          <div className="flex flex-col items-center text-center">
-
-
-            {/* Integrated Stats Grid */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: { staggerChildren: 0.2 }
-                }
+        <div className="container mx-auto px-4">
+          {/* Header Block */}
+          <div className="flex flex-col items-center text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-black text-[#1a294a] tracking-tight mb-4">
+              Meet Our Doctors
+            </h2>
+            <p className="text-sm md:text-base text-gray-500 font-medium max-w-2xl">
+              Experienced healthcare professionals dedicated to your well-being
+            </p>
+            <div 
+              style={{
+                width: '64px',
+                height: '4px',
+                backgroundColor: '#004e92',
+                borderRadius: '9999px',
+                marginTop: '16px'
               }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-12 pt-12 w-full max-w-5xl"
-            >
-              {[
-                { value: 2546, suffix: "+", label: "Successful Homecare", icon: <Smile size={56} />, decimals: 0, color: "#08709d" },
-                { value: 1.5, suffix: "M+", label: "Happy Patients", icon: <Heart size={56} />, decimals: 1, color: "#5eb63b" },
-                { value: 15, suffix: "+", label: "Years Experience", icon: <Award size={56} />, decimals: 0, color: "#08709d" },
-                { value: 120, suffix: "+", label: "Professional Nurses", icon: <UserCheck size={56} />, decimals: 0, color: "#5eb63b" }
-              ].map((stat, i) => (
-                <motion.div 
-                  key={i}
-                  initial="rest"
-                  whileHover="hover"
-                  animate="rest"
-                  variants={{
-                    hidden: { opacity: 0, y: 30 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-                  }}
-                  className="text-center group"
-                >
-                  <motion.div 
-                    initial={{ scale: 0.8 }}
-                    whileInView={{ scale: 1 }}
-                    className="mb-6 flex justify-center"
-                  >
-                    <motion.div 
-                      variants={{
-                        rest: { y: 0, backgroundColor: "#f9fafb", boxShadow: "0 0 0 rgba(0,0,0,0)" },
-                        hover: { y: -12, backgroundColor: "#ffffff", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.15)" }
-                      }}
-                      className="p-5 rounded-2xl transition-all duration-500 border border-transparent group-hover:border-primary-color/10"
-                    >
-                      <motion.div
-                        variants={{
-                          rest: { color: stat.color },
-                          hover: { color: "#5eb63b" }
-                        }}
-                        className="transition-colors duration-300"
-                      >
-                        {stat.icon}
-                      </motion.div>
-                    </motion.div>
-                  </motion.div>
-                  <div className="flex items-baseline justify-center gap-1 mb-3">
-                    <motion.span 
-                      variants={{
-                        rest: { scale: 1, color: stat.color },
-                        hover: { scale: 1.05, color: stat.color }
-                      }}
-                      className="text-5xl md:text-6xl font-black transition-colors duration-300"
-                    >
-                      <Counter value={stat.value} decimals={stat.decimals} />
-                    </motion.span>
-                    <span className="text-xl md:text-2xl font-black opacity-60" style={{ color: stat.color }}>{stat.suffix}</span>
-                  </div>
-                  <motion.p 
-                    variants={{
-                      rest: { color: "#1a294a" },
-                      hover: { color: "#08709d" }
-                    }}
-                    className="text-xs md:text-sm font-black uppercase tracking-[0.25em] leading-tight transition-colors duration-300"
-                  >
-                    {stat.label}
-                  </motion.p>
-                </motion.div>
-              ))}
-            </motion.div>
-            </div>
+            />
+          </div>
 
+          {/* Filter Pills Block */}
+          <div className="flex flex-wrap justify-center gap-3 mt-8 mb-16 max-w-6xl mx-auto">
+            {departments.map((dept, idx) => {
+              const isActive = selectedDept === dept;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedDept(dept)}
+                  className="text-xs md:text-sm font-semibold transition-all duration-300 cursor-pointer hover:scale-105"
+                  style={{
+                    backgroundColor: isActive ? '#004e92' : 'transparent',
+                    color: isActive ? '#ffffff' : '#4b5563',
+                    border: isActive ? '1px solid transparent' : '1px solid #d1d5db',
+                    padding: '8px 20px',
+                    borderRadius: '9999px',
+                    boxShadow: isActive ? '0 4px 12px rgba(0, 78, 146, 0.2)' : 'none'
+                  }}
+                >
+                  {dept}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Doctors Grid Block */}
+          <motion.div 
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mt-10"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredDoctors.length > 0 ? (
+                filteredDoctors.map((doc) => (
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.3 }}
+                    key={doc.nmcNo}
+                    className="shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col sm:flex-row gap-5 items-center sm:items-stretch"
+                    style={{
+                      backgroundColor: '#f4fbfb',
+                      border: '1px solid #cbebe7',
+                      borderRadius: '16px',
+                      padding: '20px'
+                    }}
+                  >
+                    {/* Photo Container */}
+                    <div 
+                      className="shrink-0 flex items-center justify-center overflow-hidden"
+                      style={{
+                        backgroundColor: '#ffffff',
+                        padding: '6px',
+                        borderRadius: '12px',
+                        border: '1px solid #e5e7eb',
+                        width: '128px',
+                        height: '144px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+                      }}
+                    >
+                      <img
+                        src={doc.image}
+                        alt={doc.name}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    </div>
+
+                    {/* Info Column */}
+                    <div className="flex flex-col justify-between flex-grow w-full">
+                      <div>
+                        <h3 className="text-lg font-bold text-[#1a294a] mb-1">
+                          {doc.name}
+                        </h3>
+                        <p className="text-sm font-semibold text-[#004e92] mb-3">
+                          {doc.specialty}
+                        </p>
+                        
+                        <div className="space-y-1.5 mb-4">
+                          <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
+                            <GraduationCap size={14} className="text-gray-400 shrink-0" />
+                            <span>{doc.degree}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Book Button */}
+                      <Link
+                        to="/contact"
+                        className="hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full"
+                        style={{ 
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px',
+                          backgroundColor: '#004e92',
+                          color: '#ffffff',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          padding: '8px 16px',
+                          borderRadius: '6px',
+                          border: 'none',
+                          cursor: 'pointer',
+                          textDecoration: 'none',
+                          boxShadow: '0 4px 12px rgba(0, 78, 146, 0.15)'
+                        }}
+                      >
+                        <Calendar size={14} />
+                        Book Appointment
+                      </Link>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-12 text-gray-500 font-medium">
+                  No doctors currently listed for this department.
+                </div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </section>
 

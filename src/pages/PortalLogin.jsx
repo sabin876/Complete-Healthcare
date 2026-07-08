@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Eye, EyeOff, ArrowLeft, Shield, CheckCircle2, ShieldCheck, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -21,28 +21,24 @@ const PortalLogin = () => {
   const navigate = useNavigate();
   const { login, loginError, setLoginError } = useAuth();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError('');
     setIsLoading(true);
 
-    // Short delay for UX feel, then validate
-    setTimeout(() => {
-      const user = login(staffId, password);
-      setIsLoading(false);
+    const user = await login(staffId, password);
+    setIsLoading(false);
 
-      if (user) {
-        setLoginSuccess(true);
-        setTimeout(() => {
-          if (user.role === 'admin') {
-            navigate('/portal/admin');
-          } else {
-            navigate('/portal/dashboard');
-          }
-        }, 1500);
-      }
-      // loginError is set inside AuthContext if credentials are wrong
-    }, 900);
+    if (user) {
+      setLoginSuccess(true);
+      setTimeout(() => {
+        if (user.role === 'admin') {
+          navigate('/portal/admin');
+        } else {
+          navigate('/portal/dashboard');
+        }
+      }, 1500);
+    }
   };
 
   return (

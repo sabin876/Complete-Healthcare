@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LogOut, Users, UserPlus, Trash2, ShieldCheck, Eye, EyeOff,
@@ -172,20 +172,18 @@ const AdminDashboard = () => {
     setFormError('');
   };
 
-  const handleCreateSubmit = (e) => {
+  const handleCreateSubmit = async (e) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) { setFormError('Passwords do not match.'); return; }
     if (form.password.length < 6) { setFormError('Password must be at least 6 characters.'); return; }
     setIsSubmitting(true);
-    setTimeout(() => {
-      const result = createStaffUser(form);
-      setIsSubmitting(false);
-      if (result.success) {
-        setFormSuccess(result.message);
-        setForm({ fullName:'', staffId:'', position:'', department:'', password:'', confirmPassword:'' });
-        setTimeout(() => { setShowCreateModal(false); setFormSuccess(''); }, 1800);
-      } else { setFormError(result.message); }
-    }, 800);
+    const result = await createStaffUser(form);
+    setIsSubmitting(false);
+    if (result.success) {
+      setFormSuccess(result.message);
+      setForm({ fullName:'', staffId:'', position:'', department:'', password:'', confirmPassword:'' });
+      setTimeout(() => { setShowCreateModal(false); setFormSuccess(''); }, 1800);
+    } else { setFormError(result.message); }
   };
 
   const handleCopyId = (staffId) => {

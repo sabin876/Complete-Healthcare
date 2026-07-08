@@ -530,7 +530,7 @@ const About = () => {
                 </motion.button>
               </a>
 
-              <a href="https://wa.me/971547033311" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+              <a href="https://wa.me/97143320776" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
                 <motion.button
                   whileHover={{ scale: 1.05, borderColor: "#22c55e", background: "rgba(34,197,94,0.1)" }}
                   whileTap={{ scale: 0.95 }}

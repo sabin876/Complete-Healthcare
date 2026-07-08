@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingCTA from './components/FloatingCTA';
+import Chatbot from './components/Chatbot';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 import Home from './pages/Home';
@@ -17,6 +18,7 @@ import DoctorAtHotelPage from './pages/DoctorAtHotelPage';
 import PortalLogin from './pages/PortalLogin';
 import StaffDashboard from './pages/StaffDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import Team from './pages/Team';
 
 
 // Placeholder for other pages
@@ -88,6 +90,7 @@ const AnimatedRoutes = () => {
         
         <Route path="/locations" element={<Locations />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/team" element={<Team />} />
 
         {/* Portal Routes */}
         <Route path="/portal" element={<PortalLogin />} />
@@ -125,6 +128,7 @@ const MainLayout = ({ children }) => {
       </div>
       {!isPortal && <Footer />}
       {!isPortal && <FloatingCTA />}
+      {!isPortal && <Chatbot />}
     </div>
   );
 };
