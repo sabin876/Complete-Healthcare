@@ -18,9 +18,8 @@ const FloatingCTA = () => {
 
     >
       <MessageCircle size={22} className="text-white fill-white" />
-      <span className="text-[15px] font-bold tracking-wide select-none">
-        Chat with us
-      </span>
+      <span className="select-none">Chat with us</span>
+
     </motion.button>
   );
 };
