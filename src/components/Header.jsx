@@ -217,16 +217,16 @@ const Header = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10, transition: { duration: 0.15 } }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
-                        className="absolute top-full left-0 z-[100] flex shadow-[0_25px_60px_-12px_rgba(0,0,0,0.4)] rounded-2xl overflow-hidden border border-white/10 backdrop-blur-md bg-[#0a658a]/95 mt-3"
+                        className="absolute top-full left-0 z-[100] flex shadow-[0_25px_60px_-12px_rgba(0,0,0,0.4)] rounded-2xl overflow-hidden border border-white/10 backdrop-blur-md bg-[#0a658a]/95 mt-2"
                       >
                         {/* Left panel — services list */}
-                        <ul className="min-w-[250px] p-2.5 flex flex-col gap-1 bg-[#0a658a]/40">
+                        <ul className="min-w-[250px] p-2 flex flex-col gap-1 bg-[#0a658a]/40">
                           {link.dropdown.map((sub) => (
                             <li key={sub.name}>
                               {sub.subItems ? (
                                 /* Doctor On Call row — name navigates, chevron toggles right panel */
                                 <div
-                                  className={`flex justify-between items-center px-4 py-3 cursor-pointer rounded-xl transition-all duration-250 ${openSubMenu === sub.name ? 'bg-white/15 text-[#63e8a0]' : 'hover:bg-white/10 text-white'}`}
+                                  className={`flex justify-between items-center px-4 py-2.5 cursor-pointer rounded-xl transition-all duration-250 ${openSubMenu === sub.name ? 'bg-white/15 text-[#63e8a0]' : 'hover:bg-white/10 text-white'}`}
                                   onClick={(e) => { e.stopPropagation(); setOpenSubMenu(openSubMenu === sub.name ? null : sub.name); }}
                                 >
                                   <Link
@@ -245,7 +245,7 @@ const Header = () => {
                                 <Link
                                   to={sub.path}
                                   onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
-                                  className="flex items-center px-4 py-3 text-[14px] font-semibold text-white tracking-wide rounded-xl hover:bg-white/10 transition-all duration-250"
+                                  className="flex items-center px-4 py-2.5 text-[14px] font-semibold text-white tracking-wide rounded-xl hover:bg-white/10 transition-all duration-250"
                                 >
                                   {sub.name}
                                 </Link>
@@ -262,14 +262,14 @@ const Header = () => {
                               animate={{ opacity: 1, x: 0 }}
                               exit={{ opacity: 0, x: -15, transition: { duration: 0.15 } }}
                               transition={{ duration: 0.25, ease: 'easeOut' }}
-                              className="bg-[#085a7b]/95 min-w-[230px] p-2.5 border-l border-white/10 flex flex-col gap-1"
+                              className="bg-[#085a7b]/95 min-w-[230px] p-2 border-l border-white/10 flex flex-col gap-1"
                             >
                               {link.dropdown.find(s => s.name === openSubMenu).subItems.map((child) => (
                                 <li key={child.name}>
                                   <Link
                                     to={child.path}
                                     onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
-                                    className="flex items-center px-5 py-3 text-[14px] font-semibold text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-250"
+                                    className="flex items-center px-4 py-2.5 text-[14px] font-semibold text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-250"
                                   >
                                     {child.name}
                                   </Link>
