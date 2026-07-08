@@ -223,10 +223,12 @@ export default function ExploreServices() {
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
         .services-section {
-          background: #f4f7f9;
+          background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f3f7fa 100%);
           min-height: 100vh;
           padding: 60px 40px;
           font-family: 'Montserrat', sans-serif;
+          position: relative;
+          overflow: hidden;
         }
 
         .services-grid {
@@ -235,6 +237,56 @@ export default function ExploreServices() {
           gap: 24px;
           max-width: 1200px;
           margin: 0 auto;
+        }
+
+        /* Floating medical bubbles */
+        @keyframes floatUp {
+          0% {
+            transform: translateY(150px) scale(0.7);
+            opacity: 0;
+          }
+          30% {
+            opacity: 0.45;
+          }
+          70% {
+            opacity: 0.45;
+          }
+          100% {
+            transform: translateY(-250px) scale(1.15);
+            opacity: 0;
+          }
+        }
+        .services-section .bubble {
+          position: absolute;
+          border-radius: 50%;
+          pointer-events: none;
+          animation: floatUp 16s infinite ease-in-out;
+        }
+        .services-section .bubble-1 {
+          width: 75px;
+          height: 75px;
+          background: rgba(8, 112, 157, 0.05);
+          left: 4%;
+          top: 15%;
+          animation-duration: 20s;
+        }
+        .services-section .bubble-2 {
+          width: 105px;
+          height: 105px;
+          background: rgba(94, 182, 59, 0.04);
+          right: 6%;
+          top: 35%;
+          animation-duration: 24s;
+          animation-delay: 2.5s;
+        }
+        .services-section .bubble-3 {
+          width: 55px;
+          height: 55px;
+          background: rgba(8, 112, 157, 0.04);
+          left: 42%;
+          bottom: 12%;
+          animation-duration: 16s;
+          animation-delay: 4.5s;
         }
 
         @media (max-width: 1024px) {
@@ -248,53 +300,101 @@ export default function ExploreServices() {
       `}</style>
 
       <section className="services-section">
-        {/* Header */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-            maxWidth: "1200px",
-            margin: "0 auto 40px",
-          }}
-        >
+        {/* Animated Background Content */}
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
+          {/* Glowing ambient blobs */}
+          <div style={{ position: "absolute", top: "15%", left: "10%", width: "350px", height: "350px", borderRadius: "50%", background: "rgba(8, 112, 157, 0.05)", filter: "blur(90px)" }}></div>
+          <div style={{ position: "absolute", bottom: "15%", right: "10%", width: "350px", height: "350px", borderRadius: "50%", background: "rgba(94, 182, 59, 0.04)", filter: "blur(90px)" }}></div>
+          
+          {/* EKG Grid paper lines */}
+          <div style={{ position: "absolute", inset: 0, opacity: 0.02, backgroundImage: "linear-gradient(to right, #08709d 1px, transparent 1px), linear-gradient(to bottom, #08709d 1px, transparent 1px)", backgroundSize: "32px 32px" }}></div>
+          
+          {/* ECG heartbeat tracer line */}
+          <svg style={{ position: "absolute", left: 0, right: 0, top: "45%", transform: "translateY(-50%)", width: "100%", height: "260px", opacity: 0.22 }} viewBox="0 0 1400 300" fill="none" preserveAspectRatio="none">
+            <path 
+              id="heartbeat-path"
+              d="M-100,150 L350,150 L365,130 L380,170 L395,30 L415,270 L435,130 L450,160 L465,150 L850,150 L865,130 L880,170 L895,30 L915,270 L935,130 L950,160 L965,150 L1600,150" 
+              stroke="url(#ecg-gradient)" 
+              strokeWidth="2.5" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+              opacity="0.65"
+            />
+            {/* The glowing tracer pulse node */}
+            <circle r="4.5" fill="#5eb63b" filter="drop-shadow(0 0 6px #5eb63b)">
+              <animateMotion 
+                dur="6.5s" 
+                repeatCount="indefinite" 
+                path="M-100,150 L350,150 L365,130 L380,170 L395,30 L415,270 L435,130 L450,160 L465,150 L850,150 L865,130 L880,170 L895,30 L915,270 L935,130 L950,160 L965,150 L1600,150" 
+              />
+            </circle>
+            <defs>
+              <linearGradient id="ecg-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#08709d" stopOpacity="0.2" />
+                <stop offset="25%" stopColor="#08709d" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#5eb63b" stopOpacity="0.95" />
+                <stop offset="75%" stopColor="#08709d" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#08709d" stopOpacity="0.2" />
+              </linearGradient>
+            </defs>
+          </svg>
+ 
+          {/* Floating cells bubbles */}
+          <div className="bubble bubble-1"></div>
+          <div className="bubble bubble-2"></div>
+          <div className="bubble bubble-3"></div>
+        </div>
+ 
+        {/* Foreground Content */}
+        <div style={{ position: "relative", zIndex: 10 }}>
+          {/* Header */}
           <div
             style={{
-              width: "52px",
-              height: "52px",
-              borderRadius: "50%",
-              background: "#e8f5e9",
-              border: "2px solid #4caf8a",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
+              gap: "16px",
+              maxWidth: "1200px",
+              margin: "0 auto 40px",
             }}
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="#2c6e5a" strokeWidth="1.8" width="22" height="22">
-              <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
-              <rect x="9" y="3" width="6" height="4" rx="2" />
-              <path d="M9 12h6M9 16h4" />
-            </svg>
+            <div
+              style={{
+                width: "52px",
+                height: "52px",
+                borderRadius: "50%",
+                background: "#e8f5e9",
+                border: "2px solid #4caf8a",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="#2c6e5a" strokeWidth="1.8" width="22" height="22">
+                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+                <rect x="9" y="3" width="6" height="4" rx="2" />
+                <path d="M9 12h6M9 16h4" />
+              </svg>
+            </div>
+            <h2
+              style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: "clamp(26px, 3vw, 36px)",
+                fontWeight: "700",
+                color: "#1a2e3a",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Explore services
+            </h2>
           </div>
-          <h2
-            style={{
-              fontFamily: "'Montserrat', sans-serif",
-              fontSize: "clamp(26px, 3vw, 36px)",
-              fontWeight: "700",
-              color: "#1a2e3a",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Explore services
-          </h2>
-        </div>
 
-        {/* Cards grid */}
-        <div className="services-grid">
-          {services.map((service, i) => (
-            <ServiceCard key={service.id} service={service} index={i} />
-          ))}
+          {/* Cards grid */}
+          <div className="services-grid">
+            {services.map((service, i) => (
+              <ServiceCard key={service.id} service={service} index={i} />
+            ))}
+          </div>
         </div>
       </section>
     </>
