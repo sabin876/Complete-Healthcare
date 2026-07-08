@@ -801,7 +801,8 @@ const Home = () => {
       {/* Testimonials Section */}
       <section style={{
         fontFamily: "'Helvetica Neue', Arial, sans-serif",
-        background: "linear-gradient(135deg, #2c3e8c 0%, #1a2a6c 50%, #23379b 100%)",
+        background: "linear-gradient(135deg, #08709d 0%, #1a294a 100%)",
+
         padding: "40px 20px",
         position: "relative",
         overflow: "hidden",
