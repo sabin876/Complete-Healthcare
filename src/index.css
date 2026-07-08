@@ -139,3 +139,18 @@ img {
 .green-shimmer-btn:hover { 
   box-shadow: 0 6px 24px rgba(94,182,59,0.35); 
 }
+
+/* Custom Chat button style */
+.chat-with-us-btn {
+  background-color: #08709d !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 15px 35px rgba(8, 112, 157, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.chat-with-us-btn:hover {
+  background-color: #1a294a !important;
+  box-shadow: 0 20px 45px rgba(8, 112, 157, 0.45) !important;
+}
+
