@@ -162,9 +162,41 @@ const Header = () => {
                 <Mail size={18} style={{ color: '#63b158' }} /> info@corx.ae
               </a>
               <div className="h-8 w-[1px] bg-gray-200 ml-5 mr-2"></div>
-              <a href="tel:8002679" className="hover:scale-105 transition-transform duration-200 ml-2">
+              <motion.a 
+
+                href="tel:8002679"
+                animate={{
+                  scale: [1, 1.04, 1],
+                  rotate: [0, -2, 2, -2, 2, 0],
+                  filter: [
+                    "drop-shadow(0 2px 4px rgba(99, 177, 88, 0.15))",
+                    "drop-shadow(0 4px 12px rgba(99, 177, 88, 0.45))",
+                    "drop-shadow(0 2px 4px rgba(99, 177, 88, 0.15))"
+                  ]
+                }}
+                transition={{
+                  scale: {
+                    repeat: Infinity,
+                    duration: 3,
+                    ease: "easeInOut"
+                  },
+                  rotate: {
+                    repeat: Infinity,
+                    duration: 1.5,
+                    repeatDelay: 3.5,
+                    ease: "easeInOut"
+                  },
+                  filter: {
+                    repeat: Infinity,
+                    duration: 3,
+                    ease: "easeInOut"
+                  }
+                }}
+                className="block ml-2 cursor-pointer"
+              >
                 <img src={tollfree} alt="Toll Free" className="h-12 md:h-16 w-auto object-contain" />
-              </a>
+              </motion.a>
+
             </div>
             {/* Portal button always visible on mobile */}
             <Link
