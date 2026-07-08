@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, Search, Printer, ArrowRight, Linkedin, User } from 'lucide-react';
+import { Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, Search, Printer, ArrowRight, Linkedin, User, ChevronRight } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.webp';
@@ -212,42 +213,39 @@ const Header = () => {
                   <AnimatePresence>
                     {isServicesOpen && (
                       <motion.div
-                        initial={{ opacity: 0, y: 12 }}
+                        initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8, transition: { duration: 0.15 } }}
+                        exit={{ opacity: 0, y: 10, transition: { duration: 0.15 } }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
-                        className="absolute top-full left-0 z-[100] flex shadow-[0_20px_50px_rgba(8,112,157,0.35)] rounded-b-md overflow-hidden border border-[#1b93ba]"
+                        className="absolute top-full left-0 z-[100] flex shadow-[0_25px_60px_-12px_rgba(0,0,0,0.4)] rounded-2xl overflow-hidden border border-white/10 backdrop-blur-md bg-[#0a658a]/95 mt-3"
                       >
                         {/* Left panel — services list */}
-                        <ul className="bg-[#1681a5] min-w-[240px]">
-                          {link.dropdown.map((sub, idx) => (
-                            <li
-                              key={sub.name}
-                              className={idx < link.dropdown.length - 1 ? 'border-b border-white/15' : ''}
-                            >
+                        <ul className="min-w-[250px] p-2.5 flex flex-col gap-1 bg-[#0a658a]/40">
+                          {link.dropdown.map((sub) => (
+                            <li key={sub.name}>
                               {sub.subItems ? (
                                 /* Doctor On Call row — name navigates, chevron toggles right panel */
                                 <div
-                                  className={`flex justify-between items-center px-5 py-3.5 cursor-pointer transition-all duration-200 ${openSubMenu === sub.name ? 'bg-[#0f6989]' : 'hover:bg-[#137494]'}`}
+                                  className={`flex justify-between items-center px-4 py-3 cursor-pointer rounded-xl transition-all duration-250 ${openSubMenu === sub.name ? 'bg-white/15 text-[#63e8a0]' : 'hover:bg-white/10 text-white'}`}
                                   onClick={(e) => { e.stopPropagation(); setOpenSubMenu(openSubMenu === sub.name ? null : sub.name); }}
                                 >
                                   <Link
                                     to={sub.path}
                                     onClick={(e) => { e.stopPropagation(); setIsServicesOpen(false); setOpenSubMenu(null); }}
-                                    className={`text-[15px] font-bold tracking-wide flex-1 ${openSubMenu === sub.name ? 'text-[#63e8a0]' : 'text-white'}`}
+                                    className="text-[14px] font-semibold tracking-wide flex-1"
                                   >
                                     {sub.name}
                                   </Link>
-                                  <ChevronDown
+                                  <ChevronRight
                                     size={16}
-                                    className={`transition-transform duration-300 ml-2 shrink-0 ${openSubMenu === sub.name ? 'rotate-180 text-[#63e8a0]' : 'text-white/70'}`}
+                                    className={`transition-transform duration-300 ml-2 shrink-0 ${openSubMenu === sub.name ? 'rotate-90 text-[#63e8a0]' : 'text-white/70'}`}
                                   />
                                 </div>
                               ) : (
                                 <Link
                                   to={sub.path}
                                   onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
-                                  className="flex items-center px-5 py-3.5 text-[15px] font-bold text-white tracking-wide hover:bg-[#137494] transition-all duration-200"
+                                  className="flex items-center px-4 py-3 text-[14px] font-semibold text-white tracking-wide rounded-xl hover:bg-white/10 transition-all duration-250"
                                 >
                                   {sub.name}
                                 </Link>
@@ -260,18 +258,18 @@ const Header = () => {
                         <AnimatePresence>
                           {openSubMenu && link.dropdown.find(s => s.name === openSubMenu)?.subItems && (
                             <motion.ul
-                              initial={{ opacity: 0, x: -10 }}
+                              initial={{ opacity: 0, x: -15 }}
                               animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: -10 }}
-                              transition={{ duration: 0.2, ease: 'easeOut' }}
-                              className="bg-[#1a8fba] min-w-[220px] border-l border-white/15"
+                              exit={{ opacity: 0, x: -15, transition: { duration: 0.15 } }}
+                              transition={{ duration: 0.25, ease: 'easeOut' }}
+                              className="bg-[#085a7b]/95 min-w-[230px] p-2.5 border-l border-white/10 flex flex-col gap-1"
                             >
-                              {link.dropdown.find(s => s.name === openSubMenu).subItems.map((child, cIdx) => (
-                                <li key={cIdx} className={cIdx < link.dropdown.find(s => s.name === openSubMenu).subItems.length - 1 ? 'border-b border-white/15' : ''}>
+                              {link.dropdown.find(s => s.name === openSubMenu).subItems.map((child) => (
+                                <li key={child.name}>
                                   <Link
                                     to={child.path}
                                     onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
-                                    className="flex items-center px-6 py-3.5 text-[15px] font-bold text-white hover:bg-[#137494] transition-all duration-200"
+                                    className="flex items-center px-5 py-3 text-[14px] font-semibold text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-250"
                                   >
                                     {child.name}
                                   </Link>
