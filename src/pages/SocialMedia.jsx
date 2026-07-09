@@ -119,8 +119,14 @@ const SocialMedia = () => {
             Our medical team is available 24/7 to provide premium healthcare at your doorstep.
           </p>
           <div className="flex flex-wrap justify-center gap-6 relative z-10">
-            <a href="tel:+97143320776" className="bg-white text-primary-color px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-accent-color hover:text-white transition-all shadow-xl">
-              <Phone size={20} /> +971 4 332 0776
+            <a href="tel:+97143320776" className="bg-white text-primary-color px-6 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-accent-color hover:text-white transition-all shadow-xl">
+              <Phone size={20} /> ☎️ +971 4 332 0776
+            </a>
+            <a href="tel:+971547033311" className="bg-white text-primary-color px-6 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-accent-color hover:text-white transition-all shadow-xl">
+              <Phone size={20} /> 📱 +971 54 703 3311
+            </a>
+            <a href="tel:+971502785990" className="bg-white text-primary-color px-6 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-accent-color hover:text-white transition-all shadow-xl">
+              <Phone size={20} /> 📱 +971 50 278 5990
             </a>
             <a href="mailto:info@corx.ae" className="bg-white/10 backdrop-blur-md border border-white/30 px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-white/20 transition-all shadow-xl">
               <Mail size={20} /> info@corx.ae

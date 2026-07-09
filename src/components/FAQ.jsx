@@ -11,7 +11,7 @@ const faqs = [
   },
   {
     q: "How can I request services from Corx Home Healthcare?",
-    a: "You can request our services by contacting us via phone at +971547033311 or by filling out the contact form on our website. Our team will promptly assess your needs and schedule a visit.",
+    a: "You can request our services by contacting us via phone at ☎️ +971 4 332 0776 (Landline), 📱 +971 54 703 3311 (Mobile), or 📱 +971 50 278 5990 (Mobile), or by filling out the contact form on our website. Our team will promptly assess your needs and schedule a visit.",
   },
   {
     q: "Are your caregivers trained and certified?",

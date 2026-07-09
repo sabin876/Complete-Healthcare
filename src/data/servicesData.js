@@ -275,7 +275,7 @@ export const servicesData = {
     faqs: [
       {
         q: "How do I call a doctor in Dubai?",
-        a: "You can arrange a doctor at hotel by contacting our team and sharing your hotel location, symptoms, and preferred time. Simply call us at +971547033311 or WhatsApp us, and our team of doctors will arrive at your doorstep within 30 minutes."
+        a: "You can arrange a doctor at hotel by contacting our team and sharing your hotel location, symptoms, and preferred time. Simply call us at ☎️ +971 4 332 0776, 📱 +971 54 703 3311, or 📱 +971 50 278 5990, or WhatsApp us at +971 4 332 0776, and our team of doctors will arrive at your doorstep within 30 minutes."
       },
       {
         q: "What conditions can be treated during a hotel doctor visit?",
@@ -359,7 +359,7 @@ export const servicesData = {
     faqs: [
       {
         q: "How can I book a blood test at home in Dubai?",
-        a: "You can arrange a blood test at home by contacting our team and sharing your requirements. A suitable appointment is scheduled for sample collection at your location. In case of emergency, directly call us at: +971 43320776."
+        a: "You can arrange a blood test at home by contacting our team and sharing your requirements. A suitable appointment is scheduled for sample collection at your location. In case of emergency, directly call us at: ☎️ +971 4 332 0776, 📱 +971 54 703 3311, or 📱 +971 50 278 5990."
       },
       {
         q: "What are the benefits of lab tests at home from Corx Home Healthcare?",

@@ -159,7 +159,7 @@ const Chatbot = () => {
 
     // Contact info is generic
     if (lower.includes('phone') || lower.includes('whatsapp') || lower.includes('contact') || lower.includes('call') || lower.includes('number')) {
-      return "You can reach our emergency coordinator 24/7 at +971 4 332 0776, or WhatsApp us directly at https://wa.me/97143320776 for instant bookings and immediate dispatch.";
+      return "You can reach our emergency coordinator 24/7 at:\n☎️ +971 4 332 0776 (Landline)\n📱 +971 54 703 3311 (Mobile)\n📱 +971 50 278 5990 (Mobile)\n\nOr WhatsApp us directly at https://wa.me/97143320776 for instant bookings and immediate dispatch.";
     }
 
     if (type === 'doctor') {

@@ -10,7 +10,7 @@ const Locations = () => {
       offices: [
         { 
           name: "Main Office - Royal Class", 
-          phones: ["+971 54 703 3311", "+971 50 278 5990"], 
+          phones: ["+971 4 332 0776", "+971 54 703 3311", "+971 50 278 5990"], 
           address: "Office 303, Royal Class Building, Dubai Investment Park (DIP), Dubai, UAE",
           hours: "24/7 Home Services Available"
         }

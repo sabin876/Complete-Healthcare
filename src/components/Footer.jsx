@@ -150,8 +150,9 @@ const Footer = () => {
                   <Phone size={20} />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <a href="tel:+971547033311" className="text-base font-medium text-blue-100/90 hover:text-white transition-colors block">+971 54 703 3311</a>
-                  <a href="tel:+971502785990" className="text-base font-medium text-blue-100/90 hover:text-white transition-colors block">+971 50 278 5990</a>
+                  <a href="tel:+97143320776" className="text-base font-medium text-blue-100/90 hover:text-white transition-colors block">☎️ +971 4 332 0776</a>
+                  <a href="tel:+971547033311" className="text-base font-medium text-blue-100/90 hover:text-white transition-colors block">📱 +971 54 703 3311</a>
+                  <a href="tel:+971502785990" className="text-base font-medium text-blue-100/90 hover:text-white transition-colors block">📱 +971 50 278 5990</a>
                 </div>
               </motion.li>
               <motion.li whileHover={{ x: 5 }} className="flex items-start gap-4 group cursor-pointer">

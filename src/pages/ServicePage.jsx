@@ -1087,7 +1087,7 @@ export default function ServicePage({ serviceId }) {
                 className="text-white text-lg md:text-xl font-medium max-w-3xl leading-relaxed"
                 style={{ color: 'rgba(255, 255, 255, 0.9)' }}
               >
-                Call Us at <a href="tel:+97143320776" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 4 332 0776</a> or WhatsApp Us at <a href="https://wa.me/97143320776" target="_blank" rel="noopener noreferrer" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 4 332 0776</a> for doctor on call service.
+                Call Us 24/7 at <a href="tel:+97143320776" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">☎️ +971 4 332 0776</a>, <a href="tel:+971547033311" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">📱 +971 54 703 3311</a>, or <a href="tel:+971502785990" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">📱 +971 50 278 5990</a> (or WhatsApp Us at <a href="https://wa.me/97143320776" target="_blank" rel="noopener noreferrer" className="text-white font-normal underline decoration-white underline-offset-4 hover:opacity-80 transition-opacity">+971 4 332 0776</a>) for doctor on call service.
               </motion.p>
             </div>
             
