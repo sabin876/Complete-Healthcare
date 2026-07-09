@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, Search, Printer, ArrowRight, Linkedin, User, ChevronRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, Printer, ArrowRight, Linkedin, User, ChevronRight } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -225,19 +225,23 @@ const Header = () => {
                       e.stopPropagation();
                       if (link.name === 'Services') setIsServicesOpen(!isServicesOpen);
                     }}
-                    className="relative flex items-center h-full px-6 text-[13px] font-bold uppercase tracking-[0.05em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap"
+                    className="group flex items-center h-full px-6 text-[13px] font-bold uppercase tracking-[0.05em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap"
                   >
-                    {link.name}
-                    <ChevronDown size={14} className={`transition-transform duration-300 ${isServicesOpen && link.name === 'Services' ? 'rotate-180' : ''}`} />
-                    <span className={`absolute bottom-0 left-0 w-full h-[3px] bg-accent-color transform transition-transform duration-300 ${isServicesOpen && link.name === 'Services' ? 'scale-x-100' : 'scale-x-0'}`}></span>
+                    <span className="relative py-1 flex items-center gap-1.5">
+                      {link.name}
+                      <ChevronDown size={14} className={`transition-transform duration-300 ${isServicesOpen && link.name === 'Services' ? 'rotate-180' : ''}`} />
+                      <span className={`absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[4px] bg-accent-color transform transition-transform duration-300 origin-left ${isServicesOpen && link.name === 'Services' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                    </span>
                   </button>
                 ) : (
                   <Link 
                     to={link.path} 
-                    className="relative flex items-center h-full px-6 text-[13px] font-bold uppercase tracking-[0.05em] hover:text-white/90 transition-all gap-1.5 whitespace-nowrap"
+                    className="group flex items-center h-full px-6 text-[13px] font-bold uppercase tracking-[0.05em] hover:text-white/90 transition-all gap-1.5 whitespace-nowrap"
                   >
-                    {link.name}
-                    <span className="absolute bottom-0 left-0 w-full h-[3px] bg-accent-color transform scale-x-0 hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                    <span className="relative py-1">
+                      {link.name}
+                      <span className="absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[4px] bg-accent-color transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                    </span>
                   </Link>
                 )}
                 
@@ -319,10 +323,6 @@ const Header = () => {
           </ul>
 
           <div className="flex items-center gap-8 h-16">
-            <button className="hover:text-accent-color transition-all hover:scale-110 h-full px-2">
-              <Search size={18} strokeWidth={3} />
-            </button>
-            <div className="h-8 w-[1px] bg-white/20"></div>
             <motion.a 
               href="tel:+971547033311" 
               whileHover={{ scale: 1.08 }}

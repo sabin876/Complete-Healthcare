@@ -690,30 +690,6 @@ const Chatbot = () => {
 
   return (
     <>
-      {/* Pop-up Invitation Bubble */}
-      <AnimatePresence>
-        {showPromoBubble && !isOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: 50, scale: 0.8 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 50, scale: 0.8 }}
-            onClick={handleOpenToggle}
-            style={styles.promoBubble}
-            className="animate-bounce"
-          >
-            <span>💬 Chat with a Doctor or Nurse!</span>
-            <button 
-              style={{ border: 'none', background: 'transparent', color: 'rgba(255,255,255,0.7)', cursor: 'pointer', padding: '0 2px', marginLeft: '4px', outline: 'none' }} 
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowPromoBubble(false);
-              }}
-            >
-              ✕
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Chat Window Panel */}
       <AnimatePresence>

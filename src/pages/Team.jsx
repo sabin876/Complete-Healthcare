@@ -6,88 +6,228 @@ import kajalPhoto from '../assets/kajal.png';
 
 const doctorsData = [
   {
-    name: "Kajal Jaiswal",
-    specialty: "Healthcare Assistant",
-    department: "Gynaecology Department",
-    nmcNo: "17070",
-    degree: "Diploma in Healthcare Support",
-    image: kajalPhoto
-  },
-  {
-    name: "Marisel Vi.R",
-    specialty: "Assistant Nurse",
-    department: "ENT Department",
-    nmcNo: "7768",
-    degree: "Diploma in Nursing",
-    image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-  },
-  {
     name: "Jaya Kumari",
-    specialty: "Physiotherapist",
-    department: "Orthopedic Department",
-    nmcNo: "21749",
+    specialty: "DHA Certified Physiotherapist",
+    department: "Physiotherapy",
+    nmcNo: "PT-001",
     degree: "DHA Certified Physiotherapist",
     image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
   },
   {
-    name: "Dr. Pradeep Adhikari",
-    specialty: "Consultant Pediatrician",
-    department: "Paediatric & Neonatology",
-    nmcNo: "12903",
-    degree: "MBBS, MD (Pediatrics)",
-    image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    name: "Vinayata M. Patel",
+    specialty: "DHA Certified Physiotherapist",
+    department: "Physiotherapy",
+    nmcNo: "PT-002",
+    degree: "DHA Certified Physiotherapist",
+    image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
   },
   {
-    name: "Dr. Ramesh Koirala",
-    specialty: "Consultant Neurologist",
-    department: "Neurology Department",
-    nmcNo: "6754",
-    degree: "MBBS, MD, DM (Neurology)",
-    image: "https://images.unsplash.com/photo-1605684954278-9f17d2673d34?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-  },
-  {
-    name: "Dr. Sabina Shrestha",
-    specialty: "Consultant Psychiatrist",
-    department: "Psychiatry Department",
-    nmcNo: "14210",
-    degree: "MBBS, MD (Psychiatry)",
+    name: "Sehar Bano",
+    specialty: "DHA Certified Physiotherapist",
+    department: "Physiotherapy",
+    nmcNo: "PT-003",
+    degree: "DHA Certified Physiotherapist",
     image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
   },
   {
-    name: "Dr. Binod Singh",
-    specialty: "Consultant Surgeon",
-    department: "Surgery Department",
-    nmcNo: "8945",
-    degree: "MBBS, MS (Surgery)",
+    name: "Manju Kumari",
+    specialty: "DHA Licensed Assistant Nurse",
+    department: "Nursing",
+    nmcNo: "NU-001",
+    degree: "DHA Licensed Assistant Nurse",
+    image: "https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Chanda Kumari",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-001",
+    degree: "Healthcare Assistant",
+    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZlbWFsZSUyMGRvY3RvcnxlbnwwfHwwfHx8MA%3D%3D&ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Shweta Jagmohan",
+    specialty: "DHA Licensed Assistant Nurse",
+    department: "Nursing",
+    nmcNo: "NU-002",
+    degree: "DHA Licensed Assistant Nurse",
+    image: "https://images.unsplash.com/photo-1643608232400-b5025785f58c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Dipesh",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-002",
+    degree: "Healthcare Assistant",
+    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Mariecris Godinez",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-003",
+    degree: "Healthcare Assistant",
+    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Sajini Babu",
+    specialty: "DHA Licensed Registered Nurse",
+    department: "Nursing",
+    nmcNo: "NU-003",
+    degree: "DHA Licensed Registered Nurse",
+    image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Lakshmi Sundar",
+    specialty: "DHA Licensed Registered Nurse",
+    department: "Nursing",
+    nmcNo: "NU-004",
+    degree: "DHA Licensed Registered Nurse",
+    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Kajal Jaiswal",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-004",
+    degree: "Healthcare Assistant",
+    image: kajalPhoto
+  },
+  {
+    name: "Marisel Vi.R",
+    specialty: "DHA Licensed Assistant Nurse",
+    department: "Nursing",
+    nmcNo: "NU-005",
+    degree: "DHA Licensed Assistant Nurse",
+    image: "https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Shweta Rakesh Kumar",
+    specialty: "DHA Licensed Registered Nurse",
+    department: "Nursing",
+    nmcNo: "NU-006",
+    degree: "DHA Licensed Registered Nurse",
+    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZlbWFsZSUyMGRvY3RvcnxlbnwwfHwwfHx8MA%3D%3D&ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Farooq Khalid",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-005",
+    degree: "Healthcare Assistant",
+    image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Bahadur",
+    specialty: "Health Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-006",
+    degree: "Health Assistant",
+    image: "https://images.unsplash.com/photo-1605684954278-9f17d2673d34?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Mamata Regmi",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-007",
+    degree: "Healthcare Assistant",
+    image: "https://images.unsplash.com/photo-1643608232400-b5025785f58c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Bharat Badwal",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-008",
+    degree: "Healthcare Assistant",
     image: "https://images.unsplash.com/photo-1582750433449-6493b2063346?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
   },
   {
-    name: "Dr. Smriti KC",
-    specialty: "Medical Officer",
-    department: "Medical Officer",
-    nmcNo: "20956",
-    degree: "MBBS",
+    name: "Nimesh Ka Sewwandi",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-009",
+    degree: "Healthcare Assistant",
+    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Santoshi Sah",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-010",
+    degree: "Healthcare Assistant",
+    image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Nirmala Gharti Magar",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-011",
+    degree: "Healthcare Assistant",
+    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Jasmeen Jassi",
+    specialty: "DHA Licensed Assistant Nurse",
+    department: "Nursing",
+    nmcNo: "NU-007",
+    degree: "DHA Licensed Assistant Nurse",
+    image: "https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Vaishali Parashar",
+    specialty: "DHA Licensed Assistant Nurse",
+    department: "Nursing",
+    nmcNo: "NU-008",
+    degree: "DHA Licensed Assistant Nurse",
+    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZlbWFsZSUyMGRvY3RvcnxlbnwwfHwwfHx8MA%3D%3D&ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Joti Ashok",
+    specialty: "DHA Licensed Registered Nurse",
+    department: "Nursing",
+    nmcNo: "NU-009",
+    degree: "DHA Licensed Registered Nurse",
+    image: "https://images.unsplash.com/photo-1643608232400-b5025785f58c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Norelie Munar",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-012",
+    degree: "Healthcare Assistant",
+    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Hasti Rameshbhai",
+    specialty: "DHA Licensed Registered Nurse",
+    department: "Nursing",
+    nmcNo: "NU-010",
+    degree: "DHA Licensed Registered Nurse",
+    image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Rhodalyn Gonzales",
+    specialty: "Health Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-013",
+    degree: "Health Assistant",
+    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Manasa Vadde",
+    specialty: "Healthcare Assistant",
+    department: "Homecare Support",
+    nmcNo: "HA-014",
+    degree: "Healthcare Assistant",
     image: "https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
   }
 ];
 
 const departments = [
   "All",
-  "ENT Department",
-  "Gynaecology Department",
-  "Internal Medicine",
-  "Neurology Department",
-  "Orthopedic Department",
-  "Pathology Department",
-  "Paediatric & Neonatology",
-  "Psychiatry Department",
-  "Surgery Department",
-  "Ophthalmology Department",
-  "OT Department",
-  "Gastroenterology Department",
-  "Dental Department",
-  "Radiology Department",
-  "Medical Officer"
+  "Physiotherapy",
+  "Nursing",
+  "Homecare Support"
 ];
 
 const Team = () => {
@@ -192,47 +332,13 @@ const Team = () => {
                   </div>
 
                   {/* Info Column (Right) */}
-                  <div className="flex flex-col justify-between flex-grow w-full">
-                    <div>
-                      <h3 className="text-lg font-bold text-[#1a294a] mb-1">
-                        {doc.name}
-                      </h3>
-                      <p className="text-sm font-semibold text-[#004e92] mb-3">
-                        {doc.specialty}
-                      </p>
-                      
-                      <div className="space-y-1.5 mb-4">
-                        <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
-                          <GraduationCap size={14} className="text-gray-400 shrink-0" />
-                          <span>{doc.degree}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Book Button - with explicit flex display layout styling */}
-                    <Link
-                      to="/contact"
-                      className="hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 w-full"
-                      style={{ 
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '8px',
-                        backgroundColor: '#004e92',
-                        color: '#ffffff',
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        padding: '8px 16px',
-                        borderRadius: '6px',
-                        border: 'none',
-                        cursor: 'pointer',
-                        textDecoration: 'none',
-                        boxShadow: '0 4px 12px rgba(0, 78, 146, 0.15)'
-                      }}
-                    >
-                      <Calendar size={14} />
-                      Book Appointment
-                    </Link>
+                  <div className="flex flex-col justify-center flex-grow w-full">
+                    <h3 className="text-lg font-bold text-[#1a294a] mb-1">
+                      {doc.name}
+                    </h3>
+                    <p className="text-sm font-semibold text-[#004e92]">
+                      {doc.specialty}
+                    </p>
                   </div>
                 </motion.div>
               ))
