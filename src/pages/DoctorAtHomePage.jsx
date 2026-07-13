@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { servicesData } from "../data/servicesData";
+
 
 const whyCards = [
   {
@@ -215,7 +215,34 @@ const faqStyles = `
 export default function DoctorAtHomePage() {
   const [openIndex, setOpenIndex] = useState(null);
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
-  const service = servicesData["doctor-at-home"];
+  
+  const [service, setService] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/services/doctor-at-home/')
+      .then(res => res.json())
+      .then(data => {
+        setService({
+          ...data,
+          themeColor: data.theme_color,
+          floatingBadge: data.floating_badge,
+        });
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error fetching service:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', paddingTop: '10rem' }}>
+        <div style={{ fontSize: '1.2rem', fontFamily: "'Poppins', sans-serif", color: '#08709d' }}>Loading details...</div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ fontFamily: "'Poppins', sans-serif", background: "#F8F9FA", color: "#333333", paddingTop: "100px" }}>

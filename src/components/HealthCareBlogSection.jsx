@@ -1,7 +1,8 @@
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { blogPosts } from "../data/blogPosts";
 import labServicesImg from "../assets/lab_services_home.png";
+
 
 /* ─── Brand Tokens ─── */
 const PRIMARY   = "#08709d";
@@ -9,8 +10,31 @@ const TEXT_DARK = "#1a1a1a";
 const TEXT_MUTED = "#666666";
 
 export default function HealthCareBlogSection() {
-  // Use first 3 posts for the section
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/blogs/')
+      .then(res => res.json())
+      .then(data => {
+        setBlogPosts(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error fetching blogs:", err);
+        setLoading(false);
+      });
+  }, []);
+
   const displayedPosts = blogPosts.slice(0, 3);
+
+  if (loading) {
+    return (
+      <section id="insights" style={{ fontFamily: "'Poppins', sans-serif", backgroundColor: "#ffffff", padding: "100px 24px", textAlign: "center" }}>
+        <div style={{ fontSize: '1.2rem', color: PRIMARY }}>Loading insights...</div>
+      </section>
+    );
+  }
 
   return (
     <section id="insights" style={{

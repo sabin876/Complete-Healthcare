@@ -90,3 +90,50 @@ class DutyApplication(models.Model):
 
     def __str__(self):
         return f"{self.staff_name} - Duty Replacement for {self.duty_date}"
+
+
+class BlogPost(models.Model):
+    title = models.CharField(max_length=250)
+    category = models.CharField(max_length=100)
+    date = models.CharField(max_length=50)  # Keep string date for frontend compatibility
+    author = models.CharField(max_length=100, default='Corx')
+    image = models.CharField(max_length=500, default='https://www.corx.ae/wp-content/uploads/placeholder.jpg')
+    excerpt = models.TextField(blank=True, default='')
+    read_time = models.CharField(max_length=50, default='5 min read')
+    content = models.TextField(blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Service(models.Model):
+    slug = models.CharField(max_length=100, unique=True, db_index=True)
+    title = models.CharField(max_length=200)
+    eyebrow = models.CharField(max_length=250, blank=True, default='')
+    tagline = models.TextField(blank=True, default='')
+    description = models.TextField(blank=True, default='')
+    icon = models.CharField(max_length=100, default='Activity')
+    theme_color = models.CharField(max_length=20, default='#08709d')
+    floating_badge = models.JSONField(default=dict, blank=True)  # {title, desc}
+    benefits = models.JSONField(default=list, blank=True)  # [{title, desc}]
+    faqs = models.JSONField(default=list, blank=True)  # [{q, a}]
+    locations = models.JSONField(default=list, blank=True)  # [{label}]
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+
+class TeamMember(models.Model):
+    name = models.CharField(max_length=150)
+    post = models.CharField(max_length=150)
+    photo = models.FileField(upload_to='team_photos/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+

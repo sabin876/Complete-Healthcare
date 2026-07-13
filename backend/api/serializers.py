@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from .models import (
     StaffProfile, Task, LeaveApplication,
-    OtApplication, SalaryApplication, NoticeApplication, DutyApplication
+    OtApplication, SalaryApplication, NoticeApplication, DutyApplication,
+    BlogPost, Service, TeamMember
 )
+
 
 class StaffProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,3 +59,29 @@ class DutyApplicationSerializer(serializers.ModelSerializer):
             'id', 'staff', 'staff_name', 'duty_date', 'duty_replacement',
             'duty_reason', 'status', 'submitted_at'
         ]
+
+
+class BlogPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogPost
+        fields = [
+            'id', 'title', 'category', 'date', 'author', 'image',
+            'excerpt', 'read_time', 'content', 'created_at', 'updated_at'
+        ]
+
+
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = [
+            'id', 'slug', 'title', 'eyebrow', 'tagline', 'description',
+            'icon', 'theme_color', 'floating_badge', 'benefits', 'faqs',
+            'locations', 'created_at', 'updated_at'
+        ]
+
+
+class TeamMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeamMember
+        fields = ['id', 'name', 'post', 'photo', 'created_at', 'updated_at']
+

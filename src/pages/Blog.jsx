@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Calendar, User, Clock, ChevronRight, ArrowRight, ChevronLeft } from 'lucide-react';
-import { blogPosts } from '../data/blogPosts';
 import labServicesImg from '../assets/lab_services_home.png';
 import FAQ from '../components/FAQ';
 
@@ -12,9 +11,25 @@ const TEXT_DARK = "#1a1a1a";
 const TEXT_MUTED = "#666666";
 
 const Blog = () => {
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
-  const totalPages = Math.ceil(blogPosts.length / postsPerPage);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/blogs/')
+      .then(res => res.json())
+      .then(data => {
+        setBlogPosts(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error fetching blogs:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  const totalPages = Math.ceil(blogPosts.length / postsPerPage) || 1;
 
   const currentPosts = blogPosts.slice(
     (currentPage - 1) * postsPerPage,
@@ -24,6 +39,14 @@ const Blog = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', paddingTop: '10rem' }}>
+        <div style={{ fontSize: '1.2rem', fontFamily: "'Poppins', sans-serif", color: PRIMARY }}>Loading insights...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white min-h-screen pt-40 pb-20">

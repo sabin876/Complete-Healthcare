@@ -1,16 +1,48 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, User, Clock, ChevronRight, Share2, Facebook, Twitter, Linkedin, ArrowLeft } from 'lucide-react';
-import { blogPosts } from '../data/blogPosts';
 
 const BlogDetails = () => {
   const { id } = useParams();
-  const post = blogPosts.find(p => p.id === parseInt(id)) || blogPosts[0];
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/blogs/')
+      .then(res => res.json())
+      .then(data => {
+        setBlogPosts(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error fetching blogs:", err);
+        setLoading(false);
+      });
+  }, [id]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
+
+  const post = blogPosts.find(p => p.id === parseInt(id));
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', paddingTop: '10rem' }}>
+        <div style={{ fontSize: '1.2rem', fontFamily: "'Poppins', sans-serif", color: '#08709d' }}>Loading post...</div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', paddingTop: '10rem' }}>
+        <div style={{ fontSize: '1.2rem', fontFamily: "'Poppins', sans-serif", color: '#1a1a1a', marginBottom: '1rem' }}>Post not found.</div>
+        <Link to="/#insights" style={{ color: '#08709d', fontWeight: 'bold' }}>Back to Insights</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white min-h-screen pt-24 pb-20">

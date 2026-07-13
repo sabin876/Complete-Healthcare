@@ -140,7 +140,7 @@ const AdminDashboard = () => {
     dutyApplications, updateDutyStatus,
   } = useAuth();
 
-  const [activeNav, setActiveNav] = useState('dashboard'); // 'dashboard' | 'leave' | 'ot' | 'duty' | 'appraisals'
+  const [activeNav, setActiveNav] = useState('dashboard'); // 'dashboard' | 'leave' | 'ot' | 'duty' | 'appraisals' | 'cms'
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [deleteConfirm,   setDeleteConfirm]   = useState(null);
@@ -160,6 +160,149 @@ const AdminDashboard = () => {
   const [taskSuccess, setTaskSuccess] = useState('');
   const [taskTab, setTaskTab] = useState('all'); // 'all' | staffId
   const [deleteTaskConfirm, setDeleteTaskConfirm] = useState(null);
+
+  // ── CMS State & Handlers ──────────────────────────────────────────
+  const [blogs, setBlogs] = useState([]);
+  const [services, setServices] = useState([]);
+  const [cmsTab, setCmsTab] = useState('blogs');
+  const [editingBlog, setEditingBlog] = useState(null);
+  const [showBlogModal, setShowBlogModal] = useState(false);
+  const [blogForm, setBlogForm] = useState({
+    title: '', category: 'Home Healthcare', date: '', author: 'Corx',
+    image: 'https://www.corx.ae/wp-content/uploads/placeholder.jpg',
+    excerpt: '', readTime: '5 min read', content: ''
+  });
+  const [editingService, setEditingService] = useState(null);
+  const [showServiceModal, setShowServiceModal] = useState(false);
+  const [serviceForm, setServiceForm] = useState({
+    title: '', eyebrow: '', tagline: '', description: '', icon: 'Activity', themeColor: '#08709d',
+    faqsJson: '[]', benefitsJson: '[]'
+  });
+
+  const fetchCmsData = async () => {
+    try {
+      const res1 = await fetch('http://localhost:8000/api/blogs/');
+      const blogsData = await res1.json();
+      setBlogs(blogsData);
+
+      const res2 = await fetch('http://localhost:8000/api/services/');
+      const servicesData = await res2.json();
+      setServices(servicesData);
+    } catch (err) {
+      console.error("Error fetching CMS data:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (activeNav === 'cms') {
+      fetchCmsData();
+    }
+  }, [activeNav]);
+
+  const handleBlogSubmit = async (e) => {
+    e.preventDefault();
+    const url = editingBlog
+      ? `http://localhost:8000/api/blogs/${editingBlog.id}/`
+      : 'http://localhost:8000/api/blogs/';
+    const method = editingBlog ? 'PUT' : 'POST';
+
+    try {
+      const payload = {
+        title: blogForm.title,
+        category: blogForm.category,
+        date: blogForm.date || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        author: blogForm.author,
+        image: blogForm.image,
+        excerpt: blogForm.excerpt,
+        read_time: blogForm.readTime || blogForm.read_time || '5 min read',
+        content: blogForm.content
+      };
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        setShowBlogModal(false);
+        setEditingBlog(null);
+        fetchCmsData();
+      } else {
+        const errors = await res.json();
+        alert("Failed to save blog post: " + JSON.stringify(errors));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleBlogDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this blog post?")) return;
+    try {
+      const res = await fetch(`http://localhost:8000/api/blogs/${id}/`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        fetchCmsData();
+      } else {
+        alert("Failed to delete blog post.");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleServiceSubmit = async (e) => {
+    e.preventDefault();
+    if (!editingService) return;
+
+    try {
+      let parsedFaqs = [];
+      let parsedBenefits = [];
+      try {
+        parsedFaqs = JSON.parse(serviceForm.faqsJson);
+      } catch (err) {
+        alert("Invalid JSON format in FAQs");
+        return;
+      }
+      try {
+        parsedBenefits = JSON.parse(serviceForm.benefitsJson);
+      } catch (err) {
+        alert("Invalid JSON format in Benefits");
+        return;
+      }
+
+      const payload = {
+        slug: editingService.slug,
+        title: serviceForm.title,
+        eyebrow: serviceForm.eyebrow,
+        tagline: serviceForm.tagline,
+        description: serviceForm.description,
+        icon: serviceForm.icon,
+        theme_color: serviceForm.themeColor,
+        floating_badge: editingService.floating_badge || {},
+        locations: editingService.locations || [],
+        faqs: parsedFaqs,
+        benefits: parsedBenefits
+      };
+
+      const res = await fetch(`http://localhost:8000/api/services/${editingService.slug}/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        setShowServiceModal(false);
+        setEditingService(null);
+        fetchCmsData();
+      } else {
+        const errors = await res.json();
+        alert("Failed to save service: " + JSON.stringify(errors));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleLogout = () => { logout(); navigate('/portal'); };
 
@@ -229,27 +372,66 @@ const AdminDashboard = () => {
     { label: 'Admin Account', value: 1,                  icon: <UserCog size={22} />,       accent: C.secondary, bg: '#EAECF3'    },
   ];
 
+  const recentActivities = [];
+  if (leaveApplications) {
+    leaveApplications.slice(-3).forEach(l => {
+      recentActivities.push({
+        title: 'Leave Request',
+        desc: `${l.staffName} requested ${l.leaveType}`,
+        status: l.status,
+        time: l.submittedAt ? new Date(l.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Today',
+        color: C.primary,
+        bg: C.lightBlue
+      });
+    });
+  }
+  if (otApplications) {
+    otApplications.slice(-3).forEach(o => {
+      recentActivities.push({
+        title: 'OT Claim',
+        desc: `${o.staffName} claimed ${o.otHours} hours OT`,
+        status: o.status,
+        time: o.submittedAt ? new Date(o.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Today',
+        color: C.accent,
+        bg: C.lightGreen
+      });
+    });
+  }
+  if (tasks) {
+    tasks.slice(-3).forEach(t => {
+      recentActivities.push({
+        title: 'Task Assigned',
+        desc: `"${t.title}" assigned to ${t.assignedToName}`,
+        status: t.status,
+        time: t.dueDate ? new Date(t.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'No due date',
+        color: '#e67e22',
+        bg: '#FEF3E2'
+      });
+    });
+  }
+  const displayActivities = recentActivities.reverse().slice(0, 4);
+
   return (
     <div style={{ fontFamily:"'Poppins',sans-serif", minHeight:'100vh', background: C.bg, display: 'flex' }}>
       <GlobalStyle />
 
       {/* ── Left Sidebar Navigation ── */}
       <aside style={{
-        width: '260px', background: C.white, borderRight: `2.5px solid ${C.border}`,
+        width: '260px', background: C.secondary, borderRight: 'none',
         display: 'flex', flexDirection: 'column', flexShrink: 0, height: '100vh', position: 'sticky', top: 0, zIndex: 50
       }}>
         {/* Sidebar Header / Brand */}
-        <div style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: `2px solid ${C.border}` }}>
+        <div style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{
             width: '38px', height: '38px', borderRadius: '10px',
-            background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0
+            background: 'white',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, padding: '4px'
           }}>
-            <ShieldCheck size={20} />
+            <img src={logo} alt="Corx Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '15px', fontWeight: 800, color: C.secondary, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adminin</span>
-            <span style={{ fontSize: '10px', fontWeight: 600, color: C.primary }}>Portal Management</span>
+            <span style={{ fontSize: '18px', fontWeight: 800, color: 'white', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: "'Poppins',sans-serif" }}>Corx</span>
+            <span style={{ fontSize: '10px', fontWeight: 600, color: '#a0aec0' }}>Portal Admin</span>
           </div>
         </div>
 
@@ -261,6 +443,7 @@ const AdminDashboard = () => {
             { id: 'ot', label: 'OT Claims', icon: Clock, count: otApplications?.length || 0 },
             { id: 'duty', label: 'Duty Replacements', icon: RefreshCw, count: dutyApplications?.length || 0 },
             { id: 'appraisals', label: 'Appraisals & Notices', icon: Bell, count: (salaryApplications?.length || 0) + (noticeApplications?.length || 0) },
+            { id: 'cms', label: 'Website CMS', icon: ClipboardList },
           ].map(item => {
             const isActive = activeNav === item.id;
             return (
@@ -271,31 +454,31 @@ const AdminDashboard = () => {
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                   padding: '12px 18px', borderRadius: '12px', transition: 'all 0.2s',
                   background: isActive ? undefined : 'transparent',
-                  color: isActive ? 'white' : '#6B7A90',
+                  color: isActive ? 'white' : '#a0aec0',
                   fontWeight: isActive ? 700 : 600,
                   boxShadow: isActive ? '0 4px 14px rgba(8,112,157,0.25)' : 'none',
                 }}
                 onMouseEnter={e => {
                   if (!isActive) {
-                    e.currentTarget.style.background = 'rgba(8,112,157,0.08)';
-                    e.currentTarget.style.color = C.primary;
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                    e.currentTarget.style.color = 'white';
                   }
                 }}
                 onMouseLeave={e => {
                   if (!isActive) {
                     e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.color = '#6B7A90';
+                    e.currentTarget.style.color = '#a0aec0';
                   }
                 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <item.icon size={18} style={{ color: isActive ? 'white' : C.muted }} />
+                  <item.icon size={18} style={{ color: isActive ? 'white' : '#a0aec0' }} />
                   <span style={{ fontSize: '13px' }}>{item.label}</span>
                 </div>
                 {item.count !== undefined && item.count > 0 && (
                   <span style={{
                     fontSize: '10px', fontWeight: 700, padding: '2px 7px', borderRadius: '6px',
-                    background: isActive ? C.white : C.border,
-                    color: isActive ? C.primary : C.muted
+                    background: isActive ? C.white : 'rgba(255,255,255,0.08)',
+                    color: isActive ? C.primary : '#a0aec0'
                   }}>{item.count}</span>
                 )}
               </button>
@@ -304,11 +487,11 @@ const AdminDashboard = () => {
         </div>
 
         {/* Sidebar Footer */}
-        <div style={{ padding: '24px 16px', borderTop: `2px solid ${C.border}` }}>
+        <div style={{ padding: '24px 16px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <button onClick={handleLogout}
-            style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '12px 16px', borderRadius: '12px', border: 'none', cursor: 'pointer', background: '#FFF5F5', color: '#dc3545', fontSize: '13px', fontWeight: 600, fontFamily: "'Poppins',sans-serif", transition: 'all 0.2s' }}
-            onMouseEnter={e => e.currentTarget.style.background = '#FFECEC'}
-            onMouseLeave={e => e.currentTarget.style.background = '#FFF5F5'}>
+            style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '12px 16px', borderRadius: '12px', border: 'none', cursor: 'pointer', background: 'rgba(220,53,69,0.15)', color: '#ff4d4f', fontSize: '13px', fontWeight: 600, fontFamily: "'Poppins',sans-serif", transition: 'all 0.2s' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(220,53,69,0.25)'; e.currentTarget.style.color = 'white'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(220,53,69,0.15)'; e.currentTarget.style.color = '#ff4d4f'; }}>
             <LogOut size={16} /> Sign Out
           </button>
         </div>
@@ -402,17 +585,112 @@ const AdminDashboard = () => {
               {/* Stats */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" style={{ marginBottom: '36px' }}>
                 {stats.map((s, i) => (
-                  <div key={i} className="stat-card" style={{ animationDelay: `${i * 0.08}s`, background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '18px', padding: '24px', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 12px rgba(26,41,74,0.04)' }}>
-                    <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: s.accent, borderRadius: '18px 0 0 18px' }} />
-                    <div style={{ width: '46px', height: '46px', borderRadius: '14px', background: s.bg, color: s.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
-                      {s.icon}
+                  <motion.div key={i} className="stat-card"
+                    whileHover={{ y: -6, scale: 1.01, boxShadow: '0 12px 30px rgba(26,41,74,0.06)' }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    style={{ animationDelay: `${i * 0.08}s`, background: `linear-gradient(135deg, ${C.white}, #FCFDFE)`, border: `1.5px solid ${C.border}`, borderRadius: '20px', padding: '26px 24px', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 12px rgba(26,41,74,0.03)', cursor: 'pointer' }}>
+                    <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', background: s.accent, borderRadius: '20px 0 0 20px' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                      <div style={{ width: '46px', height: '46px', borderRadius: '14px', background: s.bg, color: s.accent, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {s.icon}
+                      </div>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: C.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Active</span>
                     </div>
-                    <div style={{ fontSize: '36px', fontWeight: 600, color: C.secondary, lineHeight: 1, marginBottom: '6px', fontFamily: "'Poppins',sans-serif" }}>
+                    <div style={{ fontSize: '38px', fontWeight: 700, color: C.secondary, lineHeight: 1, marginBottom: '6px', fontFamily: "'Poppins',sans-serif" }}>
                       <AnimatedCount to={s.value} />
                     </div>
-                    <div style={{ fontSize: '11px', fontWeight: 500, color: C.muted, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{s.label}</div>
-                  </div>
+                    <div style={{ fontSize: '11.5px', fontWeight: 600, color: C.muted, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{s.label}</div>
+                  </motion.div>
                 ))}
+              </div>
+
+              {/* Spline Chart + Activity Feed Row */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6" style={{ marginBottom: '36px' }}>
+                {/* Visual Chart Card */}
+                <div style={{ background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '20px', padding: '24px', boxShadow: '0 2px 14px rgba(26,41,74,0.03)', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+                    <div>
+                      <h3 style={{ fontSize: '13px', fontWeight: 600, color: C.secondary, textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>System Activity Trend</h3>
+                      <span style={{ fontSize: '11px', color: C.muted }}>Daily metrics overview</span>
+                    </div>
+                    <span style={{ fontSize: '10px', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: C.lightGreen, color: C.accent }}>+18.4% growth</span>
+                  </div>
+                  
+                  {/* SVG Chart */}
+                  <div style={{ flex: 1, minHeight: '160px', display: 'flex', alignItems: 'flex-end', paddingTop: '10px' }}>
+                    <svg viewBox="0 0 500 150" width="100%" height="150" style={{ overflow: 'visible' }}>
+                      <defs>
+                        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#08709d" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="#08709d" stopOpacity="0.00" />
+                        </linearGradient>
+                      </defs>
+                      {/* Grid Lines */}
+                      <line x1="0" y1="25" x2="500" y2="25" stroke="#E8EDF2" strokeWidth="1" strokeDasharray="4 4" />
+                      <line x1="0" y1="75" x2="500" y2="75" stroke="#E8EDF2" strokeWidth="1" strokeDasharray="4 4" />
+                      <line x1="0" y1="125" x2="500" y2="125" stroke="#E8EDF2" strokeWidth="1" strokeDasharray="4 4" />
+                      
+                      {/* Chart Area Fill */}
+                      <path d="M 0 150 L 0 110 C 60 90, 80 130, 150 90 C 220 50, 280 110, 350 70 C 420 30, 440 50, 500 30 L 500 150 Z" fill="url(#chartGrad)" />
+                      {/* Chart Stroke Line */}
+                      <path d="M 0 110 C 60 90, 80 130, 150 90 C 220 50, 280 110, 350 70 C 420 30, 440 50, 500 30" fill="none" stroke="#08709d" strokeWidth="3.5" strokeLinecap="round" />
+                      
+                      {/* Highlight Dots */}
+                      <circle cx="150" cy="90" r="5" fill="#08709d" stroke="white" strokeWidth="2" />
+                      <circle cx="350" cy="70" r="5" fill="#08709d" stroke="white" strokeWidth="2" />
+                      <circle cx="500" cy="30" r="5" fill="#5eb63b" stroke="white" strokeWidth="2" />
+                    </svg>
+                  </div>
+                  
+                  {/* Chart X Labels */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px', padding: '0 4px' }}>
+                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Today'].map(day => (
+                      <span key={day} style={{ fontSize: '10px', fontWeight: 600, color: C.muted }}>{day}</span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Activity Feed Card */}
+                <div style={{ background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '20px', padding: '24px', boxShadow: '0 2px 14px rgba(26,41,74,0.03)', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+                    <div>
+                      <h3 style={{ fontSize: '13px', fontWeight: 600, color: C.secondary, textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>System Notifications & Activity</h3>
+                      <span style={{ fontSize: '11px', color: C.muted }}>Real-time audit log</span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', flex: 1, justifyContent: 'center' }}>
+                    {displayActivities.length === 0 ? (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 0', color: C.muted, fontSize: '12px' }}>
+                        No recent activity recorded
+                      </div>
+                    ) : (
+                      displayActivities.map((act, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: act.bg, color: act.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <span style={{ fontSize: '14px', fontWeight: 700 }}>✦</span>
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                              <span style={{ fontSize: '12.5px', fontWeight: 600, color: C.secondary }}>{act.title}</span>
+                              <span style={{ fontSize: '11.5px', color: C.muted }}>{act.desc}</span>
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+                            <span style={{ fontSize: '10px', color: C.muted, fontWeight: 500 }}>{act.time}</span>
+                            <span style={{
+                              fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', padding: '2px 6px', borderRadius: '4px',
+                              background: act.status === 'Approved' || act.status === 'Completed' ? C.lightGreen : act.status === 'Pending' || act.status === 'In Progress' ? '#FEF3E2' : '#FFF5F5',
+                              color: act.status === 'Approved' || act.status === 'Completed' ? C.accent : act.status === 'Pending' || act.status === 'In Progress' ? '#e67e22' : '#dc3545'
+                            }}>
+                              {act.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Staff Accounts Table */}
@@ -847,6 +1125,138 @@ const AdminDashboard = () => {
               </ReportPanelWrapper>
             </motion.div>
           )}
+
+          {/* 6. WEBSITE CMS */}
+          {activeNav === 'cms' && (
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+              
+              {/* Tab Selector & Header */}
+              <div style={{ background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '20px', padding: '20px 24px', boxShadow: '0 2px 16px rgba(26,41,74,0.04)', display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button onClick={() => setCmsTab('blogs')}
+                    style={{
+                      padding: '8px 16px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 600,
+                      background: cmsTab === 'blogs' ? C.lightBlue : 'transparent', color: cmsTab === 'blogs' ? C.primary : C.muted, transition: 'all 0.15s'
+                    }}>
+                    Blog Articles ({blogs.length})
+                  </button>
+                  <button onClick={() => setCmsTab('services')}
+                    style={{
+                      padding: '8px 16px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 600,
+                      background: cmsTab === 'services' ? C.lightBlue : 'transparent', color: cmsTab === 'services' ? C.primary : C.muted, transition: 'all 0.15s'
+                    }}>
+                    Service Pages ({services.length})
+                  </button>
+                </div>
+                
+                {cmsTab === 'blogs' && (
+                  <button onClick={() => {
+                    setEditingBlog(null);
+                    setBlogForm({
+                      title: '', category: 'Home Healthcare', date: '', author: 'Corx',
+                      image: 'https://www.corx.ae/wp-content/uploads/placeholder.jpg',
+                      excerpt: '', readTime: '5 min read', content: ''
+                    });
+                    setShowBlogModal(true);
+                  }} className="admin-shimmer-btn"
+                    style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '38px', padding: '0 16px', borderRadius: '10px', color: 'white', fontSize: '12px', fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Poppins',sans-serif" }}>
+                    <Plus size={14} /> Add Blog Post
+                  </button>
+                )}
+              </div>
+
+              {/* Tab Panels */}
+              {cmsTab === 'blogs' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {blogs.map(blog => (
+                    <div key={blog.id} style={{ background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '20px', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 12px rgba(26,41,74,0.03)' }}>
+                      <div style={{ height: '160px', background: `url(${blog.image}) center/cover no-repeat`, position: 'relative' }}>
+                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: C.primary, color: 'white', fontSize: '10px', fontWeight: 600, padding: '4px 10px', borderRadius: '999px', textTransform: 'uppercase' }}>
+                          {blog.category}
+                        </span>
+                      </div>
+                      <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <h4 style={{ fontSize: '15px', fontWeight: 600, color: C.secondary, margin: 0 }}>{blog.title}</h4>
+                        <p style={{ fontSize: '12px', color: C.muted, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: 1.5 }}>
+                          {blog.excerpt}
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '14px', borderTop: `1px solid ${C.border}` }}>
+                          <span style={{ fontSize: '11px', color: C.muted }}>By {blog.author} · {blog.read_time || blog.readTime || '5 min read'}</span>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button type="button" onClick={() => {
+                              setEditingBlog(blog);
+                              setBlogForm({
+                                title: blog.title, category: blog.category, date: blog.date, author: blog.author,
+                                image: blog.image, excerpt: blog.excerpt, readTime: blog.read_time || blog.readTime || '5 min read', content: blog.content
+                              });
+                              setShowBlogModal(true);
+                            }}
+                              style={{ background: C.lightBlue, border: 'none', color: C.primary, padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}>
+                              Edit
+                            </button>
+                            <button type="button" onClick={() => handleBlogDelete(blog.id)}
+                              style={{ background: '#FFF5F5', border: 'none', color: '#dc3545', padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}>
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '20px', overflow: 'hidden', boxShadow: '0 2px 16px rgba(26,41,74,0.04)' }}>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                      <thead>
+                        <tr style={{ borderBottom: `1.5px solid ${C.border}`, background: C.bg }}>
+                          {['Service Name', 'Eyebrow Text', 'Tagline', 'Theme Color', 'Actions'].map(h => (
+                            <th key={h} style={thStyle}>{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {services.map(service => (
+                          <tr key={service.id} className="admin-tr" style={{ borderBottom: `1px solid ${C.border}` }}>
+                            <td style={tdStyle}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <span style={{ fontSize: '18px', color: service.theme_color || C.primary }}>✦</span>
+                                <span style={{ fontSize: '13px', fontWeight: 600, color: C.secondary }}>{service.title}</span>
+                              </div>
+                            </td>
+                            <td style={tdStyle}><span style={{ fontSize: '12px', color: C.muted }}>{service.eyebrow || '—'}</span></td>
+                            <td style={tdStyle}><span style={{ fontSize: '12px', color: C.secondary, display: 'block', maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={service.tagline}>{service.tagline}</span></td>
+                            <td style={tdStyle}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ width: '12px', height: '12px', borderRadius: '3px', background: service.theme_color || service.themeColor }} />
+                                <span style={{ fontSize: '11px', fontFamily: 'monospace' }}>{service.theme_color || service.themeColor}</span>
+                              </div>
+                            </td>
+                            <td style={tdStyle}>
+                              <button type="button" onClick={() => {
+                                setEditingService(service);
+                                setServiceForm({
+                                  title: service.title, eyebrow: service.eyebrow || '', tagline: service.tagline,
+                                  description: service.description, icon: service.icon, themeColor: service.theme_color || service.themeColor,
+                                  faqsJson: JSON.stringify(service.faqs || [], null, 2),
+                                  benefitsJson: JSON.stringify(service.benefits || [], null, 2)
+                                });
+                                setShowServiceModal(true);
+                              }}
+                                style={{ background: C.lightBlue, border: 'none', color: C.primary, padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}>
+                                Customize Design & Content
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
         </main>
       </div>
 
@@ -1133,6 +1543,139 @@ const AdminDashboard = () => {
                   Remove
                 </button>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* BLOG EDITOR MODAL */}
+      <AnimatePresence>
+        {showBlogModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', background: 'rgba(26,41,74,0.45)', backdropFilter: 'blur(8px)' }}
+            onClick={e => { if (e.target === e.currentTarget) setShowBlogModal(false); }}>
+            <motion.div initial={{ scale: 0.93, y: 20, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.93, y: 20, opacity: 0 }} transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+              style={{ width: '100%', maxWidth: '650px', background: C.white, borderRadius: '24px', overflow: 'hidden', boxShadow: '0 24px 80px rgba(26,41,74,0.2)', maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}
+              onClick={e => e.stopPropagation()}>
+              
+              <div style={{ padding: '24px 32px', borderBottom: `2px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: C.bg }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: C.secondary, margin: 0, fontFamily: "'Poppins',sans-serif" }}>
+                  {editingBlog ? `Edit Blog Post: ${editingBlog.title}` : 'Create Blog Post'}
+                </h3>
+                <button onClick={() => setShowBlogModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.muted, display: 'flex', padding: '4px' }}>
+                  <X size={18} />
+                </button>
+              </div>
+
+              <form onSubmit={handleBlogSubmit} style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '20px', overflowY: 'auto', flex: 1 }}>
+                <TField label="Blog Title" icon={<ClipboardList size={14} />}>
+                  <LInput placeholder="Title" value={blogForm.title} onChange={v => setBlogForm(prev => ({ ...prev, title: v }))} required />
+                </TField>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <TField label="Category" icon={<ClipboardList size={14} />}>
+                    <LInput placeholder="e.g. Home Healthcare" value={blogForm.category} onChange={v => setBlogForm(prev => ({ ...prev, category: v }))} required />
+                  </TField>
+                  <TField label="Read Time" icon={<Clock size={14} />}>
+                    <LInput placeholder="e.g. 5 min read" value={blogForm.readTime} onChange={v => setBlogForm(prev => ({ ...prev, readTime: v }))} required />
+                  </TField>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <TField label="Author" icon={<User size={14} />}>
+                    <LInput placeholder="e.g. Corx" value={blogForm.author} onChange={v => setBlogForm(prev => ({ ...prev, author: v }))} required />
+                  </TField>
+                  <TField label="Publish Date" icon={<CalendarDays size={14} />}>
+                    <LInput placeholder="e.g. July 11, 2026 (Leave empty for today)" value={blogForm.date} onChange={v => setBlogForm(prev => ({ ...prev, date: v }))} />
+                  </TField>
+                </div>
+
+                <TField label="Image URL" icon={<ClipboardList size={14} />}>
+                  <LInput placeholder="Image link" value={blogForm.image} onChange={v => setBlogForm(prev => ({ ...prev, image: v }))} required />
+                </TField>
+
+                <TField label="Short Excerpt" icon={<ClipboardList size={14} />}>
+                  <textarea value={blogForm.excerpt} onChange={e => setBlogForm(prev => ({ ...prev, excerpt: e.target.value }))} placeholder="Brief summary of the article..." required
+                    style={{ width: '100%', minHeight: '60px', background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '12px', color: C.secondary, fontSize: '13px', fontWeight: 500, padding: '12px 14px', resize: 'vertical', fontFamily: "'Poppins',sans-serif" }} />
+                </TField>
+
+                <TField label="Content (HTML)" icon={<ClipboardList size={14} />}>
+                  <textarea value={blogForm.content} onChange={e => setBlogForm(prev => ({ ...prev, content: e.target.value }))} placeholder="<p>Full content goes here...</p>" required
+                    style={{ width: '100%', minHeight: '150px', background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '12px', color: C.secondary, fontSize: '13px', fontWeight: 500, padding: '12px 14px', resize: 'vertical', fontFamily: "'Poppins',sans-serif" }} />
+                </TField>
+
+                <motion.button type="submit" className="admin-shimmer-btn" whileTap={{ scale: 0.98 }}
+                  style={{ height: '48px', width: '100%', borderRadius: '12px', color: 'white', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Poppins',sans-serif", marginTop: '8px' }}>
+                  Save Post
+                </motion.button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* SERVICE EDITOR MODAL */}
+      <AnimatePresence>
+        {showServiceModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', background: 'rgba(26,41,74,0.45)', backdropFilter: 'blur(8px)' }}
+            onClick={e => { if (e.target === e.currentTarget) setShowServiceModal(false); }}>
+            <motion.div initial={{ scale: 0.93, y: 20, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.93, y: 20, opacity: 0 }} transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+              style={{ width: '100%', maxWidth: '650px', background: C.white, borderRadius: '24px', overflow: 'hidden', boxShadow: '0 24px 80px rgba(26,41,74,0.2)', maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}
+              onClick={e => e.stopPropagation()}>
+              
+              <div style={{ padding: '24px 32px', borderBottom: `2px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: C.bg }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: C.secondary, margin: 0, fontFamily: "'Poppins',sans-serif" }}>
+                  Edit Service: {editingService?.title}
+                </h3>
+                <button onClick={() => setShowServiceModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.muted, display: 'flex', padding: '4px' }}>
+                  <X size={18} />
+                </button>
+              </div>
+
+              <form onSubmit={handleServiceSubmit} style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '20px', overflowY: 'auto', flex: 1 }}>
+                <TField label="Service Title" icon={<ClipboardList size={14} />}>
+                  <LInput placeholder="Title" value={serviceForm.title} onChange={v => setServiceForm(prev => ({ ...prev, title: v }))} required />
+                </TField>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <TField label="Eyebrow text" icon={<ClipboardList size={14} />}>
+                    <LInput placeholder="e.g. DHA-licensed nursing" value={serviceForm.eyebrow} onChange={v => setServiceForm(prev => ({ ...prev, eyebrow: v }))} />
+                  </TField>
+                  <TField label="Lucide Icon Name" icon={<ClipboardList size={14} />}>
+                    <LInput placeholder="e.g. Heart" value={serviceForm.icon} onChange={v => setServiceForm(prev => ({ ...prev, icon: v }))} required />
+                  </TField>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <TField label="Theme Color" icon={<ClipboardList size={14} />}>
+                    <LInput placeholder="e.g. #08709d" value={serviceForm.themeColor} onChange={v => setServiceForm(prev => ({ ...prev, themeColor: v }))} required />
+                  </TField>
+                  <TField label="Tagline" icon={<ClipboardList size={14} />}>
+                    <LInput placeholder="Catchphrase" value={serviceForm.tagline} onChange={v => setServiceForm(prev => ({ ...prev, tagline: v }))} required />
+                  </TField>
+                </div>
+
+                <TField label="Description" icon={<ClipboardList size={14} />}>
+                  <textarea value={serviceForm.description} onChange={e => setServiceForm(prev => ({ ...prev, description: e.target.value }))} placeholder="Detailed service description..." required
+                    style={{ width: '100%', minHeight: '80px', background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '12px', color: C.secondary, fontSize: '13px', fontWeight: 500, padding: '12px 14px', resize: 'vertical', fontFamily: "'Poppins',sans-serif" }} />
+                </TField>
+
+                <TField label="Benefits List (JSON Array)" icon={<ClipboardList size={14} />}>
+                  <textarea value={serviceForm.benefitsJson} onChange={e => setServiceForm(prev => ({ ...prev, benefitsJson: e.target.value }))} required
+                    style={{ width: '100%', minHeight: '80px', background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '12px', color: C.secondary, fontSize: '12px', fontWeight: 500, padding: '12px 14px', resize: 'vertical', fontFamily: 'monospace' }} />
+                </TField>
+
+                <TField label="FAQs List (JSON Array)" icon={<ClipboardList size={14} />}>
+                  <textarea value={serviceForm.faqsJson} onChange={e => setServiceForm(prev => ({ ...prev, faqsJson: e.target.value }))} required
+                    style={{ width: '100%', minHeight: '100px', background: C.white, border: `1.5px solid ${C.border}`, borderRadius: '12px', color: C.secondary, fontSize: '12px', fontWeight: 500, padding: '12px 14px', resize: 'vertical', fontFamily: 'monospace' }} />
+                </TField>
+
+                <motion.button type="submit" className="admin-shimmer-btn" whileTap={{ scale: 0.98 }}
+                  style={{ height: '48px', width: '100%', borderRadius: '12px', color: 'white', fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Poppins',sans-serif", marginTop: '8px' }}>
+                  Save Service Content
+                </motion.button>
+              </form>
             </motion.div>
           </motion.div>
         )}

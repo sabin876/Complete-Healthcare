@@ -43,6 +43,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -148,4 +149,72 @@ STATIC_URL = 'static/'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Complete Healthcare Admin",
+    "site_header": "Complete Healthcare",
+    "site_brand": "Complete Healthcare",
+    "welcome_sign": "Complete Healthcare Administration",
+    "copyright": "Complete Healthcare Ltd",
+    "search_model": ["api.StaffProfile"],
+    "user_avatar": None,
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"model": "api.StaffProfile"},
+    ],
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "order_with_respect_to": ["api", "auth"],
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.group": "fas fa-users",
+        "api.staffprofile": "fas fa-user-md",
+        "api.task": "fas fa-tasks",
+        "api.leaveapplication": "fas fa-calendar-times",
+        "api.otapplication": "fas fa-user-clock",
+        "api.salaryapplication": "fas fa-money-check-alt",
+        "api.noticeapplication": "fas fa-bullhorn",
+        "api.dutyapplication": "fas fa-exchange-alt",
+        "api.blogpost": "fas fa-newspaper",
+        "api.service": "fas fa-briefcase-medical",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "changeform_format": "horizontal_tabs",
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-cyan",
+    "accent": "accent-primary",
+    "navbar": "navbar-cyan navbar-dark",
+    "no_navbar_border": False,
+    "navbar_double_row": False,
+    "scroller": False,
+    "sidebar": "sidebar-dark-info",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_layout": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "cerulean",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-info",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 

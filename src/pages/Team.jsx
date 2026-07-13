@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Calendar, GraduationCap, IdCard, MapPin } from 'lucide-react';
+import { Calendar, GraduationCap, IdCard, MapPin, Award, Clock } from 'lucide-react';
 import kajalPhoto from '../assets/kajal.png';
+import teamHero from '../assets/team_hero.png';
 
 const doctorsData = [
   {
@@ -232,26 +233,173 @@ const departments = [
 
 const Team = () => {
   const [selectedDept, setSelectedDept] = useState("All");
+  const [dbTeam, setDbTeam] = useState([]);
+
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const res = await fetch('http://localhost:8000/api/team/');
+        if (res.ok) {
+          const data = await res.json();
+          setDbTeam(data);
+        }
+      } catch (err) {
+        console.error("Error fetching team from DB:", err);
+      }
+    };
+    fetchTeam();
+  }, []);
+
+  const mappedDbTeam = dbTeam.map(member => {
+    let dept = "Nursing";
+    const postLower = member.post ? member.post.toLowerCase() : "";
+    if (postLower.includes("physio")) {
+      dept = "Physiotherapy";
+    } else if (postLower.includes("home") || postLower.includes("assistant") || postLower.includes("support")) {
+      dept = "Homecare Support";
+    }
+    
+    let img = member.photo || "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80";
+    if (img && !img.startsWith("http")) {
+      img = `http://localhost:8000${img}`;
+    }
+
+    return {
+      name: member.name,
+      specialty: member.post,
+      department: dept,
+      nmcNo: `DB-${member.id}`,
+      degree: member.post,
+      image: img,
+      isFromDb: true
+    };
+  });
+
+  const combinedDoctors = [...mappedDbTeam, ...doctorsData];
 
   const filteredDoctors = selectedDept === "All"
-    ? doctorsData
-    : doctorsData.filter(doc => doc.department === selectedDept);
+    ? combinedDoctors
+    : combinedDoctors.filter(doc => doc.department === selectedDept);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-32 pb-24 bg-gray-50 min-h-screen"
+      className="pt-28 pb-24 bg-gray-50 min-h-screen"
     >
+      <section 
+        className="relative min-h-[50vh] flex items-center py-20 mb-16 text-white text-center bg-cover bg-center overflow-hidden"
+        style={{
+          backgroundImage: `url(${teamHero})`,
+          backgroundPosition: 'center 35%'
+        }}
+      >
+        {/* Dark Blue-Navy Gradient Overlay to ensure maximum contrast and readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1a294a]/90 via-[#0b2848]/85 to-[#1a294a]/95 mix-blend-multiply z-0"></div>
+        <div className="absolute inset-0 bg-black/45 z-0"></div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-5xl mx-auto flex flex-col items-center">
+
+            <h1 
+              className="text-4xl md:text-6xl font-black leading-tight tracking-tight mb-6"
+              style={{ 
+                color: '#ffffff',
+                textShadow: '0 4px 20px rgba(0,0,0,0.7)'
+              }}
+            >
+              Our Medical Specialists
+            </h1>
+            <p 
+              className="text-sm md:text-lg leading-relaxed mb-8 max-w-3xl font-medium"
+              style={{ 
+                color: '#ffffff',
+                textShadow: '0 2px 10px rgba(0,0,0,0.5)'
+              }}
+            >
+              A dedicated team of DHA licensed doctors, registered nurses, and certified physiotherapists bringing clinical excellence, safety, and recovery directly to your home.
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-xs md:text-sm font-semibold">
+              <div 
+                style={{ 
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  color: '#ffffff',
+                  backgroundColor: 'rgba(46, 189, 110, 0.12)',
+                  border: '1.5px solid rgba(46, 189, 110, 0.35)',
+                  padding: '12px 28px',
+                  borderRadius: '9999px',
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(46, 189, 110, 0.22)';
+                  e.currentTarget.style.borderColor = 'rgba(46, 189, 110, 0.55)';
+                  e.currentTarget.style.transform = 'scale(1.03)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(46, 189, 110, 0.12)';
+                  e.currentTarget.style.borderColor = 'rgba(46, 189, 110, 0.35)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <Award size={18} style={{ color: '#2ebd6e' }} />
+                <span>100% DHA Licensed</span>
+              </div>
+              <div 
+                style={{ 
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  color: '#ffffff',
+                  backgroundColor: 'rgba(46, 189, 110, 0.12)',
+                  border: '1.5px solid rgba(46, 189, 110, 0.35)',
+                  padding: '12px 28px',
+                  borderRadius: '9999px',
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(46, 189, 110, 0.22)';
+                  e.currentTarget.style.borderColor = 'rgba(46, 189, 110, 0.55)';
+                  e.currentTarget.style.transform = 'scale(1.03)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(46, 189, 110, 0.12)';
+                  e.currentTarget.style.borderColor = 'rgba(46, 189, 110, 0.35)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <Clock size={18} style={{ color: '#2ebd6e' }} />
+                <span>24/7 Availability</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="container mx-auto px-4">
         {/* Header Block with top margin spacing */}
         <div className="flex flex-col items-center text-center mt-6 mb-12">
-          <h1 className="text-3xl md:text-5xl font-black text-[#1a294a] tracking-tight mb-4">
-            Meet Our Doctors
-          </h1>
+          <h2 className="text-3xl md:text-5xl font-black text-[#1a294a] tracking-tight mb-4">
+            Our Medical Directory
+          </h2>
           <p className="text-sm md:text-base text-gray-500 font-medium max-w-2xl">
-            Experienced healthcare professionals dedicated to your well-being
+            Search and filter through our certified clinical practitioners by department.
           </p>
           <div 
             style={{
@@ -274,12 +422,12 @@ const Team = () => {
                 onClick={() => setSelectedDept(dept)}
                 className="text-xs md:text-sm font-semibold transition-all duration-300 cursor-pointer hover:scale-105"
                 style={{
-                  backgroundColor: isActive ? '#004e92' : 'transparent',
-                  color: isActive ? '#ffffff' : '#4b5563',
-                  border: isActive ? '1px solid transparent' : '1px solid #d1d5db',
-                  padding: '8px 20px',
+                  background: isActive ? 'linear-gradient(135deg, #08709d 0%, #004e92 100%)' : '#ffffff',
+                  color: isActive ? '#ffffff' : '#374151',
+                  border: isActive ? '1px solid transparent' : '1px solid #e5e7eb',
+                  padding: '10px 24px',
                   borderRadius: '9999px',
-                  boxShadow: isActive ? '0 4px 12px rgba(0, 78, 146, 0.2)' : 'none'
+                  boxShadow: isActive ? '0 8px 20px -4px rgba(8, 112, 157, 0.35)' : '0 2px 6px rgba(0,0,0,0.03)'
                 }}
               >
                 {dept}

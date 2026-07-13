@@ -3,11 +3,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import (
     StaffProfile, Task, LeaveApplication,
-    OtApplication, SalaryApplication, NoticeApplication, DutyApplication
+    OtApplication, SalaryApplication, NoticeApplication, DutyApplication,
+    BlogPost, Service, TeamMember
 )
 from .serializers import (
     StaffProfileSerializer, TaskSerializer, LeaveApplicationSerializer,
-    OtApplicationSerializer, SalaryApplicationSerializer, NoticeApplicationSerializer, DutyApplicationSerializer
+    OtApplicationSerializer, SalaryApplicationSerializer, NoticeApplicationSerializer, DutyApplicationSerializer,
+    BlogPostSerializer, ServiceSerializer, TeamMemberSerializer
 )
 
 @api_view(['POST'])
@@ -270,3 +272,19 @@ class DutyApplicationViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except StaffProfile.DoesNotExist:
             return Response({'error': 'Staff profile not found.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BlogPostViewSet(viewsets.ModelViewSet):
+    queryset = BlogPost.objects.all().order_by('-id')
+    serializer_class = BlogPostSerializer
+
+
+class ServiceViewSet(viewsets.ModelViewSet):
+    queryset = Service.objects.all().order_by('id')
+    serializer_class = ServiceSerializer
+    lookup_field = 'slug'
+
+
+class TeamMemberViewSet(viewsets.ModelViewSet):
+    queryset = TeamMember.objects.all().order_by('-id')
+    serializer_class = TeamMemberSerializer

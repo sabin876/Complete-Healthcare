@@ -237,10 +237,10 @@ const StaffDashboard = () => {
       {/* Top Header */}
       <header style={{ height: '64px', background: B.white, borderBottom: `1.5px solid ${B.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', boxShadow: '0 2px 12px rgba(8,112,157,0.06)', flexShrink: 0, position: 'sticky', top: 0, zIndex: 30 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <img src={logo} alt="Complete Healthcare" style={{ height: '36px', objectFit: 'contain' }} />
+          <img src={logo} alt="Corx Logo" style={{ height: '36px', objectFit: 'contain' }} />
           <div style={{ width: '1px', height: '24px', background: B.border }} />
           <div>
-            <h1 style={{ fontSize: '15px', fontWeight: 600, color: B.secondary, margin: 0 }}>Staff Portal</h1>
+            <h1 style={{ fontSize: '15px', fontWeight: 600, color: B.secondary, margin: 0 }}>Corx Staff Portal</h1>
             <p style={{ fontSize: '11px', color: B.muted, margin: 0 }}>{formatDate()}</p>
           </div>
         </div>

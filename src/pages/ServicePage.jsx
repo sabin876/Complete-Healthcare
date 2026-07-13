@@ -19,7 +19,6 @@ import {
   ChevronRight,
   CalendarDays
 } from 'lucide-react';
-import { servicesData } from '../data/servicesData';
 
 const styles = `
   @keyframes fadeSlideIn {
@@ -872,14 +871,46 @@ export default function ServicePage({ serviceId }) {
   const params = useParams();
   const activeId = serviceId || params.id;
 
+  const [servicesData, setServicesData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/services/')
+      .then(res => res.json())
+      .then(data => {
+        const dict = {};
+        data.forEach(item => {
+          dict[item.slug] = {
+            ...item,
+            themeColor: item.theme_color,
+            floatingBadge: item.floating_badge,
+          };
+        });
+        setServicesData(dict);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error fetching services:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  const [openIndex, setOpenIndex] = useState(null);
+  const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', paddingTop: '10rem' }}>
+        <div style={{ fontSize: '1.2rem', fontFamily: "'Poppins', sans-serif", color: '#08709d' }}>Loading service details...</div>
+      </div>
+    );
+  }
+
   const service = servicesData[activeId];
 
   if (!service) {
     return <Navigate to="/" replace />;
   }
-
-  const [openIndex, setOpenIndex] = useState(null);
-  const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
 
   const isDoctorSubPage = ['doctor-at-home', 'doctor-at-office', 'doctor-at-hotel'].includes(activeId);
 

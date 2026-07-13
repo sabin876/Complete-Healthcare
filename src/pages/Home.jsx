@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
-import { Shield, Users, Heart, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, Pill, Flower2, User, Brain, Stethoscope, Droplets, Activity, Clock, Award, Phone, HandHeart, UserCheck, ThumbsUp, ShieldPlus, Leaf, HeartHandshake, Building, Smile, Home as HomeIcon, CalendarDays } from 'lucide-react';
+import { Shield, Users, Heart, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, Pill, Flower2, User, Brain, Stethoscope, Droplets, Activity, Clock, Award, Phone, HandHeart, UserCheck, ThumbsUp, ShieldPlus, Leaf, HeartHandshake, Building, Smile, Home as HomeIcon, CalendarDays, Play, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import partner1 from '../assets/our partner2.png';
 import partner3 from '../assets/our partner 3.png';
@@ -18,9 +18,15 @@ import FAQ from '../components/FAQ';
 import hero2 from '../assets/hero/hero2.png';
 import hero3 from '../assets/hero/hero3.png';
 import dhaLogo from '../assets/Dubai_Health_Authority_log.png';
+import logo from '../assets/logo.webp';
 import HealthCareBlogSection from '../components/HealthCareBlogSection';
 import kajalPhoto from '../assets/kajal.png';
 import { Calendar, GraduationCap, IdCard, MapPin } from 'lucide-react';
+import img1 from '../assets/img1.jpg';
+import img2 from '../assets/img2.jpg';
+import img3 from '../assets/img3.jpg';
+import img4 from '../assets/img4.jpg';
+
 
 
 /* ── Testimonials Data & Components ────────────────── */
@@ -477,6 +483,7 @@ const Home = () => {
       titlePost: "",
       subtitle: "Providing quality healthcare services with compassion and excellence. Your trusted partner in health and wellness.",
       image: hero1,
+      videoUrl: "https://www.facebook.com/plugins/video.php?height=373&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1667889694549028%2F&show_text=false&width=560&t=0",
       cta1: "Book Appointment",
       cta2: "Our Services"
     },
@@ -518,6 +525,14 @@ const Home = () => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedDept, setSelectedDept] = useState("All");
+  const [diffImageIndex, setDiffImageIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDiffImageIndex((prev) => (prev + 1) % 4);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   const filteredDoctors = selectedDept === "All"
     ? doctorsData
@@ -539,27 +554,34 @@ const Home = () => {
     <main>
       {/* Hero Slider */}
       <section className="relative min-h-[95vh] flex items-center py-20 md:py-28 overflow-hidden bg-black">
-        <AnimatePresence mode='wait'>
-          <motion.div 
-            key={currentSlide}
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.02 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="absolute inset-0 z-0"
-          >
-            <img 
-              src={slides[currentSlide].image} 
-              alt={slides[currentSlide].titlePre + slides[currentSlide].titleHighlight + slides[currentSlide].titlePost}
-              className="w-full h-full object-cover brightness-[0.4] contrast-[1.05]"
-            />
-            {/* Deep Blue Overlay matching the reference design */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#0c2e56]/95 via-[#0b2848]/85 to-[#071f3b]/95 mix-blend-multiply"></div>
-            {/* Soft dark vignettes */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-          </motion.div>
-        </AnimatePresence>
+        {/* Continuous Autoplay Muted Background Video */}
+        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden">
+          <iframe 
+            src="https://www.facebook.com/plugins/video.php?height=373&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1667889694549028%2F&show_text=false&width=560&t=0&autoplay=true&mute=true&muted=true&autoplay=1&mute=1"
+            title="Hero Background Video"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: '100vw',
+              height: '56.25vw',
+              minHeight: '100vh',
+              minWidth: '177.77vh',
+              transform: 'translate(-50%, -50%)',
+              border: 'none',
+              pointerEvents: 'none',
+              opacity: 0.45,
+              filter: 'brightness(0.4) contrast(1.05)'
+            }}
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" 
+            allowFullScreen={true}
+          />
+          {/* Deep Blue Overlay matching the reference design */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0c2e56]/95 via-[#0b2848]/85 to-[#071f3b]/95 mix-blend-multiply"></div>
+          {/* Soft dark vignettes */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+        </div>
         
         <div className="container relative z-10 text-white">
           <AnimatePresence mode='wait'>
@@ -855,6 +877,11 @@ const Home = () => {
         className="relative overflow-hidden"
         style={{ backgroundColor: '#f8f9fa', padding: '100px 0' }}
       >
+        {/* Subtle Watermarked Logo Background */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-[0.1] pointer-events-none z-0 select-none flex items-center justify-center">
+          <img src={logo} alt="Corx Watermark" className="w-full h-full object-contain" />
+        </div>
+
         <div className="container relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-16">
             {/* Left Content */}
@@ -899,38 +926,38 @@ const Home = () => {
                   ))}
                 </div>
  
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  animate={{ 
-                    y: [0, -6, 0],
-                    scale: [1, 1.02, 1]
-                  }}
-                  transition={{ 
-                    duration: 4, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
-                  }}
-                  className="mt-10 relative group inline-block"
-                >
-                  <Link 
-                    to="/contact" 
-                    className="relative overflow-hidden border-2 border-primary-color text-primary-color rounded-full font-bold uppercase tracking-widest text-xs transition-all duration-500 flex items-center gap-3 z-10 hover:bg-primary-color hover:text-white shadow-lg hover:shadow-primary-color/20"
-                    style={{ padding: '18px 45px' }}
+                <div className="mt-12 flex justify-center">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    animate={{ 
+                      y: [0, -6, 0],
+                      scale: [1, 1.02, 1]
+                    }}
+                    transition={{ 
+                      duration: 4, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
+                    className="relative group inline-block"
                   >
-                    {/* Shine Animation Effect */}
-                    <motion.div 
-                      animate={{ left: ['-100%', '200%'] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                      className="absolute top-0 w-20 h-full bg-gradient-to-r from-transparent via-primary-color/10 to-transparent -skew-x-12 z-0"
-                    />
-                    <span className="relative z-10">Schedule An Appointment</span>
-                    <ArrowRight size={18} className="relative z-10" />
-                  </Link>
-                  {/* Button Glow Shadow */}
-                  <div className="absolute inset-0 bg-primary-color/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
-                </motion.div>
+                    <Link 
+                      to="/contact" 
+                      className="inline-flex items-center gap-2 hover:scale-[1.02] text-white font-semibold text-base transition-all duration-200 cursor-pointer shadow-md"
+                      style={{
+                        backgroundColor: '#004e92',
+                        padding: '12px 24px',
+                        borderRadius: '8px',
+                        border: '1px solid transparent',
+                        color: '#ffffff'
+                      }}
+                    >
+                      <CalendarDays size={20} style={{ color: '#ffffff' }} />
+                      <span>Schedule An Appointment</span>
+                    </Link>
+                  </motion.div>
+                </div>
 
 
               </motion.div>
@@ -950,29 +977,30 @@ const Home = () => {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <div className="relative rounded-[30px] overflow-hidden shadow-[0_30px_70px_rgba(0,0,0,0.12)] border-[8px] border-white">
-                  <img 
-                    src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-                    alt="CHC Healthcare Professionals" 
-                    className="w-full h-full object-cover min-h-[450px]"
-                  />
+                <div className="relative rounded-[30px] overflow-hidden shadow-[0_30px_70px_rgba(0,0,0,0.12)] border-[8px] border-white w-full h-[530px] bg-white p-6">
+                  <div className="relative w-full h-full rounded-[20px] overflow-hidden bg-gray-50">
+                    <AnimatePresence mode="wait">
+                      <motion.img 
+                        key={diffImageIndex}
+                        src={[img1, img2, img3, img4][diffImageIndex]} 
+                        alt="CHC Healthcare Difference" 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.8 }}
+                        style={{ 
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'cover', 
+                          objectPosition: 'center' 
+                        }}
+                      />
+                    </AnimatePresence>
+                  </div>
                 </div>
-
-                {/* Floating Badge */}
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="absolute -bottom-6 -left-6 bg-white py-5 px-6 rounded-2xl shadow-xl flex items-center gap-4 border border-gray-50"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-[#5fb54a]/10 flex items-center justify-center text-[#5fb54a]">
-                    <Award size={24} />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-black text-secondary-color">15+</div>
-                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none">Years Experience</div>
-                  </div>
-                </motion.div>
               </motion.div>
             </div>
           </div>
