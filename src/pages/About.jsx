@@ -210,44 +210,13 @@ const About = () => {
     <div style={styles.pageWrapper}>
       {/* ── HERO HEADER SECTION ── */}
       <section 
-        className="relative min-h-[22vh] flex items-center pt-28 pb-6 mb-12 text-center bg-cover bg-center overflow-hidden border-b border-gray-100"
+        className="relative min-h-[50vh] flex items-center pt-32 pb-20 mb-16 text-center bg-cover bg-center overflow-hidden border-b border-gray-100"
         style={{
           backgroundImage: `url(${aboutUsBg})`,
-          backgroundPosition: 'center'
+          backgroundPosition: 'center 40%'
         }}
       >
-        {/* Dark Blue-Navy Gradient Overlay to ensure maximum contrast and readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1a294a]/90 via-[#0b2848]/85 to-[#1a294a]/95 mix-blend-multiply z-0"></div>
-        <div className="absolute inset-0 bg-black/45 z-0"></div>
-
-        <div className="container mx-auto px-6 relative z-10">
-          {/* Logo styled exactly as the Navbar logo */}
-          <div className="flex justify-center items-center h-20 md:h-24">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              transition={{ duration: 1, ease: [0.34, 1.56, 0.64, 1] }}
-              whileHover={{ 
-                scale: 1.05,
-                rotate: [0, -1, 1, -1, 0],
-                transition: { duration: 0.3 } 
-              }}
-              className="relative group h-full flex items-center"
-            >
-              <img 
-                src={logo} 
-                alt="COMPLETE HEALTHCARE" 
-                className="h-[80%] md:h-[90%] w-auto object-contain relative z-10 mx-auto" 
-              />
-              <motion.div 
-                initial={{ x: "-100%", opacity: 0 }}
-                animate={{ x: "200%", opacity: [0, 0.5, 0] }}
-                transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 4, ease: "easeInOut" }}
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg] z-20 pointer-events-none"
-              />
-            </motion.div>
-          </div>
-        </div>
+        {/* Clean raw background image banner */}
       </section>
 
       {/* Texture Overlays */}
