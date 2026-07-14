@@ -209,10 +209,15 @@ const About = () => {
     <div style={styles.pageWrapper}>
       {/* ── HERO HEADER SECTION ── */}
       <section 
-        className="relative min-h-[22vh] flex items-center pt-28 pb-6 mb-12 text-center overflow-hidden bg-white border-b border-gray-100"
+        className="relative min-h-[22vh] flex items-center pt-28 pb-6 mb-12 text-center bg-cover bg-center overflow-hidden border-b border-gray-100"
+        style={{
+          backgroundImage: "url('/assets/rebrand/corx_team_about_1777566746723.png')",
+          backgroundPosition: 'center'
+        }}
       >
-        {/* Soft background radial glow for depth */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] rounded-full bg-[#08709d]/5 blur-[80px] pointer-events-none z-0" />
+        {/* Dark Blue-Navy Gradient Overlay to ensure maximum contrast and readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1a294a]/90 via-[#0b2848]/85 to-[#1a294a]/95 mix-blend-multiply z-0"></div>
+        <div className="absolute inset-0 bg-black/45 z-0"></div>
 
         <div className="container mx-auto px-6 relative z-10">
           {/* Logo styled exactly as the Navbar logo */}
