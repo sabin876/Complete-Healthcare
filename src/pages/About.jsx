@@ -210,7 +210,7 @@ const About = () => {
     <div style={styles.pageWrapper}>
       {/* ── HERO HEADER SECTION ── */}
       <section 
-        className="relative w-full min-h-[250px] md:min-h-0 md:aspect-[3322/1262] mb-16 bg-cover bg-center overflow-hidden border-b border-gray-100"
+        className="relative w-full min-h-[250px] md:min-h-0 md:aspect-[3322/1262] mb-16 bg-no-repeat overflow-hidden border-b border-gray-100 bg-cover md:bg-[length:92%_auto]"
         style={{
           backgroundImage: `url(${aboutUsBg})`,
           backgroundPosition: 'center'
