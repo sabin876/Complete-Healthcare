@@ -98,7 +98,7 @@ const Header = () => {
 
       {/* Top Bar (White) */}
       <div className="bg-white transition-all duration-300 border-b border-gray-100 py-0 shadow-sm">
-        <div className="container flex justify-between items-center h-20 md:h-28">
+        <div className="w-full px-6 md:px-12 flex justify-between items-center h-20 md:h-28">
           {/* Logo */}
           <Link to="/" className="flex items-center h-full ml-2">
             <motion.div
@@ -215,7 +215,7 @@ const Header = () => {
 
       {/* Main Nav (Vibrant Blue) */}
       <nav className="hidden lg:block bg-[#08709d] text-white shadow-xl relative z-10">
-        <div className="container flex justify-between items-center py-0">
+        <div className="w-full px-6 md:px-12 flex justify-between items-center py-0">
           <ul className="flex items-center gap-8 h-16">
             {navLinks.map((link) => (
               <li key={link.name} className="relative h-full">

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Award, CheckCircle2, Heart, Clock, ArrowRight, ShieldCheck, Activity, Phone, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.webp';
+import aboutUsBg from '../assets/About us .jpg';
 
 const About = () => {
   const choosePillars = [
@@ -211,7 +212,7 @@ const About = () => {
       <section 
         className="relative min-h-[22vh] flex items-center pt-28 pb-6 mb-12 text-center bg-cover bg-center overflow-hidden border-b border-gray-100"
         style={{
-          backgroundImage: "url('/assets/rebrand/corx_team_about_1777566746723.png')",
+          backgroundImage: `url(${aboutUsBg})`,
           backgroundPosition: 'center'
         }}
       >

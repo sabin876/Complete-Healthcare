@@ -23,6 +23,16 @@ import shwetaRakeshPhoto from '../assets/shweta Rakesh .png';
 import shwetaPhoto from '../assets/shweta.png';
 import suneelPhoto from '../assets/suneel.png';
 
+// Newly added team images
+import chandaPhoto from '../assets/Chanda Kumari.png';
+import dipeshPhoto from '../assets/Dipesh.png';
+import jayaKumariPhoto from '../assets/Jaya Kumari .png';
+import lakshmiPhoto from '../assets/Lakshmi Sundar .png';
+import mariecrisPhoto from '../assets/Mariecris Godinez.png';
+import manasaPhoto from '../assets/manasa Vadde.png';
+import sajiniPhoto from '../assets/sajini Babu.png';
+import vinayataPhoto from '../assets/vinayata m .png';
+
 const doctorsData = [
   {
     name: "Jaya Kumari",
@@ -30,7 +40,7 @@ const doctorsData = [
     department: "Physiotherapy",
     nmcNo: "PT-001",
     degree: "DHA Certified Physiotherapist",
-    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: jayaKumariPhoto
   },
   {
     name: "Vinayata M. Patel",
@@ -38,7 +48,7 @@ const doctorsData = [
     department: "Physiotherapy",
     nmcNo: "PT-002",
     degree: "DHA Certified Physiotherapist",
-    image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: vinayataPhoto
   },
   {
     name: "Sehar Bano",
@@ -62,7 +72,7 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-001",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZlbWFsZSUyMGRvY3RvcnxlbnwwfHwwfHx8MA%3D%3D&ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+    image: chandaPhoto
   },
   {
     name: "Shweta Jagmohan",
@@ -78,7 +88,7 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-002",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: dipeshPhoto
   },
   {
     name: "Mariecris Godinez",
@@ -86,7 +96,7 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-003",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: mariecrisPhoto
   },
   {
     name: "Sajini Babu",
@@ -94,7 +104,7 @@ const doctorsData = [
     department: "Nursing",
     nmcNo: "NU-003",
     degree: "DHA Licensed Registered Nurse",
-    image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: sajiniPhoto
   },
   {
     name: "Lakshmi Sundar",
@@ -102,7 +112,7 @@ const doctorsData = [
     department: "Nursing",
     nmcNo: "NU-004",
     degree: "DHA Licensed Registered Nurse",
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: lakshmiPhoto
   },
   {
     name: "Kajal Jaiswal",
@@ -238,7 +248,7 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-014",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: manasaPhoto
   }
 ];
 
