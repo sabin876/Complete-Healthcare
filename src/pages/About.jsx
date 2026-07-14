@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Award, CheckCircle2, Heart, Clock, ArrowRight, ShieldCheck, Activity, Phone, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/logo.webp';
 
 const About = () => {
   const choosePillars = [
@@ -37,7 +38,7 @@ const About = () => {
       fontFamily: "'Poppins', sans-serif",
       background: "linear-gradient(135deg, #08709d 0%, #1a294a 100%)",
       minHeight: "100vh",
-      paddingTop: "70px",
+      paddingTop: "0px",
       paddingBottom: "80px",
       position: "relative",
       overflow: "hidden",
@@ -206,6 +207,43 @@ const About = () => {
 
   return (
     <div style={styles.pageWrapper}>
+      {/* ── HERO HEADER SECTION ── */}
+      <section 
+        className="relative min-h-[22vh] flex items-center pt-28 pb-6 mb-12 text-center overflow-hidden bg-white border-b border-gray-100"
+      >
+        {/* Soft background radial glow for depth */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] rounded-full bg-[#08709d]/5 blur-[80px] pointer-events-none z-0" />
+
+        <div className="container mx-auto px-6 relative z-10">
+          {/* Logo styled exactly as the Navbar logo */}
+          <div className="flex justify-center items-center h-20 md:h-24">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              transition={{ duration: 1, ease: [0.34, 1.56, 0.64, 1] }}
+              whileHover={{ 
+                scale: 1.05,
+                rotate: [0, -1, 1, -1, 0],
+                transition: { duration: 0.3 } 
+              }}
+              className="relative group h-full flex items-center"
+            >
+              <img 
+                src={logo} 
+                alt="COMPLETE HEALTHCARE" 
+                className="h-[80%] md:h-[90%] w-auto object-contain relative z-10 mx-auto" 
+              />
+              <motion.div 
+                initial={{ x: "-100%", opacity: 0 }}
+                animate={{ x: "200%", opacity: [0, 0.5, 0] }}
+                transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 4, ease: "easeInOut" }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg] z-20 pointer-events-none"
+              />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Texture Overlays */}
       <div style={styles.dotTexture} />
       <div style={styles.glowTeal} />
@@ -213,48 +251,20 @@ const About = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         
-        {/* ── 1. HERO HEADER (WHO WE ARE) ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-20">
+        {/* ── 1. INTRODUCTION & STATS GRID ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24">
           <div className="lg:col-span-7 text-left">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              style={styles.badge}
-            >
-              ⊙ Who We Are / About Us
-            </motion.div>
-            
-            <motion.h1
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              style={styles.title}
-            >
-              Home Health Care <br />
-              Service Provider <br />
-              <span style={{ color: "#5eb63b" }}>Across The Dubai.</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              style={{ ...styles.subtitle, fontSize: "14.5px", color: "rgba(255, 255, 255, 0.85)", fontWeight: "400" }}
-            >
-              Corx Home Healthcare offers unparalleled home healthcare services, including top-tier physiotherapy, home nursing, compassionate caregivers, and round-the-clock doctor-on-call assistance throughout the Emirates of UAE.
-            </motion.p>
-
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              style={styles.subtitle}
-            >
+            <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.3)", marginBottom: "16px" }}>
+              ⊙ Our Commitment
+            </div>
+            <h2 style={{ ...styles.sectionTitle, fontSize: "22px", marginBottom: "16px" }}>
+              Personalized Care in the Comfort of Your Home
+            </h2>
+            <p style={{ ...styles.subtitle, fontSize: "14.5px", color: "rgba(255, 255, 255, 0.85)", lineHeight: "1.75", marginBottom: "16px" }}>
               At Corx Home Health Care, we recognize the significance of receiving premium medical care within the sanctuary of your own home. Our steadfast team of experts is devoted to delivering unparalleled home care services, placing your well-being at the forefront, and fostering your autonomy.
-            </motion.p>
+            </p>
           </div>
 
-          {/* ── INTERACTIVE STATS GRID ── */}
           <div className="lg:col-span-5 w-full">
             <div className="grid grid-cols-2 gap-4">
               {stats.map((st, i) => (
@@ -271,7 +281,6 @@ const About = () => {
                 </motion.div>
               ))}
             </div>
-
           </div>
         </div>
 

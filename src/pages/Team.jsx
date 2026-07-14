@@ -5,6 +5,24 @@ import { Calendar, GraduationCap, IdCard, MapPin, Award, Clock } from 'lucide-re
 import kajalPhoto from '../assets/kajal.png';
 import teamHero from '../assets/team_hero.png';
 
+// New static team image imports
+import bharatPhoto from '../assets/Bharat.png';
+import hastiPhoto from '../assets/Hasti.png';
+import jasmeenPhoto from '../assets/Jasmeen.png';
+import jotiAshokPhoto from '../assets/Joti Ashok.png';
+import manjuPhoto from '../assets/Manju.png';
+import nimeshkaPhoto from '../assets/Nimeshka .png';
+import nirmalaPhoto from '../assets/Nirmala .png';
+import noreliePhoto from '../assets/Norelie.png';
+import santoshiPhoto from '../assets/Santoshi.png';
+import vaishaliPhoto from '../assets/Vaishali.png';
+import farooqPhoto from '../assets/farooq.png';
+import mamataPhoto from '../assets/mamata.png';
+import mariselviPhoto from '../assets/mariselvi .png';
+import shwetaRakeshPhoto from '../assets/shweta Rakesh .png';
+import shwetaPhoto from '../assets/shweta.png';
+import suneelPhoto from '../assets/suneel.png';
+
 const doctorsData = [
   {
     name: "Jaya Kumari",
@@ -36,7 +54,7 @@ const doctorsData = [
     department: "Nursing",
     nmcNo: "NU-001",
     degree: "DHA Licensed Assistant Nurse",
-    image: "https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: manjuPhoto
   },
   {
     name: "Chanda Kumari",
@@ -52,7 +70,7 @@ const doctorsData = [
     department: "Nursing",
     nmcNo: "NU-002",
     degree: "DHA Licensed Assistant Nurse",
-    image: "https://images.unsplash.com/photo-1643608232400-b5025785f58c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+    image: shwetaPhoto
   },
   {
     name: "Dipesh",
@@ -100,7 +118,7 @@ const doctorsData = [
     department: "Nursing",
     nmcNo: "NU-005",
     degree: "DHA Licensed Assistant Nurse",
-    image: "https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: mariselviPhoto
   },
   {
     name: "Shweta Rakesh Kumar",
@@ -108,7 +126,7 @@ const doctorsData = [
     department: "Nursing",
     nmcNo: "NU-006",
     degree: "DHA Licensed Registered Nurse",
-    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZlbWFsZSUyMGRvY3RvcnxlbnwwfHwwfHx8MA%3D%3D&ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+    image: shwetaRakeshPhoto
   },
   {
     name: "Farooq Khalid",
@@ -116,15 +134,15 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-005",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: farooqPhoto
   },
   {
-    name: "Bahadur",
+    name: "Suneel Bahadur",
     specialty: "Health Assistant",
     department: "Homecare Support",
     nmcNo: "HA-006",
     degree: "Health Assistant",
-    image: "https://images.unsplash.com/photo-1605684954278-9f17d2673d34?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: suneelPhoto
   },
   {
     name: "Mamata Regmi",
@@ -132,7 +150,7 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-007",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1643608232400-b5025785f58c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+    image: mamataPhoto
   },
   {
     name: "Bharat Badwal",
@@ -140,7 +158,7 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-008",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1582750433449-6493b2063346?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: bharatPhoto
   },
   {
     name: "Nimesh Ka Sewwandi",
@@ -148,7 +166,7 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-009",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: nimeshkaPhoto
   },
   {
     name: "Santoshi Sah",
@@ -156,7 +174,7 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-010",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: santoshiPhoto
   },
   {
     name: "Nirmala Gharti Magar",
@@ -164,7 +182,7 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-011",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: nirmalaPhoto
   },
   {
     name: "Jasmeen Jassi",
@@ -172,7 +190,7 @@ const doctorsData = [
     department: "Nursing",
     nmcNo: "NU-007",
     degree: "DHA Licensed Assistant Nurse",
-    image: "https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: jasmeenPhoto
   },
   {
     name: "Vaishali Parashar",
@@ -180,7 +198,7 @@ const doctorsData = [
     department: "Nursing",
     nmcNo: "NU-008",
     degree: "DHA Licensed Assistant Nurse",
-    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZlbWFsZSUyMGRvY3RvcnxlbnwwfHwwfHx8MA%3D%3D&ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+    image: vaishaliPhoto
   },
   {
     name: "Joti Ashok",
@@ -188,7 +206,7 @@ const doctorsData = [
     department: "Nursing",
     nmcNo: "NU-009",
     degree: "DHA Licensed Registered Nurse",
-    image: "https://images.unsplash.com/photo-1643608232400-b5025785f58c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+    image: jotiAshokPhoto
   },
   {
     name: "Norelie Munar",
@@ -196,7 +214,7 @@ const doctorsData = [
     department: "Homecare Support",
     nmcNo: "HA-012",
     degree: "Healthcare Assistant",
-    image: "https://images.unsplash.com/photo-1594824813573-246434de83fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: noreliePhoto
   },
   {
     name: "Hasti Rameshbhai",
@@ -204,7 +222,7 @@ const doctorsData = [
     department: "Nursing",
     nmcNo: "NU-010",
     degree: "DHA Licensed Registered Nurse",
-    image: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: hastiPhoto
   },
   {
     name: "Rhodalyn Gonzales",
