@@ -33,7 +33,7 @@ const About = () => {
                 fontFamily: "'Montserrat', sans-serif"
               }}
             >
-              About Us
+              About <span style={{ color: '#5eb63b' }}>Us</span>
             </h1>
             <p 
               className="text-sm md:text-lg leading-relaxed mb-8 max-w-3xl font-medium"
@@ -43,7 +43,7 @@ const About = () => {
                 fontFamily: "'Montserrat', sans-serif"
               }}
             >
-              We are committed to delivering premium DHA-licensed medical services, advanced physical therapy, and skilled nursing care directly to your doorstep in Dubai, ensuring clinical excellence, comfort, and safety.
+              We are committed to delivering <span style={{ color: '#5eb63b' }}>premium DHA-licensed</span> medical services, advanced physical therapy, and skilled nursing care directly to your doorstep in Dubai, ensuring clinical excellence, comfort, and safety.
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-xs md:text-sm font-semibold">
               <div 
