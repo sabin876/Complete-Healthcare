@@ -213,34 +213,46 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Main Nav (Vibrant Blue) */}
-      <nav className="hidden lg:block bg-[#08709d] text-white shadow-xl relative z-10">
+      {/* Main Nav (Vibrant Blue with Premium Shadow and Gradient) */}
+      <nav className="hidden lg:block bg-gradient-to-r from-[#065b80] via-[#08709d] to-[#0a86bd] text-white border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.15)] relative z-10">
         <div className="container flex justify-between items-center py-0">
-          <ul className="flex items-center gap-8 h-16">
+          <ul className="flex items-center gap-6 h-16">
             {navLinks.map((link) => (
-              <li key={link.name} className="relative h-full">
+              <li 
+                key={link.name} 
+                className="relative h-full"
+                onMouseEnter={() => {
+                  if (link.name === 'Services') setIsServicesOpen(true);
+                }}
+                onMouseLeave={() => {
+                  if (link.name === 'Services') {
+                    setIsServicesOpen(false);
+                    setOpenSubMenu(null);
+                  }
+                }}
+              >
                 {link.dropdown ? (
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
                       if (link.name === 'Services') setIsServicesOpen(!isServicesOpen);
                     }}
-                    className="group flex items-center h-full px-6 text-[13px] font-bold uppercase tracking-[0.05em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap"
+                    className="group flex items-center h-full px-5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap relative cursor-pointer"
                   >
                     <span className="relative py-1 flex items-center gap-1.5">
                       {link.name}
-                      <ChevronDown size={14} className={`transition-transform duration-300 ${isServicesOpen && link.name === 'Services' ? 'rotate-180' : ''}`} />
-                      <span className={`absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[4px] bg-accent-color transform transition-transform duration-300 origin-left ${isServicesOpen && link.name === 'Services' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                      <ChevronDown size={12} className={`transition-transform duration-300 ${isServicesOpen && link.name === 'Services' ? 'rotate-180 text-accent-color' : 'text-white/60 group-hover:text-white'}`} />
+                      <span className={`absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[3px] bg-accent-color transform rounded-t-full transition-transform duration-300 origin-left ${isServicesOpen && link.name === 'Services' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
                     </span>
                   </button>
                 ) : (
                   <Link 
                     to={link.path} 
-                    className="group flex items-center h-full px-6 text-[13px] font-bold uppercase tracking-[0.05em] hover:text-white/90 transition-all gap-1.5 whitespace-nowrap"
+                    className="group flex items-center h-full px-5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap relative"
                   >
                     <span className="relative py-1">
                       {link.name}
-                      <span className="absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[4px] bg-accent-color transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                      <span className="absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[3px] bg-accent-color transform rounded-t-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                     </span>
                   </Link>
                 )}
@@ -253,160 +265,84 @@ const Header = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10, transition: { duration: 0.15 } }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
-                        className="absolute top-full left-1/2 -translate-x-1/2 z-[100] mt-2 shadow-[0_25px_65px_rgba(0,0,0,0.15)] rounded-2xl border border-slate-100 bg-white p-6 w-[800px] text-slate-800"
+                        className="absolute top-full left-1/2 -translate-x-1/2 z-[100] mt-2.5 bg-gradient-to-b from-[#0a3a1f]/98 to-[#052110]/98 backdrop-blur-xl rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.45),0_0_30px_rgba(94,182,59,0.2)] text-white"
+                        style={{ padding: '16px', width: '360px' }}
                       >
-                        <div className="grid grid-cols-3 gap-8">
-                          {/* Column 1: Core Care Services */}
-                          <div className="flex flex-col gap-4 border-r border-slate-100 pr-6">
-                            <h3 className="text-xs font-bold uppercase tracking-wider text-[#08709d] mb-1">Core Care</h3>
-                            <div className="flex flex-col gap-3">
-                              {/* Physiotherapy */}
-                              <Link 
-                                to="/services/physiotherapy" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="group flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 transition-all duration-200"
+                        <div className="flex flex-col gap-1.5 w-full">
+                          {link.dropdown.map((item) => {
+                            const hasSubItems = item.subItems && item.subItems.length > 0;
+                            return (
+                              <div
+                                key={item.name}
+                                className="relative group/sub w-full"
+                                onMouseEnter={() => {
+                                  if (hasSubItems) setOpenSubMenu(item.name);
+                                }}
+                                onMouseLeave={() => {
+                                  if (hasSubItems) setOpenSubMenu(null);
+                                }}
                               >
-                                <div className="p-2 rounded-lg bg-teal-50 text-teal-600 group-hover:bg-[#08709d]/10 group-hover:text-[#08709d] transition-all">
-                                  <Activity size={18} />
-                                </div>
-                                <div>
-                                  <div className="text-[13px] font-bold text-slate-900 group-hover:text-[#08709d] transition-colors">Physiotherapy</div>
-                                  <div className="text-[11px] text-slate-500 mt-0.5 leading-snug">Professional physical rehabilitation.</div>
-                                </div>
-                              </Link>
-                              
-                              {/* IV Drip Therapy */}
-                              <Link 
-                                to="/services/iv-therapy" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="group flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 transition-all duration-200"
-                              >
-                                <div className="p-2 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-[#08709d]/10 group-hover:text-[#08709d] transition-all">
-                                  <Droplets size={18} />
-                                </div>
-                                <div>
-                                  <div className="text-[13px] font-bold text-slate-900 group-hover:text-[#08709d] transition-colors">IV Drip Therapy</div>
-                                  <div className="text-[11px] text-slate-500 mt-0.5 leading-snug">Hydration and vitamin infusions.</div>
-                                </div>
-                              </Link>
-                              
-                              {/* Lab Test */}
-                              <Link 
-                                to="/services/lab-services" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="group flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 transition-all duration-200"
-                              >
-                                <div className="p-2 rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-[#08709d]/10 group-hover:text-[#08709d] transition-all">
-                                  <Activity size={18} />
-                                </div>
-                                <div>
-                                  <div className="text-[13px] font-bold text-slate-900 group-hover:text-[#08709d] transition-colors">Lab Test at Home</div>
-                                  <div className="text-[11px] text-slate-500 mt-0.5 leading-snug">Convenient blood tests & profiles.</div>
-                                </div>
-                              </Link>
-                              
-                              {/* Elderly Care */}
-                              <Link 
-                                to="/services/elderly-care" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="group flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 transition-all duration-200"
-                              >
-                                <div className="p-2 rounded-lg bg-orange-50 text-orange-600 group-hover:bg-[#08709d]/10 group-hover:text-[#08709d] transition-all">
-                                  <Heart size={18} />
-                                </div>
-                                <div>
-                                  <div className="text-[13px] font-bold text-slate-900 group-hover:text-[#08709d] transition-colors">Elderly Home Care</div>
-                                  <div className="text-[11px] text-slate-500 mt-0.5 leading-snug">Compassionate support for seniors.</div>
-                                </div>
-                              </Link>
-                            </div>
-                          </div>
+                                {hasSubItems ? (
+                                  <div 
+                                    className="flex items-center justify-between w-full rounded-[18px] hover:bg-white/10 hover:translate-x-1.5 transition-all duration-200 cursor-pointer text-[15px] font-medium tracking-wide text-white/90 hover:text-white group/sub-item"
+                                    style={{ paddingLeft: '24px', paddingRight: '24px', paddingTop: '14px', paddingBottom: '14px' }}
+                                  >
+                                    <span>{item.name}</span>
+                                    <ChevronRight size={16} className="text-white/60 group-hover/sub-item:text-white group-hover/sub-item:translate-x-0.5 transition-all" />
+                                  </div>
+                                ) : (
+                                  <Link
+                                    to={item.path}
+                                    onClick={() => setIsServicesOpen(false)}
+                                    className="flex items-center justify-between w-full rounded-[18px] hover:bg-white/10 hover:translate-x-1.5 transition-all duration-200 text-[15px] font-medium tracking-wide text-white/90 hover:text-white"
+                                    style={{ paddingLeft: '24px', paddingRight: '24px', paddingTop: '14px', paddingBottom: '14px' }}
+                                  >
+                                    <span>{item.name}</span>
+                                  </Link>
+                                )}
 
-                          {/* Column 2: Home Nursing */}
-                          <div className="flex flex-col gap-4 border-r border-slate-100 pr-6">
-                            <Link 
-                              to="/services/nursing" 
-                              onClick={() => setIsServicesOpen(false)}
-                              className="group"
-                            >
-                              <h3 className="text-xs font-bold uppercase tracking-wider text-[#08709d] mb-1 flex items-center gap-1 group-hover:text-[#5eb63b] transition-colors">
-                                Home Nursing <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-4px] group-hover:translate-x-0" />
-                              </h3>
-                            </Link>
-                            <div className="flex flex-col gap-2.5 mt-1">
-                              <Link 
-                                to="/services/palliative-care" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="flex items-center gap-2.5 text-[12.5px] font-medium text-slate-600 hover:text-[#08709d] hover:translate-x-1.5 transition-all py-1.5 border-b border-slate-50"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#5eb63b] shrink-0"></span> Palliative Care
-                              </Link>
-                              <Link 
-                                to="/services/night-care-nurse" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="flex items-center gap-2.5 text-[12.5px] font-medium text-slate-600 hover:text-[#08709d] hover:translate-x-1.5 transition-all py-1.5 border-b border-slate-50"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#5eb63b] shrink-0"></span> Night Care Nurse
-                              </Link>
-                              <Link 
-                                to="/services/injection-at-home" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="flex items-center gap-2.5 text-[12.5px] font-medium text-slate-600 hover:text-[#08709d] hover:translate-x-1.5 transition-all py-1.5 border-b border-slate-50"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#5eb63b] shrink-0"></span> Nurse for Injection
-                              </Link>
-                              <Link 
-                                to="/services/wound-care" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="flex items-center gap-2.5 text-[12.5px] font-medium text-slate-600 hover:text-[#08709d] hover:translate-x-1.5 transition-all py-1.5 border-b border-slate-50"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#5eb63b] shrink-0"></span> Wound Care Services
-                              </Link>
-                              <Link 
-                                to="/services/oxygen-therapy" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="flex items-center gap-2.5 text-[12.5px] font-medium text-slate-600 hover:text-[#08709d] hover:translate-x-1.5 transition-all py-1.5"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#5eb63b] shrink-0"></span> Oxygen Therapy
-                              </Link>
-                            </div>
-                          </div>
-
-                          {/* Column 3: Doctor On Call */}
-                          <div className="flex flex-col gap-4">
-                            <Link 
-                              to="/services/doctor-on-call" 
-                              onClick={() => setIsServicesOpen(false)}
-                              className="group"
-                            >
-                              <h3 className="text-xs font-bold uppercase tracking-wider text-[#08709d] mb-1 flex items-center gap-1 group-hover:text-[#5eb63b] transition-colors">
-                                Doctor On Call <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-4px] group-hover:translate-x-0" />
-                              </h3>
-                            </Link>
-                            <div className="flex flex-col gap-2.5 mt-1">
-                              <Link 
-                                to="/services/doctor-at-home" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="flex items-center gap-2.5 text-[12.5px] font-medium text-slate-600 hover:text-[#08709d] hover:translate-x-1.5 transition-all py-1.5 border-b border-slate-50"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#08709d] shrink-0"></span> Doctor at Home
-                              </Link>
-                              <Link 
-                                to="/services/doctor-at-office" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="flex items-center gap-2.5 text-[12.5px] font-medium text-slate-600 hover:text-[#08709d] hover:translate-x-1.5 transition-all py-1.5 border-b border-slate-50"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#08709d] shrink-0"></span> Doctor at Office
-                              </Link>
-                              <Link 
-                                to="/services/doctor-at-hotel" 
-                                onClick={() => setIsServicesOpen(false)}
-                                className="flex items-center gap-2.5 text-[12.5px] font-medium text-slate-600 hover:text-[#08709d] hover:translate-x-1.5 transition-all py-1.5"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#08709d] shrink-0"></span> Doctor at Hotel
-                              </Link>
-                            </div>
-                          </div>
+                                {/* Flyout Sub-menu */}
+                                {hasSubItems && openSubMenu === item.name && (
+                                  <motion.div
+                                    initial={{ opacity: 0, x: 10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 10 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="absolute top-0 left-full ml-2 bg-gradient-to-b from-[#0a3a1f]/98 to-[#052110]/98 backdrop-blur-xl rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.45),0_0_30px_rgba(94,182,59,0.2)] text-white z-[110]"
+                                    style={{ padding: '16px', width: '300px' }}
+                                  >
+                                    <div className="flex flex-col gap-1.5 w-full">
+                                      <Link
+                                        to={item.path}
+                                        onClick={() => {
+                                          setIsServicesOpen(false);
+                                          setOpenSubMenu(null);
+                                        }}
+                                        className="flex items-center w-full rounded-[18px] hover:bg-white/10 hover:translate-x-1.5 transition-all duration-200 text-[13px] font-bold text-[#76cb53] uppercase tracking-wider mb-1.5"
+                                        style={{ paddingLeft: '24px', paddingRight: '24px', paddingTop: '12px', paddingBottom: '12px' }}
+                                      >
+                                        <span>View All {item.name}</span>
+                                      </Link>
+                                      {item.subItems.map((sub) => (
+                                        <Link
+                                          key={sub.name}
+                                          to={sub.path}
+                                          onClick={() => {
+                                            setIsServicesOpen(false);
+                                            setOpenSubMenu(null);
+                                          }}
+                                          className="flex items-center w-full rounded-[18px] hover:bg-white/10 hover:translate-x-1.5 transition-all duration-200 text-[14.5px] font-medium text-white/90 hover:text-white"
+                                          style={{ paddingLeft: '24px', paddingRight: '24px', paddingTop: '14px', paddingBottom: '14px' }}
+                                        >
+                                          <span>{sub.name}</span>
+                                        </Link>
+                                      ))}
+                                    </div>
+                                  </motion.div>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       </motion.div>
                     )}
