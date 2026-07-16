@@ -311,155 +311,128 @@ const About = () => {
                 </p>
               </motion.div>
             ))}
+             {/* ── 3. OUR MISSION & OUR SERVICES SECTION ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="bg-white text-slate-800 rounded-[32px] p-8 md:p-16 shadow-2xl border border-slate-100 mb-24 relative z-10 text-left"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+            {/* Left Column: Our Mission */}
+            <div>
+              {/* Banner shape header */}
+              <div 
+                className="bg-[#08709d] text-white font-extrabold text-base md:text-lg uppercase tracking-wider py-4 pl-8 pr-16 mb-8 inline-block"
+                style={{ 
+                  clipPath: 'polygon(0% 0%, 92% 0%, 82% 100%, 0% 100%)',
+                  minWidth: '260px'
+                }}
+              >
+                Our Mission
+              </div>
+              <p className="text-slate-700 text-[14.5px] leading-relaxed mb-8 font-medium">
+                Our mission is to elevate health and well-being by delivering unparalleled comprehensive healthcare.
+              </p>
+              
+              <div className="flex flex-col gap-6">
+                {/* Item 1 */}
+                <div className="flex items-start gap-4">
+                  <div className="relative w-8 h-8 shrink-0 mt-0.5">
+                    <div className="absolute bottom-0 left-0 w-6 h-6 bg-[#08709d] rounded-[4px]" />
+                    <div className="absolute top-0 right-0 w-6 h-6 bg-[#5eb63b] rounded-[4px]" />
+                  </div>
+                  <div>
+                    <h4 className="text-slate-900 text-[14.5px] font-bold uppercase tracking-wide mb-1 leading-snug">
+                      Individualized Planning
+                    </h4>
+                    <p className="text-slate-600 text-[13.5px] leading-relaxed">
+                      Creating customized care plans specifically designed for your personal health and well-being.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Item 2 */}
+                <div className="flex items-start gap-4">
+                  <div className="relative w-8 h-8 shrink-0 mt-0.5">
+                    <div className="absolute bottom-0 left-0 w-6 h-6 bg-[#08709d] rounded-[4px]" />
+                    <div className="absolute top-0 right-0 w-6 h-6 bg-[#5eb63b] rounded-[4px]" />
+                  </div>
+                  <div>
+                    <h4 className="text-slate-900 text-[14.5px] font-bold uppercase tracking-wide mb-1 leading-snug">
+                      Integrity
+                    </h4>
+                    <p className="text-slate-600 text-[13.5px] leading-relaxed">
+                      A commitment to upholding trust and delivering excellence in home healthcare.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Item 3 */}
+                <div className="flex items-start gap-4">
+                  <div className="relative w-8 h-8 shrink-0 mt-0.5">
+                    <div className="absolute bottom-0 left-0 w-6 h-6 bg-[#08709d] rounded-[4px]" />
+                    <div className="absolute top-0 right-0 w-6 h-6 bg-[#5eb63b] rounded-[4px]" />
+                  </div>
+                  <div>
+                    <h4 className="text-slate-900 text-[14.5px] font-bold uppercase tracking-wide mb-1 leading-snug">
+                      Compassion & Expertise
+                    </h4>
+                    <p className="text-slate-600 text-[13.5px] leading-relaxed">
+                      Delivering exceptional home healthcare through compassionate expertise and dedicated care.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Right Column: Our Services */}
+            <div>
+              {/* Banner shape header (slanted on left) */}
+              <div className="w-full flex justify-start lg:justify-end mb-8">
+                <div 
+                  className="bg-[#08709d] text-white font-extrabold text-base md:text-lg uppercase tracking-wider py-4 pl-12 pr-8 inline-block text-left"
+                  style={{ 
+                    clipPath: 'polygon(8% 0%, 100% 0%, 100% 100%, 0% 100%)',
+                    minWidth: '260px'
+                  }}
+                >
+                  Our Services
+                </div>
+              </div>
+              <p className="text-slate-700 text-[14.5px] leading-relaxed mb-8 font-medium">
+                Discover personalized home healthcare in Dubai at CORx, our expert team delivers physiotherapy, nursing care, doctor consultations, and lab services directly to you, ensuring comfort and quality.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                {[
+                  "Physiotherapy",
+                  "Mother and Infant Care On-Site",
+                  "IV Therapy",
+                  "Nursing Care",
+                  "Doctor on Call",
+                  "Elder Care",
+                  "Lab Services",
+                  "School & Nursery Healthcare",
+                  "Skilled Nursing Care",
+                  "Medical Tourism"
+                ].map((service, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <div className="relative w-6 h-6 shrink-0">
+                      <div className="absolute bottom-0 left-0 w-4.5 h-4.5 bg-[#08709d] rounded-[3px]" />
+                      <div className="absolute top-0 right-0 w-4.5 h-4.5 bg-[#5eb63b] rounded-[3px]" />
+                    </div>
+                    <span className="text-slate-800 text-[13.5px] font-semibold leading-tight">
+                      {service}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* ── 3. OUR MISSION SECTION ── */}
-        <div className="flex flex-col lg:flex-row items-center gap-14 lg:gap-16 mb-24" style={{ paddingTop: "20px" }}>
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            style={{ flex: 1 }}
-            className="text-left"
-          >
-            <div style={styles.badge}>
-              ⊙ Our Mission
-            </div>
-            <h2 style={{ ...styles.sectionTitle, fontSize: "20px", lineHeight: "1.3", marginBottom: "20px" }}>
-              Our mission is to elevate health and well-being by delivering unparalleled comprehensive healthcare.
-            </h2>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              At Corx Home Healthcare, first and foremost, our mission is to elevate health and overall well-being by delivering unparalleled, comprehensive healthcare solutions. With this clear commitment at our core, we not only strive for excellence but also stand as a national leader dedicated to enriching lives and providing optimal care for your loved ones. Based in Dubai, United Arab Emirates, we therefore proudly serve individuals across Dubai and the wider UAE as a trusted and dependable home healthcare provider.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              Through a carefully integrated and patient-centric approach, we consistently deliver comprehensive home healthcare services led by a highly skilled, physician-guided clinical team. In particular, we focus on supporting patients who prefer the comfort of their own homes for treatment, recovery, and rehabilitation. In doing so, we ensure continuity of care, promote familiarity, and preserve dignity throughout their daily lives.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              Recognizing, above all, that there truly is no place like home, we continuously prioritize quality improvement initiatives. Consequently, we enhance patient safety, increase satisfaction, and support long-term health outcomes, while simultaneously maintaining the highest standards of care within a familiar and reassuring environment.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "0" }}>
-              Moreover, our overarching goal is to provide round-the-clock access to premier healthcare services. By doing so, we consistently deliver exceptional clinical outcomes and, at the same time, set new benchmarks in patient experience across home care, corporate healthcare, and on-demand medical services not only in the UAE but across the entire GCC region.
-            </p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            style={{ flex: 1, position: "relative" }}
-            className="w-full max-w-[480px]"
-          >
-            {/* Ambient deep glow behind image */}
-            <div className="absolute inset-0 bg-[#08709d]/10 rounded-[40px] blur-2xl pointer-events-none" />
-            
-            <div style={{ 
-              borderRadius: "28px", 
-              overflow: "hidden", 
-              border: "4px solid rgba(255,255,255,0.15)",
-              boxShadow: "0 20px 50px rgba(0, 0, 0, 0.2)",
-              position: "relative",
-              zIndex: 5
-            }}>
-              <img 
-                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1200" 
-                alt="Corx Professional Home Healthcare in Dubai" 
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
-            </div>
-
-            {/* Overlapping Floating trust badge */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="absolute bottom-6 -right-4 bg-white/10 border border-white/15 backdrop-blur-md p-4 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.15)] z-10 flex gap-3 items-center max-w-[200px]"
-            >
-              <div className="w-8 h-8 rounded-full bg-[#5eb63b] text-white flex items-center justify-center font-normal text-xs shrink-0">
-                ★
-              </div>
-              <div className="text-left">
-                <p className="m-0 font-normal text-xs text-white leading-tight">5-Star Rated</p>
-                <p className="m-0 text-[9.5px] text-white/60 mt-0.5">Patient Satisfaction</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* ── 4. OUR VISION SECTION ── */}
-        <div className="flex flex-col lg:flex-row-reverse items-center gap-14 lg:gap-16 mb-24" style={{ paddingTop: "20px" }}>
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            style={{ flex: 1 }}
-            className="text-left"
-          >
-            <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.3)", marginBottom: "16px" }}>
-              ⊙ Our Vision
-            </div>
-            <h2 style={{ ...styles.sectionTitle, fontSize: "20px", lineHeight: "1.3", marginBottom: "20px" }}>
-              We are committed to consistently creating and delivering exceptional value for you.
-            </h2>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              At Corx Home Healthcare, first and foremost, we are committed to consistently creating and delivering exceptional value for you. With this guiding principle, our vision is to set the standard as the foremost provider of compassionate and tailored healthcare services, delivered within the comfort and convenience of our patients’ homes.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              Through this commitment, we are dedicated to elevating the quality of life for our patients by delivering comprehensive, dependable, and expert care. In doing so, we actively foster independence, promote overall wellness, and preserve personal dignity at every stage of care.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              Furthermore, supported by our skilled and devoted team, we continuously aspire to surpass the expectations of our patients and their families. As a result, we aim to positively influence not only health outcomes but also overall happiness and peace of mind.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "0" }}>
-              Additionally, and beyond traditional healthcare, we seek to become the top choice for outdoor enthusiasts looking for extraordinary nightlife experiences that transcend conventional boundaries. By combining innovation with nature, we remain committed to offering unparalleled adventures and creating unforgettable moments, all while embracing the beauty of the natural environment.
-            </p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            style={{ flex: 1, position: "relative" }}
-            className="w-full max-w-[480px]"
-          >
-            {/* Ambient green glow behind illustration */}
-            <div className="absolute inset-0 bg-[#5eb63b]/10 rounded-[40px] blur-2xl pointer-events-none" />
-            
-            <div style={{ 
-              borderRadius: "28px", 
-              overflow: "hidden", 
-              border: "4px solid rgba(255,255,255,0.15)",
-              boxShadow: "0 20px 50px rgba(0, 0, 0, 0.2)",
-              position: "relative",
-              zIndex: 5
-            }}>
-              <img 
-                src="https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80&w=1200" 
-                alt="Corx Vision for Care and Innovation" 
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
-            </div>
-
-            {/* Overlapping Floating badge */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="absolute top-6 -left-4 bg-white/10 border border-white/15 backdrop-blur-md p-4 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.15)] z-10 flex gap-3 items-center max-w-[210px]"
-            >
-              <div className="w-8 h-8 rounded-full bg-[#08709d] text-white flex items-center justify-center font-normal text-xs shrink-0">
-                ✓
-              </div>
-              <div className="text-left">
-                <p className="m-0 font-normal text-xs text-white leading-tight">Exceptional Value</p>
-                <p className="m-0 text-[9.5px] text-white/60 mt-0.5">Consistent &amp; Trusted</p>
-              </div>
-            </motion.div>
-          </motion.div>
+        </motion.div>
+          </div>
         </div>
 
         {/* ── 5. DYNAMIC CTA BANNER ── */}
