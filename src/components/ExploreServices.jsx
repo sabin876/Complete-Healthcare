@@ -102,7 +102,7 @@ function ServiceCard({ service, index }) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ 
         duration: 0.6, 
-        delay: index * 0.15,
+        delay: index * 0.12,
         ease: [0.21, 1.02, 0.47, 0.98] 
       }}
       whileHover={{ 
@@ -111,17 +111,19 @@ function ServiceCard({ service, index }) {
       }}
       style={{
         background: "#ffffff",
-        borderRadius: "16px",
+        borderRadius: "24px",
         overflow: "hidden",
+        border: hovered ? "1px solid rgba(94, 182, 59, 0.25)" : "1px solid rgba(8, 112, 157, 0.05)",
         boxShadow: hovered
-          ? "0 25px 50px -12px rgba(0, 0, 0, 0.15)"
-          : "0 10px 25px -5px rgba(0, 0, 0, 0.05)",
+          ? "0 30px 60px -15px rgba(8, 112, 157, 0.15), 0 0 25px rgba(94, 182, 59, 0.06)"
+          : "0 10px 30px -5px rgba(0, 0, 0, 0.03)",
         cursor: "pointer",
         position: "relative",
+        transition: "border-color 0.4s ease, box-shadow 0.4s ease"
       }}
     >
       {/* Image Area */}
-      <div style={{ position: "relative", height: "180px", overflow: "hidden" }}>
+      <div style={{ position: "relative", height: "190px", overflow: "hidden" }}>
         <video
           autoPlay
           muted
@@ -132,31 +134,38 @@ function ServiceCard({ service, index }) {
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            transform: hovered ? "scale(1.1)" : "scale(1)",
-            transition: "transform 0.8s ease",
+            transform: hovered ? "scale(1.08)" : "scale(1)",
+            transition: "transform 0.8s cubic-bezier(0.21, 1.02, 0.47, 0.98)",
           }}
         >
           <source src={service.video} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
 
+        {/* Hover Dark Vignette overlay */}
+        <div 
+          className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none transition-opacity duration-300"
+          style={{ opacity: hovered ? 1 : 0 }}
+        />
+
         {/* Icon badge */}
         <div
           style={{
             position: "absolute",
-            bottom: "-18px",
-            left: "20px",
-            width: "44px",
-            height: "44px",
+            bottom: "-20px",
+            left: "24px",
+            width: "48px",
+            height: "48px",
             borderRadius: "50%",
-            background: "#ffffff",
-            border: `2px solid ${service.accent}`,
+            background: hovered ? "#5eb63b" : "#ffffff",
+            border: hovered ? "2px solid #ffffff" : `2px solid ${service.accent}`,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#3a5a6a",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            color: hovered ? "#ffffff" : "#08709d",
+            boxShadow: hovered ? "0 6px 16px rgba(94, 182, 59, 0.3)" : "0 4px 12px rgba(0,0,0,0.08)",
             zIndex: 2,
+            transition: "all 0.35s ease"
           }}
         >
           {service.icon}
@@ -164,15 +173,16 @@ function ServiceCard({ service, index }) {
       </div>
 
       {/* Content */}
-      <div style={{ padding: "30px 22px 24px" }}>
+      <div style={{ padding: "32px 24px 24px" }}>
         <h3
           style={{
             fontFamily: "'Montserrat', sans-serif",
             fontSize: "18px",
-            fontWeight: "700",
-            color: "#1a2e3a",
+            fontWeight: "750",
+            color: hovered ? "#08709d" : "#1a2e3a",
             margin: "0 0 10px",
             lineHeight: 1.3,
+            transition: "color 0.3s ease"
           }}
         >
           {service.title}
@@ -182,8 +192,9 @@ function ServiceCard({ service, index }) {
             fontFamily: "'Montserrat', sans-serif",
             fontSize: "14px",
             color: "#6b7b85",
-            margin: "0 0 20px",
+            margin: "0 0 24px",
             lineHeight: 1.6,
+            fontWeight: "400"
           }}
         >
           {service.description}
@@ -191,7 +202,7 @@ function ServiceCard({ service, index }) {
 
         {/* Read more */}
         <motion.div
-          animate={{ color: hovered ? "#08709d" : "#2c6e6a" }}
+          animate={{ color: hovered ? "#5eb63b" : "#08709d" }}
           style={{
             display: "flex",
             alignItems: "center",
@@ -202,7 +213,7 @@ function ServiceCard({ service, index }) {
             letterSpacing: "0.02em",
           }}
         >
-          Read more
+          <span>Read more</span>
           <motion.span
             animate={{ x: hovered ? 6 : 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -225,7 +236,7 @@ export default function ExploreServices() {
         .services-section {
           background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f3f7fa 100%);
           min-height: 100vh;
-          padding: 60px 40px;
+          padding: 80px 40px;
           font-family: 'Montserrat', sans-serif;
           position: relative;
           overflow: hidden;
@@ -234,7 +245,7 @@ export default function ExploreServices() {
         .services-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 24px;
+          gap: 30px;
           max-width: 1200px;
           margin: 0 auto;
         }
@@ -290,12 +301,13 @@ export default function ExploreServices() {
         }
 
         @media (max-width: 1024px) {
-          .services-grid { grid-template-columns: repeat(2, 1fr); }
+          .services-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+          .services-section { padding: 60px 30px; }
         }
 
         @media (max-width: 600px) {
-          .services-grid { grid-template-columns: 1fr; }
-          .services-section { padding: 40px 20px; }
+          .services-grid { grid-template-columns: 1fr; gap: 20px; }
+          .services-section { padding: 50px 20px; }
         }
       `}</style>
 
@@ -350,43 +362,50 @@ export default function ExploreServices() {
           {/* Header */}
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "16px",
               maxWidth: "1200px",
-              margin: "0 auto 40px",
+              margin: "0 auto 56px",
+              textAlign: "left"
             }}
           >
-            <div
+            {/* Capsule Badge */}
+            <div 
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-3.5 text-[11px] font-bold uppercase tracking-wider"
               style={{
-                width: "52px",
-                height: "52px",
-                borderRadius: "50%",
-                background: "#e8f5e9",
-                border: "2px solid #4caf8a",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
+                background: "rgba(94, 182, 59, 0.08)",
+                border: "1px solid rgba(94, 182, 59, 0.2)",
+                color: "#5eb63b"
               }}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="#2c6e5a" strokeWidth="1.8" width="22" height="22">
-                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
-                <rect x="9" y="3" width="6" height="4" rx="2" />
-                <path d="M9 12h6M9 16h4" />
-              </svg>
+              ⊙ Clinical Care At Home
             </div>
+            
             <h2
               style={{
                 fontFamily: "'Montserrat', sans-serif",
-                fontSize: "clamp(26px, 3vw, 36px)",
-                fontWeight: "700",
+                fontSize: "clamp(28px, 3.5vw, 42px)",
+                fontWeight: "800",
                 color: "#1a2e3a",
                 letterSpacing: "-0.02em",
+                textTransform: "uppercase",
+                lineHeight: 1.15
               }}
             >
-              Explore services
+              Explore Our <span style={{ color: "#08709d" }}>Home Services</span>
             </h2>
+            
+            <p
+              style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: "14.5px",
+                color: "#6b7b85",
+                maxWidth: "680px",
+                margin: "12px 0 0",
+                lineHeight: 1.6,
+                fontWeight: "400"
+              }}
+            >
+              Discover 24/7 DHA-licensed physician-guided medical services, nursing care, and physical therapy delivered directly to your doorstep in Dubai.
+            </p>
           </div>
 
           {/* Cards grid */}
