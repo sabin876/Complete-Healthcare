@@ -18,9 +18,9 @@ const About = () => {
           backgroundPosition: 'center 35%'
         }}
       >
-        {/* Dark Blue-Navy Gradient Overlay to ensure maximum contrast and readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1a294a]/90 via-[#0b2848]/85 to-[#1a294a]/95 mix-blend-multiply z-0"></div>
-        <div className="absolute inset-0 bg-black/45 z-0"></div>
+        {/* Vibrant & Clear Overlay (Reduced dark tints to let the background image shine) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1a294a]/65 via-[#0b2848]/50 to-[#1a294a]/65 mix-blend-multiply z-0"></div>
+        <div className="absolute inset-0 bg-black/10 z-0"></div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto flex flex-col items-center">
