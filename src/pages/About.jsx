@@ -18,9 +18,8 @@ const About = () => {
           backgroundPosition: 'center 35%'
         }}
       >
-        {/* Vibrant & Clear Overlay (Reduced dark tints to let the background image shine) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1a294a]/65 via-[#0b2848]/50 to-[#1a294a]/65 mix-blend-multiply z-0"></div>
-        <div className="absolute inset-0 bg-black/10 z-0"></div>
+        {/* Light & Clean White Screen Overlay to support dark blue typography */}
+        <div className="absolute inset-0 bg-white/75 backdrop-blur-[2px] z-0"></div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto flex flex-col items-center">
@@ -28,22 +27,21 @@ const About = () => {
             <h1 
               className="text-4xl md:text-6xl font-black leading-tight tracking-tight mb-6 uppercase"
               style={{ 
-                color: '#ffffff',
-                textShadow: '0 4px 20px rgba(0,0,0,0.7)',
+                color: '#08709d',
+                textShadow: '0 2px 8px rgba(8,112,157,0.12)',
                 fontFamily: "'Montserrat', sans-serif"
               }}
             >
-              About <span style={{ color: '#5eb63b' }}>Us</span>
+              About Us
             </h1>
             <p 
               className="text-sm md:text-lg leading-relaxed mb-8 max-w-3xl font-medium"
               style={{ 
-                color: '#ffffff',
-                textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                color: '#08709d',
                 fontFamily: "'Montserrat', sans-serif"
               }}
             >
-              We are committed to delivering <span style={{ color: '#5eb63b' }}>premium DHA-licensed</span> medical services, advanced physical therapy, and skilled nursing care directly to your doorstep in Dubai, ensuring clinical excellence, comfort, and safety.
+              We are committed to delivering premium DHA-licensed medical services, advanced physical therapy, and skilled nursing care directly to your doorstep in Dubai, ensuring clinical excellence, comfort, and safety.
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-xs md:text-sm font-semibold">
               <div 
@@ -52,32 +50,32 @@ const About = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '10px',
-                  color: '#ffffff',
-                  backgroundColor: 'rgba(46, 189, 110, 0.12)',
-                  border: '1.5px solid rgba(46, 189, 110, 0.35)',
+                  color: '#08709d',
+                  backgroundColor: 'rgba(8, 112, 157, 0.08)',
+                  border: '1.5px solid rgba(8, 112, 157, 0.3)',
                   padding: '12px 28px',
                   borderRadius: '9999px',
                   fontSize: '14px',
                   fontWeight: '700',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
-                  boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.06)',
                   transition: 'all 0.3s ease',
                   cursor: 'default',
                   fontFamily: "'Montserrat', sans-serif"
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(46, 189, 110, 0.22)';
-                  e.currentTarget.style.borderColor = 'rgba(46, 189, 110, 0.55)';
+                  e.currentTarget.style.backgroundColor = 'rgba(8, 112, 157, 0.16)';
+                  e.currentTarget.style.borderColor = 'rgba(8, 112, 157, 0.5)';
                   e.currentTarget.style.transform = 'scale(1.03)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(46, 189, 110, 0.12)';
-                  e.currentTarget.style.borderColor = 'rgba(46, 189, 110, 0.35)';
+                  e.currentTarget.style.backgroundColor = 'rgba(8, 112, 157, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(8, 112, 157, 0.3)';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                <Award size={18} style={{ color: '#2ebd6e' }} />
+                <Award size={18} style={{ color: '#08709d' }} />
                 <span>100% DHA Licensed</span>
               </div>
               <div 
@@ -86,32 +84,32 @@ const About = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '10px',
-                  color: '#ffffff',
-                  backgroundColor: 'rgba(46, 189, 110, 0.12)',
-                  border: '1.5px solid rgba(46, 189, 110, 0.35)',
+                  color: '#08709d',
+                  backgroundColor: 'rgba(8, 112, 157, 0.08)',
+                  border: '1.5px solid rgba(8, 112, 157, 0.3)',
                   padding: '12px 28px',
                   borderRadius: '9999px',
                   fontSize: '14px',
                   fontWeight: '700',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
-                  boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.06)',
                   transition: 'all 0.3s ease',
                   cursor: 'default',
                   fontFamily: "'Montserrat', sans-serif"
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(46, 189, 110, 0.22)';
-                  e.currentTarget.style.borderColor = 'rgba(46, 189, 110, 0.55)';
+                  e.currentTarget.style.backgroundColor = 'rgba(8, 112, 157, 0.16)';
+                  e.currentTarget.style.borderColor = 'rgba(8, 112, 157, 0.5)';
                   e.currentTarget.style.transform = 'scale(1.03)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(46, 189, 110, 0.12)';
-                  e.currentTarget.style.borderColor = 'rgba(46, 189, 110, 0.35)';
+                  e.currentTarget.style.backgroundColor = 'rgba(8, 112, 157, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(8, 112, 157, 0.3)';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                <Clock size={18} style={{ color: '#2ebd6e' }} />
+                <Clock size={18} style={{ color: '#08709d' }} />
                 <span>24/7 Availability</span>
               </div>
             </div>
