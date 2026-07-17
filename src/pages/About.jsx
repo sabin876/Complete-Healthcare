@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Award, Clock, Activity, Heart, Users, Stethoscope, ShieldCheck } from 'lucide-react';
 import aboutUsBg from '../assets/About us .jpg';
+import aboutServicesCollage from '../assets/about_services_collage.png';
 
 const About = () => {
   return (
@@ -122,7 +123,7 @@ const About = () => {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
-            {/* Left Column: Visual Stack & Floating Cards */}
+            {/* Left Column: Visual Stack & Collage Image */}
             <div className="lg:col-span-5 relative flex items-center justify-center min-h-[380px] md:min-h-[440px]">
               {/* Decorative radial blur background */}
               <div className="absolute w-80 h-80 bg-[#08709d]/5 rounded-full blur-[100px] pointer-events-none" />
@@ -131,47 +132,47 @@ const About = () => {
               {/* EKG ambient lines */}
               <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #08709d 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
 
-              {/* Main Graphic Container */}
-              <div className="relative w-full max-w-[360px] bg-gradient-to-tr from-[#08709d]/8 to-[#5eb63b]/5 p-6 rounded-[40px] border border-gray-100 shadow-[0_20px_50px_rgba(8,112,157,0.03)]">
+              {/* Main Image Graphic Container */}
+              <div className="relative w-full max-w-[380px] transition-all duration-500 hover:scale-[1.02]">
                 
-                {/* Center Clinical Badge */}
-                <div className="relative bg-white rounded-[28px] border border-gray-150 p-8 shadow-sm flex flex-col items-center justify-center min-h-[280px]">
-                  <div className="w-16 h-16 rounded-2xl bg-[#08709d]/10 flex items-center justify-center text-[#08709d] mb-6">
-                    <Heart size={32} className="stroke-[2]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a294a] mb-2 font-['Montserrat']">Premium Healthcare</h3>
-                  <p className="text-sm text-gray-400 text-center font-medium font-sans">Delivered inside the sanctuary of your own home.</p>
+                {/* Slanted collage image with styling */}
+                <div className="overflow-hidden rounded-[32px] border-4 border-white shadow-[0_20px_50px_rgba(8,112,157,0.15)] bg-white">
+                  <img 
+                    src={aboutServicesCollage} 
+                    alt="CORx Healthcare Services Collage" 
+                    className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-700" 
+                  />
                 </div>
 
-                {/* Overlapping Floating Card 1 */}
+                {/* Overlapping Floating Badge 1: DHA Licensed */}
                 <motion.div 
                   initial={{ x: -20, y: -20 }}
-                  animate={{ y: [-10, 10, -10] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-6 -left-6 bg-white border border-gray-100 rounded-2xl p-4 shadow-lg flex items-center gap-3 w-48"
+                  animate={{ y: [-6, 6, -6] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-gray-100 rounded-2xl p-3.5 shadow-[0_10px_30px_rgba(0,0,0,0.08)] flex items-center gap-2.5 w-44"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-[#5eb63b]/10 flex items-center justify-center text-[#5eb63b]">
+                  <div className="w-8 h-8 rounded-lg bg-[#5eb63b]/10 flex items-center justify-center text-[#5eb63b] shrink-0">
                     <ShieldCheck size={18} />
                   </div>
                   <div className="text-left">
-                    <p className="text-xs font-black text-[#1a294a] leading-none uppercase">DHA Certified</p>
-                    <p className="text-[10px] text-gray-400 font-bold mt-1">Licensed Clinicians</p>
+                    <p className="text-[11px] font-black text-[#1a294a] leading-none uppercase">DHA Certified</p>
+                    <p className="text-[9px] text-gray-400 font-bold mt-1">Licensed Clinicians</p>
                   </div>
                 </motion.div>
 
-                {/* Overlapping Floating Card 2 */}
+                {/* Overlapping Floating Badge 2: 24/7 Available */}
                 <motion.div 
                   initial={{ x: 20, y: 20 }}
-                  animate={{ y: [10, -10, 10] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                  className="absolute -bottom-6 -right-6 bg-white border border-gray-100 rounded-2xl p-4 shadow-lg flex items-center gap-3 w-48"
+                  animate={{ y: [6, -6, 6] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
+                  className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-gray-100 rounded-2xl p-3.5 shadow-[0_10px_30px_rgba(0,0,0,0.08)] flex items-center gap-2.5 w-44"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-[#08709d]/10 flex items-center justify-center text-[#08709d]">
+                  <div className="w-8 h-8 rounded-lg bg-[#08709d]/10 flex items-center justify-center text-[#08709d] shrink-0">
                     <Clock size={18} />
                   </div>
                   <div className="text-left">
-                    <p className="text-xs font-black text-[#1a294a] leading-none uppercase">24/7 Response</p>
-                    <p className="text-[10px] text-gray-400 font-bold mt-1">Doctor On Call</p>
+                    <p className="text-[11px] font-black text-[#1a294a] leading-none uppercase">24/7 Response</p>
+                    <p className="text-[9px] text-gray-400 font-bold mt-1">Doctor On Call</p>
                   </div>
                 </motion.div>
 
