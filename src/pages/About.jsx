@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award, Clock } from 'lucide-react';
+import { Award, Clock, Activity, Heart, Users, Stethoscope, ShieldCheck } from 'lucide-react';
 import aboutUsBg from '../assets/About us .jpg';
 
 const About = () => {
@@ -11,6 +11,7 @@ const About = () => {
       exit={{ opacity: 0 }}
       className="pt-28 pb-24 bg-white min-h-screen"
     >
+      {/* ── HERO SECTION ── */}
       <section 
         className="relative min-h-[50vh] flex items-center py-20 mb-16 text-white text-center bg-cover bg-center overflow-hidden"
         style={{
@@ -23,7 +24,6 @@ const About = () => {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto flex flex-col items-center">
-
             <h1 
               className="text-4xl md:text-6xl font-black leading-tight tracking-tight mb-6 uppercase"
               style={{ 
@@ -41,7 +41,7 @@ const About = () => {
                 fontFamily: "'Montserrat', sans-serif"
               }}
             >
-              CORx Healthcare offers unparalleled home healthcare services, including top-tier physiotherapy, home nursing, compassionate caregivers, and round-the-clock doctor-on-call assistance. At CORx Healthcare, we recognize the significance of receiving premium medical care within the sanctuary of your own home. Our steadfast team of experts is devoted to delivering unparalleled homecare services, placing your well-being at the forefront, and fostering your autonomy.
+              We are committed to delivering premium DHA-licensed medical services, advanced physical therapy, and skilled nursing care directly to your doorstep in Dubai, ensuring clinical excellence, comfort, and safety.
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-xs md:text-sm font-semibold">
               <div 
@@ -113,6 +113,145 @@ const About = () => {
                 <span>24/7 Availability</span>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CUSTOM DESIGN ABOUT DETAILS SECTION ── */}
+      <section className="py-24 bg-gradient-to-b from-white to-[#f7fbfd] overflow-hidden">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            
+            {/* Left Column: Visual Stack & Floating Cards */}
+            <div className="lg:col-span-5 relative flex items-center justify-center min-h-[380px] md:min-h-[440px]">
+              {/* Decorative radial blur background */}
+              <div className="absolute w-80 h-80 bg-[#08709d]/5 rounded-full blur-[100px] pointer-events-none" />
+              <div className="absolute w-64 h-64 bg-[#5eb63b]/3 rounded-full blur-[80px] pointer-events-none" />
+              
+              {/* EKG ambient lines */}
+              <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #08709d 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
+
+              {/* Main Graphic Container */}
+              <div className="relative w-full max-w-[360px] bg-gradient-to-tr from-[#08709d]/8 to-[#5eb63b]/5 p-6 rounded-[40px] border border-gray-100 shadow-[0_20px_50px_rgba(8,112,157,0.03)]">
+                
+                {/* Center Clinical Badge */}
+                <div className="relative bg-white rounded-[28px] border border-gray-150 p-8 shadow-sm flex flex-col items-center justify-center min-h-[280px]">
+                  <div className="w-16 h-16 rounded-2xl bg-[#08709d]/10 flex items-center justify-center text-[#08709d] mb-6">
+                    <Heart size={32} className="stroke-[2]" />
+                  </div>
+                  <h3 className="text-xl font-bold text-[#1a294a] mb-2 font-['Montserrat']">Premium Healthcare</h3>
+                  <p className="text-sm text-gray-400 text-center font-medium font-sans">Delivered inside the sanctuary of your own home.</p>
+                </div>
+
+                {/* Overlapping Floating Card 1 */}
+                <motion.div 
+                  initial={{ x: -20, y: -20 }}
+                  animate={{ y: [-10, 10, -10] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-6 -left-6 bg-white border border-gray-100 rounded-2xl p-4 shadow-lg flex items-center gap-3 w-48"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-[#5eb63b]/10 flex items-center justify-center text-[#5eb63b]">
+                    <ShieldCheck size={18} />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-black text-[#1a294a] leading-none uppercase">DHA Certified</p>
+                    <p className="text-[10px] text-gray-400 font-bold mt-1">Licensed Clinicians</p>
+                  </div>
+                </motion.div>
+
+                {/* Overlapping Floating Card 2 */}
+                <motion.div 
+                  initial={{ x: 20, y: 20 }}
+                  animate={{ y: [10, -10, 10] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                  className="absolute -bottom-6 -right-6 bg-white border border-gray-100 rounded-2xl p-4 shadow-lg flex items-center gap-3 w-48"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-[#08709d]/10 flex items-center justify-center text-[#08709d]">
+                    <Clock size={18} />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-black text-[#1a294a] leading-none uppercase">24/7 Response</p>
+                    <p className="text-[10px] text-gray-400 font-bold mt-1">Doctor On Call</p>
+                  </div>
+                </motion.div>
+
+              </div>
+            </div>
+
+            {/* Right Column: Custom Text & Columns Layout */}
+            <div className="lg:col-span-7 text-left space-y-6">
+              
+              {/* Section Tag */}
+              <div className="inline-flex bg-[#08709d]/10 border border-[#08709d]/20 text-[#08709d] text-xs font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider select-none font-['Montserrat']">
+                ⊙ Clinical Excellence
+              </div>
+
+              {/* Title */}
+              <h2 className="text-2xl md:text-[36px] font-black text-[#1a294a] tracking-tight leading-tight uppercase font-['Montserrat']">
+                Compassionate Care <span className="text-[#08709d]">Where You Need It Most</span>
+              </h2>
+
+              {/* Styled Paragraph Block */}
+              <div className="space-y-4">
+                <p className="text-base md:text-lg text-[#08709d] font-bold leading-relaxed font-['Montserrat']">
+                  CORx Healthcare offers unparalleled home healthcare services, including top-tier physiotherapy, home nursing, compassionate caregivers, and round-the-clock doctor-on-call assistance.
+                </p>
+                <p className="text-sm md:text-base text-gray-500 font-medium leading-relaxed">
+                  At CORx Healthcare, we recognize the significance of receiving premium medical care within the sanctuary of your own home. Our steadfast team of experts is devoted to delivering unparalleled homecare services, placing your well-being at the forefront, and fostering your autonomy.
+                </p>
+              </div>
+
+              {/* Core Offerings Highlight Grid (2x2) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
+                
+                {/* 1. Physiotherapy */}
+                <div className="p-4 bg-white border border-gray-100 rounded-2xl flex gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:border-[#08709d]/20 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0">
+                    <Activity size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-[#1a294a] text-sm font-bold uppercase tracking-wide">Physiotherapy</h4>
+                    <p className="text-[12px] text-gray-400 font-medium mt-1 leading-snug">Expert in-home rehabilitation for joint, post-surgical, & pain conditions.</p>
+                  </div>
+                </div>
+
+                {/* 2. Home Nursing */}
+                <div className="p-4 bg-white border border-gray-100 rounded-2xl flex gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:border-[#08709d]/20 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0">
+                    <Heart size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-[#1a294a] text-sm font-bold uppercase tracking-wide">Home Nursing</h4>
+                    <p className="text-[12px] text-gray-400 font-medium mt-1 leading-snug">DHA-licensed clinical care, injection administration, & vitals monitoring.</p>
+                  </div>
+                </div>
+
+                {/* 3. Caregivers */}
+                <div className="p-4 bg-white border border-gray-100 rounded-2xl flex gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:border-[#08709d]/20 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0">
+                    <Users size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-[#1a294a] text-sm font-bold uppercase tracking-wide">Caregivers</h4>
+                    <p className="text-[12px] text-gray-400 font-medium mt-1 leading-snug">Compassionate daily assistance & companionships for seniors.</p>
+                  </div>
+                </div>
+
+                {/* 4. Doctor on Call */}
+                <div className="p-4 bg-white border border-gray-100 rounded-2xl flex gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:border-[#08709d]/20 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0">
+                    <Stethoscope size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-[#1a294a] text-sm font-bold uppercase tracking-wide">Doctor On Call</h4>
+                    <p className="text-[12px] text-gray-400 font-medium mt-1 leading-snug">24/7 licensed medical diagnostics & physical consultations at home.</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
         </div>
       </section>
