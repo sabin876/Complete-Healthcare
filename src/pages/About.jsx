@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award, Clock, Activity, Heart, Users, Stethoscope, ShieldCheck } from 'lucide-react';
+import { Award, Clock, Activity, Heart, Users, Stethoscope, ShieldCheck, Phone, MessageSquare } from 'lucide-react';
 import aboutUsBg from '../assets/About us .jpg';
 import aboutServicesCollage from '../assets/about_services_collage.png';
 
@@ -14,7 +14,7 @@ const About = () => {
     >
       {/* ── HERO SECTION ── */}
       <section 
-        className="relative min-h-[50vh] flex items-center py-20 mb-16 text-white text-center bg-cover bg-center overflow-hidden"
+        className="relative min-h-[50vh] flex items-center py-24 mb-16 text-white text-center bg-cover bg-center overflow-hidden"
         style={{
           backgroundImage: `url(${aboutUsBg})`,
           backgroundPosition: 'center 35%'
@@ -26,7 +26,7 @@ const About = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto flex flex-col items-center">
             <h1 
-              className="text-4xl md:text-6xl font-black leading-tight tracking-tight mb-6 uppercase"
+              className="text-4xl md:text-6xl font-black leading-tight tracking-tight mb-8 uppercase"
               style={{ 
                 color: '#08709d',
                 textShadow: '0 2px 8px rgba(8,112,157,0.12)',
@@ -36,10 +36,11 @@ const About = () => {
               About Us
             </h1>
             <p 
-              className="text-sm md:text-lg leading-relaxed mb-8 max-w-3xl font-medium"
+              className="text-sm md:text-lg leading-relaxed mb-10 max-w-3xl font-medium"
               style={{ 
                 color: '#08709d',
-                fontFamily: "'Montserrat', sans-serif"
+                fontFamily: "'Montserrat', sans-serif",
+                lineHeight: '1.75'
               }}
             >
               We are committed to delivering premium DHA-licensed medical services, advanced physical therapy, and skilled nursing care directly to your doorstep in Dubai, ensuring clinical excellence, comfort, and safety.
@@ -180,7 +181,7 @@ const About = () => {
             </div>
 
             {/* Right Column: Custom Text & Columns Layout */}
-            <div className="lg:col-span-7 text-left space-y-6">
+            <div className="lg:col-span-7 text-left space-y-8">
               
               {/* Section Tag */}
               <div className="inline-flex bg-[#08709d]/10 border border-[#08709d]/20 text-[#08709d] text-xs font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider select-none font-['Montserrat']">
@@ -194,16 +195,16 @@ const About = () => {
 
               {/* Styled Paragraph Block */}
               <div className="space-y-4">
-                <p className="text-base md:text-lg text-[#08709d] font-bold leading-relaxed font-['Montserrat']">
+                <p className="text-base md:text-lg text-[#08709d] font-bold leading-relaxed font-['Montserrat']" style={{ color: '#08709d' }}>
                   CORx Healthcare offers unparalleled home healthcare services, including top-tier physiotherapy, home nursing, compassionate caregivers, and round-the-clock doctor-on-call assistance.
                 </p>
-                <p className="text-sm md:text-base text-gray-500 font-medium leading-relaxed">
+                <p className="text-sm md:text-base text-gray-500 font-medium leading-relaxed" style={{ lineHeight: '1.75' }}>
                   At CORx Healthcare, we recognize the significance of receiving premium medical care within the sanctuary of your own home. Our steadfast team of experts is devoted to delivering unparalleled homecare services, placing your well-being at the forefront, and fostering your autonomy.
                 </p>
               </div>
 
               {/* Core Offerings Highlight Grid (2x2) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 {/* 1. Physiotherapy */}
                 <div className="p-4 bg-white border border-gray-100 rounded-2xl flex gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:border-[#08709d]/20 transition-all duration-300">
@@ -249,6 +250,29 @@ const About = () => {
                   </div>
                 </div>
 
+              </div>
+
+              {/* CTA Action Buttons */}
+              <div className="flex flex-wrap gap-4 pt-4">
+                <a 
+                  href="tel:+971547033311"
+                  className="inline-flex items-center justify-center gap-3 rounded-full font-bold text-xs md:text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg select-none text-center"
+                  style={{ color: "white", padding: "13px 32px", minHeight: "50px", backgroundColor: "#08709d" }}
+                >
+                  <Phone size={18} className="stroke-[2.5]" /> 
+                  <span>Call Us Now</span>
+                </a>
+                
+                <a 
+                  href="https://wa.me/97143320776"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-3 rounded-full font-bold text-xs md:text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg select-none text-center"
+                  style={{ color: "white", padding: "13px 32px", minHeight: "50px", backgroundColor: "#5eb63b" }}
+                >
+                  <MessageSquare size={18} className="stroke-[2.5]" /> 
+                  <span>WhatsApp Now</span>
+                </a>
               </div>
 
             </div>
