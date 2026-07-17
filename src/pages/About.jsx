@@ -41,7 +41,7 @@ const About = () => {
                 fontFamily: "'Montserrat', sans-serif"
               }}
             >
-              We are committed to delivering premium DHA-licensed medical services, advanced physical therapy, and skilled nursing care directly to your doorstep in Dubai, ensuring clinical excellence, comfort, and safety.
+              CORx Healthcare offers unparalleled home healthcare services, including top-tier physiotherapy, home nursing, compassionate caregivers, and round-the-clock doctor-on-call assistance. At CORx Healthcare, we recognize the significance of receiving premium medical care within the sanctuary of your own home. Our steadfast team of experts is devoted to delivering unparalleled homecare services, placing your well-being at the forefront, and fostering your autonomy.
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-xs md:text-sm font-semibold">
               <div 
