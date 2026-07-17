@@ -19,7 +19,7 @@ const About = () => {
         }}
       >
         {/* Light & Clean White Screen Overlay to support dark blue typography */}
-        <div className="absolute inset-0 bg-white/75 backdrop-blur-[2px] z-0"></div>
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] z-0"></div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto flex flex-col items-center">
