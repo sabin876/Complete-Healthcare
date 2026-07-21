@@ -585,7 +585,7 @@ const Home = () => {
         {/* Continuous Autoplay Muted Background Video */}
         <div className="absolute inset-0 z-0 w-full h-full overflow-hidden">
           <iframe 
-            src="https://www.facebook.com/plugins/video.php?height=373&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1667889694549028%2F&show_text=false&width=560&t=0&autoplay=true&mute=true&muted=true&autoplay=1&mute=1"
+            src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1667889694549028%2F&show_text=false&autoplay=true&mute=1"
             title="Hero Background Video"
             style={{
               position: 'absolute',
