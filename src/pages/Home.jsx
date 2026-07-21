@@ -582,28 +582,22 @@ const Home = () => {
     <main>
       {/* Hero Slider */}
       <section className="relative min-h-[95vh] flex items-center py-20 md:py-28 overflow-hidden bg-black">
-        {/* Continuous Autoplay Muted Background Video */}
-        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden">
-          <iframe 
-            src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1667889694549028%2F&show_text=false&autoplay=true&mute=1"
-            title="Hero Background Video"
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              width: '100vw',
-              height: '56.25vw',
-              minHeight: '100vh',
-              minWidth: '177.77vh',
-              transform: 'translate(-50%, -50%)',
-              border: 'none',
-              pointerEvents: 'none',
-              opacity: 0.45,
-              filter: 'brightness(0.4) contrast(1.05)'
-            }}
-            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" 
-            allowFullScreen={true}
-          />
+        {/* Dynamic Background Slide Image */}
+        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden bg-black">
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              key={currentSlide}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 0.55, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.85, ease: "easeInOut" }}
+              className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+              style={{
+                backgroundImage: `url(${slides[currentSlide].image})`,
+                filter: 'brightness(0.5) contrast(1.05)'
+              }}
+            />
+          </AnimatePresence>
           {/* Deep Blue Overlay matching the reference design */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#0c2e56]/95 via-[#0b2848]/85 to-[#071f3b]/95 mix-blend-multiply"></div>
           {/* Soft dark vignettes */}

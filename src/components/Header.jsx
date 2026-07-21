@@ -213,10 +213,10 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Main Nav (Vibrant Blue) */}
-      <nav className="hidden lg:block bg-[#08709d] text-white shadow-xl relative z-10">
+      {/* Main Nav (Vibrant Blue with Premium Shadow and Gradient) */}
+      <nav className="hidden lg:block bg-gradient-to-r from-[#065b80] via-[#08709d] to-[#0a86bd] text-white border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.15)] relative z-10">
         <div className="container flex justify-between items-center py-0">
-          <ul className="flex items-center gap-8 h-16">
+          <ul className="flex items-center gap-6 h-16">
             {navLinks.map((link) => (
               <li 
                 key={link.name} 
@@ -237,22 +237,22 @@ const Header = () => {
                       e.stopPropagation();
                       if (link.name === 'Services') setIsServicesOpen(!isServicesOpen);
                     }}
-                    className="group flex items-center h-full px-6 text-[13px] font-bold uppercase tracking-[0.05em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap"
+                    className="group flex items-center h-full px-5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap relative cursor-pointer"
                   >
                     <span className="relative py-1 flex items-center gap-1.5">
                       {link.name}
-                      <ChevronDown size={14} className={`transition-transform duration-300 ${isServicesOpen && link.name === 'Services' ? 'rotate-180' : ''}`} />
-                      <span className={`absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[4px] bg-accent-color transform transition-transform duration-300 origin-left ${isServicesOpen && link.name === 'Services' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                      <ChevronDown size={12} className={`transition-transform duration-300 ${isServicesOpen && link.name === 'Services' ? 'rotate-180 text-accent-color' : 'text-white/60 group-hover:text-white'}`} />
+                      <span className={`absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[3px] bg-accent-color transform rounded-t-full transition-transform duration-300 origin-left ${isServicesOpen && link.name === 'Services' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
                     </span>
                   </button>
                 ) : (
                   <Link 
                     to={link.path} 
-                    className="group flex items-center h-full px-6 text-[13px] font-bold uppercase tracking-[0.05em] hover:text-white/90 transition-all gap-1.5 whitespace-nowrap"
+                    className="group flex items-center h-full px-5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap relative"
                   >
                     <span className="relative py-1">
                       {link.name}
-                      <span className="absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[4px] bg-accent-color transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                      <span className="absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[3px] bg-accent-color transform rounded-t-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                     </span>
                   </Link>
                 )}
@@ -323,6 +323,7 @@ const Header = () => {
                             </motion.ul>
                           )}
                         </AnimatePresence>
+                      </motion.div>
                       </motion.div>
                     )}
                   </AnimatePresence>

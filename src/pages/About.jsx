@@ -1,534 +1,286 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award, CheckCircle2, Heart, Clock, ArrowRight, ShieldCheck, Activity, Phone, MessageSquare } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import logo from '../assets/logo.webp';
+import { Award, Clock, Activity, Heart, Users, Stethoscope, ShieldCheck, Phone, MessageSquare } from 'lucide-react';
 import aboutUsBg from '../assets/About us .jpg';
+import aboutServicesCollage from '../assets/about_services_collage.png';
 
 const About = () => {
-  const choosePillars = [
-    { 
-      icon: <ShieldCheck size={28} />, 
-      title: "Integrity", 
-      desc: "We maintain the highest standards of professional ethics, transparency, and clinical honesty, ensuring your family can fully trust every nurse, therapist, and caregiver in your home.",
-      color: "#5eb63b" 
-    },
-    { 
-      icon: <Clock size={28} />, 
-      title: "Commitment", 
-      desc: "We are devoted round-the-clock to delivering comprehensive home care services that prioritize patient safety, promote recovery, and preserve autonomy in Dubai.",
-      color: "#e11d48"
-    },
-    { 
-      icon: <Award size={28} />, 
-      title: "Excellence and Awards", 
-      desc: "We set new clinical benchmarks in home healthcare, supported by DHA-licensed medical specialists, physician-guided teams, and a proven history of patient satisfaction.",
-      color: "#38bdf8"
-    }
-  ];
-
-  const stats = [
-    { val: "10,000+", label: "Happy Patients Served" },
-    { val: "50+", label: "DHA Licensed Staff" },
-    { val: "24/7", label: "Medical Support Available" },
-    { val: "100%", label: "Patient Autonomy Focus" }
-  ];
-
-  const styles = {
-    pageWrapper: {
-      fontFamily: "'Poppins', sans-serif",
-      background: "linear-gradient(135deg, #08709d 0%, #1a294a 100%)",
-      minHeight: "100vh",
-      paddingTop: "0px",
-      paddingBottom: "80px",
-      position: "relative",
-      overflow: "hidden",
-    },
-    dotTexture: {
-      position: "absolute",
-      inset: 0,
-      opacity: 0.06,
-      backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
-      backgroundSize: "32px 32px",
-      pointerEvents: "none",
-      zIndex: 1
-    },
-    glowTeal: {
-      position: "absolute",
-      top: "-10%",
-      right: "-10%",
-      width: "550px",
-      height: "550px",
-      borderRadius: "50%",
-      background: "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
-      filter: "blur(60px)",
-      pointerEvents: "none",
-      zIndex: 1
-    },
-    glowGreen: {
-      position: "absolute",
-      bottom: "20%",
-      left: "-10%",
-      width: "500px",
-      height: "500px",
-      borderRadius: "50%",
-      background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
-      filter: "blur(50px)",
-      pointerEvents: "none",
-      zIndex: 1
-    },
-    badge: {
-      display: "inline-flex",
-      alignItems: "center",
-      background: "rgba(255, 255, 255, 0.08)",
-      border: "1px solid rgba(255, 255, 255, 0.2)",
-      color: "#ffffff",
-      fontSize: "10.5px",
-      fontWeight: "400",
-      padding: "8px 18px",
-      borderRadius: "50px",
-      textTransform: "uppercase",
-      letterSpacing: "0.08em",
-      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-      marginBottom: "20px",
-      fontFamily: "'Montserrat', sans-serif"
-    },
-    title: {
-      fontFamily: "'Montserrat', sans-serif",
-      fontSize: "clamp(24px, 3.5vw, 36px)",
-      fontWeight: "400",
-      color: "#ffffff",
-      lineHeight: "1.15",
-      letterSpacing: "-0.01em",
-      textTransform: "uppercase",
-      marginBottom: "24px"
-    },
-    subtitle: {
-      fontSize: "15px",
-      color: "rgba(255, 255, 255, 0.85)",
-      lineHeight: "1.75",
-      fontWeight: "400",
-      marginBottom: "16px"
-    },
-    card: {
-      background: "rgba(255, 255, 255, 0.06)",
-      border: "1px solid rgba(255, 255, 255, 0.15)",
-      borderRadius: "24px",
-      padding: "32px",
-      boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
-      backdropFilter: "blur(16px)",
-      transition: "all 0.3s ease",
-      textAlign: "left"
-    },
-    statCard: {
-      background: "rgba(255, 255, 255, 0.06)",
-      border: "1px solid rgba(255, 255, 255, 0.15)",
-      borderRadius: "20px",
-      padding: "24px 16px",
-      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.08)",
-      textAlign: "center",
-      backdropFilter: "blur(12px)"
-    },
-    statVal: {
-      fontFamily: "'Montserrat', sans-serif",
-      fontSize: "26px",
-      fontWeight: "400",
-      color: "#5eb63b",
-      marginBottom: "4px"
-    },
-    statLabel: {
-      fontSize: "11px",
-      fontWeight: "400",
-      color: "rgba(255, 255, 255, 0.7)",
-      textTransform: "uppercase",
-      letterSpacing: "0.02em"
-    },
-    sectionTitle: {
-      fontFamily: "'Montserrat', sans-serif",
-      fontSize: "24px",
-      fontWeight: "400",
-      color: "#ffffff",
-      textTransform: "uppercase",
-      marginBottom: "20px"
-    },
-    pill: {
-      padding: "8px 20px",
-      borderRadius: "50px",
-      fontSize: "10.5px",
-      fontWeight: "400",
-      letterSpacing: "0.06em",
-      textTransform: "uppercase"
-    },
-    ctaSection: {
-      background: "rgba(255, 255, 255, 0.05)",
-      border: "1px solid rgba(255, 255, 255, 0.12)",
-      padding: "56px 36px",
-      borderRadius: "32px",
-      textAlign: "center",
-      boxShadow: "0 25px 60px rgba(0, 0, 0, 0.15)",
-      position: "relative",
-      overflow: "hidden",
-      marginTop: "80px",
-      backdropFilter: "blur(16px)"
-    },
-    ctaButton: {
-      fontFamily: "'Montserrat', sans-serif",
-      background: "#ffffff",
-      color: "#08709d",
-      border: "none",
-      padding: "16px 42px",
-      borderRadius: "50px",
-      fontWeight: "400",
-      fontSize: "12px",
-      letterSpacing: "0.12em",
-      cursor: "pointer",
-      display: "inline-flex",
-      alignItems: "center",
-      gap: "10px",
-      transition: "all 0.3s ease",
-      boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
-    },
-    ctaPhoneBtn: {
-      fontFamily: "'Montserrat', sans-serif",
-      background: "transparent",
-      color: "#ffffff",
-      border: "2px solid rgba(255, 255, 255, 0.4)",
-      padding: "14px 36px",
-      borderRadius: "50px",
-      fontWeight: "400",
-      fontSize: "12px",
-      letterSpacing: "0.12em",
-      cursor: "pointer",
-      display: "inline-flex",
-      alignItems: "center",
-      gap: "10px",
-      transition: "all 0.3s ease"
-    }
-  };
-
   return (
-    <div style={styles.pageWrapper}>
-      {/* ── HERO HEADER SECTION ── */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="pt-28 pb-24 bg-white min-h-screen"
+    >
+      {/* ── HERO SECTION ── */}
       <section 
-        className="relative w-full min-h-[210px] md:min-h-0 md:aspect-[3322/1080] mb-16 bg-[#121212] bg-no-repeat overflow-hidden border-b border-gray-100 bg-cover md:bg-[length:80%_auto]"
+        className="relative min-h-[50vh] flex items-center py-24 mb-16 text-white text-center bg-cover bg-center overflow-hidden"
         style={{
           backgroundImage: `url(${aboutUsBg})`,
-          backgroundPosition: 'center'
+          backgroundPosition: 'center 35%'
         }}
       >
-        {/* Clean raw background image banner */}
+        {/* Light & Clean White Screen Overlay to support dark blue typography */}
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] z-0"></div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-5xl mx-auto flex flex-col items-center">
+            <h1 
+              className="text-4xl md:text-6xl font-black leading-tight tracking-tight mb-8 uppercase"
+              style={{ 
+                color: '#08709d',
+                textShadow: '0 2px 8px rgba(8,112,157,0.12)',
+                fontFamily: "'Montserrat', sans-serif"
+              }}
+            >
+              About Us
+            </h1>
+            <p 
+              className="text-sm md:text-lg leading-relaxed mb-10 max-w-3xl font-medium"
+              style={{ 
+                color: '#08709d',
+                fontFamily: "'Montserrat', sans-serif",
+                lineHeight: '1.75'
+              }}
+            >
+              We are committed to delivering premium DHA-licensed medical services, advanced physical therapy, and skilled nursing care directly to your doorstep in Dubai, ensuring clinical excellence, comfort, and safety.
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-xs md:text-sm font-semibold">
+              <div 
+                style={{ 
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  color: '#08709d',
+                  backgroundColor: 'rgba(8, 112, 157, 0.08)',
+                  border: '1.5px solid rgba(8, 112, 157, 0.3)',
+                  padding: '12px 28px',
+                  borderRadius: '9999px',
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.06)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'default',
+                  fontFamily: "'Montserrat', sans-serif"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(8, 112, 157, 0.16)';
+                  e.currentTarget.style.borderColor = 'rgba(8, 112, 157, 0.5)';
+                  e.currentTarget.style.transform = 'scale(1.03)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(8, 112, 157, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(8, 112, 157, 0.3)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <Award size={18} style={{ color: '#08709d' }} />
+                <span>100% DHA Licensed</span>
+              </div>
+              <div 
+                style={{ 
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  color: '#08709d',
+                  backgroundColor: 'rgba(8, 112, 157, 0.08)',
+                  border: '1.5px solid rgba(8, 112, 157, 0.3)',
+                  padding: '12px 28px',
+                  borderRadius: '9999px',
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.06)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'default',
+                  fontFamily: "'Montserrat', sans-serif"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(8, 112, 157, 0.16)';
+                  e.currentTarget.style.borderColor = 'rgba(8, 112, 157, 0.5)';
+                  e.currentTarget.style.transform = 'scale(1.03)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(8, 112, 157, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(8, 112, 157, 0.3)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <Clock size={18} style={{ color: '#08709d' }} />
+                <span>24/7 Availability</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Texture Overlays */}
-      <div style={styles.dotTexture} />
-      <div style={styles.glowTeal} />
-      <div style={styles.glowGreen} />
-
-      <div className="container mx-auto px-6 relative z-10">
-        
-        {/* ── 1. INTRODUCTION & STATS GRID ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24">
-          <div className="lg:col-span-7 text-left">
-            <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.3)", marginBottom: "16px" }}>
-              ⊙ Our Commitment
-            </div>
-            <h2 style={{ ...styles.sectionTitle, fontSize: "22px", marginBottom: "16px" }}>
-              Personalized Care in the Comfort of Your Home
-            </h2>
-            <p style={{ ...styles.subtitle, fontSize: "14.5px", color: "rgba(255, 255, 255, 0.85)", lineHeight: "1.75", marginBottom: "16px" }}>
-              At Corx Home Health Care, we recognize the significance of receiving premium medical care within the sanctuary of your own home. Our steadfast team of experts is devoted to delivering unparalleled home care services, placing your well-being at the forefront, and fostering your autonomy.
-            </p>
-          </div>
-
-          <div className="lg:col-span-5 w-full">
-            <div className="grid grid-cols-2 gap-4">
-              {stats.map((st, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2 + i * 0.08 }}
-                  whileHover={{ y: -5, background: "rgba(255, 255, 255, 0.12)" }}
-                  style={styles.statCard}
-                >
-                  <div style={styles.statVal}>{st.val}</div>
-                  <div style={styles.statLabel}>{st.label}</div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ── 2. WHY CHOOSE CORX HOME HEALTHCARE? ── */}
-        <div className="mb-24" style={{ paddingTop: "20px" }}>
-          <div style={{ textAlign: "left", marginBottom: "40px" }}>
-            <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.3)" }}>
-              ⊙ Why Choose Us
-            </div>
-            <h2 style={{ ...styles.sectionTitle, fontSize: "22px", marginBottom: "12px" }}>Why Choose Corx Home Healthcare?</h2>
-            <p style={{ color: "rgba(255, 255, 255, 0.75)", fontSize: "13.5px", fontWeight: "400", margin: 0 }}>
-              There are many reasons to choose Corx Home Health Care as your healthcare provider of choice.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {choosePillars.map((pillar, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -6, background: "rgba(255, 255, 255, 0.12)", boxShadow: "0 12px 35px rgba(0, 0, 0, 0.15)" }}
-                style={styles.card}
-              >
-                <div style={{ 
-                  color: pillar.color, 
-                  background: "rgba(255, 255, 255, 0.08)", 
-                  width: "56px", 
-                  height: "56px", 
-                  borderRadius: "16px", 
-                  display: "flex", 
-                  alignItems: "center", 
-                  justifyContent: "center",
-                  marginBottom: "24px",
-                  border: "1px solid rgba(255, 255, 255, 0.15)"
-                }}>
-                  {pillar.icon}
-                </div>
-                <h3 style={{ 
-                  fontFamily: "'Montserrat', sans-serif",
-                  color: "#ffffff", 
-                  fontSize: "14.5px", 
-                  fontWeight: "400", 
-                  marginBottom: "12px",
-                  textTransform: "uppercase" 
-                }}>
-                  {pillar.title}
-                </h3>
-                <p style={{ color: "rgba(255, 255, 255, 0.75)", fontSize: "12.5px", lineHeight: "1.7", fontWeight: "400", margin: 0 }}>
-                  {pillar.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── 3. OUR MISSION SECTION ── */}
-        <div className="flex flex-col lg:flex-row items-center gap-14 lg:gap-16 mb-24" style={{ paddingTop: "20px" }}>
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            style={{ flex: 1 }}
-            className="text-left"
-          >
-            <div style={styles.badge}>
-              ⊙ Our Mission
-            </div>
-            <h2 style={{ ...styles.sectionTitle, fontSize: "20px", lineHeight: "1.3", marginBottom: "20px" }}>
-              Our mission is to elevate health and well-being by delivering unparalleled comprehensive healthcare.
-            </h2>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              At Corx Home Healthcare, first and foremost, our mission is to elevate health and overall well-being by delivering unparalleled, comprehensive healthcare solutions. With this clear commitment at our core, we not only strive for excellence but also stand as a national leader dedicated to enriching lives and providing optimal care for your loved ones. Based in Dubai, United Arab Emirates, we therefore proudly serve individuals across Dubai and the wider UAE as a trusted and dependable home healthcare provider.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              Through a carefully integrated and patient-centric approach, we consistently deliver comprehensive home healthcare services led by a highly skilled, physician-guided clinical team. In particular, we focus on supporting patients who prefer the comfort of their own homes for treatment, recovery, and rehabilitation. In doing so, we ensure continuity of care, promote familiarity, and preserve dignity throughout their daily lives.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              Recognizing, above all, that there truly is no place like home, we continuously prioritize quality improvement initiatives. Consequently, we enhance patient safety, increase satisfaction, and support long-term health outcomes, while simultaneously maintaining the highest standards of care within a familiar and reassuring environment.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "0" }}>
-              Moreover, our overarching goal is to provide round-the-clock access to premier healthcare services. By doing so, we consistently deliver exceptional clinical outcomes and, at the same time, set new benchmarks in patient experience across home care, corporate healthcare, and on-demand medical services not only in the UAE but across the entire GCC region.
-            </p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            style={{ flex: 1, position: "relative" }}
-            className="w-full max-w-[480px]"
-          >
-            {/* Ambient deep glow behind image */}
-            <div className="absolute inset-0 bg-[#08709d]/10 rounded-[40px] blur-2xl pointer-events-none" />
+      {/* ── CUSTOM DESIGN ABOUT DETAILS SECTION ── */}
+      <section className="py-24 bg-gradient-to-b from-white to-[#f7fbfd] overflow-hidden">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
-            <div style={{ 
-              borderRadius: "28px", 
-              overflow: "hidden", 
-              border: "4px solid rgba(255,255,255,0.15)",
-              boxShadow: "0 20px 50px rgba(0, 0, 0, 0.2)",
-              position: "relative",
-              zIndex: 5
-            }}>
-              <img 
-                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1200" 
-                alt="Corx Professional Home Healthcare in Dubai" 
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
-            </div>
-
-            {/* Overlapping Floating trust badge */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="absolute bottom-6 -right-4 bg-white/10 border border-white/15 backdrop-blur-md p-4 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.15)] z-10 flex gap-3 items-center max-w-[200px]"
-            >
-              <div className="w-8 h-8 rounded-full bg-[#5eb63b] text-white flex items-center justify-center font-normal text-xs shrink-0">
-                ★
-              </div>
-              <div className="text-left">
-                <p className="m-0 font-normal text-xs text-white leading-tight">5-Star Rated</p>
-                <p className="m-0 text-[9.5px] text-white/60 mt-0.5">Patient Satisfaction</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* ── 4. OUR VISION SECTION ── */}
-        <div className="flex flex-col lg:flex-row-reverse items-center gap-14 lg:gap-16 mb-24" style={{ paddingTop: "20px" }}>
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            style={{ flex: 1 }}
-            className="text-left"
-          >
-            <div style={{ ...styles.badge, color: "#5eb63b", borderColor: "rgba(94, 182, 59, 0.3)", marginBottom: "16px" }}>
-              ⊙ Our Vision
-            </div>
-            <h2 style={{ ...styles.sectionTitle, fontSize: "20px", lineHeight: "1.3", marginBottom: "20px" }}>
-              We are committed to consistently creating and delivering exceptional value for you.
-            </h2>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              At Corx Home Healthcare, first and foremost, we are committed to consistently creating and delivering exceptional value for you. With this guiding principle, our vision is to set the standard as the foremost provider of compassionate and tailored healthcare services, delivered within the comfort and convenience of our patients’ homes.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              Through this commitment, we are dedicated to elevating the quality of life for our patients by delivering comprehensive, dependable, and expert care. In doing so, we actively foster independence, promote overall wellness, and preserve personal dignity at every stage of care.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "16px" }}>
-              Furthermore, supported by our skilled and devoted team, we continuously aspire to surpass the expectations of our patients and their families. As a result, we aim to positively influence not only health outcomes but also overall happiness and peace of mind.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "14.5px", lineHeight: "1.75", marginBottom: "0" }}>
-              Additionally, and beyond traditional healthcare, we seek to become the top choice for outdoor enthusiasts looking for extraordinary nightlife experiences that transcend conventional boundaries. By combining innovation with nature, we remain committed to offering unparalleled adventures and creating unforgettable moments, all while embracing the beauty of the natural environment.
-            </p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            style={{ flex: 1, position: "relative" }}
-            className="w-full max-w-[480px]"
-          >
-            {/* Ambient green glow behind illustration */}
-            <div className="absolute inset-0 bg-[#5eb63b]/10 rounded-[40px] blur-2xl pointer-events-none" />
-            
-            <div style={{ 
-              borderRadius: "28px", 
-              overflow: "hidden", 
-              border: "4px solid rgba(255,255,255,0.15)",
-              boxShadow: "0 20px 50px rgba(0, 0, 0, 0.2)",
-              position: "relative",
-              zIndex: 5
-            }}>
-              <img 
-                src="https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80&w=1200" 
-                alt="Corx Vision for Care and Innovation" 
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
-            </div>
-
-            {/* Overlapping Floating badge */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="absolute top-6 -left-4 bg-white/10 border border-white/15 backdrop-blur-md p-4 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.15)] z-10 flex gap-3 items-center max-w-[210px]"
-            >
-              <div className="w-8 h-8 rounded-full bg-[#08709d] text-white flex items-center justify-center font-normal text-xs shrink-0">
-                ✓
-              </div>
-              <div className="text-left">
-                <p className="m-0 font-normal text-xs text-white leading-tight">Exceptional Value</p>
-                <p className="m-0 text-[9.5px] text-white/60 mt-0.5">Consistent &amp; Trusted</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* ── 5. DYNAMIC CTA BANNER ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          style={styles.ctaSection}
-        >
-          {/* Animated Background Glow circles */}
-          <div className="absolute inset-0 opacity-20 pointer-events-none">
-            <motion.div 
-              animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.35, 0.15] }}
-              transition={{ duration: 6, repeat: Infinity }}
-              className="absolute -top-20 -left-20 w-80 h-80 bg-[#5eb63b] rounded-full blur-[100px]"
-            />
-            <motion.div 
-              animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.25, 0.1] }}
-              transition={{ duration: 8, repeat: Infinity, delay: 1 }}
-              className="absolute -bottom-20 -right-20 w-80 h-80 bg-white rounded-full blur-[100px]"
-            />
-          </div>
-
-          <div className="relative z-10 flex flex-col items-center">
-            <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "clamp(20px, 3vw, 26px)", fontWeight: "400", color: "#ffffff", marginBottom: "16px", textTransform: "uppercase" }}>
-              Ready to Experience Better Care?
-            </h2>
-            <p style={{ fontSize: "14.5px", color: "rgba(255,255,255,0.85)", marginBottom: "36px", maxWidth: "620px", lineHeight: "1.65", fontWeight: "400" }}>
-              Contact us today to book a consultation or find out more about our premium home care services.
-            </p>
-            
-            <div className="flex flex-wrap gap-4 items-center justify-center w-full">
-              <Link to="/contact">
-                <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(255,255,255,0.15)" }}
-                  whileTap={{ scale: 0.95 }}
-                  animate={{ scale: [1, 1.02, 1] }}
-                  transition={{ scale: { repeat: Infinity, duration: 2, ease: "easeInOut" } }}
-                  style={styles.ctaButton}
-                >
-                  BOOK NOW <ArrowRight size={16} />
-                </motion.button>
-              </Link>
+            {/* Left Column: Visual Stack & Collage Image */}
+            <div className="lg:col-span-5 relative flex items-center justify-center min-h-[380px] md:min-h-[440px]">
+              {/* Decorative radial blur background */}
+              <div className="absolute w-80 h-80 bg-[#08709d]/5 rounded-full blur-[100px] pointer-events-none" />
+              <div className="absolute w-64 h-64 bg-[#5eb63b]/3 rounded-full blur-[80px] pointer-events-none" />
               
-              <a href="tel:+97143320776" style={{ textDecoration: "none" }}>
-                <motion.button
-                  whileHover={{ scale: 1.05, borderColor: "#ffffff", background: "rgba(255,255,255,0.08)" }}
-                  whileTap={{ scale: 0.95 }}
-                  style={styles.ctaPhoneBtn}
-                >
-                  <Phone size={16} /> CALL NOW
-                </motion.button>
-              </a>
+              {/* EKG ambient lines */}
+              <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #08709d 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
 
-              <a href="https://wa.me/97143320776" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
-                <motion.button
-                  whileHover={{ scale: 1.05, borderColor: "#22c55e", background: "rgba(34,197,94,0.1)" }}
-                  whileTap={{ scale: 0.95 }}
-                  style={{ ...styles.ctaPhoneBtn, color: "#22c55e", borderColor: "rgba(34,197,94,0.4)" }}
+              {/* Main Image Graphic Container */}
+              <div className="relative w-full max-w-[380px] transition-all duration-500 hover:scale-[1.02]">
+                
+                {/* Slanted collage image with styling */}
+                <div className="overflow-hidden rounded-[32px] border-4 border-white shadow-[0_20px_50px_rgba(8,112,157,0.15)] bg-white">
+                  <img 
+                    src={aboutServicesCollage} 
+                    alt="CORx Healthcare Services Collage" 
+                    className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-700" 
+                  />
+                </div>
+
+                {/* Overlapping Floating Badge 1: DHA Licensed */}
+                <motion.div 
+                  initial={{ x: -20, y: -20 }}
+                  animate={{ y: [-6, 6, -6] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-6 -left-6 bg-white/95 backdrop-blur-md border border-gray-100 rounded-2xl p-3.5 shadow-[0_10px_30px_rgba(0,0,0,0.08)] flex items-center gap-2.5 w-44"
                 >
-                  <MessageSquare size={16} /> WHATSAPP
-                </motion.button>
-              </a>
+                  <div className="w-8 h-8 rounded-lg bg-[#5eb63b]/10 flex items-center justify-center text-[#5eb63b] shrink-0">
+                    <ShieldCheck size={18} />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[11px] font-black text-[#1a294a] leading-none uppercase">DHA Certified</p>
+                    <p className="text-[9px] text-gray-400 font-bold mt-1">Licensed Clinicians</p>
+                  </div>
+                </motion.div>
+
+                {/* Overlapping Floating Badge 2: 24/7 Available */}
+                <motion.div 
+                  initial={{ x: 20, y: 20 }}
+                  animate={{ y: [6, -6, 6] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
+                  className="absolute -bottom-6 -right-6 bg-white/95 backdrop-blur-md border border-gray-100 rounded-2xl p-3.5 shadow-[0_10px_30px_rgba(0,0,0,0.08)] flex items-center gap-2.5 w-44"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-[#08709d]/10 flex items-center justify-center text-[#08709d] shrink-0">
+                    <Clock size={18} />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[11px] font-black text-[#1a294a] leading-none uppercase">24/7 Response</p>
+                    <p className="text-[9px] text-gray-400 font-bold mt-1">Doctor On Call</p>
+                  </div>
+                </motion.div>
+
+              </div>
             </div>
-          </div>
-        </motion.div>
 
-      </div>
-    </div>
+            {/* Right Column: Custom Text & Columns Layout */}
+            <div className="lg:col-span-7 text-left space-y-8">
+              
+              {/* Section Tag */}
+              <div className="inline-flex bg-[#08709d]/10 border border-[#08709d]/20 text-[#08709d] text-xs font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider select-none font-['Montserrat']">
+                ⊙ Clinical Excellence
+              </div>
+
+              {/* Title */}
+              <h2 className="text-2xl md:text-[36px] font-black text-[#1a294a] tracking-tight leading-tight uppercase font-['Montserrat']">
+                Compassionate Care <span className="text-[#08709d]">Where You Need It Most</span>
+              </h2>
+
+              {/* Styled Paragraph Block */}
+              <div className="space-y-4">
+                <p className="text-base md:text-lg text-[#08709d] font-bold leading-relaxed font-['Montserrat']" style={{ color: '#08709d' }}>
+                  CORx Healthcare offers unparalleled home healthcare services, including top-tier physiotherapy, home nursing, compassionate caregivers, and round-the-clock doctor-on-call assistance.
+                </p>
+                <p className="text-sm md:text-base text-gray-500 font-medium leading-relaxed" style={{ lineHeight: '1.75' }}>
+                  At CORx Healthcare, we recognize the significance of receiving premium medical care within the sanctuary of your own home. Our steadfast team of experts is devoted to delivering unparalleled homecare services, placing your well-being at the forefront, and fostering your autonomy.
+                </p>
+              </div>
+
+              {/* Core Offerings Highlight Grid (2x2) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                {/* 1. Physiotherapy */}
+                <div className="p-4 bg-white border border-gray-100 rounded-2xl flex gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:border-[#08709d]/20 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0">
+                    <Activity size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-[#1a294a] text-sm font-bold uppercase tracking-wide">Physiotherapy</h4>
+                    <p className="text-[12px] text-gray-400 font-medium mt-1 leading-snug">Expert in-home rehabilitation for joint, post-surgical, & pain conditions.</p>
+                  </div>
+                </div>
+
+                {/* 2. Home Nursing */}
+                <div className="p-4 bg-white border border-gray-100 rounded-2xl flex gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:border-[#08709d]/20 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0">
+                    <Heart size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-[#1a294a] text-sm font-bold uppercase tracking-wide">Home Nursing</h4>
+                    <p className="text-[12px] text-gray-400 font-medium mt-1 leading-snug">DHA-licensed clinical care, injection administration, & vitals monitoring.</p>
+                  </div>
+                </div>
+
+                {/* 3. Caregivers */}
+                <div className="p-4 bg-white border border-gray-100 rounded-2xl flex gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:border-[#08709d]/20 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0">
+                    <Users size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-[#1a294a] text-sm font-bold uppercase tracking-wide">Caregivers</h4>
+                    <p className="text-[12px] text-gray-400 font-medium mt-1 leading-snug">Compassionate daily assistance & companionships for seniors.</p>
+                  </div>
+                </div>
+
+                {/* 4. Doctor on Call */}
+                <div className="p-4 bg-white border border-gray-100 rounded-2xl flex gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:border-[#08709d]/20 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0">
+                    <Stethoscope size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-[#1a294a] text-sm font-bold uppercase tracking-wide">Doctor On Call</h4>
+                    <p className="text-[12px] text-gray-400 font-medium mt-1 leading-snug">24/7 licensed medical diagnostics & physical consultations at home.</p>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* CTA Action Buttons */}
+              <div className="flex flex-wrap gap-4 pt-4">
+                <a 
+                  href="tel:+971547033311"
+                  className="inline-flex items-center justify-center gap-3 rounded-full font-bold text-xs md:text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg select-none text-center"
+                  style={{ color: "white", padding: "13px 32px", minHeight: "50px", backgroundColor: "#08709d" }}
+                >
+                  <Phone size={18} className="stroke-[2.5]" /> 
+                  <span>Call Us Now</span>
+                </a>
+                
+                <a 
+                  href="https://wa.me/97143320776"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-3 rounded-full font-bold text-xs md:text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg select-none text-center"
+                  style={{ color: "white", padding: "13px 32px", minHeight: "50px", backgroundColor: "#5eb63b" }}
+                >
+                  <MessageSquare size={18} className="stroke-[2.5]" /> 
+                  <span>WhatsApp Now</span>
+                </a>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </motion.div>
   );
 };
 
