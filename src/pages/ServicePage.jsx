@@ -906,7 +906,34 @@ export default function ServicePage({ serviceId }) {
     );
   }
 
-  const service = servicesData[activeId];
+  const service = servicesData ? servicesData[activeId] : null;
+
+  useEffect(() => {
+    if (service) {
+      const pageTitle = service.title 
+        ? `${service.title} in Dubai | CORX Healthcare`
+        : 'Healthcare Services in Dubai | CORX Healthcare';
+      document.title = pageTitle;
+
+      // Update or create Meta Description
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (!metaDesc) {
+        metaDesc = document.createElement('meta');
+        metaDesc.name = "description";
+        document.head.appendChild(metaDesc);
+      }
+      metaDesc.content = service.subtitle || service.description || "24/7 DHA-licensed home healthcare services in Dubai.";
+
+      // Update OpenGraph Title
+      let ogTitle = document.querySelector('meta[property="og:title"]');
+      if (!ogTitle) {
+        ogTitle = document.createElement('meta');
+        ogTitle.setAttribute('property', 'og:title');
+        document.head.appendChild(ogTitle);
+      }
+      ogTitle.content = pageTitle;
+    }
+  }, [service]);
 
   if (!service) {
     return <Navigate to="/" replace />;

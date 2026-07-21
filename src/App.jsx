@@ -74,19 +74,38 @@ const AnimatedRoutes = () => {
         {/* Services Routes */}
         <Route path="/services" element={<PlaceholderPage title="Our Services" />} />
         <Route path="/services/physiotherapy" element={<ServicePage serviceId="physiotherapy" />} />
+        <Route path="/physiotherapy-at-home-in-dubai" element={<ServicePage serviceId="physiotherapy" />} />
+        <Route path="/physiotherapy-at-home-in-dubai/" element={<ServicePage serviceId="physiotherapy" />} />
+        
         <Route path="/services/iv-therapy" element={<ServicePage serviceId="iv-therapy" />} />
+        <Route path="/iv-therapy-iv-drip-at-home-in-dubai" element={<ServicePage serviceId="iv-therapy" />} />
+        <Route path="/iv-therapy-iv-drip-at-home-in-dubai/" element={<ServicePage serviceId="iv-therapy" />} />
+        
         <Route path="/services/nursing" element={<ServicePage serviceId="nursing" />} />
+        <Route path="/home-nursing-service-in-dubai" element={<ServicePage serviceId="nursing" />} />
+        <Route path="/home-nursing-service-in-dubai/" element={<ServicePage serviceId="nursing" />} />
+        
         <Route path="/services/palliative-care" element={<ServicePage serviceId="palliative-care" />} />
         <Route path="/services/night-care-nurse" element={<ServicePage serviceId="night-care-nurse" />} />
         <Route path="/services/injection-at-home" element={<ServicePage serviceId="injection-at-home" />} />
         <Route path="/services/wound-care" element={<ServicePage serviceId="wound-care" />} />
         <Route path="/services/oxygen-therapy" element={<ServicePage serviceId="oxygen-therapy" />} />
+        
         <Route path="/services/doctor-on-call" element={<ServicePage serviceId="doctor-on-call" />} />
+        <Route path="/doctor-on-call-in-dubai" element={<ServicePage serviceId="doctor-on-call" />} />
+        <Route path="/doctor-on-call-in-dubai/" element={<ServicePage serviceId="doctor-on-call" />} />
+        
         <Route path="/services/doctor-at-home" element={<DoctorAtHomePage />} />
         <Route path="/services/doctor-at-office" element={<DoctorAtOfficePage />} />
         <Route path="/services/doctor-at-hotel" element={<DoctorAtHotelPage />} />
+        
         <Route path="/services/elderly-care" element={<ServicePage serviceId="elderly-care" />} />
+        <Route path="/elderly-care-service-at-home-in-dubai" element={<ServicePage serviceId="elderly-care" />} />
+        <Route path="/elderly-care-service-at-home-in-dubai/" element={<ServicePage serviceId="elderly-care" />} />
+        
         <Route path="/services/lab-services" element={<ServicePage serviceId="lab-services" />} />
+        <Route path="/lab-test-at-home-dubai" element={<ServicePage serviceId="lab-services" />} />
+        <Route path="/lab-test-at-home-dubai/" element={<ServicePage serviceId="lab-services" />} />
         
         <Route path="/locations" element={<Locations />} />
         <Route path="/contact" element={<Contact />} />

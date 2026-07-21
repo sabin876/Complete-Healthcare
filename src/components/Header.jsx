@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, Printer, ArrowRight, Linkedin, User, ChevronRight } from 'lucide-react';
+import { 
+  Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, 
+  Printer, ArrowRight, Linkedin, User, ChevronRight, Activity, Droplets, 
+  HeartPulse, Stethoscope, HeartHandshake, TestTube, Globe, Sparkles, CheckCircle2 
+} from 'lucide-react';
 
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,7 +13,7 @@ import tollfree from '../assets/tollfree.png';
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [openSubMenu, setOpenSubMenu] = useState(null);
 
@@ -20,7 +24,7 @@ const Header = () => {
     
     const handleClickOutside = (e) => {
       if (!e.target.closest('nav')) {
-        setIsServicesOpen(false);
+        setActiveDropdown(null);
       }
     };
 
@@ -42,22 +46,62 @@ const Header = () => {
       name: 'Services', 
       path: '#',
       dropdown: [
-        { name: 'Physiotherapy', path: '/services/physiotherapy', hasArrow: true },
-        { name: 'IV Therapy | IV Drip', path: '/services/iv-therapy', hasArrow: true },
-        { name: 'Home Nursing', path: '/services/nursing', hasArrow: true, subItems: [
-          { name: 'Palliative Care', path: '/services/palliative-care' },
-          { name: 'Night Care Nurse', path: '/services/night-care-nurse' },
-          { name: 'Nurse for Injection', path: '/services/injection-at-home' },
-          { name: 'Wound Care Services', path: '/services/wound-care' },
-          { name: 'Oxygen Therapy', path: '/services/oxygen-therapy' },
-        ]},
-        { name: 'Doctor On Call', path: '/services/doctor-on-call', hasArrow: true, subItems: [
-          { name: 'Doctor at Home', path: '/services/doctor-at-home' },
-          { name: 'Doctor at Office', path: '/services/doctor-at-office' },
-          { name: 'Doctor at Hotel', path: '/services/doctor-at-hotel' },
-        ]},
-        { name: 'Elderly Home Care', path: '/services/elderly-care', hasArrow: false },
-        { name: 'Lab Test at Home', path: '/services/lab-services', hasArrow: false },
+        { 
+          name: 'Physiotherapy', 
+          path: '/physiotherapy-at-home-in-dubai', 
+          icon: Activity,
+          subtitle: 'Rehabilitation & Pain Relief',
+          badge: 'Popular',
+          accent: '#63e8a0'
+        },
+        { 
+          name: 'IV Therapy | IV Drip', 
+          path: '/iv-therapy-iv-drip-at-home-in-dubai', 
+          icon: Droplets,
+          subtitle: 'Vitamin Boost & Fast Hydration',
+          badge: 'Fast Acting',
+          accent: '#38bdf8'
+        },
+        { 
+          name: 'Home Nursing', 
+          path: '/home-nursing-service-in-dubai', 
+          icon: HeartPulse,
+          subtitle: 'Post-op & Specialized Care',
+          accent: '#f43f5e',
+          subItems: [
+            { name: 'Palliative Care', path: '/services/palliative-care', desc: 'Compassionate long-term medical support' },
+            { name: 'Night Care Nurse', path: '/services/night-care-nurse', desc: '24/7 Dedicated overnight monitoring' },
+            { name: 'Nurse for Injection', path: '/services/injection-at-home', desc: 'Safe at-home IV & medication care' },
+            { name: 'Wound Care Services', path: '/services/wound-care', desc: 'Clinical dressing & wound management' },
+            { name: 'Oxygen Therapy', path: '/services/oxygen-therapy', desc: 'Respiratory care & equipment at home' },
+          ]
+        },
+        { 
+          name: 'Doctor On Call', 
+          path: '/doctor-on-call-in-dubai', 
+          icon: Stethoscope,
+          subtitle: '24/7 Medical Home & Hotel Visits',
+          accent: '#fbbf24',
+          subItems: [
+            { name: 'Doctor at Home', path: '/services/doctor-at-home', desc: 'Urgent home visits within 30-45 mins' },
+            { name: 'Doctor at Office', path: '/services/doctor-at-office', desc: 'Workplace consultations & checkups' },
+            { name: 'Doctor at Hotel', path: '/services/doctor-at-hotel', desc: 'Hotel room medical visits for guests' },
+          ]
+        },
+        { 
+          name: 'Elderly Home Care', 
+          path: '/elderly-care-service-at-home-in-dubai', 
+          icon: HeartHandshake,
+          subtitle: 'Assisted Senior Living at Home',
+          accent: '#a78bfa'
+        },
+        { 
+          name: 'Lab Test at Home', 
+          path: '/lab-test-at-home-dubai', 
+          icon: TestTube,
+          subtitle: 'Quick In-Home Sample Collection',
+          accent: '#34d399'
+        },
       ]
     },
     { name: 'Book Appointment', path: '/contact' },
@@ -67,8 +111,8 @@ const Header = () => {
       name: 'Language', 
       path: '#',
       dropdown: [
-        { name: 'English', path: '#' },
-        { name: 'Arabic', path: '#' },
+        { name: 'English', path: '#', code: 'EN', flag: '🇬🇧' },
+        { name: 'Arabic', path: '#', code: 'AR', flag: '🇦🇪' },
       ]
     },
   ];
@@ -163,7 +207,6 @@ const Header = () => {
               </a>
               <div className="h-8 w-[1px] bg-gray-200 ml-5 mr-2"></div>
               <motion.a 
-
                 href="tel:8002679"
                 animate={{
                   scale: [1, 1.04, 1],
@@ -175,28 +218,14 @@ const Header = () => {
                   ]
                 }}
                 transition={{
-                  scale: {
-                    repeat: Infinity,
-                    duration: 3,
-                    ease: "easeInOut"
-                  },
-                  rotate: {
-                    repeat: Infinity,
-                    duration: 1.5,
-                    repeatDelay: 3.5,
-                    ease: "easeInOut"
-                  },
-                  filter: {
-                    repeat: Infinity,
-                    duration: 3,
-                    ease: "easeInOut"
-                  }
+                  scale: { repeat: Infinity, duration: 3, ease: "easeInOut" },
+                  rotate: { repeat: Infinity, duration: 1.5, repeatDelay: 3.5, ease: "easeInOut" },
+                  filter: { repeat: Infinity, duration: 3, ease: "easeInOut" }
                 }}
                 className="block ml-2 cursor-pointer"
               >
                 <img src={tollfree} alt="Toll Free" className="h-12 md:h-16 w-auto object-contain" />
               </motion.a>
-
             </div>
             {/* Portal button always visible on mobile */}
             <Link
@@ -222,11 +251,11 @@ const Header = () => {
                 key={link.name} 
                 className="relative h-full"
                 onMouseEnter={() => {
-                  if (link.name === 'Services') setIsServicesOpen(true);
+                  if (link.dropdown) setActiveDropdown(link.name);
                 }}
                 onMouseLeave={() => {
-                  if (link.name === 'Services') {
-                    setIsServicesOpen(false);
+                  if (link.dropdown) {
+                    setActiveDropdown(null);
                     setOpenSubMenu(null);
                   }
                 }}
@@ -235,14 +264,14 @@ const Header = () => {
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (link.name === 'Services') setIsServicesOpen(!isServicesOpen);
+                      setActiveDropdown(activeDropdown === link.name ? null : link.name);
                     }}
                     className="group flex items-center h-full px-5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap relative cursor-pointer"
                   >
                     <span className="relative py-1 flex items-center gap-1.5">
                       {link.name}
-                      <ChevronDown size={12} className={`transition-transform duration-300 ${isServicesOpen && link.name === 'Services' ? 'rotate-180 text-accent-color' : 'text-white/60 group-hover:text-white'}`} />
-                      <span className={`absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[3px] bg-accent-color transform rounded-t-full transition-transform duration-300 origin-left ${isServicesOpen && link.name === 'Services' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                      <ChevronDown size={13} className={`transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-emerald-300' : 'text-white/70 group-hover:text-white'}`} />
+                      <span className={`absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[3px] bg-accent-color transform rounded-t-full transition-transform duration-300 origin-left ${activeDropdown === link.name ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
                     </span>
                   </button>
                 ) : (
@@ -257,73 +286,126 @@ const Header = () => {
                   </Link>
                 )}
                 
+                {/* Services Dropdown - Exact Dark Green Screenshot Design (#0c361d, rounded-[24px]) */}
                 {link.dropdown && link.name === 'Services' && (
                   <AnimatePresence>
-                    {isServicesOpen && (
+                    {activeDropdown === 'Services' && (
                       <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10, transition: { duration: 0.15 } }}
-                        transition={{ duration: 0.25, ease: "easeOut" }}
-                        className="absolute top-[calc(100%-4px)] left-0 z-[100] flex shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-2xl overflow-hidden border border-white/5 bg-[#063a56] mt-1"
+                        initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.98, transition: { duration: 0.15 } }}
+                        transition={{ duration: 0.22, ease: "easeOut" }}
+                        className="absolute top-[calc(100%+8px)] left-0 z-[100] bg-[#0c361d] rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.55)] text-white"
+                        style={{ padding: '24px', width: '360px' }}
                       >
-                        {/* Left panel — services list */}
-                        <ul className="min-w-[280px] py-3 px-2 flex flex-col gap-0.5 bg-[#063a56]">
-                          {link.dropdown.map((sub) => (
-                            <li 
-                              key={sub.name}
-                              onMouseEnter={() => setOpenSubMenu(sub.subItems ? sub.name : null)}
-                            >
-                              {sub.subItems ? (
-                                <Link
-                                  to={sub.path}
-                                  onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
-                                  className={`flex justify-between items-center px-5 py-3 text-[14.5px] font-semibold rounded-xl transition-all duration-200 ${openSubMenu === sub.name ? 'bg-white/10 text-white' : 'text-white/90 hover:bg-white/10 hover:text-white'}`}
-                                >
-                                  <span>{sub.name}</span>
-                                  <ChevronRight 
-                                    size={14} 
-                                    className={`opacity-60 transition-transform duration-200 ${openSubMenu === sub.name ? 'translate-x-0.5 opacity-100 text-[#63e8a0]' : ''}`} 
-                                  />
-                                </Link>
-                              ) : (
-                                <Link
-                                  to={sub.path}
-                                  onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
-                                  className="flex items-center px-5 py-3 text-[14.5px] font-semibold text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-200"
-                                >
-                                  {sub.name}
-                                </Link>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-
-                        {/* Right panel — sub-items */}
-                        <AnimatePresence>
-                          {openSubMenu && link.dropdown.find(s => s.name === openSubMenu)?.subItems && (
-                            <motion.ul
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: -10, transition: { duration: 0.15 } }}
-                              transition={{ duration: 0.2, ease: 'easeOut' }}
-                              className="bg-[#05314a] min-w-[250px] py-3 px-2 border-l border-white/5 flex flex-col gap-0.5"
-                            >
-                              {link.dropdown.find(s => s.name === openSubMenu).subItems.map((child) => (
-                                <li key={child.name}>
-                                  <Link
-                                    to={child.path}
-                                    onClick={() => { setIsServicesOpen(false); setOpenSubMenu(null); }}
-                                    className="flex items-center px-5 py-3 text-[14px] font-semibold text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-200"
+                        <div className="flex flex-col gap-2 w-full">
+                          {link.dropdown.map((item) => {
+                            const hasSubItems = item.subItems && item.subItems.length > 0;
+                            const isSubOpen = openSubMenu === item.name;
+                            return (
+                              <div
+                                key={item.name}
+                                className="relative group/sub w-full"
+                                onMouseEnter={() => {
+                                  if (hasSubItems) setOpenSubMenu(item.name);
+                                }}
+                                onMouseLeave={() => {
+                                  if (hasSubItems) setOpenSubMenu(null);
+                                }}
+                              >
+                                {hasSubItems ? (
+                                  <div 
+                                    className={`flex items-center justify-between w-full rounded-[18px] transition-all duration-200 cursor-pointer text-[15.5px] font-semibold tracking-wide text-white/95 hover:text-white py-3.5 px-6 ${isSubOpen ? 'bg-white/12 shadow-sm' : 'hover:bg-white/10'}`}
                                   >
-                                    {child.name}
+                                    <span>{item.name}</span>
+                                    <ChevronRight size={15} className={`transition-all duration-200 ${isSubOpen ? 'translate-x-1 text-emerald-300 opacity-100' : 'text-white/60 group-hover/sub:text-white group-hover/sub:translate-x-0.5'}`} />
+                                  </div>
+                                ) : (
+                                  <Link
+                                    to={item.path}
+                                    onClick={() => setActiveDropdown(null)}
+                                    className="flex items-center justify-between w-full rounded-[18px] transition-all duration-200 text-[15.5px] font-semibold tracking-wide text-white/95 hover:text-white hover:bg-white/10 py-3.5 px-6"
+                                  >
+                                    <span>{item.name}</span>
                                   </Link>
-                                </li>
-                              ))}
-                            </motion.ul>
-                          )}
-                        </AnimatePresence>
+                                )}
+
+                                {/* Matching Dark Green Sub-menu Flyout */}
+                                {hasSubItems && isSubOpen && (
+                                  <motion.div
+                                    initial={{ opacity: 0, x: 10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 10 }}
+                                    transition={{ duration: 0.18 }}
+                                    className="absolute top-0 left-full ml-3 bg-[#0c361d] rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.55)] text-white z-[110]"
+                                    style={{ padding: '24px', width: '310px' }}
+                                  >
+                                    <div className="flex flex-col gap-2 w-full">
+                                      <Link
+                                        to={item.path}
+                                        onClick={() => {
+                                          setActiveDropdown(null);
+                                          setOpenSubMenu(null);
+                                        }}
+                                        className="flex items-center w-full rounded-[16px] hover:bg-white/10 transition-all duration-200 text-[13px] font-bold text-emerald-300 uppercase tracking-wider py-2.5 px-4 mb-1 border-b border-white/10"
+                                      >
+                                        <span>View All {item.name}</span>
+                                      </Link>
+                                      {item.subItems.map((sub) => (
+                                        <Link
+                                          key={sub.name}
+                                          to={sub.path}
+                                          onClick={() => {
+                                            setActiveDropdown(null);
+                                            setOpenSubMenu(null);
+                                          }}
+                                          className="flex items-center w-full rounded-[16px] hover:bg-white/10 hover:translate-x-1 transition-all duration-200 text-[14.5px] font-semibold text-white/90 hover:text-white py-3 px-4"
+                                        >
+                                          <span>{sub.name}</span>
+                                        </Link>
+                                      ))}
+                                    </div>
+                                  </motion.div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
+
+                {/* Compact Dropdown for Language or general lists */}
+                {link.dropdown && link.name === 'Language' && (
+                  <AnimatePresence>
+                    {activeDropdown === 'Language' && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.95, transition: { duration: 0.15 } }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="absolute top-[calc(100%-2px)] right-0 z-[100] min-w-[180px] p-2 bg-[#052d47] backdrop-blur-xl border border-white/15 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] mt-1.5"
+                      >
+                        <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#63e8a0] border-b border-white/10 mb-1 flex items-center gap-1.5">
+                          <Globe size={13} /> Select Language
+                        </div>
+                        {link.dropdown.map((lang) => (
+                          <a
+                            key={lang.name}
+                            href="#"
+                            onClick={(e) => { e.preventDefault(); setActiveDropdown(null); }}
+                            className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13.5px] font-semibold text-white/90 hover:text-white hover:bg-white/10 transition-all duration-200"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="text-base">{lang.flag}</span>
+                              <span>{lang.name}</span>
+                            </div>
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-white/70 uppercase">
+                              {lang.code}
+                            </span>
+                          </a>
+                        ))}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -392,17 +474,36 @@ const Header = () => {
                   )}
                 </div>
                 {link.dropdown && openDropdown === link.name && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="overflow-hidden bg-gray-50/50 rounded-xl mb-4">
-                    {link.dropdown.map((sub) => (
-                      <Link 
-                        key={sub.name}
-                        to={sub.path}
-                        className="block px-6 py-3 text-[13px] font-bold text-gray-500 uppercase tracking-wide hover:text-primary-color"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {sub.name}
-                      </Link>
-                    ))}
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="overflow-hidden bg-gray-50/70 rounded-2xl p-2 mb-4 flex flex-col gap-1">
+                    {link.dropdown.map((sub) => {
+                      const SubIcon = sub.icon || CheckCircle2;
+                      return (
+                        <div key={sub.name} className="flex flex-col">
+                          <Link 
+                            to={sub.path}
+                            className="flex items-center gap-3 px-4 py-3 text-[13.5px] font-bold text-gray-700 hover:text-primary-color rounded-xl hover:bg-white transition-all"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <SubIcon size={16} className="text-[#63b158]" />
+                            <span>{sub.name}</span>
+                          </Link>
+                          {sub.subItems && (
+                            <div className="pl-9 pr-2 py-1 flex flex-col gap-1">
+                              {sub.subItems.map((c) => (
+                                <Link
+                                  key={c.name}
+                                  to={c.path}
+                                  className="text-[12.5px] font-medium text-gray-500 hover:text-primary-color py-1 px-2 rounded hover:bg-gray-100/60"
+                                  onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                  • {c.name}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </motion.div>
                 )}
               </div>
