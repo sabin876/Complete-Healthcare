@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "../config/api";
 import ivTherapyImg from "../assets/iv_therapy_home.png";
 import labServicesImg from "../assets/lab_services_home.png";
 
@@ -240,23 +241,23 @@ export default function ExploreServices() {
   const [serviceList, setServiceList] = useState(services);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/services/')
+    fetch(`${API_BASE_URL}/api/services/`)
       .then(res => res.json())
       .then(data => {
         if (data && Array.isArray(data) && data.length > 0) {
-          setServiceList(prev => {
-            return prev.map(s => {
-              const matched = data.find(item => item.slug === s.path.replace('/services/', ''));
-              if (matched) {
-                return {
-                  ...s,
-                  title: matched.title || s.title,
-                  description: matched.tagline || matched.description || s.description
-                };
-              }
-              return s;
-            });
-          });
+          setServiceList(data.map((item, index) => {
+            const defaultItem = services.find(s => s.path.includes(item.slug) || item.slug.includes(s.path.split('/').pop())) || services[index % services.length];
+            return {
+              id: item.id || index + 1,
+              title: item.title || defaultItem.title,
+              description: item.tagline || item.description || defaultItem.description,
+              accent: item.theme_color || defaultItem.accent,
+              path: `/services/${item.slug}`,
+              icon: defaultItem.icon,
+              image: item.image || defaultItem.image,
+              video: defaultItem.video
+            };
+          }));
         }
       })
       .catch(() => {});

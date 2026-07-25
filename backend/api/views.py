@@ -284,6 +284,24 @@ class ServiceViewSet(viewsets.ModelViewSet):
     serializer_class = ServiceSerializer
     lookup_field = 'slug'
 
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        slug_val = self.kwargs.get('slug', '').strip().lower()
+
+        # 1. Exact slug match
+        obj = queryset.filter(slug__iexact=slug_val).first()
+        if obj:
+            self.check_object_permissions(self.request, obj)
+            return obj
+
+        # 2. Keyword/substring match (e.g. 'physiotherapy-at-home-in-dubai' -> 'physiotherapy')
+        for item in queryset:
+            if item.slug and (item.slug in slug_val or slug_val in item.slug):
+                self.check_object_permissions(self.request, item)
+                return item
+
+        return super().get_object()
+
 
 class TeamMemberViewSet(viewsets.ModelViewSet):
     queryset = TeamMember.objects.all().order_by('-id')

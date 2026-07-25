@@ -24,6 +24,7 @@ const AnimatedRoutes = () => {
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/services/lab-services" element={<ServicePage serviceId="lab-services" />} />
+        <Route path="/services/:serviceSlug" element={<ServicePage />} />
         <Route path="/lab-test-at-home-dubai" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/lab-test-at-home-dubai/" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/blog" element={<Blog />} />
@@ -32,6 +33,7 @@ const AnimatedRoutes = () => {
         <Route path="/locations" element={<Locations />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/team" element={<Team />} />
+        <Route path="/:serviceSlug" element={<ServicePage />} />
       </Routes>
     </AnimatePresence>
   );

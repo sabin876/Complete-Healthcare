@@ -49,7 +49,7 @@ const Header = () => {
       dropdown: [
         { 
           name: 'Physiotherapy', 
-          path: '/physiotherapy-at-home-in-dubai', 
+          path: '/services/physiotherapy', 
           icon: Activity,
           subtitle: 'Rehabilitation & Pain Relief',
           badge: 'Popular',
@@ -57,7 +57,7 @@ const Header = () => {
         },
         { 
           name: 'IV Therapy | IV Drip', 
-          path: '/iv-therapy-iv-drip-at-home-in-dubai', 
+          path: '/services/iv-therapy', 
           icon: Droplets,
           subtitle: 'Vitamin Boost & Fast Hydration',
           badge: 'Fast Acting',
@@ -65,7 +65,7 @@ const Header = () => {
         },
         { 
           name: 'Home Nursing', 
-          path: '/home-nursing-service-in-dubai', 
+          path: '/services/nursing', 
           icon: HeartPulse,
           subtitle: 'Post-op & Specialized Care',
           accent: '#f43f5e',
@@ -79,7 +79,7 @@ const Header = () => {
         },
         { 
           name: 'Doctor On Call', 
-          path: '/doctor-on-call-in-dubai', 
+          path: '/services/doctor-on-call', 
           icon: Stethoscope,
           subtitle: '24/7 Medical Home & Hotel Visits',
           accent: '#fbbf24',
@@ -91,14 +91,14 @@ const Header = () => {
         },
         { 
           name: 'Elderly Home Care', 
-          path: '/elderly-care-service-at-home-in-dubai', 
+          path: '/services/elderly-care', 
           icon: HeartHandshake,
           subtitle: 'Assisted Senior Living at Home',
           accent: '#a78bfa'
         },
         { 
           name: 'Lab Test at Home', 
-          path: '/lab-test-at-home-dubai', 
+          path: '/services/lab-services', 
           icon: TestTube,
           subtitle: 'Quick In-Home Sample Collection',
           accent: '#34d399'

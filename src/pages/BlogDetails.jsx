@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
 
 const blogDatabase = [
   {
@@ -110,7 +111,7 @@ export default function BlogDetails() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (id) {
-      fetch(`http://localhost:8000/api/blogs/${id}/`)
+      fetch(`${API_BASE_URL}/api/blogs/${id}/`)
         .then(res => res.json())
         .then(data => {
           if (data && data.title) {

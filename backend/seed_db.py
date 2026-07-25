@@ -115,6 +115,159 @@ def seed():
     print("Seeding Services...")
     services_list = [
         {
+            "slug": "lab-services",
+            "title": "Lab Services | Blood Test at Home",
+            "eyebrow": "DHA-Licensed Home Sample Collection Across Dubai",
+            "tagline": "Get an Accurate Lab Result at Your Doorsteps",
+            "description": "Book a blood test at home in Dubai without visiting a clinic or Hospital. Our home care service provides convenient blood sample collection at your home, hotel, or office by DHA-certified healthcare professionals at an affordable price.",
+            "icon": "Activity",
+            "theme_color": "#08709d",
+            "floating_badge": {
+                "title": "Accredited Lab Diagnostics",
+                "desc": "Clean, certified medical blood tests right at your home."
+            },
+            "features": [
+                {"title": "24/7 blood test home service"},
+                {"title": "Blood test result within 4 Hours"},
+                {"title": "On-demand scheduling for convenience"},
+                {"title": "DHA licensed doctors and nurses"},
+                {"title": "High security and privacy"}
+            ],
+            "indications": [
+                "Routine annual health & body checkups",
+                "Swelling, fatigue, or unexplained weakness",
+                "Monitoring blood sugar & diabetes markers",
+                "Difficulty visiting a clinic or hospital",
+                "Checking cholesterol & lipid profile",
+                "Vitamin deficiency screening (Vitamin D & B12)",
+                "Testing for anemia, iron & hemoglobin levels",
+                "Hormonal, thyroid & metabolism evaluation",
+                "Food allergy & intolerance diagnostic screening",
+                "Liver & kidney function routine monitoring",
+                "Elderly care & patients requiring home sampling",
+                "Doctor-prescribed follow-up blood tests"
+            ],
+            "lab_columns": [
+                {
+                    "title": "Core Screenings",
+                    "tagline": "Routine blood & vitals",
+                    "iconBg": "bg-blue-50 text-blue-600 border border-blue-100",
+                    "tests": [
+                        "Allergy test",
+                        "Testing for anemia",
+                        "Blood sugar test",
+                        "Complete blood count",
+                        "CRP",
+                        "Covid-19 test",
+                        "Cholesterol test",
+                        "Diabetes test"
+                    ]
+                },
+                {
+                    "title": "Organ & Metabolic",
+                    "tagline": "Hormonal & organ health",
+                    "iconBg": "bg-emerald-50 text-emerald-600 border border-emerald-100",
+                    "tests": [
+                        "Food sensitivity test",
+                        "HbA1C test",
+                        "Hepatitis A",
+                        "Hepatitis B",
+                        "Hormone test",
+                        "Influenza test",
+                        "Lipid profile",
+                        "Liver function test"
+                    ]
+                },
+                {
+                    "title": "Advanced Diagnostics",
+                    "tagline": "Immunity, viruses & minerals",
+                    "iconBg": "bg-amber-50 text-amber-600 border border-amber-100",
+                    "tests": [
+                        "Microbial culture & sensitivity",
+                        "Mineral test",
+                        "Renal function test",
+                        "Stool test",
+                        "Urine test",
+                        "Vitamins test",
+                        "Food intolerance test",
+                        "Electrolytes"
+                    ]
+                }
+            ],
+            "reasons": [
+                {
+                    "num": "01",
+                    "label": "LAB SAMPLE COLLECTION",
+                    "title": "Lab sample collection by DHA licensed nurses",
+                    "desc": "CORx Healthcare provides blood test home service by DHA-licensed nurses, ensuring convenience and professional care. Ideal for regular monitoring or those unable to visit clinics."
+                },
+                {
+                    "num": "02",
+                    "label": "FAST RESULTS",
+                    "title": "Lab tests results in just 2-3 hours for all routine tests",
+                    "desc": "Routine lab tests can be completed in just two to three hours. Fast and reliable, ensuring timely diagnosis and peace of mind. Ideal for urgent health assessments and regular checkups."
+                },
+                {
+                    "num": "03",
+                    "label": "ACCREDITED LABS",
+                    "title": "Certified & internationally accredited labs",
+                    "desc": "CORx Healthcare guarantees the highest standards of accuracy and reliability by using lab samples from internationally accredited and certified facilities. Trust us for precise results and exceptional quality in every test."
+                },
+                {
+                    "num": "04",
+                    "label": "SENIOR MEDICAL TEAM",
+                    "title": "Direct contact with CORx Healthcare senior medical team",
+                    "desc": "Enjoy direct contact with CORx Healthcare senior medical team, ensuring personalized and expert guidance. Benefit from immediate support and professional insights for your healthcare needs, enhancing your treatment and care experience."
+                }
+            ],
+            "steps": [
+                {
+                    "title": "1. Book An Appointment",
+                    "desc": "Call +971 4 332 0776 or WhatsApp Us at +971 54 703 3311 for doctor-on-call service."
+                },
+                {
+                    "title": "2. Doctors & Nurses Will Be At Your Doorstep",
+                    "desc": "Our team of DHA-certified Nurses is dedicated to your prompt care. Expect them at your doorstep within just 30 minutes for blood test home service."
+                },
+                {
+                    "title": "3. Accurate Results 24/7 at CORx Healthcare",
+                    "desc": "For routine tests, receive your results in just 2 to 3 hours. Confirm the turnaround time (TAT) with our patient relationship executives for precise details."
+                }
+            ],
+            "benefits": [
+                {"title": "Stress-Free", "desc": "Simple blood & sample collection right at your home or office"},
+                {"title": "Licensed Nurses", "desc": "DHA-licensed nurses using strict sterile clinical protocols"},
+                {"title": "Accurate Reports", "desc": "100% accurate results from fully accredited laboratory partners"},
+                {"title": "Fast Reporting", "desc": "Fast digital report delivery via email/WhatsApp in 24 hours"}
+            ],
+            "faqs": [
+                {
+                    "q": "How soon will I get my blood test results?",
+                    "a": "Most routine blood test results are delivered digitally within 2 to 4 hours of sample collection. For specialized or advanced tests, our patient relationship executives will confirm the exact turnaround time (TAT) at the time of booking."
+                },
+                {
+                    "q": "Is home sample collection safe and hygienic?",
+                    "a": "Yes, absolutely. Our DHA-licensed nurses follow strict sterile medical protocols using single-use, sealed collection kits for every visit. All samples are transported in temperature-controlled, lab-grade carriers directly to our internationally accredited partner laboratories."
+                },
+                {
+                    "q": "What types of blood tests can be done at home in Dubai?",
+                    "a": "We offer 10,000+ tests at home including Complete Blood Count (CBC), Lipid Profile, HbA1C, Liver Function, Kidney Function, Hormones, Vitamins, Allergy panels, Hepatitis A & B, Thyroid profile, and many more. Contact us to confirm availability of any specific test."
+                },
+                {
+                    "q": "How do I book a blood test at home service in Dubai?",
+                    "a": "You can book easily by calling +971 4 332 0776, WhatsApp at +971 54 703 3311, or filling out our online appointment form. Our team is available 24/7 and typically confirms your appointment within 30 minutes."
+                },
+                {
+                    "q": "Who collects the blood sample at home?",
+                    "a": "All sample collections are performed by our DHA-certified registered nurses with extensive clinical experience. They arrive at your doorstep within 30–60 minutes of booking, equipped with all necessary sterile supplies."
+                },
+                {
+                    "q": "Do you accept insurance for lab tests at home in Dubai?",
+                    "a": "We work with a number of insurance providers for direct billing. Please contact our team with your insurance details and we will confirm coverage before your appointment. We also accept cash, credit/debit cards, and bank transfers."
+                }
+            ]
+        },
+        {
             "slug": "physiotherapy",
             "title": "Home Physiotherapy",
             "eyebrow": "Physiotherapy at Home in Dubai",
@@ -122,6 +275,16 @@ def seed():
             "description": "DHA-licensed physical therapists bring personalized exercise and rehabilitation directly to your residence.",
             "icon": "Activity",
             "theme_color": "#63b158",
+            "floating_badge": {
+                "title": "Home, hotel, or office visits",
+                "desc": "Professional physiotherapy tailored to your schedule and condition."
+            },
+            "benefits": [
+                {"title": "DHA-Licensed", "desc": "licensed physiotherapists for home visits across Dubai"},
+                {"title": "Flexible Locations", "desc": "Physiotherapy at home, hotel, or office with flexible scheduling"},
+                {"title": "Customized Programs", "desc": "Personalized treatment plans for faster and safe recovery"},
+                {"title": "Transparent Pricing", "desc": "Transparent pricing structure with no hidden costs"}
+            ]
         },
         {
             "slug": "iv-therapy",
@@ -131,6 +294,16 @@ def seed():
             "description": "Customized IV drip infusions administered by registered nurses for energy, immunity, and recovery.",
             "icon": "Droplets",
             "theme_color": "#38bdf8",
+            "floating_badge": {
+                "title": "Rapid Cellular Rehydration",
+                "desc": "Formulated drips tailored to restore energy and wellness."
+            },
+            "benefits": [
+                {"title": "Premium Blends", "desc": "DHA-approved vitamin formulations for energy, immunity & beauty"},
+                {"title": "Expert Care", "desc": "Administered by licensed DHA-registered nurses in 30-45 minutes"},
+                {"title": "Direct Absorption", "desc": "100% absorption for immediate hydration, detox & cell revitality"},
+                {"title": "Sterile Setup", "desc": "Safe, clean clinical setup at your convenient time and location"}
+            ]
         },
         {
             "slug": "nursing",
@@ -140,6 +313,16 @@ def seed():
             "description": "Post-surgical care, wound dressing, palliative care, and continuous patient monitoring.",
             "icon": "HeartPulse",
             "theme_color": "#f43f5e",
+            "floating_badge": {
+                "title": "Hospital-grade Care at Home",
+                "desc": "Compassionate clinical nursing support available 24/7."
+            },
+            "benefits": [
+                {"title": "Licensed Nurses", "desc": "Experienced DHA-registered nurses for pediatric & geriatric care"},
+                {"title": "Flexible Shifts", "desc": "Flexible visits: hourly sessions, 12h shifts, or 24/7 care"},
+                {"title": "Clinical Standards", "desc": "Hospital-grade clinical standards, hygiene, and monitoring"},
+                {"title": "Doctor-Guided", "desc": "Close coordination with your family doctor or surgeon"}
+            ]
         },
         {
             "slug": "doctor-on-call",
@@ -149,6 +332,35 @@ def seed():
             "description": "Urgent consultations, health checkups, prescription issuance, and home care treatment.",
             "icon": "Stethoscope",
             "theme_color": "#fbbf24",
+            "floating_badge": {
+                "title": "Urgent Medical Consultation",
+                "desc": "Qualified medical doctors at your doorstep day or night."
+            },
+            "benefits": [
+                {"title": "Rapid Response", "desc": "DHA-licensed family physicians arriving in 30-45 minutes"},
+                {"title": "24/7 Medical Care", "desc": "Round-the-clock support on weekends and public holidays"},
+                {"title": "Diagnostics On-site", "desc": "On-site diagnostic checks & electronic prescriptions"},
+                {"title": "Official Certification", "desc": "Official medical certificates & insurance claim documentation"}
+            ]
+        },
+        {
+            "slug": "elderly-care",
+            "title": "Elderly Home Care Services",
+            "eyebrow": "Compassionate senior care & companionship",
+            "tagline": "Dedicated care, support, and companionship for your senior loved ones.",
+            "description": "Want the best comfort and support for your aging loved ones? Our empathetic caregivers provide professional assistance with daily activities, personal hygiene, nutritional support, mobility, and medication reminders.",
+            "icon": "Users",
+            "theme_color": "#5eb63b",
+            "floating_badge": {
+                "title": "Empathetic Senior Care",
+                "desc": "Committed to senior safety, dignity, and companionship."
+            },
+            "benefits": [
+                {"title": "Specialized Staff", "desc": "Trained caregivers for cognitive, dementia & Alzheimer's support"},
+                {"title": "Daily Assistance", "desc": "Companionship, daily mobility support, and fall prevention"},
+                {"title": "Family Peace of Mind", "desc": "Continuous updates and clear communication with family members"},
+                {"title": "Flexible Live-In", "desc": "Tailored care schedules from basic check-ins to 24/7 live-in care"}
+            ]
         }
     ]
 
@@ -156,11 +368,19 @@ def seed():
         Service.objects.create(
             slug=s["slug"],
             title=s["title"],
-            eyebrow=s["eyebrow"],
-            tagline=s["tagline"],
-            description=s["description"],
-            icon=s["icon"],
-            theme_color=s["theme_color"]
+            eyebrow=s.get("eyebrow", ""),
+            tagline=s.get("tagline", ""),
+            description=s.get("description", ""),
+            icon=s.get("icon", "Activity"),
+            theme_color=s.get("theme_color", "#08709d"),
+            floating_badge=s.get("floating_badge", {}),
+            features=s.get("features", []),
+            indications=s.get("indications", []),
+            lab_columns=s.get("lab_columns", []),
+            reasons=s.get("reasons", []),
+            steps=s.get("steps", []),
+            benefits=s.get("benefits", []),
+            faqs=s.get("faqs", [])
         )
     print(f"Successfully seeded {len(services_list)} services.")
 
@@ -168,3 +388,4 @@ def seed():
 
 if __name__ == '__main__':
     seed()
+
