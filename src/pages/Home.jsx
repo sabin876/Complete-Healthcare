@@ -13,14 +13,16 @@ import hero1 from '../assets/hero/hero1.png';
 import GoogleReviews from '../components/GoogleReviews';
 
 import ExploreServices from '../components/ExploreServices';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import FAQ from '../components/FAQ';
 
 import hero2 from '../assets/hero/hero2.png';
 import hero3 from '../assets/hero/hero3.png';
 import dhaLogo from '../assets/Dubai_Health_Authority_log.png';
 import logo from '../assets/logo.webp';
-import HealthCareBlogSection from '../components/HealthCareBlogSection';
 import kajalPhoto from '../assets/kajal.png';
+
 import { Calendar, GraduationCap, IdCard, MapPin } from 'lucide-react';
 
 // New static team image imports
@@ -1100,7 +1102,7 @@ const Home = () => {
         </div>
       </section>
 
-      <HealthCareBlogSection />
+
 
       <FAQ />
 

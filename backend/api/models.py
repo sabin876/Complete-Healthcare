@@ -97,7 +97,8 @@ class BlogPost(models.Model):
     category = models.CharField(max_length=100)
     date = models.CharField(max_length=50)  # Keep string date for frontend compatibility
     author = models.CharField(max_length=100, default='Corx')
-    image = models.CharField(max_length=500, default='https://www.corx.ae/wp-content/uploads/placeholder.jpg')
+    image = models.CharField(max_length=500, blank=True, default='')
+    image_file = models.FileField(upload_to='blog_images/', null=True, blank=True, help_text="Upload a local image file from your computer")
     excerpt = models.TextField(blank=True, default='')
     read_time = models.CharField(max_length=50, default='5 min read')
     content = models.TextField(blank=True, default='')
@@ -115,6 +116,7 @@ class Service(models.Model):
     tagline = models.TextField(blank=True, default='')
     description = models.TextField(blank=True, default='')
     icon = models.CharField(max_length=100, default='Activity')
+    image_file = models.FileField(upload_to='service_images/', null=True, blank=True, help_text="Upload a local image file from your computer")
     theme_color = models.CharField(max_length=20, default='#08709d')
     floating_badge = models.JSONField(default=dict, blank=True)  # {title, desc}
     benefits = models.JSONField(default=list, blank=True)  # [{title, desc}]

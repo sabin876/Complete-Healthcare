@@ -1,231 +1,343 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Calendar, User, Clock, ChevronRight, ArrowRight, ChevronLeft } from 'lucide-react';
-import labServicesImg from '../assets/lab_services_home.png';
-import FAQ from '../components/FAQ';
+import React, { useState } from "react";
+import { User, Calendar, ArrowRight, Search, Tag, BookOpen } from "lucide-react";
+import { Link } from "react-router-dom";
 
-/* ─── Brand Tokens ─── */
-const PRIMARY   = "#08709d";
-const TEXT_DARK = "#1a1a1a";
-const TEXT_MUTED = "#666666";
+const DUMMY_IMAGE =
+  "https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop";
 
-const Blog = () => {
-  const [blogPosts, setBlogPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 6;
+const articles = [
+  {
+    id: 1,
+    tag: "KNEE-REPLACEMENT",
+    title: "Alignment concept: Total Knee Replacement",
+    excerpt: "alignment-concept-total-knee-replacement",
+    author: "Dr. Ulhas Sonar",
+    date: "2026-05-30",
+    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: 2,
+    tag: "TKR IMPLANTS",
+    title: "The Evolution of TKR Implants",
+    excerpt:
+      "The Evolution of TKR Implants Advancing Toward Precision and Performance Total Knee Replacement (TKR) implants have come a lon…",
+    author: "Dr. Ulhas Sonar",
+    date: "2026-05-30",
+    image: "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: 3,
+    tag: "TOTAL KNEE REPLACEMENT (TKR)",
+    title: "Steps in Total Knee Replacement",
+    excerpt:
+      "Steps in Total Knee Replacement A Surgical Overview by Dr. Ulhas Sonar Total Knee Replacement (TKR) is a complex yet…",
+    author: "Dr. Ulhas Sonar",
+    date: "2026-05-30",
+    image: DUMMY_IMAGE,
+  },
+  {
+    id: 4,
+    tag: "KNEE-REPLACEMENT",
+    title: "Post-Surgical Kinematic Alignment in TKR",
+    excerpt:
+      "Understanding kinematic alignment techniques to preserve ligament balance and natural joint motion for knee replacement patients.",
+    author: "Dr. Ulhas Sonar",
+    date: "2026-06-14",
+    image: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: 5,
+    tag: "TKR IMPLANTS",
+    title: "Patient-Specific Implants & 3D Precision",
+    excerpt:
+      "Discover how 3D anatomical modeling and patient-specific TKR implant designs improve longevity and patient comfort.",
+    author: "Dr. Ulhas Sonar",
+    date: "2026-06-25",
+    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: 6,
+    tag: "TOTAL KNEE REPLACEMENT (TKR)",
+    title: "Recovery Timeline & Rehabilitation Milestones",
+    excerpt:
+      "A complete guide to post-operative knee recovery, milestone achievements, home nursing support, and physical therapy exercises.",
+    author: "Dr. Ulhas Sonar",
+    date: "2026-07-02",
+    image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?q=80&w=800&auto=format&fit=crop",
+  },
+];
 
-  useEffect(() => {
+const categories = ["ALL", "KNEE-REPLACEMENT", "TKR IMPLANTS", "TOTAL KNEE REPLACEMENT (TKR)"];
+
+function ArticleCard({ article }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <Link
+      to={`/blog/${article.id}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        backgroundColor: "#ffffff",
+        borderRadius: "16px",
+        overflow: "hidden",
+        border: "1px solid #e2e8f0",
+        boxShadow: isHovered ? "0 16px 32px rgba(37, 99, 235, 0.12)" : "0 2px 8px rgba(0,0,0,0.04)",
+        transform: isHovered ? "translateY(-6px)" : "none",
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        textDecoration: "none",
+        color: "inherit",
+      }}
+    >
+      {/* Thumbnail */}
+      <div style={{ position: "relative", height: "200px", width: "100%", backgroundColor: "#f1f5f9", overflow: "hidden" }}>
+        <img
+          src={article.image}
+          alt={article.title}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transform: isHovered ? "scale(1.08)" : "scale(1)",
+            transition: "transform 0.5s ease",
+          }}
+        />
+        {/* Floating Tag */}
+        <span
+          style={{
+            position: "absolute",
+            top: "12px",
+            left: "12px",
+            backgroundColor: "rgba(255, 255, 255, 0.95)",
+            color: "#2563eb",
+            fontSize: "11px",
+            fontWeight: "700",
+            letterSpacing: "0.05em",
+            padding: "5px 12px",
+            borderRadius: "9999px",
+            textTransform: "uppercase",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "4px",
+          }}
+        >
+          <Tag size={10} style={{ color: "#2563eb" }} />
+          {article.tag}
+        </span>
+      </div>
+
+      {/* Card Body */}
+      <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
+        <h3
+          style={{
+            fontSize: "18px",
+            fontWeight: "700",
+            color: isHovered ? "#2563eb" : "#0f172a",
+            lineHeight: "1.4",
+            marginBottom: "10px",
+            transition: "color 0.2s ease",
+          }}
+        >
+          {article.title}
+        </h3>
+        
+        <p
+          style={{
+            fontSize: "14px",
+            color: "#64748b",
+            lineHeight: "1.6",
+            marginBottom: "24px",
+            flex: 1,
+          }}
+        >
+          {article.excerpt}
+        </p>
+
+        {/* Footer Meta */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingTop: "16px",
+            borderTop: "1px solid #f1f5f9",
+            marginTop: "auto",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span
+              style={{
+                width: "30px",
+                height: "30px",
+                borderRadius: "50%",
+                backgroundColor: "#eff6ff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <User size={14} style={{ color: "#2563eb" }} />
+            </span>
+            <span style={{ fontSize: "13px", fontWeight: "600", color: "#334155" }}>
+              {article.author}
+            </span>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#94a3b8" }}>
+            <Calendar size={13} style={{ color: "#94a3b8" }} />
+            <span>{article.date}</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+export default function OrthopedicArticlesPage() {
+  const [blogPostsList, setBlogPostsList] = useState(articles);
+
+  React.useEffect(() => {
     fetch('http://localhost:8000/api/blogs/')
       .then(res => res.json())
       .then(data => {
-        setBlogPosts(data);
-        setLoading(false);
+        if (Array.isArray(data) && data.length > 0) {
+          const formatted = data.map(item => ({
+            id: item.id,
+            tag: item.category || 'HEALTHCARE',
+            title: item.title,
+            excerpt: item.excerpt || item.title,
+            author: item.author || 'Dr. Ulhas Sonar',
+            date: item.date || '2026-05-30',
+            image: item.image && !item.image.includes('placeholder') ? item.image : DUMMY_IMAGE,
+          }));
+          setBlogPostsList(formatted);
+        }
       })
-      .catch(err => {
-        console.error("Error fetching blogs:", err);
-        setLoading(false);
-      });
+      .catch(err => console.log('Django API offline, using default articles:', err));
   }, []);
 
-  const totalPages = Math.ceil(blogPosts.length / postsPerPage) || 1;
-
-  const currentPosts = blogPosts.slice(
-    (currentPage - 1) * postsPerPage,
-    currentPage * postsPerPage
-  );
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentPage]);
-
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', paddingTop: '10rem' }}>
-        <div style={{ fontSize: '1.2rem', fontFamily: "'Poppins', sans-serif", color: PRIMARY }}>Loading insights...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-white min-h-screen pt-40 pb-20">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&display=swap');
+    <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Poppins', 'Inter', sans-serif", paddingTop: "140px", paddingBottom: "80px" }}>
+      <div style={{ maxWidth: "1140px", margin: "0 auto", padding: "0 24px" }}>
         
-        .blog-card {
-          transition: transform 0.3s ease;
-        }
-        .blog-card:hover {
-          transform: translateY(-8px);
-        }
-        .blog-card:hover .read-more {
-          color: ${PRIMARY};
-        }
-        .blog-card:hover .read-more span {
-          transform: translateX(5px);
-        }
-        .read-more span {
-          display: inline-block;
-          transition: transform 0.3s ease;
-        }
-      `}</style>
+        {/* Header Section */}
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <span
+            style={{
+              display: "inline-block",
+              backgroundColor: "#eff6ff",
+              color: "#2563eb",
+              fontSize: "12px",
+              fontWeight: "700",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              padding: "6px 18px",
+              borderRadius: "9999px",
+              marginBottom: "16px",
+              border: "1px solid #dbeafe",
+            }}
+          >
+            Medical Insights
+          </span>
 
-      {/* ── Page Heading ── */}
-      <div style={{ textAlign: "center", marginBottom: "60px", padding: "0 20px" }}>
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <h1 style={{
-            fontFamily: "'Poppins', sans-serif",
-            fontSize: "3rem",
-            fontWeight: 700,
-            color: TEXT_DARK,
-            marginBottom: "16px",
-            letterSpacing: "-0.02em"
-          }}>
-            Caring better,<br />
-            one insight at a time
+          <h1
+            style={{
+              fontSize: "clamp(32px, 4vw, 48px)",
+              fontWeight: "800",
+              color: "#0f172a",
+              marginBottom: "12px",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Expert Orthopedic <span style={{ color: "#2563eb" }}>Articles</span>
           </h1>
-          <p style={{
-            color: TEXT_MUTED,
-            fontSize: "1.1rem",
-            maxWidth: "600px",
-            margin: "0 auto",
-            lineHeight: 1.6
-          }}>
-            Stay updated with the latest medical insights, care strategies, and health tips from our expert team.
+
+          <p style={{ fontSize: "16px", color: "#64748b", maxWidth: "560px", margin: "0 auto", lineHeight: "1.6" }}>
+            Stay informed with the latest insights on orthopedic health, treatments, and surgical innovations.
           </p>
-        </motion.div>
-      </div>
-
-      {/* ── Post Grid ── */}
-      <div className="container mx-auto px-4">
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-          gap: "40px",
-          maxWidth: "1200px",
-          margin: "0 auto"
-        }}>
-          {currentPosts.map((post, idx) => (
-            <motion.div 
-              key={post.id} 
-              className="blog-card" 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              style={{
-                backgroundColor: "#ffffff",
-                overflow: "hidden"
-              }}
-            >
-              {/* Image */}
-              <div style={{ height: "240px", overflow: "hidden", marginBottom: "24px", borderRadius: "12px" }}>
-                <img 
-                  src={labServicesImg} 
-                  alt={post.title} 
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-
-              {/* Content */}
-              <div style={{ padding: "0 4px" }}>
-                <div style={{
-                  fontSize: "0.85rem",
-                  fontWeight: 600,
-                  color: PRIMARY,
-                  textTransform: "uppercase",
-                  marginBottom: "8px",
-                  letterSpacing: "0.05em"
-                }}>
-                  {post.category}
-                </div>
-
-                <h3 style={{
-                  fontFamily: "'Poppins', sans-serif",
-                  fontSize: "1.4rem",
-                  fontWeight: 700,
-                  color: TEXT_DARK,
-                  marginBottom: "12px",
-                  lineHeight: 1.3
-                }}>
-                  {post.title}
-                </h3>
-
-                <div style={{
-                  fontSize: "0.9rem",
-                  color: TEXT_MUTED,
-                  marginBottom: "16px",
-                  fontWeight: 500
-                }}>
-                  {post.author} &nbsp;·&nbsp; {post.date}
-                </div>
-
-                <Link 
-                  to={`/blog/${post.id}`} 
-                  className="read-more"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    color: TEXT_DARK,
-                    textDecoration: "none",
-                    transition: "color 0.3s ease"
-                  }}
-                >
-                  Read More <span>→</span>
-                </Link>
-              </div>
-            </motion.div>
-          ))}
         </div>
 
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-6 mt-20">
-            <button
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className={`p-4 rounded-full flex items-center justify-center transition-all duration-300 ${
-                currentPage === 1 
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-70' 
-                  : 'bg-white border-2 border-gray-100 text-[#08709d] hover:bg-[#08709d] hover:text-white hover:shadow-lg hover:-translate-y-1'
-              }`}
-            >
-              <ChevronLeft size={24} strokeWidth={2.5} />
-            </button>
-            
-            <div className="px-6 py-3 bg-white border-2 border-gray-100 rounded-2xl shadow-sm">
-              <span className="text-gray-500 font-medium font-poppins text-sm uppercase tracking-widest">
-                Page <span className="text-[#08709d] font-bold text-lg mx-1">{currentPage}</span> of {totalPages}
-              </span>
-            </div>
-
-            <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className={`p-4 rounded-full flex items-center justify-center transition-all duration-300 ${
-                currentPage === totalPages 
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-70' 
-                  : 'bg-white border-2 border-gray-100 text-[#08709d] hover:bg-[#08709d] hover:text-white hover:shadow-lg hover:-translate-y-1'
-              }`}
-            >
-              <ChevronRight size={24} strokeWidth={2.5} />
-            </button>
+        {/* Article Grid */}
+        {blogPostsList.length > 0 ? (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+              gap: "28px",
+              marginBottom: "56px",
+            }}
+          >
+            {blogPostsList.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
+        ) : (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "60px 24px",
+              backgroundColor: "#ffffff",
+              borderRadius: "20px",
+              border: "1px solid #e2e8f0",
+              marginBottom: "56px",
+            }}
+          >
+            <BookOpen size={44} style={{ margin: "0 auto 16px auto", color: "#94a3b8" }} />
+            <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#1e293b", marginBottom: "8px" }}>
+              No articles found
+            </h3>
+            <p style={{ fontSize: "14px", color: "#64748b" }}>
+              Try searching with another keyword or selecting a different category tab.
+            </p>
           </div>
         )}
+
+        {/* CTA Banner */}
+        <div
+          style={{
+            background: "linear-gradient(135deg, #1d4ed8 0%, #1e40af 50%, #0f172a 100%)",
+            borderRadius: "24px",
+            padding: "56px 32px",
+            textAlign: "center",
+            color: "#ffffff",
+            boxShadow: "0 20px 40px rgba(30, 64, 175, 0.25)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <h2 style={{ fontSize: "clamp(24px, 3.5vw, 32px)", fontWeight: "800", marginBottom: "16px", letterSpacing: "-0.01em" }}>
+            Have Questions About Your Condition?
+          </h2>
+          <p style={{ fontSize: "16px", color: "#dbeafe", maxWidth: "560px", margin: "0 auto 32px auto", lineHeight: "1.6" }}>
+            Book a consultation with Dr. Ulhas Sonar for personalized assessment and expert orthopedic care.
+          </p>
+          <Link
+            to="/contact"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              backgroundColor: "#ffffff",
+              color: "#1d4ed8",
+              fontWeight: "700",
+              fontSize: "14px",
+              padding: "14px 32px",
+              borderRadius: "9999px",
+              textDecoration: "none",
+              boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
+              transition: "transform 0.2s ease, background-color 0.2s ease",
+            }}
+          >
+            Schedule Consultation
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+
       </div>
-
-      {/* ── FAQ Section ── */}
-      <FAQ />
-
     </div>
   );
-};
-
-export default Blog;
+}

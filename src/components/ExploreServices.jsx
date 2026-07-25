@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import ivTherapyImg from "../assets/iv_therapy_home.png";
 import labServicesImg from "../assets/lab_services_home.png";
@@ -9,6 +10,7 @@ const services = [
     title: "Home Physiotherapy",
     description: "Experience Exceptional Home Physiotherapy in Dubai with Just One Phone Call Away",
     accent: "#B8D8E8",
+    path: "/services/physiotherapy",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -25,6 +27,7 @@ const services = [
     title: "IV Therapy",
     description: "Discover Convenient 24/7 IV Therapy Services Right at Your Doorstep with Us.",
     accent: "#F5DEB3",
+    path: "/services/iv-therapy",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -40,6 +43,7 @@ const services = [
     title: "Home Nursing",
     description: "Offering expert nursing care within the UAE and right at your doorstep.",
     accent: "#D8B4D8",
+    path: "/services/nursing",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
@@ -53,6 +57,7 @@ const services = [
     title: "Doctor On Call",
     description: "Access 24/7 Doctor On Call Services in Dubai. Experience the Premier At-Home Medical Care in the City.",
     accent: "#F4C2C2",
+    path: "/services/doctor-on-call",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -66,6 +71,7 @@ const services = [
     title: "Elderly Care Givers",
     description: "Experience Dedicated Caregivers at Your Home in Dubai. Personalized Medical Care Right at Your Doorstep!",
     accent: "#B4E1D0",
+    path: "/services/elderly-care",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
@@ -79,6 +85,7 @@ const services = [
     title: "Lab Services",
     description: "Corx Healthcare Offers Convenient 24/7 Lab Testing Right at Your Doorstep in Dubai.",
     accent: "#E2D1F9",
+    path: "/services/lab-services",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
@@ -91,10 +98,12 @@ const services = [
 ];
 
 function ServiceCard({ service, index }) {
+  const navigate = useNavigate();
   const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
+      onClick={() => navigate(service.path)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       initial={{ opacity: 0, y: 30 }}
@@ -228,6 +237,30 @@ function ServiceCard({ service, index }) {
 }
 
 export default function ExploreServices() {
+  const [serviceList, setServiceList] = useState(services);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/services/')
+      .then(res => res.json())
+      .then(data => {
+        if (data && Array.isArray(data) && data.length > 0) {
+          setServiceList(prev => {
+            return prev.map(s => {
+              const matched = data.find(item => item.slug === s.path.replace('/services/', ''));
+              if (matched) {
+                return {
+                  ...s,
+                  title: matched.title || s.title,
+                  description: matched.tagline || matched.description || s.description
+                };
+              }
+              return s;
+            });
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
   return (
     <>
       <style>{`
@@ -410,7 +443,7 @@ export default function ExploreServices() {
 
           {/* Cards grid */}
           <div className="services-grid">
-            {services.map((service, i) => (
+            {serviceList.map((service, i) => (
               <ServiceCard key={service.id} service={service} index={i} />
             ))}
           </div>

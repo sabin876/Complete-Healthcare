@@ -204,20 +204,7 @@ export default function DoctorAtHotelPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/services/doctor-at-hotel/')
-      .then(res => res.json())
-      .then(data => {
-        setService({
-          ...data,
-          themeColor: data.theme_color,
-          floatingBadge: data.floating_badge,
-        });
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Error fetching service:", err);
-        setLoading(false);
-      });
+    setLoading(false);
   }, []);
 
   if (loading) {

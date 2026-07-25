@@ -6,9 +6,7 @@ from datetime import date, timedelta
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'healthcare_backend.settings')
 django.setup()
 
-import json
-from pathlib import Path
-
+from django.contrib.auth.models import User
 from api.models import (
     StaffProfile, Task, LeaveApplication,
     OtApplication, SalaryApplication, NoticeApplication, DutyApplication,
@@ -27,8 +25,13 @@ def seed():
     BlogPost.objects.all().delete()
     Service.objects.all().delete()
 
+    # Create Django Superuser for Admin access (admin / admin123)
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+        print("Created Django Superuser: admin / admin123")
+
     print("Seeding Staff Profiles...")
-    admin = StaffProfile.objects.create(
+    admin_profile = StaffProfile.objects.create(
         staff_id='ADMIN-001',
         full_name='System Administrator',
         position='Admin Officer',
@@ -36,126 +39,130 @@ def seed():
         password='Admin@2024',
         role='admin'
     )
-    clara = StaffProfile.objects.create(
-        staff_id='STF-CO1234',
-        full_name='Clara Oswald',
-        position='Senior Nurse',
-        department='Home Nursing',
-        password='Staff@2024',
-        role='staff'
-    )
-    john = StaffProfile.objects.create(
-        staff_id='STF-JS5678',
-        full_name='John Smith',
-        position='Physiotherapist',
-        department='Physiotherapy',
-        password='Staff@2024',
-        role='staff'
-    )
 
-    print("Seeding Tasks...")
-    Task.objects.create(
-        title='DHA Nursing Compliance Review',
-        description='Ensure all patient files for this week have updated vitals logs and signed DHA consent forms.',
-        priority='High',
-        due_date=date.today() + timedelta(days=2),
-        assigned_to=clara,
-        assigned_to_name=clara.full_name,
-        assigned_by_name=admin.full_name,
-        status='Pending'
-    )
-    Task.objects.create(
-        title='Home Patient Assessment',
-        description='Perform a routine checkup and vital assessment for Patient ID: PAT-992 (Mr. Henderson).',
-        priority='Medium',
-        due_date=date.today() + timedelta(days=4),
-        assigned_to=clara,
-        assigned_to_name=clara.full_name,
-        assigned_by_name=admin.full_name,
-        status='In Progress'
-    )
-
-    print("Seeding Leave Applications...")
-    LeaveApplication.objects.create(
-        staff=clara,
-        staff_name=clara.full_name,
-        staff_dep=clara.department,
-        staff_position=clara.position,
-        leave_type='Annual Leave',
-        leave_start=date.today() + timedelta(days=10),
-        leave_end=date.today() + timedelta(days=15),
-        reason='Family vacation trip',
-        status='Approved'
-    )
-
-    print("Seeding OT Applications...")
-    OtApplication.objects.create(
-        staff=clara,
-        staff_name=clara.full_name,
-        staff_dep=clara.department,
-        staff_position=clara.position,
-        ot_type='Weekend Shift',
-        ot_date=date.today() - timedelta(days=2),
-        ot_hours='6.5',
-        status='Pending'
-    )
-
-    print("Seeding Services from services.json...")
-    services_json_path = Path("C:/Users/DELL/.gemini/antigravity/brain/3cdb892f-7563-47a2-ac62-35c9607351ea/scratch/services.json")
-    if services_json_path.exists():
-        with open(services_json_path, 'r', encoding='utf-8') as f:
-            services_data = json.load(f)
-        for slug, data in services_data.items():
-            Service.objects.create(
-                slug=slug,
-                title=data.get('title', ''),
-                eyebrow=data.get('eyebrow', ''),
-                tagline=data.get('tagline', ''),
-                description=data.get('description', ''),
-                icon=data.get('icon', 'Activity'),
-                theme_color=data.get('themeColor', '#08709d'),
-                floating_badge=data.get('floatingBadge', {}),
-                benefits=data.get('benefits', []),
-                faqs=data.get('faqs', []),
-                locations=data.get('locations', [])
-            )
-        print(f"Successfully seeded {len(services_data)} services.")
-    else:
-        print("services.json not found! Skipping services seeding.")
-
-    print("Seeding Blog Posts...")
+    print("Seeding Orthopedic & Healthcare Blog Posts...")
     all_posts_data = [
-        {"title": "WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE", "author": "Corx", "date": "April 16, 2026", "category": "Home Physiotherapy"},
-        {"title": "Burnout in Working Professionals: Signs & Solutions", "author": "Corx", "date": "March 18, 2026", "category": "Home Healthcare"},
-        {"title": "Doctor at Home vs Hospital Visit: What’s Better in 2026?", "author": "Corx", "date": "February 12, 2026", "category": "Home Healthcare"},
-        {"title": "Managing Chronic Conditions With Home Healthcare Support", "author": "Corx", "date": "January 20, 2026", "category": "Home Healthcare"},
-        {"title": "10 Signs Your Loved One Might Need Home Nursing Care", "author": "Corx", "date": "January 6, 2026", "category": "Home Nursing"},
-        {"title": "The Complete Guide to IV Therapy at Home", "author": "Corx", "date": "December 16, 2025", "category": "Home Healthcare"},
-        {"title": "Pediatric Home Healthcare: Ensuring Comfort for Children", "author": "Corx", "date": "November 12, 2025", "category": "Home Healthcare"},
-        {"title": "What to Expect From a Doctor at Home Visit", "author": "Corx", "date": "October 12, 2025", "category": "Home Healthcare"},
-        {"title": "Why Home Healthcare Is Becoming Essential in Dubai", "author": "Corx", "date": "September 12, 2025", "category": "Home Healthcare"},
-        {"title": "Why Post-Surgery Home Care is Essential for Recovery", "author": "Corx", "date": "August 28, 2025", "category": "Home Healthcare"},
-        {"title": "Holistic Healing: Physiotherapy Plus Lifestyle Support at Home", "author": "Corx", "date": "August 21, 2025", "category": "Home Physiotherapy"},
-        {"title": "Why Home Physiotherapy is the Future of Recovery?", "author": "Corx", "date": "July 30, 2025", "category": "Home Physiotherapy"},
-        {"title": "Chronic Pain Solutions in Dubai: How Physiotherapy Can Help?", "author": "Corx", "date": "June 27, 2025", "category": "Home Physiotherapy"},
-        {"title": "Hydration & Energy: The Role of IV Drips in Dubai’s Wellness Trend", "author": "Corx", "date": "June 24, 2025", "category": "IV Therapy"},
-        {"title": "How Corx Healthcare Is Revolutionizing Doctor on Call Services in Dubai?", "author": "Corx", "date": "June 17, 2025", "category": "Doctor on Call"},
-        {"title": "Elderly Care Services in Dubai: Providing Comfort and Dignity at Home", "author": "Corx", "date": "June 13, 2025", "category": "Elderly Care"},
-        {"title": "How IV Therapy Is Changing Healthcare in Dubai: Boost Your Energy Today", "author": "Corx", "date": "June 11, 2025", "category": "IV Therapy"},
-        {"title": "The Benefits of Home Nursing Services in Dubai: Care You Can Trust", "author": "Corx", "date": "June 5, 2025", "category": "Home Nursing"},
+        {
+            "id": 1,
+            "title": "Advantages of Stem Cells: Regenerative Medicine Supports Healing and Recovery",
+            "author": "Corx",
+            "date": "May 22, 2026",
+            "category": "Home Healthcare",
+            "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80",
+            "excerpt": "Stem cells don't just replace damaged tissue — they can become it, and they signal the body to repair itself faster.",
+            "read_time": "6 min read",
+            "content": "<p>Stem cells are probably one of the most significant breakthroughs in modern regenerative medicine...</p>"
+        },
+        {
+            "id": 2,
+            "title": "Alignment concept: Total Knee Replacement",
+            "author": "Dr. Ulhas Sonar",
+            "date": "May 30, 2026",
+            "category": "KNEE-REPLACEMENT",
+            "image": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80",
+            "excerpt": "Exploring modern kinematic alignment concepts to preserve natural joint motion and improve long-term functional recovery.",
+            "read_time": "5 min read",
+            "content": "<p>Total Knee Replacement (TKR) has evolved dramatically with customized kinematic alignment...</p>"
+        },
+        {
+            "id": 3,
+            "title": "The Evolution of TKR Implants",
+            "author": "Dr. Ulhas Sonar",
+            "date": "May 30, 2026",
+            "category": "TKR IMPLANTS",
+            "image": "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1200&q=80",
+            "excerpt": "Advancing toward precision and performance. Total Knee Replacement implants have come a long way with biocompatible alloys.",
+            "read_time": "6 min read",
+            "content": "<p>The materials and geometry of knee implants have undergone revolutionary improvements...</p>"
+        },
+        {
+            "id": 4,
+            "title": "Steps in Total Knee Replacement",
+            "author": "Dr. Ulhas Sonar",
+            "date": "May 30, 2026",
+            "category": "TOTAL KNEE REPLACEMENT (TKR)",
+            "image": "https://images.unsplash.com/photo-1580281657527-47f249e8f4df?w=1200&q=80",
+            "excerpt": "A surgical overview by Dr. Ulhas Sonar detailing step-by-step joint preparation and precision alignment.",
+            "read_time": "5 min read",
+            "content": "<p>Steps in Total Knee Replacement. A surgical overview for patient understanding...</p>"
+        },
+        {
+            "id": 5,
+            "title": "WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE",
+            "author": "Corx",
+            "date": "April 16, 2026",
+            "category": "Home Physiotherapy",
+            "image": "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=1200&q=80",
+            "excerpt": "Read more about WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE and how it can help you achieve better health outcomes.",
+            "read_time": "5 min read",
+            "content": "<p>Full content for WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE.</p>"
+        }
     ]
+
     for post in all_posts_data:
         BlogPost.objects.create(
             title=post["title"],
             author=post["author"],
             date=post["date"],
             category=post["category"],
-            image="https://www.corx.ae/wp-content/uploads/placeholder.jpg",
-            excerpt=f"Read more about {post['title']} and how it can help you achieve better health outcomes.",
-            read_time="5 min read",
-            content=f"<p>Full content for {post['title']} coming soon.</p>"
+            image=post["image"],
+            excerpt=post["excerpt"],
+            read_time=post["read_time"],
+            content=post["content"]
         )
     print(f"Successfully seeded {len(all_posts_data)} blog posts.")
+
+    print("Seeding Services...")
+    services_list = [
+        {
+            "slug": "physiotherapy",
+            "title": "Home Physiotherapy",
+            "eyebrow": "Physiotherapy at Home in Dubai",
+            "tagline": "Rehabilitative treatment & pain management in your home.",
+            "description": "DHA-licensed physical therapists bring personalized exercise and rehabilitation directly to your residence.",
+            "icon": "Activity",
+            "theme_color": "#63b158",
+        },
+        {
+            "slug": "iv-therapy",
+            "title": "IV Therapy | IV Drip",
+            "eyebrow": "24/7 IV Drip at Home in Dubai",
+            "tagline": "Vitamin infusion & rapid hydration therapy.",
+            "description": "Customized IV drip infusions administered by registered nurses for energy, immunity, and recovery.",
+            "icon": "Droplets",
+            "theme_color": "#38bdf8",
+        },
+        {
+            "slug": "nursing",
+            "title": "Home Nursing Services",
+            "eyebrow": "DHA-Licensed Home Nursing in Dubai",
+            "tagline": "24/7 Professional nursing care at home.",
+            "description": "Post-surgical care, wound dressing, palliative care, and continuous patient monitoring.",
+            "icon": "HeartPulse",
+            "theme_color": "#f43f5e",
+        },
+        {
+            "slug": "doctor-on-call",
+            "title": "Doctor On Call",
+            "eyebrow": "24/7 Doctor Home & Hotel Visits in Dubai",
+            "tagline": "DHA-registered physicians at your doorstep in 30-45 mins.",
+            "description": "Urgent consultations, health checkups, prescription issuance, and home care treatment.",
+            "icon": "Stethoscope",
+            "theme_color": "#fbbf24",
+        }
+    ]
+
+    for s in services_list:
+        Service.objects.create(
+            slug=s["slug"],
+            title=s["title"],
+            eyebrow=s["eyebrow"],
+            tagline=s["tagline"],
+            description=s["description"],
+            icon=s["icon"],
+            theme_color=s["theme_color"]
+        )
+    print(f"Successfully seeded {len(services_list)} services.")
 
     print("Database seeding completed successfully!")
 

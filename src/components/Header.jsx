@@ -42,9 +42,10 @@ const Header = () => {
     { name: 'Home', path: '/' },
     { name: 'About us', path: '/about' },
     { name: 'Our Team', path: '/team' },
+    { name: 'Blog', path: '/blog' },
     { 
       name: 'Services', 
-      path: '#',
+      path: '/services',
       dropdown: [
         { 
           name: 'Physiotherapy', 
@@ -106,7 +107,7 @@ const Header = () => {
     },
     { name: 'Book Appointment', path: '/contact' },
     { name: 'Contact us', path: '/contact' },
-    { name: 'Blog', path: '#' },
+
     { 
       name: 'Language', 
       path: '#',
@@ -227,14 +228,6 @@ const Header = () => {
                 <img src={tollfree} alt="Toll Free" className="h-12 md:h-16 w-auto object-contain" />
               </motion.a>
             </div>
-            {/* Portal button always visible on mobile */}
-            <Link
-              to="/portal"
-              className="lg:hidden flex items-center justify-center font-semibold text-[11px] uppercase tracking-wider green-shimmer-btn text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-md"
-              style={{ padding: '8px 18px', borderRadius: '8px', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
-            >
-              PORTAL
-            </Link>
             <button className="lg:hidden p-2 text-secondary-color" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
             </button>
@@ -376,7 +369,7 @@ const Header = () => {
                   </AnimatePresence>
                 )}
 
-                {/* Compact Dropdown for Language or general lists */}
+                {/* Updated Language dropdown matching Services design */}
                 {link.dropdown && link.name === 'Language' && (
                   <AnimatePresence>
                     {activeDropdown === 'Language' && (
@@ -385,26 +378,25 @@ const Header = () => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 8, scale: 0.95, transition: { duration: 0.15 } }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="absolute top-[calc(100%-2px)] right-0 z-[100] min-w-[180px] p-2 bg-[#052d47] backdrop-blur-xl border border-white/15 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] mt-1.5"
+                        className="absolute top-[calc(100%+8px)] right-0 z-[100] bg-[#0c361d] rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.55)] text-white"
+                        style={{ padding: '24px', width: '200px' }}
                       >
                         <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#63e8a0] border-b border-white/10 mb-1 flex items-center gap-1.5">
                           <Globe size={13} /> Select Language
                         </div>
                         {link.dropdown.map((lang) => (
-                          <a
+                          <Link
                             key={lang.name}
-                            href="#"
+                            to="#"
                             onClick={(e) => { e.preventDefault(); setActiveDropdown(null); }}
-                            className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13.5px] font-semibold text-white/90 hover:text-white hover:bg-white/10 transition-all duration-200"
+                            className="flex items-center justify-between w-full rounded-[18px] transition-all duration-200 text-[15.5px] font-semibold tracking-wide text-white/95 hover:text-white hover:bg-white/10 py-3.5 px-6"
                           >
                             <div className="flex items-center gap-2.5">
                               <span className="text-base">{lang.flag}</span>
                               <span>{lang.name}</span>
                             </div>
-                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-white/70 uppercase">
-                              {lang.code}
-                            </span>
-                          </a>
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-white/70 uppercase">{lang.code}</span>
+                          </Link>
                         ))}
                       </motion.div>
                     )}
@@ -432,14 +424,6 @@ const Header = () => {
               </motion.span>
               CALL NOW
             </motion.a>
-            <div className="h-8 w-[1px] bg-white/20"></div>
-            <Link 
-              to="/portal"
-              className="flex items-center justify-center font-semibold text-[12px] uppercase tracking-wider green-shimmer-btn text-white cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
-              style={{ padding: '10px 24px', borderRadius: '8px', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
-            >
-              PORTAL
-            </Link>
           </div>
         </div>
       </nav>
@@ -508,16 +492,6 @@ const Header = () => {
                 )}
               </div>
             ))}
-            <div className="mt-6">
-              <Link
-                to="/portal"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full flex items-center justify-center font-semibold text-[13px] uppercase tracking-widest green-shimmer-btn text-white cursor-pointer transition-all duration-300 hover:scale-[1.02] shadow-md"
-                style={{ padding: '12px 24px', borderRadius: '8px', border: 'none' }}
-              >
-                PORTAL
-              </Link>
-            </div>
           </div>
         </div>
       </div>

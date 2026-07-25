@@ -1,11 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingCTA from './components/FloatingCTA';
 import Chatbot from './components/Chatbot';
-import { AuthProvider, useAuth } from './context/AuthContext';
 
 import Home from './pages/Home';
 import About from './pages/About';
@@ -15,11 +14,10 @@ import ServicePage from './pages/ServicePage';
 import DoctorAtHomePage from './pages/DoctorAtHomePage';
 import DoctorAtOfficePage from './pages/DoctorAtOfficePage';
 import DoctorAtHotelPage from './pages/DoctorAtHotelPage';
-import PortalLogin from './pages/PortalLogin';
-import StaffDashboard from './pages/StaffDashboard';
-import AdminDashboard from './pages/AdminDashboard';
+import Services from './pages/Services';
+import Blog from './pages/Blog';
+import BlogDetails from './pages/BlogDetails';
 import Team from './pages/Team';
-
 
 // Placeholder for other pages
 const PlaceholderPage = ({ title }) => (
@@ -43,26 +41,6 @@ const PlaceholderPage = ({ title }) => (
   </motion.div>
 );
 
-/* ─── Protected Route ─────────────────────────────────────────────────────
-   Requires the user to be logged in AND have the correct role.
-   If not logged in → /portal
-   If wrong role → redirect to appropriate dashboard
-────────────────────────────────────────────────────────────────────────── */
-const ProtectedRoute = ({ children, requiredRole }) => {
-  const { currentUser } = useAuth();
-
-  if (!currentUser) {
-    return <Navigate to="/portal" replace />;
-  }
-
-  if (requiredRole && currentUser.role !== requiredRole) {
-    // Redirect to the correct dashboard
-    return <Navigate to={currentUser.role === 'admin' ? '/portal/admin' : '/portal/dashboard'} replace />;
-  }
-
-  return children;
-};
-
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
@@ -72,7 +50,7 @@ const AnimatedRoutes = () => {
         <Route path="/about" element={<About />} />
         
         {/* Services Routes */}
-        <Route path="/services" element={<PlaceholderPage title="Our Services" />} />
+        <Route path="/services" element={<Services />} />
         <Route path="/services/physiotherapy" element={<ServicePage serviceId="physiotherapy" />} />
         <Route path="/physiotherapy-at-home-in-dubai" element={<ServicePage serviceId="physiotherapy" />} />
         <Route path="/physiotherapy-at-home-in-dubai/" element={<ServicePage serviceId="physiotherapy" />} />
@@ -107,60 +85,38 @@ const AnimatedRoutes = () => {
         <Route path="/lab-test-at-home-dubai" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/lab-test-at-home-dubai/" element={<ServicePage serviceId="lab-services" />} />
         
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<BlogDetails />} />
+        <Route path="/blog/details" element={<BlogDetails />} />
         <Route path="/locations" element={<Locations />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/team" element={<Team />} />
-
-        {/* Portal Routes */}
-        <Route path="/portal" element={<PortalLogin />} />
-        <Route
-          path="/portal/dashboard"
-          element={
-            <ProtectedRoute requiredRole="staff">
-              <StaffDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/portal/admin"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-
       </Routes>
     </AnimatePresence>
   );
 };
 
 const MainLayout = ({ children }) => {
-  const location = useLocation();
-  const isPortal = location.pathname.startsWith('/portal');
-
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
-      {!isPortal && <Header />}
+      <Header />
       <div className="flex-grow">
         {children}
       </div>
-      {!isPortal && <Footer />}
-      {!isPortal && <FloatingCTA />}
-      {!isPortal && <Chatbot />}
+      <Footer />
+      <FloatingCTA />
+      <Chatbot />
     </div>
   );
 };
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <MainLayout>
-          <AnimatedRoutes />
-        </MainLayout>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <MainLayout>
+        <AnimatedRoutes />
+      </MainLayout>
+    </Router>
   );
 }
 

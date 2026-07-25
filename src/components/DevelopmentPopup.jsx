@@ -60,7 +60,7 @@ const DevelopmentPopup = ({ isOpen: controlledIsOpen, onClose }) => {
               
               {/* Subtitle */}
               <p className="text-gray-300 text-base leading-relaxed mb-10 px-2">
-                We are currently refining our healthcare portal to provide you with a better experience.
+                We are currently refining our website to provide you with a better experience.
               </p>
 
               {/* Simple Button (Matching User's Image) */}

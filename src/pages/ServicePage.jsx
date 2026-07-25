@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import MedicalSpecialties from '../components/MedicalSpecialties';
 import { 
   Check, 
   Home, 
@@ -872,41 +873,38 @@ export default function ServicePage({ serviceId }) {
   const activeId = serviceId || params.id;
 
   const [servicesData, setServicesData] = useState(null);
+  const [apiService, setApiService] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('http://localhost:8000/api/services/')
       .then(res => res.json())
       .then(data => {
-        const dict = {};
-        data.forEach(item => {
-          dict[item.slug] = {
-            ...item,
-            themeColor: item.theme_color,
-            floatingBadge: item.floating_badge,
-          };
-        });
-        setServicesData(dict);
-        setLoading(false);
+        if (data && Array.isArray(data)) {
+          const matched = data.find(s => s.slug === activeId);
+          if (matched) {
+            setApiService(matched);
+          }
+        }
       })
-      .catch(err => {
-        console.error("Error fetching services:", err);
-        setLoading(false);
-      });
-  }, []);
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [activeId]);
 
   const [openIndex, setOpenIndex] = useState(null);
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
 
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', paddingTop: '10rem' }}>
-        <div style={{ fontSize: '1.2rem', fontFamily: "'Poppins', sans-serif", color: '#08709d' }}>Loading service details...</div>
-      </div>
-    );
-  }
-
-  const service = servicesData ? servicesData[activeId] : null;
+  const fallbackService = servicesData ? servicesData[activeId] : null;
+  const service = apiService ? {
+    title: apiService.title,
+    eyebrow: apiService.eyebrow || '⊙ CLINICAL CARE',
+    subtitle: apiService.tagline || apiService.description,
+    description: apiService.description,
+    icon: Activity,
+    themeColor: apiService.theme_color || '#08709d',
+    faqs: apiService.faqs && apiService.faqs.length > 0 ? apiService.faqs : (fallbackService ? fallbackService.faqs : []),
+    benefits: apiService.benefits && apiService.benefits.length > 0 ? apiService.benefits : (fallbackService ? fallbackService.benefits : [])
+  } : fallbackService;
 
   useEffect(() => {
     if (service) {
@@ -934,6 +932,14 @@ export default function ServicePage({ serviceId }) {
       ogTitle.content = pageTitle;
     }
   }, [service]);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', paddingTop: '10rem' }}>
+        <div style={{ fontSize: '1.2rem', fontFamily: "'Poppins', sans-serif", color: '#08709d' }}>Loading service details...</div>
+      </div>
+    );
+  }
 
   if (!service) {
     return <Navigate to="/" replace />;
@@ -1187,6 +1193,9 @@ export default function ServicePage({ serviceId }) {
           </div>
         </div>
       </section>}
+
+      {/* Medical Specialties section just above FAQ section for Lab Services */}
+      {activeId === 'lab-services' && <MedicalSpecialties />}
 
       {/* 3. Dynamic Accordion FAQ Section */}
       <section className="faq-section">

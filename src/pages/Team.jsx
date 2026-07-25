@@ -264,18 +264,7 @@ const Team = () => {
   const [dbTeam, setDbTeam] = useState([]);
 
   useEffect(() => {
-    const fetchTeam = async () => {
-      try {
-        const res = await fetch('http://localhost:8000/api/team/');
-        if (res.ok) {
-          const data = await res.json();
-          setDbTeam(data);
-        }
-      } catch (err) {
-        console.error("Error fetching team from DB:", err);
-      }
-    };
-    fetchTeam();
+    // Standalone mode: using static default team members
   }, []);
 
   const mappedDbTeam = dbTeam.map(member => {
@@ -287,9 +276,8 @@ const Team = () => {
       dept = "Homecare Support";
     }
     
-    let img = member.photo || "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80";
-    if (img && !img.startsWith("http")) {
-      img = `http://localhost:8000${img}`;
+    if (img && !img.startsWith("http") && !img.startsWith("/")) {
+      img = `/${img}`;
     }
 
     return {

@@ -62,22 +62,42 @@ class DutyApplicationSerializer(serializers.ModelSerializer):
 
 
 class BlogPostSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = BlogPost
         fields = [
-            'id', 'title', 'category', 'date', 'author', 'image',
+            'id', 'title', 'category', 'date', 'author', 'image', 'image_file',
             'excerpt', 'read_time', 'content', 'created_at', 'updated_at'
         ]
 
+    def get_image(self, obj):
+        if obj.image_file:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image_file.url)
+            return f"http://localhost:8000{obj.image_file.url}"
+        return obj.image or 'https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop'
+
 
 class ServiceSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = Service
         fields = [
             'id', 'slug', 'title', 'eyebrow', 'tagline', 'description',
-            'icon', 'theme_color', 'floating_badge', 'benefits', 'faqs',
+            'icon', 'image_file', 'image', 'theme_color', 'floating_badge', 'benefits', 'faqs',
             'locations', 'created_at', 'updated_at'
         ]
+
+    def get_image(self, obj):
+        if obj.image_file:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image_file.url)
+            return f"http://localhost:8000{obj.image_file.url}"
+        return ''
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):

@@ -27,4 +27,6 @@ dist-ssr
 diff.txt
 diff_utf8.txt
 db.json
+*.sqlite3
+backend/db.sqlite3
 
