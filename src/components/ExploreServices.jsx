@@ -244,19 +244,19 @@ export default function ExploreServices() {
       .then(res => res.json())
       .then(data => {
         if (data && Array.isArray(data) && data.length > 0) {
-          setServiceList(prev => {
-            return prev.map(s => {
-              const matched = data.find(item => item.slug === s.path.replace('/services/', ''));
-              if (matched) {
-                return {
-                  ...s,
-                  title: matched.title || s.title,
-                  description: matched.tagline || matched.description || s.description
-                };
-              }
-              return s;
-            });
-          });
+          setServiceList(data.map((item, index) => {
+            const defaultItem = services.find(s => s.path.includes(item.slug) || item.slug.includes(s.path.split('/').pop())) || services[index % services.length];
+            return {
+              id: item.id || index + 1,
+              title: item.title || defaultItem.title,
+              description: item.tagline || item.description || defaultItem.description,
+              accent: item.theme_color || defaultItem.accent,
+              path: `/services/${item.slug}`,
+              icon: defaultItem.icon,
+              image: item.image || defaultItem.image,
+              video: defaultItem.video
+            };
+          }));
         }
       })
       .catch(() => {});

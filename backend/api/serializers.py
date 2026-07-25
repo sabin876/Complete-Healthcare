@@ -88,7 +88,8 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'slug', 'title', 'eyebrow', 'tagline', 'description',
             'icon', 'image_file', 'image', 'theme_color', 'floating_badge', 'benefits', 'faqs',
-            'locations', 'created_at', 'updated_at'
+            'locations', 'features', 'indications', 'lab_columns', 'reasons', 'steps',
+            'created_at', 'updated_at'
         ]
 
     def get_image(self, obj):

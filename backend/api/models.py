@@ -122,6 +122,11 @@ class Service(models.Model):
     benefits = models.JSONField(default=list, blank=True)  # [{title, desc}]
     faqs = models.JSONField(default=list, blank=True)  # [{q, a}]
     locations = models.JSONField(default=list, blank=True)  # [{label}]
+    features = models.JSONField(default=list, blank=True)  # [{title}]
+    indications = models.JSONField(default=list, blank=True)  # [str]
+    lab_columns = models.JSONField(default=list, blank=True)  # [{title, tagline, iconBg, tests}]
+    reasons = models.JSONField(default=list, blank=True)  # [{num, label, title, desc}]
+    steps = models.JSONField(default=list, blank=True)  # [{title, desc}]
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

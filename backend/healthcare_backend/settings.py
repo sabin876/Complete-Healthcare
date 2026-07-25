@@ -156,11 +156,9 @@ JAZZMIN_SETTINGS = {
     "site_brand": "Complete Healthcare",
     "welcome_sign": "Complete Healthcare Administration",
     "copyright": "Complete Healthcare Ltd",
-    "search_model": ["api.StaffProfile"],
     "user_avatar": None,
     "topmenu_links": [
         {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"model": "api.StaffProfile"},
     ],
     "show_sidebar": True,
     "navigation_expanded": True,
@@ -203,7 +201,6 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
     "theme": "cerulean",
-    "dark_mode_theme": None,
     "button_classes": {
         "primary": "btn-info",
         "secondary": "btn-secondary",
