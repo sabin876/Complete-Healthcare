@@ -32,12 +32,13 @@ DatabaseFeatures.can_return_columns_from_insert = property(lambda self: False)
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$52mo)@jul!^*)h-x0tph%0#8+e0xxq%b#3o0572av%l9gt2en'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-$52mo)@jul!^*)h-x0tph%0#8+e0xxq%b#3o0572av%l9gt2en')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() in ('true', '1', 't')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+
 
 
 # Application definition
