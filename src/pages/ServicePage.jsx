@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { API_BASE_URL } from '../config/api';
 import { Container, Section, Button, Card, HeroTitle, SectionTitle, CardTitle, Paragraph, SmallText } from '../components/ui';
 import { 
   Check, 
@@ -322,7 +323,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/services/${slug}/`)
+    fetch(`${API_BASE_URL}/api/services/${slug}/`)
       .then(res => res.json())
       .then(data => {
         if (data && data.slug) {

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { User, Calendar, ArrowRight, Search, Tag, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
 
 const DUMMY_IMAGE =
   "https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop";
@@ -201,7 +202,7 @@ export default function OrthopedicArticlesPage() {
   const [blogPostsList, setBlogPostsList] = useState(articles);
 
   React.useEffect(() => {
-    fetch('http://localhost:8000/api/blogs/')
+    fetch(`${API_BASE_URL}/api/blogs/`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {

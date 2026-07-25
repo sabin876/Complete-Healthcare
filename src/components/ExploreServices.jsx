@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "../config/api";
 import ivTherapyImg from "../assets/iv_therapy_home.png";
 import labServicesImg from "../assets/lab_services_home.png";
 
@@ -240,7 +241,7 @@ export default function ExploreServices() {
   const [serviceList, setServiceList] = useState(services);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/services/')
+    fetch(`${API_BASE_URL}/api/services/`)
       .then(res => res.json())
       .then(data => {
         if (data && Array.isArray(data) && data.length > 0) {
