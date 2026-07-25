@@ -238,7 +238,7 @@ const Header = () => {
       {/* Main Nav (Vibrant Blue with Premium Shadow and Gradient) */}
       <nav className="hidden lg:block bg-gradient-to-r from-[#065b80] via-[#08709d] to-[#0a86bd] text-white border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.15)] relative z-10">
         <div className="container flex justify-between items-center py-0">
-          <ul className="flex items-center gap-6 h-16">
+          <ul className="flex items-center gap-2.5 h-16">
             {navLinks.map((link) => (
               <li 
                 key={link.name} 
@@ -259,18 +259,18 @@ const Header = () => {
                       e.stopPropagation();
                       setActiveDropdown(activeDropdown === link.name ? null : link.name);
                     }}
-                    className="group flex items-center h-full px-5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap relative cursor-pointer"
+                    className="group flex items-center h-full px-2.5 lg:px-3 xl:px-3.5 text-[15px] font-bold uppercase tracking-[0.05em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap relative cursor-pointer"
                   >
                     <span className="relative py-1 flex items-center gap-1.5">
                       {link.name}
-                      <ChevronDown size={13} className={`transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-emerald-300' : 'text-white/70 group-hover:text-white'}`} />
+                      <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-emerald-300' : 'text-white/70 group-hover:text-white'}`} />
                       <span className={`absolute bottom-0 left-[-4px] w-[calc(100%+8px)] h-[3px] bg-accent-color transform rounded-t-full transition-transform duration-300 origin-left ${activeDropdown === link.name ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
                     </span>
                   </button>
                 ) : (
                   <Link 
                     to={link.path} 
-                    className="group flex items-center h-full px-5 text-[12.5px] font-semibold uppercase tracking-[0.08em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap relative"
+                    className="group flex items-center h-full px-2.5 lg:px-3 xl:px-3.5 text-[15px] font-bold uppercase tracking-[0.05em] text-white hover:text-white/90 transition-all gap-1.5 whitespace-nowrap relative"
                   >
                     <span className="relative py-1">
                       {link.name}
@@ -292,6 +292,14 @@ const Header = () => {
                         style={{ padding: '24px', width: '360px' }}
                       >
                         <div className="flex flex-col gap-2 w-full">
+                          <Link
+                            to="/services"
+                            onClick={() => setActiveDropdown(null)}
+                            className="flex items-center justify-between w-full rounded-[18px] transition-all duration-200 text-[14px] font-black uppercase tracking-wider text-emerald-300 hover:text-white bg-white/12 hover:bg-white/20 py-3 px-6 mb-1 border border-emerald-400/20"
+                          >
+                            <span>All Services Overview</span>
+                            <ArrowRight size={15} />
+                          </Link>
                           {link.dropdown.map((item) => {
                             const hasSubItems = item.subItems && item.subItems.length > 0;
                             const isSubOpen = openSubMenu === item.name;
@@ -443,7 +451,7 @@ const Header = () => {
                 <div className="flex justify-between items-center py-4 group">
                   <Link 
                     to={link.path} 
-                    className="text-[15px] font-bold text-secondary-color uppercase tracking-wide group-hover:text-primary-color transition-colors flex-grow"
+                    className="text-[17px] font-extrabold text-secondary-color uppercase tracking-wide group-hover:text-primary-color transition-colors flex-grow"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
