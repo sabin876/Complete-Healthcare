@@ -221,11 +221,11 @@ export default function OrthopedicArticlesPage() {
   }, []);
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Poppins', 'Inter', sans-serif", paddingTop: "140px", paddingBottom: "80px" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Poppins', 'Inter', sans-serif", paddingTop: "90px", paddingBottom: "50px" }}>
       <div style={{ maxWidth: "1140px", margin: "0 auto", padding: "0 24px" }}>
         
         {/* Header Section */}
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+        <div style={{ textAlign: "center", marginBottom: "28px" }}>
           <span
             style={{
               display: "inline-block",
@@ -237,7 +237,7 @@ export default function OrthopedicArticlesPage() {
               textTransform: "uppercase",
               padding: "6px 18px",
               borderRadius: "9999px",
-              marginBottom: "16px",
+              marginBottom: "12px",
               border: "1px solid #dbeafe",
             }}
           >
@@ -246,17 +246,17 @@ export default function OrthopedicArticlesPage() {
 
           <h1
             style={{
-              fontSize: "clamp(32px, 4vw, 48px)",
+              fontSize: "clamp(28px, 3.5vw, 42px)",
               fontWeight: "800",
               color: "#0f172a",
-              marginBottom: "12px",
+              marginBottom: "8px",
               letterSpacing: "-0.02em",
             }}
           >
             Expert Orthopedic <span style={{ color: "#2563eb" }}>Articles</span>
           </h1>
 
-          <p style={{ fontSize: "16px", color: "#64748b", maxWidth: "560px", margin: "0 auto", lineHeight: "1.6" }}>
+          <p style={{ fontSize: "15px", color: "#64748b", maxWidth: "560px", margin: "0 auto", lineHeight: "1.5" }}>
             Stay informed with the latest insights on orthopedic health, treatments, and surgical innovations.
           </p>
         </div>
@@ -267,8 +267,8 @@ export default function OrthopedicArticlesPage() {
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-              gap: "28px",
-              marginBottom: "56px",
+              gap: "20px",
+              marginBottom: "40px",
             }}
           >
             {blogPostsList.map((article) => (

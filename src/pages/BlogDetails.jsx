@@ -135,14 +135,14 @@ export default function BlogDetails() {
   const nextPost = blogDatabase.find((p) => p.id === articleId + 1) || blogDatabase[0];
 
   return (
-    <div style={{ backgroundColor: "#eef2f6", color: "#3a3f47", fontFamily: "Georgia, 'Times New Roman', serif", minHeight: "100vh", paddingTop: "120px", paddingBottom: "64px" }}>
+    <div style={{ backgroundColor: "#eef2f6", color: "#3a3f47", fontFamily: "Georgia, 'Times New Roman', serif", minHeight: "100vh", paddingTop: "95px", paddingBottom: "50px" }}>
       <style>{`
         .blog-page {
-          max-width: 1120px;
+          max-width: 1220px;
           margin: 0 auto;
-          padding: 32px 24px 64px;
+          padding: 24px 24px 48px;
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 300px;
+          grid-template-columns: minmax(0, 1fr) 310px;
           gap: 24px;
           align-items: start;
         }
