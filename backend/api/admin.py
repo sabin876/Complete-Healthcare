@@ -557,13 +557,15 @@ class TitleDescListJsonWidget(forms.Widget):
 # ----------------------------------------------------------------------
 class FloatingBadgeJsonWidget(forms.Widget):
     def render(self, name, value, attrs=None, renderer=None):
-        if value is None:
-            value = {}
-        if isinstance(value, str):
-            try:
-                value = json.loads(value)
-            except Exception:
+        if not isinstance(value, dict):
+            if isinstance(value, str):
+                try:
+                    value = json.loads(value)
+                except Exception:
+                    value = {}
+            if not isinstance(value, dict):
                 value = {}
+
         escaped_json = json.dumps(value).replace("&", "&amp;").replace("'", "&#39;").replace('"', "&quot;")
         container_id = f"badge-widget-{name}"
 
