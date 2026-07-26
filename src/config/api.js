@@ -1,2 +1,4 @@
 // Centralized API Configuration for Development and Deployment
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://sabinsiwakoti.com.np';
+export const API_BASE_URL = rawBaseUrl.replace(/\/+$/, '');
+
