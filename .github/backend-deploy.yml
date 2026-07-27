@@ -1,0 +1,66 @@
+name: Deploy Django Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Deploy
+        run: |
+          ssh \
+            -i ~/.ssh/id_ed25519 \
+            -o StrictHostKeyChecking=no \
+            -p ${{ secrets.SSH_PORT }} \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+
+            set -e
+
+            echo "========== DEPLOY STARTED =========="
+
+            cd ${{ secrets.PROJECT_PATH }}
+
+            echo "Pull latest code..."
+            git pull origin main
+
+            echo "Entering backend..."
+            cd backend
+
+            echo "Activate virtualenv..."
+            source .venv/bin/activate
+
+            echo "Upgrade pip..."
+            pip install --upgrade pip
+
+            echo "Install dependencies..."
+            pip install -r requirements.txt
+
+            echo "Run migrations..."
+            python manage.py migrate --noinput
+
+            echo "Collect static..."
+            python manage.py collectstatic --noinput
+
+            echo "Restart Passenger..."
+            mkdir -p tmp
+            touch tmp/restart.txt
+
+            echo "========== DEPLOY FINISHED =========="
+
