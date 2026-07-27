@@ -40,11 +40,8 @@ jobs:
             echo "Pull latest code..."
             git pull origin main
 
-            echo "Entering backend..."
-            cd backend
-
-            echo "Activate virtualenv..."
-            source .venv/bin/activate
+            echo "Entering backend and activate virtualenv"
+            source /home4/corxae/virtualenv/Complete-Healthcare/backend/3.10/bin/activate && cd /home4/corxae/Complete-Healthcare/backend
 
             echo "Upgrade pip..."
             pip install --upgrade pip
