@@ -6,7 +6,9 @@ on:
       - main
     paths:
       - 'backend/**'
-      - '.github/workflows/deploy-backend.yml'
+      - '.github/workflows/deploy.yml'
+
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -23,41 +25,51 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-      - name: Deploy
+      - name: Deploy to Server
         run: |
           ssh \
             -i ~/.ssh/id_ed25519 \
             -o StrictHostKeyChecking=no \
-            -p ${{ secrets.SSH_PORT }} \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            -p "${{ secrets.SSH_PORT }}" \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" << EOF
 
-            set -e
+          set -e
 
-            echo "========== DEPLOY STARTED =========="
+          echo "========== DEPLOY STARTED =========="
 
-            cd ${{ secrets.PROJECT_PATH }}
+          cd "${{ secrets.PROJECT_PATH }}"
 
-            echo "Pull latest code..."
-            git pull origin main
+          echo "Current directory:"
+          pwd
 
-            echo "Entering backend and activate virtualenv"
-            source /home4/corxae/virtualenv/Complete-Healthcare/backend/3.10/bin/activate && cd /home4/corxae/Complete-Healthcare/backend
+          echo "Pull latest code..."
+          git pull origin main
 
-            echo "Upgrade pip..."
-            pip install --upgrade pip
+          echo "Activate Python virtual environment..."
+          source /home4/corxae/virtualenv/Complete-Healthcare/backend/3.10/bin/activate
 
-            echo "Install dependencies..."
-            pip install -r requirements.txt
+          echo "Enter backend directory..."
+          cd backend
 
-            echo "Run migrations..."
-            python manage.py migrate --noinput
+          echo "Python version:"
+          python --version
 
-            echo "Collect static..."
-            python manage.py collectstatic --noinput
+          echo "Upgrade pip..."
+          python -m pip install --upgrade pip
 
-            echo "Restart Passenger..."
-            mkdir -p tmp
-            touch tmp/restart.txt
+          echo "Install requirements..."
+          pip install -r requirements.txt
 
-            echo "========== DEPLOY FINISHED =========="
+          echo "Run migrations..."
+          python manage.py migrate --noinput
 
+          echo "Collect static..."
+          python manage.py collectstatic --noinput
+
+          echo "Restart Passenger..."
+          mkdir -p tmp
+          touch tmp/restart.txt
+
+          echo "========== DEPLOY SUCCESS =========="
+
+          EOF
