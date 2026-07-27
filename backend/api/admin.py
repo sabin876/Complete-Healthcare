@@ -557,13 +557,15 @@ class TitleDescListJsonWidget(forms.Widget):
 # ----------------------------------------------------------------------
 class FloatingBadgeJsonWidget(forms.Widget):
     def render(self, name, value, attrs=None, renderer=None):
-        if value is None:
-            value = {}
-        if isinstance(value, str):
-            try:
-                value = json.loads(value)
-            except Exception:
+        if not isinstance(value, dict):
+            if isinstance(value, str):
+                try:
+                    value = json.loads(value)
+                except Exception:
+                    value = {}
+            if not isinstance(value, dict):
                 value = {}
+
         escaped_json = json.dumps(value).replace("&", "&amp;").replace("'", "&#39;").replace('"', "&quot;")
         container_id = f"badge-widget-{name}"
 
@@ -769,6 +771,222 @@ class FAQJsonWidget(forms.Widget):
 
 
 # ----------------------------------------------------------------------
+# 7. Rich Text Content Editor Widget for Blog Posts
+# ----------------------------------------------------------------------
+class RichTextEditorWidget(forms.Widget):
+    def render(self, name, value, attrs=None, renderer=None):
+        if value is None:
+            value = ""
+        escaped_value = value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+        container_id = f"rte-widget-{name}"
+
+        html = f"""
+        <div id="{container_id}" class="custom-rte-wrapper" style="max-width: 950px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; overflow: hidden; font-family: system-ui, -apple-system, sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <!-- Hidden textarea for Django Form post data -->
+            <textarea name="{name}" id="id_{name}_textarea" style="display: none;">{escaped_value}</textarea>
+
+            <!-- Toolbar Header -->
+            <div class="rte-toolbar" style="background: #f8fafc; border-bottom: 1.5px solid #e2e8f0; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; user-select: none;">
+                <!-- Format block selector -->
+                <select id="{container_id}-format" style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: white; cursor: pointer; color: #334155; font-weight: 600; outline: none;">
+                    <option value="p">Normal Paragraph</option>
+                    <option value="h2">Heading 2 (H2)</option>
+                    <option value="h3">Heading 3 (H3)</option>
+                    <option value="h4">Heading 4 (H4)</option>
+                    <option value="pullquote">Pull Quote Box</option>
+                </select>
+
+                <div style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px;"></div>
+
+                <!-- Text Style Buttons -->
+                <button type="button" class="rte-btn" data-cmd="bold" title="Bold (Ctrl+B)" style="padding: 6px 11px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 13px; color: #0f172a;">B</button>
+                <button type="button" class="rte-btn" data-cmd="italic" title="Italic (Ctrl+I)" style="padding: 6px 11px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-style: italic; font-weight: 700; cursor: pointer; font-size: 13px; color: #0f172a;">I</button>
+                <button type="button" class="rte-btn" data-cmd="underline" title="Underline (Ctrl+U)" style="padding: 6px 11px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; text-decoration: underline; font-weight: 700; cursor: pointer; font-size: 13px; color: #0f172a;">U</button>
+                <button type="button" class="rte-btn" data-cmd="strikeThrough" title="Strikethrough" style="padding: 6px 11px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; text-decoration: line-through; font-weight: 700; cursor: pointer; font-size: 13px; color: #0f172a;">S</button>
+
+                <div style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px;"></div>
+
+                <!-- Lists -->
+                <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Bullet List" style="padding: 6px 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px; color: #334155;">• List</button>
+                <button type="button" class="rte-btn" data-cmd="insertOrderedList" title="Numbered List" style="padding: 6px 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px; color: #334155;">1. List</button>
+
+                <div style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px;"></div>
+
+                <!-- Alignment -->
+                <button type="button" class="rte-btn" data-cmd="justifyLeft" title="Align Left" style="padding: 6px 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 12px; color: #334155;">⬅ Left</button>
+                <button type="button" class="rte-btn" data-cmd="justifyCenter" title="Align Center" style="padding: 6px 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 12px; color: #334155;">↔ Center</button>
+                <button type="button" class="rte-btn" data-cmd="justifyRight" title="Align Right" style="padding: 6px 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 12px; color: #334155;">➡ Right</button>
+
+                <div style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px;"></div>
+
+                <!-- Inserts -->
+                <button type="button" id="{container_id}-link-btn" title="Insert Link" style="padding: 6px 10px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px;">🔗 Link</button>
+                <button type="button" id="{container_id}-img-btn" title="Insert Image" style="padding: 6px 10px; background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px;">🖼️ Image</button>
+                <button type="button" id="{container_id}-quote-btn" title="Insert Pull Quote" style="padding: 6px 10px; background: #fefce8; color: #854d0e; border: 1px solid #fef08a; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px;">💬 Quote</button>
+                <button type="button" class="rte-btn" data-cmd="insertHorizontalRule" title="Horizontal Line" style="padding: 6px 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 12px; color: #334155;">― Divider</button>
+
+                <div style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px;"></div>
+
+                <!-- Tools -->
+                <button type="button" class="rte-btn" data-cmd="removeFormat" title="Clear Formatting" style="padding: 6px 9px; background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🧹 Clear</button>
+                <button type="button" id="{container_id}-code-btn" title="Toggle Code Mode" style="padding: 6px 10px; background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px;">&lt;/&gt; Code</button>
+            </div>
+
+            <!-- Editable Editor Area -->
+            <div id="{container_id}-editor" contenteditable="true" style="min-height: 400px; max-height: 750px; overflow-y: auto; padding: 22px 26px; outline: none; background: #ffffff; color: #1e293b; font-size: 16px; line-height: 1.7; font-family: Georgia, 'Times New Roman', serif;"></div>
+
+            <!-- Code Editor Mode (Initially hidden) -->
+            <textarea id="{container_id}-codemode" style="display: none; width: 100%; min-height: 400px; max-height: 750px; padding: 22px 26px; box-sizing: border-box; font-family: 'Fira Code', Consolas, Monaco, monospace; font-size: 14px; background: #0f172a; color: #f8fafc; border: none; outline: none; line-height: 1.6; resize: vertical;"></textarea>
+
+            <!-- Status Footer -->
+            <div style="background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #64748b;">
+                <span id="{container_id}-stats" style="font-weight: 600;">0 words | 0 characters</span>
+                <span style="font-weight: 700; color: #08709d;">✨ Rich Visual Content Editor</span>
+            </div>
+        </div>
+
+        <style>
+            #{container_id}-editor p {{ margin: 0 0 18px 0; font-size: 16px; color: #334155; line-height: 1.7; }}
+            #{container_id}-editor h2 {{ color: #1f5f9e; font-size: 24px; font-weight: 700; margin: 30px 0 14px 0; font-family: Georgia, serif; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }}
+            #{container_id}-editor h3 {{ color: #1f5f9e; font-size: 20px; font-weight: 700; margin: 24px 0 12px 0; font-family: Georgia, serif; }}
+            #{container_id}-editor h4 {{ color: #08709d; font-size: 17px; font-weight: 700; margin: 18px 0 8px 0; }}
+            #{container_id}-editor ul, #{container_id}-editor ol {{ margin: 0 0 20px 0; padding-left: 26px; }}
+            #{container_id}-editor li {{ margin-bottom: 8px; font-size: 16px; color: #334155; }}
+            #{container_id}-editor .pull-note {{ background: #f4f8fb; border-left: 4px solid #1f6fb2; padding: 16px 20px; font-size: 15px; color: #475569; margin: 24px 0; font-style: italic; border-radius: 0 8px 8px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.03); }}
+            #{container_id}-editor img {{ max-width: 100%; height: auto; border-radius: 8px; margin: 20px 0; display: block; box-shadow: 0 4px 14px rgba(0,0,0,0.1); }}
+            #{container_id}-editor a {{ color: #1f6fb2; text-decoration: underline; font-weight: 600; }}
+            #{container_id}-editor hr {{ border: none; border-top: 2px dashed #cbd5e1; margin: 28px 0; }}
+        </style>
+
+        <script>
+        (function() {{
+            const textarea = document.getElementById('id_{name}_textarea');
+            const editor = document.getElementById('{container_id}-editor');
+            const codeInput = document.getElementById('{container_id}-codemode');
+            const formatSelect = document.getElementById('{container_id}-format');
+            const stats = document.getElementById('{container_id}-stats');
+            const codeBtn = document.getElementById('{container_id}-code-btn');
+            const linkBtn = document.getElementById('{container_id}-link-btn');
+            const imgBtn = document.getElementById('{container_id}-img-btn');
+            const quoteBtn = document.getElementById('{container_id}-quote-btn');
+
+            let isCodeView = false;
+
+            // Initial load
+            editor.innerHTML = textarea.value || '';
+            updateStats();
+
+            function sync() {{
+                if (isCodeView) {{
+                    textarea.value = codeInput.value;
+                    editor.innerHTML = codeInput.value;
+                }} else {{
+                    textarea.value = editor.innerHTML;
+                }}
+                updateStats();
+            }}
+
+            function updateStats() {{
+                const text = editor.innerText || editor.textContent || '';
+                const cleanText = text.trim();
+                const words = cleanText ? cleanText.split(/\\s+/).length : 0;
+                const chars = cleanText.length;
+                const readMin = Math.max(1, Math.ceil(words / 200));
+                stats.textContent = `${{words}} words | ${{chars}} characters | ~${{readMin}} min read`;
+            }}
+
+            // Exec command helper
+            const toolbarBtns = document.querySelectorAll('#{container_id} .rte-btn');
+            toolbarBtns.forEach(btn => {{
+                btn.addEventListener('click', () => {{
+                    const cmd = btn.getAttribute('data-cmd');
+                    if (cmd) {{
+                        document.execCommand(cmd, false, null);
+                        sync();
+                    }}
+                }});
+            }});
+
+            // Format block selector
+            formatSelect.addEventListener('change', (e) => {{
+                const val = e.target.value;
+                if (val === 'pullquote') {{
+                    document.execCommand('formatBlock', false, '<div>');
+                    const selection = window.getSelection();
+                    if (selection.rangeCount) {{
+                        let node = selection.getRangeAt(0).commonAncestorContainer;
+                        if (node.nodeType === 3) node = node.parentNode;
+                        if (node && node !== editor) {{
+                            node.className = 'pull-note';
+                        }}
+                    }}
+                }} else {{
+                    document.execCommand('formatBlock', false, `<${{val}}>`);
+                }}
+                formatSelect.value = 'p';
+                sync();
+            }});
+
+            // Insert Link
+            linkBtn.addEventListener('click', () => {{
+                const url = prompt('Enter link URL (e.g. https://example.com):');
+                if (url) {{
+                    document.execCommand('createLink', false, url);
+                    sync();
+                }}
+            }});
+
+            // Insert Image
+            imgBtn.addEventListener('click', () => {{
+                const url = prompt('Enter Image URL (e.g. https://images.unsplash.com/... or /media/blog_images/...):');
+                if (url) {{
+                    document.execCommand('insertImage', false, url);
+                    sync();
+                }}
+            }});
+
+            // Insert Quote
+            quoteBtn.addEventListener('click', () => {{
+                const text = prompt('Enter Pull Quote text:', 'Stem cell research gives the body better tools to heal.');
+                if (text) {{
+                    const quoteHtml = `<div class="pull-note">"${{text}}"</div><p></p>`;
+                    document.execCommand('insertHTML', false, quoteHtml);
+                    sync();
+                }}
+            }});
+
+            // Toggle Code Mode
+            codeBtn.addEventListener('click', () => {{
+                isCodeView = !isCodeView;
+                if (isCodeView) {{
+                    codeInput.value = editor.innerHTML;
+                    editor.style.display = 'none';
+                    codeInput.style.display = 'block';
+                    codeBtn.style.background = '#08709d';
+                    codeBtn.style.color = '#ffffff';
+                    codeBtn.textContent = '👁️ Visual View';
+                }} else {{
+                    editor.innerHTML = codeInput.value;
+                    codeInput.style.display = 'none';
+                    editor.style.display = 'block';
+                    codeBtn.style.background = '#f1f5f9';
+                    codeBtn.style.color = '#0f172a';
+                    codeBtn.textContent = '</> Code View';
+                    sync();
+                }}
+            }});
+
+            // Listeners
+            editor.addEventListener('input', sync);
+            editor.addEventListener('blur', sync);
+            codeInput.addEventListener('input', sync);
+        }})();
+        </script>
+        """
+        return mark_safe(html)
+
+
+# ----------------------------------------------------------------------
 # Admin Forms & Classes
 # ----------------------------------------------------------------------
 class ServiceAdminForm(forms.ModelForm):
@@ -862,6 +1080,21 @@ class BlogPostAdminForm(forms.ModelForm):
     author = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 700px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
     )
+    read_time = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 400px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+        required=False,
+        help_text="e.g. 5 min read"
+    )
+    excerpt = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 14.5px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
+        required=False,
+        help_text="Brief summary snippet displayed on article cards"
+    )
+    content = forms.CharField(
+        widget=RichTextEditorWidget(),
+        required=False,
+        help_text="Full article body content: Use formatting toolbar for Headings, Bold, Lists, Pull Quotes, Links & Images."
+    )
 
     class Meta:
         model = BlogPost
@@ -896,9 +1129,22 @@ class ServiceAdmin(admin.ModelAdmin):
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
     form = BlogPostAdminForm
-    list_display = ('title', 'category', 'date', 'author')
+    list_display = ('title', 'category', 'date', 'author', 'read_time')
     list_filter = ('category', 'author')
-    search_fields = ('title', 'content')
+    search_fields = ('title', 'content', 'category', 'author')
+
+    fieldsets = (
+        ('📰 Article Header & Info', {
+            'fields': ('title', 'category', 'author', 'date', 'read_time')
+        }),
+        ('🖼️ Featured Media & Excerpt', {
+            'fields': ('image_file', 'image', 'excerpt')
+        }),
+        ('✍️ Main Article Content (Rich Visual Editor)', {
+            'fields': ('content',)
+        }),
+    )
+
 
 
 @admin.register(TeamMember)
