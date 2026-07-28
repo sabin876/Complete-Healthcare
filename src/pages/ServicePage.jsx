@@ -440,13 +440,13 @@ function LabServicesLanding({ slug = 'lab-services' }) {
         <Container className="flex flex-col items-center">
           <div className="mb-10 text-center max-w-3xl">
             <span className="text-[#08709d] text-xs font-bold uppercase tracking-widest bg-[#08709d]/10 px-3.5 py-1.5 rounded-full border border-[#08709d]/20 inline-block mb-3">
-              COMPREHENSIVE DIAGNOSTIC SERVICES
+              {serviceData?.eyebrow || "COMPREHENSIVE DIAGNOSTIC SERVICES"}
             </span>
             <SectionTitle className="mb-4">
-              Accurate Diagnostic Tests & Body Checkups at Your Doorstep
+              {serviceData?.tagline || (serviceData?.title ? `${serviceData.title} & Healthcare Services at Your Doorstep` : "Accurate Diagnostic Tests & Body Checkups at Your Doorstep")}
             </SectionTitle>
             <Paragraph>
-              CORx Healthcare offers a wide range of lab tests at home — blood tests, screenings, diagnostic or monitoring health checks, all as per your needs.
+              {serviceData?.description || "CORx Healthcare offers a wide range of services at home — screenings, diagnostic or monitoring health checks, all tailored to your needs."}
             </Paragraph>
           </div>
 
@@ -503,7 +503,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
               </svg>
             </span>
             <p className="text-base leading-7 text-white m-0 font-medium">
-              <strong className="font-extrabold uppercase tracking-wider mr-1">Note:</strong> All blood tests at home at CORx are coordinated based on your medical requirements and doctor's advice, where applicable.
+              <strong className="font-extrabold uppercase tracking-wider mr-1">Note:</strong> All {serviceData?.title ? serviceData.title.toLowerCase() : "health services"} at home at CORx are coordinated based on your medical requirements and doctor's advice, where applicable.
             </p>
           </div>
         </Container>
