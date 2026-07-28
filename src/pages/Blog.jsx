@@ -200,6 +200,18 @@ function ArticleCard({ article }) {
 
 export default function OrthopedicArticlesPage() {
   const [blogPostsList, setBlogPostsList] = useState(articles);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 4;
+
+  const totalPages = Math.ceil(blogPostsList.length / postsPerPage);
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = blogPostsList.slice(indexOfFirstPost, indexOfLastPost);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 200, behavior: "smooth" });
+  };
 
   React.useEffect(() => {
     fetch(`${API_BASE_URL}/api/blogs/`)
@@ -263,19 +275,96 @@ export default function OrthopedicArticlesPage() {
         </div>
 
         {/* Article Grid */}
-        {blogPostsList.length > 0 ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-              gap: "20px",
-              marginBottom: "40px",
-            }}
-          >
-            {blogPostsList.map((article) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
+        {currentPosts.length > 0 ? (
+          <>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                gap: "20px",
+                marginBottom: "40px",
+              }}
+            >
+              {currentPosts.map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "10px",
+                  marginTop: "10px",
+                  marginBottom: "50px",
+                  flexWrap: "wrap",
+                }}
+              >
+                <button
+                  onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                  disabled={currentPage === 1}
+                  style={{
+                    padding: "10px 18px",
+                    borderRadius: "8px",
+                    border: "1px solid #cbd5e1",
+                    backgroundColor: currentPage === 1 ? "#f1f5f9" : "#ffffff",
+                    color: currentPage === 1 ? "#94a3b8" : "#1e293b",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                    cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                    transition: "all 0.2s ease",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                  }}
+                >
+                  Previous
+                </button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "8px",
+                      border: page === currentPage ? "none" : "1px solid #cbd5e1",
+                      backgroundColor: page === currentPage ? "#2563eb" : "#ffffff",
+                      color: page === currentPage ? "#ffffff" : "#1e293b",
+                      fontWeight: "700",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      boxShadow: page === currentPage ? "0 4px 10px rgba(37, 99, 235, 0.2)" : "0 1px 2px rgba(0,0,0,0.05)",
+                    }}
+                  >
+                    {page}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  style={{
+                    padding: "10px 18px",
+                    borderRadius: "8px",
+                    border: "1px solid #cbd5e1",
+                    backgroundColor: currentPage === totalPages ? "#f1f5f9" : "#ffffff",
+                    color: currentPage === totalPages ? "#94a3b8" : "#1e293b",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                    cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+                    transition: "all 0.2s ease",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                  }}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <div
             style={{
