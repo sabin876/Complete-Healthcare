@@ -1047,6 +1047,18 @@ class ServiceAdminForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 450px; font-size: 14px; padding: 8px 12px; border-radius: 6px;'}),
         help_text="URL Identifier slug (e.g. lab-services, physiotherapy, iv-therapy)"
     )
+    icon = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 450px; font-size: 14px; padding: 8px 12px; border-radius: 6px;'}),
+        required=False,
+        initial='Activity',
+        help_text="Lucide Icon name (e.g. Activity, HeartPulse, Droplets, Stethoscope, Users)"
+    )
+    theme_color = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 450px; font-size: 14px; padding: 8px 12px; border-radius: 6px;'}),
+        required=False,
+        initial='#08709d',
+        help_text="Hex color code (e.g. #08709d, #63b158, #38bdf8, #f43f5e, #fbbf24)"
+    )
     eyebrow = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
         required=False,
@@ -1111,6 +1123,94 @@ class ServiceAdminForm(forms.ModelForm):
         help_text="User-Friendly FAQ Builder: Add, edit, or remove Question & Answer cards without writing JSON."
     )
 
+    def clean_floating_badge(self):
+        val = self.cleaned_data.get('floating_badge')
+        if not val or val == '':
+            return {}
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return {}
+        return val
+
+    def clean_features(self):
+        val = self.cleaned_data.get('features')
+        if not val or val == '':
+            return []
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return []
+        return val
+
+    def clean_indications(self):
+        val = self.cleaned_data.get('indications')
+        if not val or val == '':
+            return []
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return []
+        return val
+
+    def clean_lab_columns(self):
+        val = self.cleaned_data.get('lab_columns')
+        if not val or val == '':
+            return []
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return []
+        return val
+
+    def clean_reasons(self):
+        val = self.cleaned_data.get('reasons')
+        if not val or val == '':
+            return []
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return []
+        return val
+
+    def clean_steps(self):
+        val = self.cleaned_data.get('steps')
+        if not val or val == '':
+            return []
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return []
+        return val
+
+    def clean_benefits(self):
+        val = self.cleaned_data.get('benefits')
+        if not val or val == '':
+            return []
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return []
+        return val
+
+    def clean_faqs(self):
+        val = self.cleaned_data.get('faqs')
+        if not val or val == '':
+            return []
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return []
+        return val
+
     class Meta:
         model = Service
         fields = '__all__'
@@ -1155,6 +1255,7 @@ class ServiceAdmin(admin.ModelAdmin):
     form = ServiceAdminForm
     list_display = ('title', 'slug', 'eyebrow', 'theme_color', 'parent')
     search_fields = ('title', 'slug', 'tagline', 'description')
+    prepopulated_fields = {"slug": ("title",)}
     actions = ['duplicate_as_lab_template']
 
     @admin.action(description="📋 Duplicate selected service(s) using Lab-Services template structure")

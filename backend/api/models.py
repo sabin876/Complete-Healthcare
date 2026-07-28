@@ -116,9 +116,9 @@ class Service(models.Model):
     eyebrow = models.CharField(max_length=250, blank=True, default='')
     tagline = models.TextField(blank=True, default='')
     description = models.TextField(blank=True, default='')
-    icon = models.CharField(max_length=100, default='Activity')
+    icon = models.CharField(max_length=100, default='Activity', blank=True)
     image_file = models.FileField(upload_to='service_images/', null=True, blank=True, help_text="Upload a local image file from your computer")
-    theme_color = models.CharField(max_length=20, default='#08709d')
+    theme_color = models.CharField(max_length=20, default='#08709d', blank=True)
     floating_badge = models.JSONField(default=dict, blank=True)  # {title, desc}
     benefits = models.JSONField(default=list, blank=True)  # [{title, desc}]
     faqs = models.JSONField(default=list, blank=True)  # [{q, a}]
