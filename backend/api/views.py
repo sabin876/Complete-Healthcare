@@ -279,6 +279,9 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     serializer_class = BlogPostSerializer
 
 
+from rest_framework.decorators import api_view, action
+
+
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all().order_by('id')
     serializer_class = ServiceSerializer
@@ -301,6 +304,145 @@ class ServiceViewSet(viewsets.ModelViewSet):
                 return item
 
         return super().get_object()
+
+    @action(detail=False, methods=['get'], url_path='template')
+    def get_template(self, request):
+        """
+        Returns the lab-services template structure pre-populated with standard default section JSON.
+        """
+        base_service = Service.objects.filter(slug='lab-services').first()
+        if base_service:
+            serializer = self.get_serializer(base_service)
+            data = serializer.data
+        else:
+            data = {
+                "slug": "sample-service",
+                "title": "Sample Service Title",
+                "eyebrow": "DHA-Licensed Healthcare Service Across Dubai",
+                "tagline": "Quality Medical Care at Your Doorstep",
+                "description": "Professional healthcare service delivered to your home, hotel, or office by DHA-certified specialists.",
+                "icon": "Activity",
+                "theme_color": "#08709d",
+                "floating_badge": {
+                    "title": "Certified Clinical Care",
+                    "desc": "Professional medical services right at your home."
+                },
+                "features": [
+                    {"title": "24/7 on-demand home service"},
+                    {"title": "Fast turn-around time"},
+                    {"title": "DHA licensed doctors and nurses"},
+                    {"title": "High security and privacy"}
+                ],
+                "indications": [
+                    "Routine health evaluation",
+                    "Monitoring vital health markers",
+                    "Difficulty visiting a clinic or hospital"
+                ],
+                "lab_columns": [
+                    {
+                        "title": "Core Screenings",
+                        "tagline": "Routine blood & vitals",
+                        "tests": ["Allergy test", "Complete blood count", "Blood sugar test"]
+                    }
+                ],
+                "reasons": [
+                    {
+                        "num": "01",
+                        "label": "HOME VISITS",
+                        "title": "Sample collection & care by DHA licensed nurses",
+                        "desc": "CORx Healthcare provides professional doorstep care ensuring convenience and safety."
+                    }
+                ],
+                "steps": [
+                    {
+                        "title": "1. Book An Appointment",
+                        "desc": "Call +971 4 332 0776 or WhatsApp +971 54 703 3311."
+                    },
+                    {
+                        "title": "2. Clinical Team Arrives",
+                        "desc": "DHA-certified nurses arrive at your doorstep in ~30 minutes."
+                    },
+                    {
+                        "title": "3. Receive Results & Care",
+                        "desc": "Receive digital reports and follow-up medical guidance."
+                    }
+                ],
+                "faqs": [
+                    {
+                        "q": "How do I book a home service?",
+                        "a": "Call or WhatsApp our 24/7 patient helpline."
+                    }
+                ]
+            }
+        return Response(data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['post'], url_path='create_from_template')
+    def create_from_template(self, request):
+        """
+        Creates a new service using lab-services structure as template.
+        Accepts: title, slug (optional auto-generated), eyebrow, tagline, description, parent, theme_color, icon,
+        and optionally overrides features, indications, lab_columns, reasons, steps, faqs, benefits, floating_badge.
+        """
+        import re
+        title = request.data.get('title', '').strip()
+        if not title:
+            return Response({'error': 'Service title is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        provided_slug = request.data.get('slug', '').strip().lower()
+        if not provided_slug:
+            provided_slug = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+
+        if Service.objects.filter(slug=provided_slug).exists():
+            return Response({'error': f'Service with slug "{provided_slug}" already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Base template
+        base_service = Service.objects.filter(slug='lab-services').first()
+        base_data = {}
+        if base_service:
+            base_data = {
+                'eyebrow': base_service.eyebrow,
+                'tagline': base_service.tagline,
+                'description': base_service.description,
+                'icon': base_service.icon,
+                'theme_color': base_service.theme_color,
+                'floating_badge': base_service.floating_badge,
+                'benefits': base_service.benefits,
+                'faqs': base_service.faqs,
+                'locations': base_service.locations,
+                'features': base_service.features,
+                'indications': base_service.indications,
+                'lab_columns': base_service.lab_columns,
+                'reasons': base_service.reasons,
+                'steps': base_service.steps,
+            }
+
+        # Override defaults with payload if provided
+        parent_id = request.data.get('parent')
+        new_service_data = {
+            'slug': provided_slug,
+            'title': title,
+            'parent': parent_id,
+            'eyebrow': request.data.get('eyebrow', base_data.get('eyebrow', 'DHA-Licensed Home Care Across Dubai')),
+            'tagline': request.data.get('tagline', base_data.get('tagline', 'Professional Healthcare Services')),
+            'description': request.data.get('description', base_data.get('description', '')),
+            'icon': request.data.get('icon', base_data.get('icon', 'Activity')),
+            'theme_color': request.data.get('theme_color', base_data.get('theme_color', '#08709d')),
+            'floating_badge': request.data.get('floating_badge', base_data.get('floating_badge', {})),
+            'benefits': request.data.get('benefits', base_data.get('benefits', [])),
+            'faqs': request.data.get('faqs', base_data.get('faqs', [])),
+            'locations': request.data.get('locations', base_data.get('locations', [])),
+            'features': request.data.get('features', base_data.get('features', [])),
+            'indications': request.data.get('indications', base_data.get('indications', [])),
+            'lab_columns': request.data.get('lab_columns', base_data.get('lab_columns', [])),
+            'reasons': request.data.get('reasons', base_data.get('reasons', [])),
+            'steps': request.data.get('steps', base_data.get('steps', [])),
+        }
+
+        serializer = ServiceSerializer(data=new_service_data, context={'request': request})
+        if serializer.is_valid():
+            new_obj = serializer.save()
+            return Response({'success': True, 'message': 'Service created successfully from lab-services template.', 'service': serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({'success': False, 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TeamMemberViewSet(viewsets.ModelViewSet):

@@ -1153,12 +1153,45 @@ class BlogPostAdminForm(forms.ModelForm):
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     form = ServiceAdminForm
-    list_display = ('title', 'slug', 'eyebrow', 'theme_color')
+    list_display = ('title', 'slug', 'eyebrow', 'theme_color', 'parent')
     search_fields = ('title', 'slug', 'tagline', 'description')
+    actions = ['duplicate_as_lab_template']
+
+    @admin.action(description="📋 Duplicate selected service(s) using Lab-Services template structure")
+    def duplicate_as_lab_template(self, request, queryset):
+        count = 0
+        for service in queryset:
+            new_slug = f"{service.slug}-copy"
+            idx = 1
+            while Service.objects.filter(slug=new_slug).exists():
+                idx += 1
+                new_slug = f"{service.slug}-copy-{idx}"
+            
+            Service.objects.create(
+                slug=new_slug,
+                title=f"{service.title} (Copy)",
+                parent=service.parent,
+                eyebrow=service.eyebrow,
+                tagline=service.tagline,
+                description=service.description,
+                icon=service.icon,
+                theme_color=service.theme_color,
+                floating_badge=service.floating_badge,
+                benefits=service.benefits,
+                faqs=service.faqs,
+                locations=service.locations,
+                features=service.features,
+                indications=service.indications,
+                lab_columns=service.lab_columns,
+                reasons=service.reasons,
+                steps=service.steps
+            )
+            count += 1
+        self.message_user(request, f"Successfully created {count} service duplicate(s) with lab-services template layout.")
     
     fieldsets = (
         ('📌 General Information', {
-            'fields': ('title', 'slug', 'theme_color', 'icon', 'image_file')
+            'fields': ('title', 'slug', 'parent', 'theme_color', 'icon', 'image_file')
         }),
         ('✨ Hero Section Content', {
             'fields': ('eyebrow', 'tagline', 'description', 'floating_badge', 'features')

@@ -97,10 +97,10 @@ class SubServiceSerializer(serializers.ModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     sub_services = SubServiceSerializer(many=True, read_only=True)
-    name = serializers.CharField(source='title')
+    name = serializers.CharField(source='title', required=False)
     path = serializers.SerializerMethodField()
-    subtitle = serializers.CharField(source='tagline', default='')
-    accent = serializers.CharField(source='theme_color', default='#08709d')
+    subtitle = serializers.CharField(source='tagline', required=False, allow_blank=True)
+    accent = serializers.CharField(source='theme_color', default='#08709d', required=False)
 
     class Meta:
         model = Service
