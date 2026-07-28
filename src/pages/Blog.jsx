@@ -201,7 +201,7 @@ function ArticleCard({ article }) {
 export default function OrthopedicArticlesPage() {
   const [blogPostsList, setBlogPostsList] = useState(articles);
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 4;
+  const postsPerPage = 6;
 
   const totalPages = Math.ceil(blogPostsList.length / postsPerPage);
   const indexOfLastPost = currentPage * postsPerPage;
