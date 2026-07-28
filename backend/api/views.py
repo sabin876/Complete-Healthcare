@@ -306,3 +306,28 @@ class ServiceViewSet(viewsets.ModelViewSet):
 class TeamMemberViewSet(viewsets.ModelViewSet):
     queryset = TeamMember.objects.all().order_by('-id')
     serializer_class = TeamMemberSerializer
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+
+@csrf_exempt
+def upload_blog_image(request):
+    # Ensure the user is a logged-in staff member (like an admin)
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return JsonResponse({'error': 'Unauthorized. Staff privilege required.'}, status=403)
+
+    if request.method == 'POST' and request.FILES.get('image'):
+        image_file = request.FILES['image']
+        # Save file to media/blog_images/
+        file_name = default_storage.save(f'blog_images/{image_file.name}', ContentFile(image_file.read()))
+        # Get url
+        file_url = default_storage.url(file_name)
+        # Absolute url
+        absolute_url = request.build_absolute_uri(file_url)
+        return JsonResponse({'url': absolute_url})
+
+    return JsonResponse({'error': 'Invalid request. POST request with image file expected.'}, status=400)
+

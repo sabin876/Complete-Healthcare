@@ -936,14 +936,63 @@ class RichTextEditorWidget(forms.Widget):
                 }}
             }});
 
-            // Insert Image
+            // Insert Image from local computer
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            
             imgBtn.addEventListener('click', () => {{
-                const url = prompt('Enter Image URL (e.g. https://images.unsplash.com/... or /media/blog_images/...):');
-                if (url) {{
-                    document.execCommand('insertImage', false, url);
-                    sync();
-                }}
+                fileInput.click();
             }});
+
+            fileInput.addEventListener('change', () => {{
+                if (fileInput.files.length === 0) return;
+                const file = fileInput.files[0];
+                
+                // Show loading state on button
+                const originalText = imgBtn.innerHTML;
+                imgBtn.innerHTML = 'Uploading...';
+                imgBtn.disabled = true;
+
+                const formData = new FormData();
+                formData.append('image', file);
+
+                // Dynamically resolve API prefix if Django is hosted in a subdirectory (e.g. /backend/)
+                const adminIndex = window.location.pathname.indexOf('/admin/');
+                const uploadPath = (adminIndex !== -1 ? window.location.pathname.slice(0, adminIndex) : '') + '/api/upload_blog_image/';
+
+                fetch(uploadPath, {{
+                    method: 'POST',
+                    body: formData
+                }})
+                .then(res => {{
+                    if (!res.ok) {{
+                        throw new Error('Upload failed with status ' + res.status);
+                    }}
+                    return res.json();
+                }})
+                .then(data => {{
+                    if (data.url) {{
+                        // Focus on editor area
+                        editor.focus();
+                        // Insert uploaded image
+                        document.execCommand('insertImage', false, data.url);
+                        sync();
+                    }} else if (data.error) {{
+                        alert('Upload failed: ' + data.error);
+                    }}
+                }})
+                .catch(err => {{
+                    console.error('Error uploading image:', err);
+                    alert('Error uploading image from local system. Please check your connection and login status.');
+                }})
+                .finally(() => {{
+                    imgBtn.innerHTML = originalText;
+                    imgBtn.disabled = false;
+                    fileInput.value = ''; // Reset file uploader input
+                }});
+            }});
+
 
             // Insert Quote
             quoteBtn.addEventListener('click', () => {{
