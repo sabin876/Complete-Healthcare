@@ -364,7 +364,165 @@ def seed():
         }
     ]
 
-    for s in services_list:
+    # Sub-services for Home Nursing (nursing) and Doctor On Call (doctor-on-call)
+    sub_services_list = [
+        {
+            "slug": "palliative-care",
+            "title": "Palliative Care",
+            "eyebrow": "Compassionate Support for Advanced Illness",
+            "tagline": "Comfort-focused care & symptom management.",
+            "description": "Providing relief from the symptoms and stress of a serious illness to improve quality of life for the patient and the family.",
+            "icon": "HeartHandshake",
+            "theme_color": "#f43f5e",
+            "parent_slug": "nursing",
+            "floating_badge": {
+                "title": "Comfort & Quality of Life",
+                "desc": "Empathetic medical, emotional, and social support for long-term health needs."
+            },
+            "benefits": [
+                {"title": "Pain Management", "desc": "Expert clinical monitoring and symptom relief under medical guidance"},
+                {"title": "Holistic Support", "desc": "Addressing emotional, spiritual, and physical health aspects"},
+                {"title": "Family Guidance", "desc": "Close support, communication, and training for family caregivers"}
+            ]
+        },
+        {
+            "slug": "night-care-nurse",
+            "title": "Night Care Nurse",
+            "eyebrow": "Dedicated Overnight Nursing Care",
+            "tagline": "Continuous clinical monitoring & overnight assistance.",
+            "description": "Registered nurses provide medical monitoring, medication management, and patient assistance throughout the night.",
+            "icon": "Clock",
+            "theme_color": "#f43f5e",
+            "parent_slug": "nursing",
+            "floating_badge": {
+                "title": "Overnight Safety",
+                "desc": "Peace of mind while your loved ones are professionally monitored overnight."
+            },
+            "benefits": [
+                {"title": "24/7 Watch", "desc": "Continuous checks on vitals and overnight response"},
+                {"title": "Sleep Support", "desc": "Allowing family members to rest while clinicians manage night duties"},
+                {"title": "Medication Timing", "desc": "Timely administration of critical night-time prescriptions"}
+            ]
+        },
+        {
+            "slug": "injection-at-home",
+            "title": "Nurse for Injection",
+            "eyebrow": "At-Home Injections & IV Infusions",
+            "tagline": "Safe, sterile injection administration at your home.",
+            "description": "DHA-licensed nurses visit your home or hotel room to safely administer prescribed injections, IV lines, or medications.",
+            "icon": "Activity",
+            "theme_color": "#f43f5e",
+            "parent_slug": "nursing",
+            "floating_badge": {
+                "title": "Certified Clinical Safety",
+                "desc": "Avoiding hospital visits for routine or critical injections."
+            },
+            "benefits": [
+                {"title": "Accurate Dosage", "desc": "Sterile preparation and exact dosage compliance under physician guidelines"},
+                {"title": "Immediate Care", "desc": "Saves time and effort, especially for patients with limited mobility"},
+                {"title": "Diverse Injections", "desc": "Intramuscular, subcutaneous, or intravenous administration"}
+            ]
+        },
+        {
+            "slug": "wound-care",
+            "title": "Wound Care Services",
+            "eyebrow": "Specialized Clinical Wound Dressing",
+            "tagline": "Advanced dressing & wound management at home.",
+            "description": "Professional treatment and recovery programs for surgical wounds, pressure ulcers, diabetic wounds, and minor injuries.",
+            "icon": "HeartPulse",
+            "theme_color": "#f43f5e",
+            "parent_slug": "nursing",
+            "floating_badge": {
+                "title": "Faster Wound Healing",
+                "desc": "Clinical hygiene protocols to prevent infection and encourage recovery."
+            },
+            "benefits": [
+                {"title": "Infection Control", "desc": "Strict sterile protocols using hospital-grade clinical dressings"},
+                {"title": "Healing Tracking", "desc": "Continuous monitoring and progress logging for surgical wounds"},
+                {"title": "Doctor Liaison", "desc": "Close coordination with surgeons for suture removal and reviews"}
+            ]
+        },
+        {
+            "slug": "oxygen-therapy",
+            "title": "Oxygen Therapy",
+            "eyebrow": "At-Home Respiratory Care & Support",
+            "tagline": "Oxygen administration and respiratory monitoring.",
+            "description": "DHA-licensed nurses assist patients requiring oxygen support or respiratory therapies in a familiar environment.",
+            "icon": "Droplets",
+            "theme_color": "#f43f5e",
+            "parent_slug": "nursing",
+            "floating_badge": {
+                "title": "Respiratory Support",
+                "desc": "Professional clinical oversight for oxygen concentrators and breathing support."
+            },
+            "benefits": [
+                {"title": "Vitals Monitoring", "desc": "Continuous checking of blood oxygen levels (SpO2) and pulse"},
+                {"title": "Equipment Safety", "desc": "Safe setup, cannula checks, and settings adjustments"},
+                {"title": "Patient Familiarity", "desc": "Delivering complex respiratory care safely at home"}
+            ]
+        },
+        {
+            "slug": "doctor-at-home",
+            "title": "Doctor at Home",
+            "eyebrow": "24/7 At-Home Doctor Visits in Dubai",
+            "tagline": "Licensed physicians arriving at your home in 30-45 mins.",
+            "description": "Urgent consultations, diagnostic checks, and prescriptions issued right inside your living room.",
+            "icon": "Stethoscope",
+            "theme_color": "#fbbf24",
+            "parent_slug": "doctor-on-call",
+            "floating_badge": {
+                "title": "30-Min Rapid Response",
+                "desc": "Direct access to emergency primary physicians in Dubai."
+            },
+            "benefits": [
+                {"title": "Fast Home Visits", "desc": "Doctors at your doorstep day or night within 30-45 minutes"},
+                {"title": "Diagnosis & Rx", "desc": "Immediate diagnostic vitals and prescription issuance"},
+                {"title": "Comfort of Home", "desc": "Avoiding ER waiting rooms and traffic stresses"}
+            ]
+        },
+        {
+            "slug": "doctor-at-office",
+            "title": "Doctor at Office",
+            "eyebrow": "Workplace Physician Visits & Consultations",
+            "tagline": "Corporate medical checkups and workplace doctor calls.",
+            "description": "On-demand doctor visits to corporate office locations across Dubai for staff assessments, checkups, or wellness reviews.",
+            "icon": "Stethoscope",
+            "theme_color": "#fbbf24",
+            "parent_slug": "doctor-on-call",
+            "floating_badge": {
+                "title": "Corporate Wellness",
+                "desc": "Protecting workforce productivity and health through on-site primary care."
+            },
+            "benefits": [
+                {"title": "Corporate Visits", "desc": "Doctors sent directly to your corporate headquarters or offices"},
+                {"title": "Preventative Care", "desc": "Screenings, blood pressure checks, and prescription renewals"},
+                {"title": "Zero Work Downtime", "desc": "Employees get treated on-site without travel delays"}
+            ]
+        },
+        {
+            "slug": "doctor-at-hotel",
+            "title": "Doctor at Hotel",
+            "eyebrow": "Hotel Room Medical Consultations",
+            "tagline": "24/7 On-demand doctor calls for Dubai hotel guests.",
+            "description": "DHA-licensed doctors travel directly to your hotel room for immediate diagnosis, treatment, or prescription renewals.",
+            "icon": "Stethoscope",
+            "theme_color": "#fbbf24",
+            "parent_slug": "doctor-on-call",
+            "floating_badge": {
+                "title": "Tourist Medical Care",
+                "desc": "Peace of mind for tourists and business travelers in Dubai."
+            },
+            "benefits": [
+                {"title": "Hotel Room Care", "desc": "Doctors arriving directly at your hotel room in 30-45 minutes"},
+                {"title": "Insurance Friendly", "desc": "Official medical reports for travel insurance reimbursement"},
+                {"title": "On-call Assistance", "desc": "24/7 treatment for travel fatigue, dehydration, food poisoning, or minor injuries"}
+            ]
+        }
+    ]
+
+    all_services = services_list + sub_services_list
+
+    for s in all_services:
         Service.objects.create(
             slug=s["slug"],
             title=s["title"],
@@ -382,7 +540,20 @@ def seed():
             benefits=s.get("benefits", []),
             faqs=s.get("faqs", [])
         )
-    print(f"Successfully seeded {len(services_list)} services.")
+    print(f"Successfully seeded {len(all_services)} services.")
+
+    # Pass 2: Set parent-child relationships
+    for s in all_services:
+        parent_slug = s.get("parent_slug")
+        if parent_slug:
+            try:
+                parent_obj = Service.objects.get(slug=parent_slug)
+                child_obj = Service.objects.get(slug=s["slug"])
+                child_obj.parent = parent_obj
+                child_obj.save()
+            except Service.DoesNotExist:
+                print(f"Warning: Could not link parent '{parent_slug}' to service '{s['slug']}'")
+    print("Successfully configured parent-child service links.")
 
     print("Database seeding completed successfully!")
 

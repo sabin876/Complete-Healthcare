@@ -80,17 +80,39 @@ class BlogPostSerializer(serializers.ModelSerializer):
         return obj.image or 'https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop'
 
 
+class SubServiceSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='title')
+    path = serializers.SerializerMethodField()
+    desc = serializers.CharField(source='tagline', default='')
+    accent = serializers.CharField(source='theme_color', default='#08709d')
+
+    class Meta:
+        model = Service
+        fields = ['id', 'name', 'slug', 'path', 'desc', 'accent']
+
+    def get_path(self, obj):
+        return f'/services/{obj.slug}'
+
+
 class ServiceSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
+    sub_services = SubServiceSerializer(many=True, read_only=True)
+    name = serializers.CharField(source='title')
+    path = serializers.SerializerMethodField()
+    subtitle = serializers.CharField(source='tagline', default='')
+    accent = serializers.CharField(source='theme_color', default='#08709d')
 
     class Meta:
         model = Service
         fields = [
-            'id', 'slug', 'title', 'eyebrow', 'tagline', 'description',
-            'icon', 'image_file', 'image', 'theme_color', 'floating_badge', 'benefits', 'faqs',
+            'id', 'slug', 'title', 'name', 'path', 'subtitle', 'accent', 'parent', 'sub_services',
+            'eyebrow', 'description', 'icon', 'image_file', 'image', 'floating_badge', 'benefits', 'faqs',
             'locations', 'features', 'indications', 'lab_columns', 'reasons', 'steps',
             'created_at', 'updated_at'
         ]
+
+    def get_path(self, obj):
+        return f'/services/{obj.slug}'
 
     def get_image(self, obj):
         if obj.image_file:
@@ -99,6 +121,7 @@ class ServiceSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.image_file.url)
             return f"http://localhost:8000{obj.image_file.url}"
         return ''
+
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):

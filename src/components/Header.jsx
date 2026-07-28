@@ -2,13 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { 
   Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, 
   Printer, ArrowRight, Linkedin, User, ChevronRight, Activity, Droplets, 
-  HeartPulse, Stethoscope, HeartHandshake, TestTube, Globe, Sparkles, CheckCircle2 
+  HeartPulse, Stethoscope, HeartHandshake, TestTube, Globe, Sparkles, CheckCircle2,
+  Clock
 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.webp';
 import tollfree from '../assets/tollfree.png';
+import { API_BASE_URL } from '../config/api';
+
+const ICON_MAP = {
+  Activity,
+  Droplets,
+  HeartPulse,
+  Stethoscope,
+  HeartHandshake,
+  TestTube,
+  Globe,
+  Sparkles,
+  CheckCircle2,
+  Clock
+};
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -16,6 +31,97 @@ const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [openSubMenu, setOpenSubMenu] = useState(null);
+
+  const defaultServices = [
+    { 
+      name: 'Physiotherapy', 
+      path: '/services/physiotherapy', 
+      icon: Activity,
+      subtitle: 'Rehabilitation & Pain Relief',
+      badge: 'Popular',
+      accent: '#63e8a0'
+    },
+    { 
+      name: 'IV Therapy | IV Drip', 
+      path: '/services/iv-therapy', 
+      icon: Droplets,
+      subtitle: 'Vitamin Boost & Fast Hydration',
+      badge: 'Fast Acting',
+      accent: '#38bdf8'
+    },
+    { 
+      name: 'Home Nursing', 
+      path: '/services/nursing', 
+      icon: HeartPulse,
+      subtitle: 'Post-op & Specialized Care',
+      accent: '#f43f5e',
+      subItems: [
+        { name: 'Palliative Care', path: '/services/palliative-care', desc: 'Compassionate long-term medical support' },
+        { name: 'Night Care Nurse', path: '/services/night-care-nurse', desc: '24/7 Dedicated overnight monitoring' },
+        { name: 'Nurse for Injection', path: '/services/injection-at-home', desc: 'Safe at-home IV & medication care' },
+        { name: 'Wound Care Services', path: '/services/wound-care', desc: 'Clinical dressing & wound management' },
+        { name: 'Oxygen Therapy', path: '/services/oxygen-therapy', desc: 'Respiratory care & equipment at home' },
+      ]
+    },
+    { 
+      name: 'Doctor On Call', 
+      path: '/services/doctor-on-call', 
+      icon: Stethoscope,
+      subtitle: '24/7 Medical Home & Hotel Visits',
+      accent: '#fbbf24',
+      subItems: [
+        { name: 'Doctor at Home', path: '/services/doctor-at-home', desc: 'Urgent home visits within 30-45 mins' },
+        { name: 'Doctor at Office', path: '/services/doctor-at-office', desc: 'Workplace consultations & checkups' },
+        { name: 'Doctor at Hotel', path: '/services/doctor-at-hotel', desc: 'Hotel room medical visits for guests' },
+      ]
+    },
+    { 
+      name: 'Elderly Home Care', 
+      path: '/services/elderly-care', 
+      icon: HeartHandshake,
+      subtitle: 'Assisted Senior Living at Home',
+      accent: '#a78bfa'
+    },
+    { 
+      name: 'Lab Test at Home', 
+      path: '/services/lab-services', 
+      icon: TestTube,
+      subtitle: 'Quick In-Home Sample Collection',
+      accent: '#34d399'
+    },
+  ];
+
+  const [servicesDropdown, setServicesDropdown] = useState(defaultServices);
+
+  useEffect(() => {
+    // Fetch dynamic services from Django API
+    fetch(`${API_BASE_URL}/api/services/`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          // Filter to get only parent services (s.parent === null)
+          const parents = data.filter(s => s.parent === null);
+          const mapped = parents.map(s => ({
+            id: s.id,
+            name: s.name || s.title,
+            path: s.path || `/services/${s.slug}`,
+            icon: ICON_MAP[s.icon] || Activity,
+            subtitle: s.subtitle || s.tagline || '',
+            badge: s.floating_badge && s.floating_badge.title ? s.floating_badge.title : '',
+            accent: s.accent || s.theme_color || '#08709d',
+            subItems: (s.sub_services || []).map(sub => ({
+              id: sub.id,
+              name: sub.name,
+              path: sub.path || `/services/${sub.slug}`,
+              icon: ICON_MAP[sub.icon] || CheckCircle2,
+              desc: sub.desc || ''
+            }))
+          }));
+          setServicesDropdown(mapped);
+        }
+      })
+      .catch(err => console.log('Django API offline/error, using static default services navbar:', err));
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,64 +152,7 @@ const Header = () => {
     { 
       name: 'Services', 
       path: '/services',
-      dropdown: [
-        { 
-          name: 'Physiotherapy', 
-          path: '/services/physiotherapy', 
-          icon: Activity,
-          subtitle: 'Rehabilitation & Pain Relief',
-          badge: 'Popular',
-          accent: '#63e8a0'
-        },
-        { 
-          name: 'IV Therapy | IV Drip', 
-          path: '/services/iv-therapy', 
-          icon: Droplets,
-          subtitle: 'Vitamin Boost & Fast Hydration',
-          badge: 'Fast Acting',
-          accent: '#38bdf8'
-        },
-        { 
-          name: 'Home Nursing', 
-          path: '/services/nursing', 
-          icon: HeartPulse,
-          subtitle: 'Post-op & Specialized Care',
-          accent: '#f43f5e',
-          subItems: [
-            { name: 'Palliative Care', path: '/services/palliative-care', desc: 'Compassionate long-term medical support' },
-            { name: 'Night Care Nurse', path: '/services/night-care-nurse', desc: '24/7 Dedicated overnight monitoring' },
-            { name: 'Nurse for Injection', path: '/services/injection-at-home', desc: 'Safe at-home IV & medication care' },
-            { name: 'Wound Care Services', path: '/services/wound-care', desc: 'Clinical dressing & wound management' },
-            { name: 'Oxygen Therapy', path: '/services/oxygen-therapy', desc: 'Respiratory care & equipment at home' },
-          ]
-        },
-        { 
-          name: 'Doctor On Call', 
-          path: '/services/doctor-on-call', 
-          icon: Stethoscope,
-          subtitle: '24/7 Medical Home & Hotel Visits',
-          accent: '#fbbf24',
-          subItems: [
-            { name: 'Doctor at Home', path: '/services/doctor-at-home', desc: 'Urgent home visits within 30-45 mins' },
-            { name: 'Doctor at Office', path: '/services/doctor-at-office', desc: 'Workplace consultations & checkups' },
-            { name: 'Doctor at Hotel', path: '/services/doctor-at-hotel', desc: 'Hotel room medical visits for guests' },
-          ]
-        },
-        { 
-          name: 'Elderly Home Care', 
-          path: '/services/elderly-care', 
-          icon: HeartHandshake,
-          subtitle: 'Assisted Senior Living at Home',
-          accent: '#a78bfa'
-        },
-        { 
-          name: 'Lab Test at Home', 
-          path: '/services/lab-services', 
-          icon: TestTube,
-          subtitle: 'Quick In-Home Sample Collection',
-          accent: '#34d399'
-        },
-      ]
+      dropdown: servicesDropdown
     },
     { name: 'Book Appointment', path: '/contact' },
     { name: 'Contact us', path: '/contact' },
