@@ -15,3 +15,11 @@ except ImportError:
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'healthcare_backend.settings')
 
 from healthcare_backend.wsgi import application
+
+# Auto-run pending database migrations on server boot
+try:
+    from django.core.management import call_command
+    call_command('migrate', interactive=False)
+except Exception as e:
+    pass
+
