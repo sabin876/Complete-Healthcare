@@ -102,6 +102,11 @@ class ServiceSerializer(serializers.ModelSerializer):
     subtitle = serializers.CharField(source='tagline', required=False, allow_blank=True)
     accent = serializers.CharField(source='theme_color', default='#08709d', required=False)
 
+    about_section_title = serializers.SerializerMethodField()
+    indications_section_title = serializers.SerializerMethodField()
+    comprehensive_section_title = serializers.SerializerMethodField()
+    faq_section_title = serializers.SerializerMethodField()
+
     class Meta:
         model = Service
         fields = [
@@ -122,6 +127,24 @@ class ServiceSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.image_file.url)
             return f"http://localhost:8000{obj.image_file.url}"
         return ''
+
+    def _get_badge_field(self, obj, key):
+        badge = getattr(obj, 'floating_badge', None)
+        if isinstance(badge, dict):
+            return badge.get(key, '')
+        return ''
+
+    def get_about_section_title(self, obj):
+        return self._get_badge_field(obj, 'about_section_title')
+
+    def get_indications_section_title(self, obj):
+        return self._get_badge_field(obj, 'indications_section_title')
+
+    def get_comprehensive_section_title(self, obj):
+        return self._get_badge_field(obj, 'comprehensive_section_title')
+
+    def get_faq_section_title(self, obj):
+        return self._get_badge_field(obj, 'faq_section_title')
 
 
 

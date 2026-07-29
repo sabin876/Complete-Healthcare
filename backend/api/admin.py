@@ -1238,6 +1238,33 @@ class ServiceAdminForm(forms.ModelForm):
         fields = '__all__'
 
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            badge = self.instance.floating_badge or {}
+            if isinstance(badge, dict):
+                self.fields['about_section_title'].initial = badge.get('about_section_title', '')
+                self.fields['indications_section_title'].initial = badge.get('indications_section_title', '')
+                self.fields['comprehensive_section_title'].initial = badge.get('comprehensive_section_title', '')
+                self.fields['faq_section_title'].initial = badge.get('faq_section_title', '')
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        badge = instance.floating_badge or {}
+        if not isinstance(badge, dict):
+            badge = {}
+        
+        badge['about_section_title'] = self.cleaned_data.get('about_section_title', '')
+        badge['indications_section_title'] = self.cleaned_data.get('indications_section_title', '')
+        badge['comprehensive_section_title'] = self.cleaned_data.get('comprehensive_section_title', '')
+        badge['faq_section_title'] = self.cleaned_data.get('faq_section_title', '')
+        
+        instance.floating_badge = badge
+        if commit:
+            instance.save()
+        return instance
+
+
 class BlogPostAdminForm(forms.ModelForm):
     title = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 16px; font-weight: 600; padding: 10px 14px; border-radius: 6px;'}),

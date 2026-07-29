@@ -119,13 +119,6 @@ class Service(models.Model):
     icon = models.CharField(max_length=100, default='Activity', blank=True)
     image_file = models.FileField(upload_to='service_images/', null=True, blank=True, help_text="Upload a local image file from your computer")
     theme_color = models.CharField(max_length=20, default='#08709d', blank=True)
-    
-    # Custom Section Titles
-    about_section_title = models.CharField(max_length=200, blank=True, default='', help_text="Override the 'About this service' title")
-    indications_section_title = models.CharField(max_length=200, blank=True, default='', help_text="Override the 'Who May Need this service' title")
-    comprehensive_section_title = models.CharField(max_length=200, blank=True, default='', help_text="Override the 'Comprehensive Services' title")
-    faq_section_title = models.CharField(max_length=200, blank=True, default='', help_text="Override the 'FAQs' title")
-
     floating_badge = models.JSONField(default=dict, blank=True)  # {title, desc}
     benefits = models.JSONField(default=list, blank=True)  # [{title, desc}]
     faqs = models.JSONField(default=list, blank=True)  # [{q, a}]
