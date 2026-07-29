@@ -93,17 +93,17 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData }) {
   const descParagraphs = rawDesc.trim() 
     ? rawDesc.split(/\n\n+/).filter(Boolean)
     : [
-        "Blood testing and home health evaluations are essential for monitoring health, diagnosing medical conditions, and evaluating organ function. With CORx Healthcare, you no longer need to travel to a clinic or wait in crowded waiting rooms.",
-        "Our DHA-certified nurses visit your home, hotel, or office with sterile, single-use sampling kits to deliver accurate clinical care and fast digital reports.",
-        "Whether you require routine checkups, specialized diagnostic screenings, or personalized home care, our senior medical team ensures complete confidentiality and medical accuracy throughout."
+        "Blood testing is essential for monitoring health, diagnosing medical conditions, and evaluating organ function. With CORx Healthcare, you no longer need to travel to a lab or wait in crowded waiting rooms.",
+        "Our DHA-certified nurses visit your home, hotel, or office with sterile, single-use sampling kits to collect blood samples comfortably and safely, delivering accurate digital lab reports within 2 to 4 hours.",
+        "Whether you require routine body checkups, diabetes monitoring, lipid profiles, or specialized diagnostic screenings, our senior medical team ensures complete confidentiality and medical accuracy throughout."
       ];
 
   return (
     <Section variant="slate" className="py-16 md:py-24">
       <Container className="max-w-[1480px]">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+        <div className={`grid grid-cols-1 ${displayIndications.length > 0 ? 'lg:grid-cols-2' : ''} gap-8 lg:gap-12 items-stretch`}>
           
-          {/* Left Card: ABOUT THE SERVICE */}
+          {/* Left Card: ABOUT THE SPECIALITY */}
           <div className="rounded-3xl border-l-[6px] border-l-[#08709d] border-t border-r border-b border-slate-200/90 bg-white p-8 sm:p-12 lg:p-14 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between min-h-[540px]">
             <div>
               <span className="text-[#08709d] text-xs sm:text-sm font-bold uppercase tracking-widest bg-[#08709d]/10 px-4 py-2 rounded-full border border-[#08709d]/20 inline-block mb-5">
@@ -111,7 +111,7 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData }) {
               </span>
               
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-6">
-                About {serviceTitle}
+                {serviceData?.title ? `About ${serviceData.title}` : "About Blood Test at Home & Home Sample Collection"}
               </h2>
 
               {descParagraphs.map((para, pIdx) => (
@@ -425,7 +425,15 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 transitionDelay: "0.2s"
               }}
             >
-              <LabIllustration />
+              {serviceData?.image_file ? (
+                <img 
+                  src={serviceData.image_file} 
+                  alt={serviceData.title || "Service"} 
+                  className="w-full h-auto rounded-[30px] shadow-2xl object-cover border-[6px] border-white/60" 
+                />
+              ) : (
+                <LabIllustration />
+              )}
             </div>
           </div>
         </Container>
