@@ -1255,7 +1255,10 @@ class ServiceAdmin(admin.ModelAdmin):
     form = ServiceAdminForm
     list_display = ('title', 'slug', 'eyebrow', 'theme_color', 'parent')
     search_fields = ('title', 'slug', 'tagline', 'description')
+    list_filter = ('parent', 'created_at', 'updated_at')
     prepopulated_fields = {"slug": ("title",)}
+    autocomplete_fields = ('parent',)
+    readonly_fields = ('created_at', 'updated_at')
     actions = ['duplicate_as_lab_template']
 
     @admin.action(description="📋 Duplicate selected service(s) using Lab-Services template structure")
@@ -1305,6 +1308,10 @@ class ServiceAdmin(admin.ModelAdmin):
         }),
         ('❓ FAQs', {
             'fields': ('faqs',)
+        }),
+        ('🕒 Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
         }),
     )
 

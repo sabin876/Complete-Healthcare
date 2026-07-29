@@ -84,8 +84,8 @@ function LabIllustration() {
   );
 }
 
-function WhoMayNeedBloodTestSection({ indicationsList = bloodTestIndications, serviceData }) {
-  const displayIndications = (indicationsList && indicationsList.length > 0) ? indicationsList : bloodTestIndications;
+function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData }) {
+  const displayIndications = indicationsList || [];
   const serviceTitle = serviceData?.title || "Blood Test at Home & Home Sample Collection";
   const rawDesc = serviceData?.description || "";
   
@@ -123,6 +123,7 @@ function WhoMayNeedBloodTestSection({ indicationsList = bloodTestIndications, se
           </div>
 
           {/* Right Card: CLINICAL INDICATIONS */}
+          {displayIndications.length > 0 && (
           <div className="rounded-3xl border border-slate-200/90 bg-white p-8 sm:p-12 lg:p-14 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between min-h-[540px]">
             <div>
               <span className="text-emerald-700 text-xs sm:text-sm font-bold uppercase tracking-widest bg-emerald-50 px-4 py-2 rounded-full border border-emerald-200/60 inline-block mb-5">
@@ -152,6 +153,7 @@ function WhoMayNeedBloodTestSection({ indicationsList = bloodTestIndications, se
               </div>
             </div>
           </div>
+          )}
 
         </div>
       </Container>
@@ -339,19 +341,19 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       .catch(() => {});
   }, [slug]);
 
-  const featuresList = (serviceData?.features && serviceData.features.length > 0) ? serviceData.features : labFeatures;
-  const indicationsList = (serviceData?.indications && serviceData.indications.length > 0) ? serviceData.indications : bloodTestIndications;
-  const labColumns = (serviceData?.lab_columns && serviceData.lab_columns.length > 0) 
-    ? serviceData.lab_columns.map((col, idx) => ({
+  const featuresList = serviceData ? (serviceData.features || []) : labFeatures;
+  const indicationsList = serviceData ? (serviceData.indications || []) : bloodTestIndications;
+  const labColumns = serviceData 
+    ? (serviceData.lab_columns || []).map((col, idx) => ({
         ...col,
         icon: col.icon || defaultLabColumns[idx % defaultLabColumns.length]?.icon,
         iconBg: col.iconBg || defaultLabColumns[idx % defaultLabColumns.length]?.iconBg,
         delay: 0.05 + idx * 0.07
       })) 
     : defaultLabColumns;
-  const reasonsList = (serviceData?.reasons && serviceData.reasons.length > 0) ? serviceData.reasons : reasons;
-  const stepsList = (serviceData?.steps && serviceData.steps.length > 0) ? serviceData.steps : stepsData;
-  const faqList = (serviceData?.faqs && serviceData.faqs.length > 0) ? serviceData.faqs : labFaqs;
+  const reasonsList = serviceData ? (serviceData.reasons || []) : reasons;
+  const stepsList = serviceData ? (serviceData.steps || []) : stepsData;
+  const faqList = serviceData ? (serviceData.faqs || []) : labFaqs;
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
@@ -773,10 +775,12 @@ const faqStyles = `
   .lab-faq-footer a:hover { border-bottom-color: #08709d; }
 `;
 
-function LabServiceFAQ({ faqList = labFaqs, serviceData }) {
+function LabServiceFAQ({ faqList = [], serviceData }) {
   const [openIndex, setOpenIndex] = useState(null);
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
-  const displayFaqs = (faqList && faqList.length > 0) ? faqList : labFaqs;
+  const displayFaqs = faqList || [];
+  
+  if (displayFaqs.length === 0) return null;
 
   return (
     <section className="lab-faq-section">
@@ -869,8 +873,9 @@ const stepsData = [
   }
 ];
 
-function ThreeStepsLabProcessSection({ stepsList = stepsData, serviceData }) {
-  const displaySteps = (stepsList && stepsList.length > 0) ? stepsList : stepsData;
+function ThreeStepsLabProcessSection({ stepsList = [], serviceData }) {
+  const displaySteps = stepsList || [];
+  if (displaySteps.length === 0) return null;
   return (
     <Section variant="slate" className="relative overflow-hidden py-20">
       <Container className="max-w-[1480px]">
@@ -960,8 +965,9 @@ function ThreeStepsLabProcessSection({ stepsList = stepsData, serviceData }) {
   );
 }
 
-function WhyChooseCorxBloodTest({ reasonsList = reasons, serviceData }) {
-  const displayReasons = (reasonsList && reasonsList.length > 0) ? reasonsList : reasons;
+function WhyChooseCorxBloodTest({ reasonsList = [], serviceData }) {
+  const displayReasons = reasonsList || [];
+  if (displayReasons.length === 0) return null;
   return (
     <Section variant="slate">
       <Container className="flex flex-col items-center">
