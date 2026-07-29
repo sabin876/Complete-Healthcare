@@ -108,6 +108,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'id', 'slug', 'title', 'name', 'path', 'subtitle', 'accent', 'parent', 'sub_services',
             'eyebrow', 'description', 'icon', 'image_file', 'image', 'floating_badge', 'benefits', 'faqs',
             'locations', 'features', 'indications', 'lab_columns', 'reasons', 'steps',
+            'about_section_title', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
             'created_at', 'updated_at'
         ]
 

@@ -111,7 +111,7 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData }) {
               </span>
               
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-6">
-                {serviceData?.title ? `About ${serviceData.title}` : "About Blood Test at Home & Home Sample Collection"}
+                {serviceData?.about_section_title || (serviceData?.title ? `About ${serviceData.title}` : "About Blood Test at Home & Home Sample Collection")}
               </h2>
 
               {descParagraphs.map((para, pIdx) => (
@@ -131,7 +131,7 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData }) {
               </span>
 
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-4">
-                Who May Need {serviceData?.title || "a Blood Test at Home"} in Dubai?
+                {serviceData?.indications_section_title || (serviceData?.title ? `Who May Need ${serviceData.title}?` : "Who May Need a Blood Test at Home in Dubai?")}
               </h2>
 
               <p className="text-slate-600 text-base sm:text-lg font-medium leading-relaxed mb-7 font-sans">
@@ -453,7 +453,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
               {serviceData?.eyebrow || "COMPREHENSIVE DIAGNOSTIC SERVICES"}
             </span>
             <SectionTitle className="mb-4">
-              {serviceData?.tagline || (serviceData?.title ? `${serviceData.title} & Healthcare Services at Your Doorstep` : "Accurate Diagnostic Tests & Body Checkups at Your Doorstep")}
+              {serviceData?.comprehensive_section_title || (serviceData?.title ? `Comprehensive ${serviceData.title} Services` : 'Accurate Diagnostic Tests & Body Checkups at Your Doorstep')}
             </SectionTitle>
             <Paragraph>
               {serviceData?.description || "CORx Healthcare offers a wide range of services at home — screenings, diagnostic or monitoring health checks, all tailored to your needs."}
@@ -795,7 +795,7 @@ function LabServiceFAQ({ faqList = [], serviceData }) {
       <style>{faqStyles}</style>
       <div className="lab-faq-wrap">
         <div className="lab-faq-eyebrow">⊙ Common Questions</div>
-        <h2 className="lab-faq-title">{serviceData?.title ? `${serviceData.title} FAQs` : 'Lab Services FAQs'}</h2>
+        <h2 className="lab-faq-title">{serviceData?.faq_section_title || (serviceData?.title ? `${serviceData.title} FAQs` : 'Lab Services FAQs')}</h2>
         <p className="lab-faq-sub">
           {serviceData?.title ? `Find answers to the most common questions about our ${serviceData.title.toLowerCase()} service in Dubai.` : 'Find answers to the most common questions about our blood test at home service in Dubai.'}
         </p>

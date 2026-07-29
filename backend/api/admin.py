@@ -1064,6 +1064,28 @@ class ServiceAdminForm(forms.ModelForm):
         required=False,
         help_text="Top badge text e.g. DHA-Licensed Home Sample Collection Across Dubai"
     )
+    
+    # Custom Section Titles
+    about_section_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+        required=False,
+        help_text="Custom title for 'About the Service' section. Leaves empty to use default 'About {Title}'"
+    )
+    indications_section_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+        required=False,
+        help_text="Custom title for 'Who May Need' section. Leaves empty to use default 'Who May Need {Title} in Dubai?'"
+    )
+    comprehensive_section_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+        required=False,
+        help_text="Custom title for 'Comprehensive Services' section. Leaves empty to use default 'Comprehensive {Title} Services'"
+    )
+    faq_section_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+        required=False,
+        help_text="Custom title for 'FAQs' section. Leaves empty to use default '{Title} FAQs'"
+    )
     tagline = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 2, 'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
         required=False,
@@ -1299,6 +1321,11 @@ class ServiceAdmin(admin.ModelAdmin):
         }),
         ('✨ Hero Section Content', {
             'fields': ('eyebrow', 'tagline', 'description', 'floating_badge', 'features')
+        }),
+        ('✏️ Section Custom Titles', {
+            'fields': ('about_section_title', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title'),
+            'description': 'Override the default titles for sections on the service page. Leave blank to use the auto-generated defaults.',
+            'classes': ('collapse',),
         }),
         ('📋 Diagnostic Test Suites & Indications', {
             'fields': ('indications', 'lab_columns')
