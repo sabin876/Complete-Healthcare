@@ -24,7 +24,9 @@ import {
   Stethoscope,
   Syringe,
   Clock3,
-  PhoneCall
+  PhoneCall,
+  Edit3,
+  RotateCcw
 } from 'lucide-react';
 
 const labFeatures = [
@@ -50,16 +52,125 @@ const bloodTestIndications = [
   "Doctor-prescribed follow-up blood tests"
 ];
 
+function EditableText({ 
+  fieldKey, 
+  slug = 'default', 
+  defaultText = '', 
+  isEditMode = false, 
+  className = '', 
+  tagName = 'span',
+  multiline = false
+}) {
+  const storageKey = `corx_editable_${slug}_${fieldKey}`;
+  const [text, setText] = useState(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved !== null ? saved : defaultText;
+    } catch (e) {
+      return defaultText;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved !== null) {
+        setText(saved);
+      } else {
+        setText(defaultText);
+      }
+    } catch (e) {
+      setText(defaultText);
+    }
+  }, [defaultText, storageKey]);
+
+  const handleBlur = (e) => {
+    const updated = e.currentTarget.innerText || e.currentTarget.textContent || '';
+    setText(updated);
+    try {
+      localStorage.setItem(storageKey, updated);
+    } catch (err) {}
+  };
+
+  const Component = tagName;
+  const currentVal = text !== null && text !== undefined ? text : defaultText;
+
+  if (!isEditMode) {
+    if (multiline && typeof currentVal === 'string' && currentVal.includes('\n')) {
+      const paragraphs = currentVal.split(/\n\n+/).filter(Boolean);
+      return (
+        <div className={className}>
+          {paragraphs.map((p, idx) => (
+            <p key={idx} className="mb-4 last:mb-0 leading-relaxed">
+              {p}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return <Component className={className}>{currentVal}</Component>;
+  }
+
+  return (
+    <Component
+      contentEditable
+      suppressContentEditableWarning
+      onBlur={handleBlur}
+      className={`${className} outline-none focus:ring-2 focus:ring-[#08709d] focus:ring-offset-2 rounded px-2 py-0.5 transition-all cursor-text group border-2 border-dashed border-[#08709d]/60 hover:border-[#08709d] bg-[#08709d]/10 text-slate-900 inline-block`}
+      title="✏️ Click to edit text live"
+    >
+      {currentVal}
+    </Component>
+  );
+}
+
+function EditControlBar({ isEditMode, setIsEditMode, onResetDefaults }) {
+  return (
+    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-[#1a294a]/95 text-white backdrop-blur-md px-4 py-3 rounded-full shadow-2xl border border-white/20">
+      <div className="flex items-center gap-2 pr-2 border-r border-white/20">
+        <span className={`w-2.5 h-2.5 rounded-full ${isEditMode ? 'bg-emerald-400 animate-pulse' : 'bg-gray-400'}`} />
+        <span className="text-xs font-bold uppercase tracking-wider">
+          {isEditMode ? 'Live Edit Mode ON' : 'Live Editor'}
+        </span>
+      </div>
+
+      <button
+        onClick={() => setIsEditMode(!isEditMode)}
+        className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
+          isEditMode 
+            ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-md' 
+            : 'bg-white/10 hover:bg-white/20 text-white'
+        }`}
+        title={isEditMode ? "Click to lock edits" : "Click to edit titles & headings live"}
+      >
+        <Edit3 size={14} />
+        <span>{isEditMode ? 'Done Editing' : 'Edit Headings'}</span>
+      </button>
+
+      {isEditMode && (
+        <button
+          onClick={onResetDefaults}
+          className="px-3 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 transition-all flex items-center gap-1 border border-rose-500/30"
+          title="Reset all edited text on this page to default"
+        >
+          <RotateCcw size={13} />
+          <span>Reset</span>
+        </button>
+      )}
+    </div>
+  );
+}
+
 function LabIllustration() {
   return (
-    <div className="relative w-full max-w-[460px] mx-auto flex items-center justify-center">
-      <div className="absolute w-80 h-80 bg-[#08709d]/5 rounded-full blur-[100px] pointer-events-none" />
-      <div className="relative w-full bg-gradient-to-tr from-[#08709d]/10 via-[#08709d]/3 to-transparent p-5 rounded-3xl border border-[#08709d]/10 shadow-lg">
-        <div className="relative bg-white rounded-2xl border border-gray-150 p-8 shadow-sm overflow-hidden flex flex-col items-center justify-center min-h-[360px]">
-          <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
-          <div className="absolute -bottom-16 -left-16 w-40 h-40 bg-[#08709d]/5 rounded-full blur-2xl pointer-events-none" />
+    <div className="relative w-full max-w-[620px] mx-auto flex items-center justify-center">
+      <div className="absolute w-96 h-96 bg-[#08709d]/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="relative w-full bg-gradient-to-tr from-[#08709d]/10 via-[#08709d]/3 to-transparent p-6 rounded-[32px] border border-[#08709d]/10 shadow-xl">
+        <div className="relative bg-white rounded-2xl border border-gray-150 p-10 shadow-sm overflow-hidden flex flex-col items-center justify-center min-h-[440px]">
+          <div className="absolute -top-12 -right-12 w-40 h-40 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-[#08709d]/5 rounded-full blur-2xl pointer-events-none" />
           
-          <svg width="200" height="200" viewBox="0 0 200 200" fill="none" className="relative z-10 w-[75%] h-auto drop-shadow-md">
+          <svg width="240" height="240" viewBox="0 0 200 200" fill="none" className="relative z-10 w-[88%] h-auto drop-shadow-md">
             <circle cx="100" cy="100" r="90" fill="#08709d" fillOpacity="0.04" />
             <circle cx="100" cy="80" r="42" fill="#f4fafc" stroke="#08709d" strokeWidth="2.5" />
             <rect x="78" y="118" width="44" height="38" rx="8" fill="#1a294a" />
@@ -74,9 +185,9 @@ function LabIllustration() {
             <path d="M100 117v12" stroke="#1a294a" strokeWidth="2.5" />
             <circle cx="100" cy="133" r="3.5" fill="#22c55e" />
           </svg>
-          <div className="mt-4 inline-flex items-center gap-2 bg-[#08709d]/10 px-3.5 py-1 rounded-full border border-[#08709d]/20">
-            <span className="w-2 h-2 rounded-full bg-[#08709d] animate-pulse" />
-            <span className="text-xs font-bold text-[#08709d] uppercase">DHA-Licensed · Results in 4 Hours</span>
+          <div className="mt-5 inline-flex items-center gap-2 bg-[#08709d]/10 px-4 py-1.5 rounded-full border border-[#08709d]/20">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#08709d] animate-pulse" />
+            <span className="text-xs sm:text-sm font-bold text-[#08709d] uppercase tracking-wide">DHA-Licensed · Results in 2-4 Hours</span>
           </div>
         </div>
       </div>
@@ -84,41 +195,48 @@ function LabIllustration() {
   );
 }
 
-function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData }) {
+function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData, isEditMode, slug }) {
   const displayIndications = indicationsList || [];
-  const serviceTitle = serviceData?.title || "Blood Test at Home & Home Sample Collection";
-  const rawDesc = serviceData?.description || "";
-  
-  // Format description into paragraphs
-  const descParagraphs = rawDesc.trim() 
-    ? rawDesc.split(/\n\n+/).filter(Boolean)
-    : [
-        "Blood testing is essential for monitoring health, diagnosing medical conditions, and evaluating organ function. With CORx Healthcare, you no longer need to travel to a lab or wait in crowded waiting rooms.",
-        "Our DHA-certified nurses visit your home, hotel, or office with sterile, single-use sampling kits to collect blood samples comfortably and safely, delivering accurate digital lab reports within 2 to 4 hours.",
-        "Whether you require routine body checkups, diabetes monitoring, lipid profiles, or specialized diagnostic screenings, our senior medical team ensures complete confidentiality and medical accuracy throughout."
-      ];
+  const defaultAboutDesc = serviceData?.about_description || serviceData?.description || 
+    "Blood testing is essential for monitoring health, diagnosing medical conditions, and evaluating organ function. With CORx Healthcare, you no longer need to travel to a lab or wait in crowded waiting rooms.\n\nOur DHA-certified nurses visit your home, hotel, or office with sterile, single-use sampling kits to collect blood samples comfortably and safely, delivering accurate digital lab reports within 2 to 4 hours.\n\nWhether you require routine body checkups, diabetes monitoring, lipid profiles, or specialized diagnostic screenings, our senior medical team ensures complete confidentiality and medical accuracy throughout.";
 
   return (
     <Section variant="slate" className="py-16 md:py-24">
       <Container className="max-w-[1480px]">
         <div className={`grid grid-cols-1 ${displayIndications.length > 0 ? 'lg:grid-cols-2' : ''} gap-8 lg:gap-12 items-stretch`}>
           
-          {/* Left Card: ABOUT THE SPECIALITY */}
+          {/* Left Card: ABOUT THE SERVICE */}
           <div className="rounded-3xl border-l-[6px] border-l-[#08709d] border-t border-r border-b border-slate-200/90 bg-white p-8 sm:p-12 lg:p-14 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between min-h-[540px]">
             <div>
-              <span className="text-[#08709d] text-xs sm:text-sm font-bold uppercase tracking-widest bg-[#08709d]/10 px-4 py-2 rounded-full border border-[#08709d]/20 inline-block mb-5">
-                ABOUT THE SERVICE
-              </span>
+              <div className="mb-5">
+                <EditableText
+                  slug={slug}
+                  fieldKey="about_eyebrow"
+                  defaultText="ABOUT THE SERVICE"
+                  isEditMode={isEditMode}
+                  tagName="span"
+                  className="text-[#08709d] text-xs sm:text-sm font-bold uppercase tracking-widest bg-[#08709d]/10 px-4 py-2 rounded-full border border-[#08709d]/20 inline-block"
+                />
+              </div>
               
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-6">
-                {serviceData?.about_section_title || (serviceData?.title ? `About ${serviceData.title}` : "About Blood Test at Home & Home Sample Collection")}
-              </h2>
+              <EditableText
+                slug={slug}
+                fieldKey="about_title"
+                defaultText={serviceData?.about_section_title || (serviceData?.title ? `About ${serviceData.title}` : "About Blood Test at Home & Home Sample Collection")}
+                isEditMode={isEditMode}
+                tagName="h2"
+                className="text-3xl sm:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-6"
+              />
 
-              {descParagraphs.map((para, pIdx) => (
-                <p key={pIdx} className="text-slate-700 text-base sm:text-lg font-normal leading-relaxed mb-5 font-sans last:mb-0">
-                  {para}
-                </p>
-              ))}
+              <EditableText
+                slug={slug}
+                fieldKey="about_custom_description"
+                defaultText={defaultAboutDesc}
+                isEditMode={isEditMode}
+                tagName="div"
+                multiline={true}
+                className="text-slate-700 text-base sm:text-lg font-normal leading-relaxed font-sans"
+              />
             </div>
           </div>
 
@@ -126,17 +244,36 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData }) {
           {displayIndications.length > 0 && (
           <div className="rounded-3xl border border-slate-200/90 bg-white p-8 sm:p-12 lg:p-14 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between min-h-[540px]">
             <div>
-              <span className="text-emerald-700 text-xs sm:text-sm font-bold uppercase tracking-widest bg-emerald-50 px-4 py-2 rounded-full border border-emerald-200/60 inline-block mb-5">
-                CLINICAL INDICATIONS
-              </span>
+              <div className="mb-5">
+                <EditableText
+                  slug={slug}
+                  fieldKey="indications_eyebrow"
+                  defaultText="CLINICAL INDICATIONS"
+                  isEditMode={isEditMode}
+                  tagName="span"
+                  className="text-emerald-700 text-xs sm:text-sm font-bold uppercase tracking-widest bg-emerald-50 px-4 py-2 rounded-full border border-emerald-200/60 inline-block"
+                />
+              </div>
 
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-4">
-                {serviceData?.indications_section_title || (serviceData?.title ? `Who May Need ${serviceData.title}?` : "Who May Need a Blood Test at Home in Dubai?")}
-              </h2>
+              <EditableText
+                slug={slug}
+                fieldKey="indications_title"
+                defaultText={serviceData?.indications_section_title || (serviceData?.title ? `Who May Need ${serviceData.title}?` : "Who May Need a Blood Test at Home in Dubai?")}
+                isEditMode={isEditMode}
+                tagName="h2"
+                className="text-3xl sm:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-4"
+              />
 
-              <p className="text-slate-600 text-base sm:text-lg font-medium leading-relaxed mb-7 font-sans">
-                You may benefit from our DHA-certified {serviceData?.title || "home health service"} if you have:
-              </p>
+              <div className="mb-7">
+                <EditableText
+                  slug={slug}
+                  fieldKey="indications_subheading"
+                  defaultText={`You may benefit from our DHA-certified ${serviceData?.title || "home health service"} if you have:`}
+                  isEditMode={isEditMode}
+                  tagName="p"
+                  className="text-slate-600 text-base sm:text-lg font-medium leading-relaxed font-sans"
+                />
+              </div>
 
               {/* 2-Column Circle Checklist */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
@@ -145,9 +282,14 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData }) {
                     <div className="w-6 h-6 rounded-full border-2 border-[#08709d] flex items-center justify-center shrink-0 mt-0.5">
                       <div className="w-2.5 h-2.5 rounded-full bg-[#08709d]" />
                     </div>
-                    <span className="text-slate-800 text-sm sm:text-base font-semibold leading-relaxed font-sans">
-                      {typeof item === 'string' ? item : item.title || item.label}
-                    </span>
+                    <EditableText
+                      slug={slug}
+                      fieldKey={`indication_item_${idx}`}
+                      defaultText={typeof item === 'string' ? item : item.title || item.label}
+                      isEditMode={isEditMode}
+                      tagName="span"
+                      className="text-slate-800 text-sm sm:text-base font-semibold leading-relaxed font-sans"
+                    />
                   </div>
                 ))}
               </div>
@@ -253,6 +395,18 @@ function LabServicesLanding({ slug = 'lab-services' }) {
   const [visible, setVisible] = useState(false);
   const [condVisible, setCondVisible] = useState(false);
   const [serviceData, setServiceData] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const handleResetDefaults = () => {
+    if (window.confirm("Are you sure you want to reset all custom edited text on this page to default?")) {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith(`corx_editable_${slug}_`)) {
+          localStorage.removeItem(key);
+        }
+      });
+      window.location.reload();
+    }
+  };
 
   const defaultLabColumns = [
     {
@@ -364,7 +518,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Column */}
             <div 
-              className="lg:col-span-7 space-y-6 flex flex-col items-start text-left transition-all duration-700"
+              className="lg:col-span-6 space-y-6 flex flex-col items-start text-left transition-all duration-700"
               style={{ 
                 opacity: visible ? 1 : 0, 
                 transform: visible ? "translateY(0)" : "translateY(24px)" 
@@ -372,21 +526,45 @@ function LabServicesLanding({ slug = 'lab-services' }) {
             >
               <div className="inline-flex items-center gap-2 bg-[#08709d]/10 border border-[#08709d]/20 px-3.5 py-1.5 rounded-full">
                 <span className="w-2 h-2 rounded-full bg-[#08709d] animate-pulse" />
-                <span className="text-[#08709d] text-xs font-bold uppercase tracking-wider">
-                  {serviceData?.eyebrow || "DHA-Licensed Home Sample Collection Across Dubai"}
-                </span>
+                <EditableText
+                  slug={slug}
+                  fieldKey="hero_eyebrow"
+                  defaultText={serviceData?.eyebrow || "DHA-Licensed Home Sample Collection Across Dubai"}
+                  isEditMode={isEditMode}
+                  tagName="span"
+                  className="text-[#08709d] text-xs font-bold uppercase tracking-wider"
+                />
               </div>
               
               <HeroTitle className="text-4xl sm:text-5xl lg:text-6xl">
-                {serviceData?.title ? serviceData.title : <>Blood Test <span className="text-[#08709d]">in Dubai</span></>}
+                <EditableText
+                  slug={slug}
+                  fieldKey="hero_title"
+                  defaultText={serviceData?.title ? serviceData.title : "Blood Test in Dubai"}
+                  isEditMode={isEditMode}
+                  tagName="span"
+                />
               </HeroTitle>
               
               <h2 className="text-lg sm:text-xl font-bold text-[#08709d] uppercase tracking-wide -mt-2">
-                {serviceData?.tagline || "Get an Accurate Lab Result at Your Doorsteps"}
+                <EditableText
+                  slug={slug}
+                  fieldKey="hero_tagline"
+                  defaultText={serviceData?.tagline || "Get an Accurate Lab Result at Your Doorsteps"}
+                  isEditMode={isEditMode}
+                  tagName="span"
+                />
               </h2>
               
               <Paragraph className="max-w-2xl text-gray-600">
-                {serviceData?.description || "Book a blood test at home in Dubai without visiting a clinic or Hospital. Our home care service provides convenient blood sample collection at your home, hotel, or office by DHA-certified healthcare professionals at an affordable price."}
+                <EditableText
+                  slug={slug}
+                  fieldKey="hero_description"
+                  defaultText={serviceData?.description || "Book a blood test at home in Dubai without visiting a clinic or Hospital. Our home care service provides convenient blood sample collection at your home, hotel, or office by DHA-certified healthcare professionals at an affordable price."}
+                  isEditMode={isEditMode}
+                  tagName="span"
+                  multiline={true}
+                />
               </Paragraph>
               
               {/* Feature Checklist - Clean List Design */}
@@ -395,9 +573,14 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                   {featuresList.map((f, i) => (
                     <li key={i} className="flex items-center gap-3">
                       <div className="w-2.5 h-2.5 rounded-full bg-[#08709d] shrink-0" />
-                      <span className="text-gray-900 text-sm md:text-base font-semibold leading-snug">
-                        {typeof f === 'string' ? f : f.title}
-                      </span>
+                      <EditableText
+                        slug={slug}
+                        fieldKey={`feature_item_${i}`}
+                        defaultText={typeof f === 'string' ? f : f.title}
+                        isEditMode={isEditMode}
+                        tagName="span"
+                        className="text-gray-900 text-sm md:text-base font-semibold leading-snug"
+                      />
                     </li>
                   ))}
                 </ul>
@@ -416,9 +599,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
               </div>
             </div>
 
-            {/* Right Column */}
+            {/* Right Column - Prominent Hero Photo */}
             <div 
-              className="lg:col-span-5 relative w-full max-w-[460px] mx-auto lg:ml-auto flex items-center justify-center pt-8 lg:pt-0 transition-all duration-700"
+              className="lg:col-span-6 relative w-full max-w-[650px] mx-auto lg:ml-auto flex items-center justify-center pt-8 lg:pt-0 transition-all duration-700"
               style={{ 
                 opacity: visible ? 1 : 0, 
                 transform: visible ? "translateX(0)" : "translateX(32px)",
@@ -429,7 +612,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 <img 
                   src={serviceData.image_file} 
                   alt={serviceData.title || "Service"} 
-                  className="w-full h-auto rounded-[30px] shadow-2xl object-cover border-[6px] border-white/60" 
+                  className="w-full h-[380px] sm:h-[480px] lg:h-[540px] rounded-[32px] shadow-2xl object-cover border-[6px] border-white/90 ring-1 ring-slate-900/10 hover:scale-[1.01] transition-transform duration-500" 
                 />
               ) : (
                 <LabIllustration />
@@ -441,7 +624,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
       {/* ── WHO MAY NEED SECTION ── */}
       {(!serviceData || (serviceData?.indications && serviceData.indications.length > 0) || (serviceData?.description)) && (
-        <WhoMayNeedBloodTestSection indicationsList={indicationsList} serviceData={serviceData} />
+        <WhoMayNeedBloodTestSection indicationsList={indicationsList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
       )}
 
       {/* ── CONDITIONS SECTION ── */}
@@ -449,14 +632,34 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       <Section variant="warm">
         <Container className="flex flex-col items-center">
           <div className="mb-10 text-center max-w-3xl">
-            <span className="text-[#08709d] text-xs font-bold uppercase tracking-widest bg-[#08709d]/10 px-3.5 py-1.5 rounded-full border border-[#08709d]/20 inline-block mb-3">
-              {serviceData?.eyebrow || "COMPREHENSIVE DIAGNOSTIC SERVICES"}
-            </span>
+            <div className="mb-3">
+              <EditableText
+                slug={slug}
+                fieldKey="comprehensive_eyebrow"
+                defaultText={serviceData?.eyebrow || "COMPREHENSIVE DIAGNOSTIC SERVICES"}
+                isEditMode={isEditMode}
+                tagName="span"
+                className="text-[#08709d] text-xs font-bold uppercase tracking-widest bg-[#08709d]/10 px-3.5 py-1.5 rounded-full border border-[#08709d]/20 inline-block"
+              />
+            </div>
             <SectionTitle className="mb-4">
-              {serviceData?.comprehensive_section_title || (serviceData?.title ? `Comprehensive ${serviceData.title} Services` : 'Accurate Diagnostic Tests & Body Checkups at Your Doorstep')}
+              <EditableText
+                slug={slug}
+                fieldKey="comprehensive_title"
+                defaultText={serviceData?.comprehensive_section_title || (serviceData?.title ? `Comprehensive ${serviceData.title} Services` : 'Accurate Diagnostic Tests & Body Checkups at Your Doorstep')}
+                isEditMode={isEditMode}
+                tagName="span"
+              />
             </SectionTitle>
             <Paragraph>
-              {serviceData?.description || "CORx Healthcare offers a wide range of services at home — screenings, diagnostic or monitoring health checks, all tailored to your needs."}
+              <EditableText
+                slug={slug}
+                fieldKey="comprehensive_desc"
+                defaultText={serviceData?.comprehensive_desc || serviceData?.description || "CORx Healthcare offers a wide range of services at home — screenings, diagnostic or monitoring health checks, all tailored to your needs."}
+                isEditMode={isEditMode}
+                tagName="span"
+                multiline={true}
+              />
             </Paragraph>
           </div>
 
@@ -477,10 +680,22 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                       </div>
                       <div>
                         <CardTitle className="text-lg font-bold text-gray-900 leading-snug">
-                          {col.title}
+                          <EditableText
+                            slug={slug}
+                            fieldKey={`col_title_${idx}`}
+                            defaultText={col.title}
+                            isEditMode={isEditMode}
+                            tagName="span"
+                          />
                         </CardTitle>
                         <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                          {col.tagline}
+                          <EditableText
+                            slug={slug}
+                            fieldKey={`col_tagline_${idx}`}
+                            defaultText={col.tagline}
+                            isEditMode={isEditMode}
+                            tagName="span"
+                          />
                         </p>
                       </div>
                     </div>
@@ -521,11 +736,11 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       )}
 
       {/* ── THREE STEPS PROCESS SECTION ── */}
-      <ThreeStepsLabProcessSection stepsList={stepsList} serviceData={serviceData} />
+      <ThreeStepsLabProcessSection stepsList={stepsList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
 
       {/* ── WHY CHOOSE SECTION ── */}
       {(!serviceData || (serviceData?.reasons && serviceData.reasons.length > 0)) && (
-        <WhyChooseCorxBloodTest reasonsList={reasonsList} serviceData={serviceData} />
+        <WhyChooseCorxBloodTest reasonsList={reasonsList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
       )}
 
       {/* ── CTA BANNER ── */}
@@ -556,7 +771,14 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       </Section>
 
       {/* ── FAQ SECTION ── */}
-      <LabServiceFAQ faqList={faqList} serviceData={serviceData} />
+      <LabServiceFAQ faqList={faqList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
+
+      {/* ── FLOATING LIVE EDIT CONTROL TOOLBAR ── */}
+      <EditControlBar 
+        isEditMode={isEditMode} 
+        setIsEditMode={setIsEditMode} 
+        onResetDefaults={handleResetDefaults} 
+      />
     </div>
   );
 }
@@ -783,7 +1005,7 @@ const faqStyles = `
   .lab-faq-footer a:hover { border-bottom-color: #08709d; }
 `;
 
-function LabServiceFAQ({ faqList = [], serviceData }) {
+function LabServiceFAQ({ faqList = [], serviceData, isEditMode, slug }) {
   const [openIndex, setOpenIndex] = useState(null);
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
   const displayFaqs = faqList || [];
@@ -794,10 +1016,33 @@ function LabServiceFAQ({ faqList = [], serviceData }) {
     <section className="lab-faq-section">
       <style>{faqStyles}</style>
       <div className="lab-faq-wrap">
-        <div className="lab-faq-eyebrow">⊙ Common Questions</div>
-        <h2 className="lab-faq-title">{serviceData?.faq_section_title || (serviceData?.title ? `${serviceData.title} FAQs` : 'Lab Services FAQs')}</h2>
+        <div className="lab-faq-eyebrow">
+          <EditableText
+            slug={slug}
+            fieldKey="faq_eyebrow"
+            defaultText="⊙ Common Questions"
+            isEditMode={isEditMode}
+            tagName="span"
+          />
+        </div>
+        <h2 className="lab-faq-title">
+          <EditableText
+            slug={slug}
+            fieldKey="faq_title"
+            defaultText={serviceData?.faq_section_title || (serviceData?.title ? `${serviceData.title} FAQs` : 'Lab Services FAQs')}
+            isEditMode={isEditMode}
+            tagName="span"
+          />
+        </h2>
         <p className="lab-faq-sub">
-          {serviceData?.title ? `Find answers to the most common questions about our ${serviceData.title.toLowerCase()} service in Dubai.` : 'Find answers to the most common questions about our blood test at home service in Dubai.'}
+          <EditableText
+            slug={slug}
+            fieldKey="faq_subheading"
+            defaultText={serviceData?.faq_subheading || (serviceData?.title ? `Find answers to the most common questions about our ${serviceData.title.toLowerCase()} service in Dubai.` : 'Find answers to the most common questions about our blood test at home service in Dubai.')}
+            isEditMode={isEditMode}
+            tagName="span"
+            multiline={true}
+          />
         </p>
 
         <div className="lab-faq-list">
@@ -814,12 +1059,29 @@ function LabServiceFAQ({ faqList = [], serviceData }) {
                   onClick={() => toggle(i)}
                   aria-expanded={isOpen}
                 >
-                  <span className="lab-faq-q">{faq.q}</span>
+                  <span className="lab-faq-q">
+                    <EditableText
+                      slug={slug}
+                      fieldKey={`faq_q_${i}`}
+                      defaultText={faq.q}
+                      isEditMode={isEditMode}
+                      tagName="span"
+                    />
+                  </span>
                   <span className="lab-faq-icon">+</span>
                 </button>
                 <div className="lab-faq-body">
                   <div className="lab-faq-inner">
-                    <div className="lab-faq-ans">{faq.a}</div>
+                    <div className="lab-faq-ans">
+                      <EditableText
+                        slug={slug}
+                        fieldKey={`faq_a_${i}`}
+                        defaultText={faq.a}
+                        isEditMode={isEditMode}
+                        tagName="span"
+                        multiline={true}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -881,7 +1143,7 @@ const stepsData = [
   }
 ];
 
-function ThreeStepsLabProcessSection({ stepsList = [], serviceData }) {
+function ThreeStepsLabProcessSection({ stepsList = [], serviceData, isEditMode, slug }) {
   const displaySteps = stepsList || [];
   if (displaySteps.length === 0) return null;
   return (
@@ -891,12 +1153,25 @@ function ThreeStepsLabProcessSection({ stepsList = [], serviceData }) {
           
           {/* Left Column - List Content */}
           <div className="w-full lg:w-1/2">
-            <span className="text-[#08709d] text-xs sm:text-sm font-bold uppercase tracking-widest bg-[#08709d]/10 px-4 py-2 rounded-full border border-[#08709d]/20 inline-block mb-4">
-              HOW IT WORKS
-            </span>
+            <div className="mb-4">
+              <EditableText
+                slug={slug}
+                fieldKey="steps_eyebrow"
+                defaultText="HOW IT WORKS"
+                isEditMode={isEditMode}
+                tagName="span"
+                className="text-[#08709d] text-xs sm:text-sm font-bold uppercase tracking-widest bg-[#08709d]/10 px-4 py-2 rounded-full border border-[#08709d]/20 inline-block"
+              />
+            </div>
 
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-8 text-[#1a294a] tracking-tight leading-tight font-montserrat">
-              {serviceData?.title ? `Get ${serviceData.title} in 3 Easy Steps!` : 'Get 10,000+ Lab Tests at Your Doorstep in 3 Easy Steps!'}
+              <EditableText
+                slug={slug}
+                fieldKey="steps_title"
+                defaultText={serviceData?.title ? `Get ${serviceData.title} in 3 Easy Steps!` : 'Get 10,000+ Lab Tests at Your Doorstep in 3 Easy Steps!'}
+                isEditMode={isEditMode}
+                tagName="span"
+              />
             </h2>
 
             <div className="space-y-8 mb-10">
@@ -909,10 +1184,23 @@ function ThreeStepsLabProcessSection({ stepsList = [], serviceData }) {
                   </div>
                   <div>
                     <h3 className="text-lg sm:text-xl font-bold mb-1.5 text-[#1a294a] font-montserrat leading-snug">
-                      {item.title}
+                      <EditableText
+                        slug={slug}
+                        fieldKey={`step_title_${i}`}
+                        defaultText={item.title}
+                        isEditMode={isEditMode}
+                        tagName="span"
+                      />
                     </h3>
                     <p className="text-slate-600 leading-relaxed text-sm sm:text-base font-normal font-sans">
-                      {item.desc}
+                      <EditableText
+                        slug={slug}
+                        fieldKey={`step_desc_${i}`}
+                        defaultText={item.desc}
+                        isEditMode={isEditMode}
+                        tagName="span"
+                        multiline={true}
+                      />
                     </p>
                   </div>
                 </div>
@@ -973,21 +1261,41 @@ function ThreeStepsLabProcessSection({ stepsList = [], serviceData }) {
   );
 }
 
-function WhyChooseCorxBloodTest({ reasonsList = [], serviceData }) {
+function WhyChooseCorxBloodTest({ reasonsList = [], serviceData, isEditMode, slug }) {
   const displayReasons = reasonsList || [];
   if (displayReasons.length === 0) return null;
   return (
     <Section variant="slate">
       <Container className="flex flex-col items-center">
         <div className="mb-10 text-center max-w-3xl">
-          <p className="text-[#08709d] text-sm font-bold uppercase tracking-wider mb-2">
-            {serviceData?.eyebrow || 'BLOOD TEST AT HOME'}
-          </p>
+          <div className="mb-2">
+            <EditableText
+              slug={slug}
+              fieldKey="why_choose_eyebrow"
+              defaultText={serviceData?.eyebrow || 'BLOOD TEST AT HOME'}
+              isEditMode={isEditMode}
+              tagName="p"
+              className="text-[#08709d] text-sm font-bold uppercase tracking-wider inline-block"
+            />
+          </div>
           <SectionTitle className="mb-4">
-            {serviceData?.title ? `Why Choose CORx Healthcare for ${serviceData.title}?` : 'Why Choose CORx Healthcare for Blood Test at Home in Dubai?'}
+            <EditableText
+              slug={slug}
+              fieldKey="why_choose_title"
+              defaultText={serviceData?.why_choose_title || (serviceData?.title ? `Why Choose CORx Healthcare for ${serviceData.title}?` : 'Why Choose CORx Healthcare for Blood Test at Home in Dubai?')}
+              isEditMode={isEditMode}
+              tagName="span"
+            />
           </SectionTitle>
           <Paragraph>
-            {serviceData?.description || 'If a DHA certified nurse can perform quality lab tests at home, why leave the comfort of your own home? CORx Home Healthcare in Dubai offers at-home blood sample collection services, ensuring quick and accurate results from internationally accredited labs. Enjoy the convenience and reliability of top-notch healthcare without stepping outside your door.'}
+            <EditableText
+              slug={slug}
+              fieldKey="why_choose_desc"
+              defaultText={serviceData?.why_choose_desc || serviceData?.description || 'If a DHA certified nurse can perform quality lab tests at home, why leave the comfort of your own home? CORx Home Healthcare in Dubai offers at-home blood sample collection services, ensuring quick and accurate results from internationally accredited labs. Enjoy the convenience and reliability of top-notch healthcare without stepping outside your door.'}
+              isEditMode={isEditMode}
+              tagName="span"
+              multiline={true}
+            />
           </Paragraph>
         </div>
 
@@ -1004,11 +1312,24 @@ function WhyChooseCorxBloodTest({ reasonsList = [], serviceData }) {
                   </span>
                 </div>
                 <CardTitle className="mb-2">
-                  {r.title}
+                  <EditableText
+                    slug={slug}
+                    fieldKey={`reason_title_${i}`}
+                    defaultText={r.title}
+                    isEditMode={isEditMode}
+                    tagName="span"
+                  />
                 </CardTitle>
                 <hr className="border-t border-gray-100 mb-4" />
                 <Paragraph className="m-0">
-                  {r.desc}
+                  <EditableText
+                    slug={slug}
+                    fieldKey={`reason_desc_${i}`}
+                    defaultText={r.desc}
+                    isEditMode={isEditMode}
+                    tagName="span"
+                    multiline={true}
+                  />
                 </Paragraph>
               </div>
             </Card>
