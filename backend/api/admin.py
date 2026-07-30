@@ -199,46 +199,20 @@ class LabColumnsJsonWidget(forms.Widget):
 
                     card.innerHTML = `
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                            <span style="font-weight: 800; font-size: 14px; color: #08709d;">Category Column #${{colIdx + 1}}</span>
-                            <button type="button" class="del-col-btn" data-col="${{colIdx}}" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🗑️ Remove Category</button>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                            <div>
-                                <label style="display: block; font-weight: 700; font-size: 12px; color: #334155; margin-bottom: 4px;">Category Title:</label>
-                                <input type="text" class="col-title-input" data-col="${{colIdx}}" value="${{(col.title || '').replace(/"/g, '&quot;')}}" placeholder="e.g. Core Screenings" style="width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;" />
-                            </div>
-                            <div>
-                                <label style="display: block; font-weight: 700; font-size: 12px; color: #334155; margin-bottom: 4px;">Tagline / Subtitle:</label>
-                                <input type="text" class="col-tagline-input" data-col="${{colIdx}}" value="${{(col.tagline || '').replace(/"/g, '&quot;')}}" placeholder="e.g. Routine blood & vitals" style="width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;" />
-                            </div>
+                            <span style="font-weight: 800; font-size: 14px; color: #08709d;">Test Column #${colIdx + 1}</span>
+                            <button type="button" class="del-col-btn" data-col="${colIdx}" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🗑️ Remove Column</button>
                         </div>
                         
                         <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                            <label style="display: block; font-weight: 700; font-size: 12px; color: #334155; margin-bottom: 8px;">Tests Included in this Category:</label>
-                            <div class="tests-container-${{colIdx}}">${{testsHtml}}</div>
-                            <button type="button" class="add-test-btn" data-col="${{colIdx}}" style="margin-top: 6px; background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">+ Add Test to Category</button>
+                            <label style="display: block; font-weight: 700; font-size: 12px; color: #334155; margin-bottom: 8px;">Tests Included in this Column:</label>
+                            <div class="tests-container-${colIdx}">${testsHtml}</div>
+                            <button type="button" class="add-test-btn" data-col="${colIdx}" style="margin-top: 6px; background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">+ Add Test to Column</button>
                         </div>
                     `;
                     columnsContainer.appendChild(card);
                 }});
 
                 // Attach Listeners
-                columnsContainer.querySelectorAll('.col-title-input').forEach(inp => {{
-                    inp.addEventListener('input', (e) => {{
-                        const colIdx = parseInt(e.target.getAttribute('data-col'));
-                        colsData[colIdx].title = e.target.value;
-                        sync();
-                    }});
-                }});
-
-                columnsContainer.querySelectorAll('.col-tagline-input').forEach(inp => {{
-                    inp.addEventListener('input', (e) => {{
-                        const colIdx = parseInt(e.target.getAttribute('data-col'));
-                        colsData[colIdx].tagline = e.target.value;
-                        sync();
-                    }});
-                }});
-
                 columnsContainer.querySelectorAll('.test-name-input').forEach(inp => {{
                     inp.addEventListener('input', (e) => {{
                         const colIdx = parseInt(e.target.getAttribute('data-col'));
@@ -280,8 +254,6 @@ class LabColumnsJsonWidget(forms.Widget):
 
             addColBtn.addEventListener('click', () => {{
                 colsData.push({{
-                    title: '',
-                    tagline: '',
                     iconBg: 'bg-blue-50 text-blue-600 border border-blue-100',
                     tests: []
                 }});

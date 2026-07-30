@@ -631,39 +631,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       {(!serviceData || (serviceData?.lab_columns && serviceData.lab_columns.length > 0)) && (
       <Section variant="warm">
         <Container className="flex flex-col items-center">
-          <div className="mb-10 text-center max-w-3xl">
-            <div className="mb-3">
-              <EditableText
-                slug={slug}
-                fieldKey="comprehensive_eyebrow"
-                defaultText={serviceData?.eyebrow || "COMPREHENSIVE DIAGNOSTIC SERVICES"}
-                isEditMode={isEditMode}
-                tagName="span"
-                className="text-[#08709d] text-xs font-bold uppercase tracking-widest bg-[#08709d]/10 px-3.5 py-1.5 rounded-full border border-[#08709d]/20 inline-block"
-              />
-            </div>
-            <SectionTitle className="mb-4">
-              <EditableText
-                slug={slug}
-                fieldKey="comprehensive_title"
-                defaultText={serviceData?.comprehensive_section_title || (serviceData?.title ? `Comprehensive ${serviceData.title} Services` : 'Accurate Diagnostic Tests & Body Checkups at Your Doorstep')}
-                isEditMode={isEditMode}
-                tagName="span"
-              />
-            </SectionTitle>
-            <Paragraph>
-              <EditableText
-                slug={slug}
-                fieldKey="comprehensive_desc"
-                defaultText={serviceData?.comprehensive_desc || serviceData?.description || "CORx Healthcare offers a wide range of services at home — screenings, diagnostic or monitoring health checks, all tailored to your needs."}
-                isEditMode={isEditMode}
-                tagName="span"
-                multiline={true}
-              />
-            </Paragraph>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full">
             {labColumns.map((col, idx) => (
               <motion.div
                 key={idx}
@@ -674,34 +642,6 @@ function LabServicesLanding({ slug = 'lab-services' }) {
               >
                 <Card className="h-full flex flex-col justify-between p-6 sm:p-7 border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300">
                   <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${col.iconBg || "bg-blue-50 text-blue-600 border border-blue-100"}`}>
-                        {col.icon || <Activity size={20} />}
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg font-bold text-gray-900 leading-snug">
-                          <EditableText
-                            slug={slug}
-                            fieldKey={`col_title_${idx}`}
-                            defaultText={col.title}
-                            isEditMode={isEditMode}
-                            tagName="span"
-                          />
-                        </CardTitle>
-                        <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                          <EditableText
-                            slug={slug}
-                            fieldKey={`col_tagline_${idx}`}
-                            defaultText={col.tagline}
-                            isEditMode={isEditMode}
-                            tagName="span"
-                          />
-                        </p>
-                      </div>
-                    </div>
-
-                    <hr className="border-t border-slate-100 mb-4" />
-
                     <div className="grid grid-cols-1 gap-2.5">
                       {col.tests && col.tests.map((test, testIdx) => (
                         <div 
