@@ -96,7 +96,10 @@ const Header = () => {
   useEffect(() => {
     // Fetch dynamic services from Django API
     fetch(`${API_BASE_URL}/api/services/`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) return null;
+        return res.json();
+      })
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           // Filter to get only parent services (s.parent === null)

@@ -289,7 +289,13 @@ class ServiceViewSet(viewsets.ModelViewSet):
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        slug_val = self.kwargs.get('slug', '').strip().lower()
+        slug_param = self.kwargs.get('slug', '')
+        if not slug_param:
+            return super().get_object()
+
+        slug_val = str(slug_param).strip().lower().strip('/')
+        if not slug_val:
+            return super().get_object()
 
         # 1. Exact slug match
         obj = queryset.filter(slug__iexact=slug_val).first()
@@ -298,10 +304,13 @@ class ServiceViewSet(viewsets.ModelViewSet):
             return obj
 
         # 2. Keyword/substring match (e.g. 'physiotherapy-at-home-in-dubai' -> 'physiotherapy')
-        for item in queryset:
-            if item.slug and (item.slug in slug_val or slug_val in item.slug):
-                self.check_object_permissions(self.request, item)
-                return item
+        if len(slug_val) >= 3:
+            for item in queryset:
+                if item.slug and isinstance(item.slug, str):
+                    item_slug = item.slug.strip().lower()
+                    if item_slug and (item_slug in slug_val or slug_val in item_slug):
+                        self.check_object_permissions(self.request, item)
+                        return item
 
         return super().get_object()
 
@@ -418,6 +427,13 @@ class ServiceViewSet(viewsets.ModelViewSet):
 
         # Override defaults with payload if provided
         parent_id = request.data.get('parent')
+        if parent_id in ['', 'null', 'none', 'undefined', None]:
+            parent_id = None
+        else:
+            try:
+                parent_id = int(parent_id)
+            except (ValueError, TypeError):
+                parent_id = None
         new_service_data = {
             'slug': provided_slug,
             'title': title,

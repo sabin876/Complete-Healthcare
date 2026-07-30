@@ -81,26 +81,26 @@ class BlogPostSerializer(serializers.ModelSerializer):
 
 
 class SubServiceSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(source='title')
+    name = serializers.CharField(source='title', required=False, allow_null=True, allow_blank=True)
     path = serializers.SerializerMethodField()
-    desc = serializers.CharField(source='tagline', default='')
-    accent = serializers.CharField(source='theme_color', default='#08709d')
+    desc = serializers.CharField(source='tagline', default='', required=False, allow_null=True, allow_blank=True)
+    accent = serializers.CharField(source='theme_color', default='#08709d', required=False, allow_null=True, allow_blank=True)
 
     class Meta:
         model = Service
         fields = ['id', 'name', 'slug', 'path', 'desc', 'accent']
 
     def get_path(self, obj):
-        return f'/services/{obj.slug}'
+        return f'/services/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
 
 
 class ServiceSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     sub_services = SubServiceSerializer(many=True, read_only=True)
-    name = serializers.CharField(source='title', required=False)
+    name = serializers.CharField(source='title', required=False, allow_null=True, allow_blank=True)
     path = serializers.SerializerMethodField()
-    subtitle = serializers.CharField(source='tagline', required=False, allow_blank=True)
-    accent = serializers.CharField(source='theme_color', default='#08709d', required=False)
+    subtitle = serializers.CharField(source='tagline', required=False, allow_null=True, allow_blank=True)
+    accent = serializers.CharField(source='theme_color', default='#08709d', required=False, allow_null=True, allow_blank=True)
 
     about_section_title = serializers.SerializerMethodField()
     about_description = serializers.SerializerMethodField()
@@ -119,15 +119,18 @@ class ServiceSerializer(serializers.ModelSerializer):
         ]
 
     def get_path(self, obj):
-        return f'/services/{obj.slug}'
+        return f'/services/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
 
     def get_image(self, obj):
-        if obj.image_file:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.image_file.url)
-            return f"http://localhost:8000{obj.image_file.url}"
-        return ''
+        try:
+            if getattr(obj, 'image_file', None) and hasattr(obj.image_file, 'url') and obj.image_file.name:
+                request = self.context.get('request')
+                if request:
+                    return request.build_absolute_uri(obj.image_file.url)
+                return f"http://localhost:8000{obj.image_file.url}"
+        except Exception:
+            pass
+        return getattr(obj, 'image', '') or ''
 
     def _get_badge_field(self, obj, key):
         badge = getattr(obj, 'floating_badge', None)

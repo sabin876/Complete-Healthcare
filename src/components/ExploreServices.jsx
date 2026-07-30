@@ -242,7 +242,10 @@ export default function ExploreServices() {
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/services/`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) return null;
+        return res.json();
+      })
       .then(data => {
         if (data && Array.isArray(data) && data.length > 0) {
           setServiceList(data.map((item, index) => {

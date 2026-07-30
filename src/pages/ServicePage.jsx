@@ -485,14 +485,20 @@ function LabServicesLanding({ slug = 'lab-services' }) {
   }, []);
 
   useEffect(() => {
+    if (!slug) return;
     fetch(`${API_BASE_URL}/api/services/${slug}/`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) return null;
+        return res.json();
+      })
       .then(data => {
         if (data && data.slug) {
           setServiceData(data);
         }
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.warn("Could not fetch service data from API, using default layout:", err);
+      });
   }, [slug]);
 
   const featuresList = serviceData ? (serviceData.features || []) : labFeatures;
