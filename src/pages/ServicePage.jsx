@@ -1091,7 +1091,7 @@ function ThreeStepsLabProcessSection({ stepsList = [], serviceData, isEditMode, 
       <Container className="max-w-[1480px]">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           
-          {/* Left Column - List Content */}
+          {/* Left Column - List Content / Vertical Timeline */}
           <div className="w-full lg:w-1/2">
             <div className="mb-4">
               <EditableText
@@ -1114,37 +1114,46 @@ function ThreeStepsLabProcessSection({ stepsList = [], serviceData, isEditMode, 
               />
             </h2>
 
-            <div className="space-y-8 mb-10">
-              {displaySteps.map((item, i) => (
-                <div key={i} className="flex gap-5 sm:gap-6 group items-start">
-                  <div className="shrink-0">
-                    <div className="w-16 h-16 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#08709d] group-hover:bg-[#08709d] group-hover:text-white transition-all duration-300 border border-slate-200/80">
-                      {item.icon || <CalendarDays size={30} />}
+            {/* ── VERTICAL TIMELINE DESIGN (NO ICONS) ── */}
+            <div className="relative my-8">
+              {/* Timeline Connecting Line */}
+              <div className="absolute left-[22px] sm:left-[26px] top-6 bottom-8 w-1 bg-gradient-to-b from-[#08709d] via-[#08709d]/40 to-emerald-500 rounded-full z-0 pointer-events-none" />
+
+              <div className="space-y-6 sm:space-y-7 relative z-10">
+                {displaySteps.map((item, i) => (
+                  <div key={i} className="relative flex items-start gap-4 sm:gap-6 group">
+                    {/* Timeline Step Badge Number (No Icon) */}
+                    <div className="shrink-0 relative z-10">
+                      <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-[#08709d] to-[#065679] text-white shadow-md shadow-[#08709d]/25 flex items-center justify-center font-black text-sm sm:text-base tracking-wider border-2 border-white ring-4 ring-[#08709d]/10 group-hover:scale-110 group-hover:from-emerald-500 group-hover:to-emerald-700 transition-all duration-300">
+                        {`0${i + 1}`}
+                      </div>
+                    </div>
+
+                    {/* Step Card Content */}
+                    <div className="flex-1 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm group-hover:shadow-md group-hover:border-[#08709d]/30 transition-all duration-300">
+                      <h3 className="text-lg sm:text-xl font-extrabold mb-1.5 text-[#1a294a] font-montserrat leading-snug">
+                        <EditableText
+                          slug={slug}
+                          fieldKey={`step_title_${i}`}
+                          defaultText={item.title}
+                          isEditMode={isEditMode}
+                          tagName="span"
+                        />
+                      </h3>
+                      <p className="text-slate-600 leading-relaxed text-sm sm:text-base font-normal font-sans m-0">
+                        <EditableText
+                          slug={slug}
+                          fieldKey={`step_desc_${i}`}
+                          defaultText={item.desc}
+                          isEditMode={isEditMode}
+                          tagName="span"
+                          multiline={true}
+                        />
+                      </p>
                     </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-bold mb-1.5 text-[#1a294a] font-montserrat leading-snug">
-                      <EditableText
-                        slug={slug}
-                        fieldKey={`step_title_${i}`}
-                        defaultText={item.title}
-                        isEditMode={isEditMode}
-                        tagName="span"
-                      />
-                    </h3>
-                    <p className="text-slate-600 leading-relaxed text-sm sm:text-base font-normal font-sans">
-                      <EditableText
-                        slug={slug}
-                        fieldKey={`step_desc_${i}`}
-                        defaultText={item.desc}
-                        isEditMode={isEditMode}
-                        tagName="span"
-                        multiline={true}
-                      />
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
             <div className="pt-2 flex items-center gap-4 flex-wrap">
