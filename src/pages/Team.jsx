@@ -276,6 +276,7 @@ const Team = () => {
       dept = "Homecare Support";
     }
     
+    let img = member.photo || member.image || "";
     if (img && !img.startsWith("http") && !img.startsWith("/")) {
       img = `/${img}`;
     }

@@ -356,8 +356,8 @@ function HeroBackgroundAnimation() {
       {[...Array(6)].map((_, i) => (
         <motion.div
           key={i}
-          initial={{ x: Math.random() * 1000 - 300, y: Math.random() * 600, opacity: 0.2 }}
-          animate={{ y: [0, -180, 0], x: [0, Math.random() * 40 - 20, 0], opacity: [0.2, 0.6, 0.2], scale: [1, 1.4, 1] }}
+          initial={{ x: (i * 170) % 800 - 300, y: (i * 95) % 500, opacity: 0.2 }}
+          animate={{ y: [0, -180, 0], x: [0, (i % 2 === 0 ? 20 : -20), 0], opacity: [0.2, 0.6, 0.2], scale: [1, 1.4, 1] }}
           transition={{ duration: 8 + i * 2, repeat: Infinity, ease: 'easeInOut', delay: i * 1.2 }}
           className={`absolute rounded-full blur-[2px] ${i % 2 === 0 ? 'w-4 h-4 bg-[#08709d]/30' : 'w-3 h-3 bg-emerald-400/40'}`}
           style={{ left: `${15 + i * 15}%`, top: `${20 + (i * 12) % 60}%` }}

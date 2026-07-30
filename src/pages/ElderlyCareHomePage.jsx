@@ -202,13 +202,13 @@ function HeroBackgroundAnimation() {
         <motion.div
           key={i}
           initial={{
-            x: Math.random() * 1000 - 300,
-            y: Math.random() * 600,
+            x: (i * 170) % 800 - 300,
+            y: (i * 95) % 500,
             opacity: 0.2,
           }}
           animate={{
             y: [0, -180, 0],
-            x: [0, Math.random() * 40 - 20, 0],
+            x: [0, (i % 2 === 0 ? 20 : -20), 0],
             opacity: [0.2, 0.6, 0.2],
             scale: [1, 1.4, 1],
           }}
