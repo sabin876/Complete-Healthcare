@@ -1218,7 +1218,12 @@ class ServiceAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
-            badge = self.instance.floating_badge or {}
+            badge = self.instance.floating_badge
+            if isinstance(badge, str):
+                try:
+                    badge = json.loads(badge)
+                except Exception:
+                    badge = {}
             if isinstance(badge, dict):
                 self.fields['about_section_title'].initial = badge.get('about_section_title', '')
                 self.fields['about_description'].initial = badge.get('about_description', '')
@@ -1228,15 +1233,20 @@ class ServiceAdminForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        badge = instance.floating_badge or {}
+        badge = instance.floating_badge
+        if isinstance(badge, str):
+            try:
+                badge = json.loads(badge)
+            except Exception:
+                badge = {}
         if not isinstance(badge, dict):
             badge = {}
         
-        badge['about_section_title'] = self.cleaned_data.get('about_section_title', '')
-        badge['about_description'] = self.cleaned_data.get('about_description', '')
-        badge['indications_section_title'] = self.cleaned_data.get('indications_section_title', '')
-        badge['comprehensive_section_title'] = self.cleaned_data.get('comprehensive_section_title', '')
-        badge['faq_section_title'] = self.cleaned_data.get('faq_section_title', '')
+        badge['about_section_title'] = self.cleaned_data.get('about_section_title', '') or ''
+        badge['about_description'] = self.cleaned_data.get('about_description', '') or ''
+        badge['indications_section_title'] = self.cleaned_data.get('indications_section_title', '') or ''
+        badge['comprehensive_section_title'] = self.cleaned_data.get('comprehensive_section_title', '') or ''
+        badge['faq_section_title'] = self.cleaned_data.get('faq_section_title', '') or ''
         
         instance.floating_badge = badge
         if commit:
@@ -1285,7 +1295,6 @@ class ServiceAdmin(admin.ModelAdmin):
     search_fields = ('title', 'slug', 'tagline', 'description')
     list_filter = ('parent', 'created_at', 'updated_at')
     prepopulated_fields = {"slug": ("title",)}
-    autocomplete_fields = ('parent',)
     readonly_fields = ('created_at', 'updated_at')
     actions = ['duplicate_as_lab_template']
 
