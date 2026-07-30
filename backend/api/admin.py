@@ -1065,11 +1065,16 @@ class ServiceAdminForm(forms.ModelForm):
         help_text="Top badge text e.g. DHA-Licensed Home Sample Collection Across Dubai"
     )
     
-    # Custom Section Titles
+    # Custom Section Titles & Content
     about_section_title = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
         required=False,
         help_text="Custom title for 'About the Service' section. Leaves empty to use default 'About {Title}'"
+    )
+    about_description = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 5, 'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
+        required=False,
+        help_text="Custom description for 'ABOUT THE SERVICE' section. Separate paragraphs with double newlines."
     )
     indications_section_title = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
@@ -1244,6 +1249,7 @@ class ServiceAdminForm(forms.ModelForm):
             badge = self.instance.floating_badge or {}
             if isinstance(badge, dict):
                 self.fields['about_section_title'].initial = badge.get('about_section_title', '')
+                self.fields['about_description'].initial = badge.get('about_description', '')
                 self.fields['indications_section_title'].initial = badge.get('indications_section_title', '')
                 self.fields['comprehensive_section_title'].initial = badge.get('comprehensive_section_title', '')
                 self.fields['faq_section_title'].initial = badge.get('faq_section_title', '')
@@ -1255,6 +1261,7 @@ class ServiceAdminForm(forms.ModelForm):
             badge = {}
         
         badge['about_section_title'] = self.cleaned_data.get('about_section_title', '')
+        badge['about_description'] = self.cleaned_data.get('about_description', '')
         badge['indications_section_title'] = self.cleaned_data.get('indications_section_title', '')
         badge['comprehensive_section_title'] = self.cleaned_data.get('comprehensive_section_title', '')
         badge['faq_section_title'] = self.cleaned_data.get('faq_section_title', '')
@@ -1349,9 +1356,9 @@ class ServiceAdmin(admin.ModelAdmin):
         ('✨ Hero Section Content', {
             'fields': ('eyebrow', 'tagline', 'description', 'floating_badge', 'features')
         }),
-        ('✏️ Section Custom Titles', {
-            'fields': ('about_section_title', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title'),
-            'description': 'Override the default titles for sections on the service page. Leave blank to use the auto-generated defaults.',
+        ('✏️ Section Custom Content & Titles', {
+            'fields': ('about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title'),
+            'description': 'Specify or override custom description text and titles for sections on the service page.',
             'classes': ('collapse',),
         }),
         ('📋 Diagnostic Test Suites & Indications', {

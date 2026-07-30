@@ -124,7 +124,9 @@ def seed():
             "theme_color": "#08709d",
             "floating_badge": {
                 "title": "Accredited Lab Diagnostics",
-                "desc": "Clean, certified medical blood tests right at your home."
+                "desc": "Clean, certified medical blood tests right at your home.",
+                "about_section_title": "About Blood Test at Home & Home Sample Collection",
+                "about_description": "Blood testing is essential for monitoring health, diagnosing medical conditions, and evaluating organ function. With CORx Healthcare, you no longer need to travel to a lab or wait in crowded waiting rooms.\n\nOur DHA-certified nurses visit your home, hotel, or office with sterile, single-use sampling kits to collect blood samples comfortably and safely, delivering accurate digital lab reports within 2 to 4 hours.\n\nWhether you require routine body checkups, diabetes monitoring, lipid profiles, or specialized diagnostic screenings, our senior medical team ensures complete confidentiality and medical accuracy throughout."
             },
             "features": [
                 {"title": "24/7 blood test home service"},

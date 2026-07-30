@@ -103,6 +103,7 @@ class ServiceSerializer(serializers.ModelSerializer):
     accent = serializers.CharField(source='theme_color', default='#08709d', required=False)
 
     about_section_title = serializers.SerializerMethodField()
+    about_description = serializers.SerializerMethodField()
     indications_section_title = serializers.SerializerMethodField()
     comprehensive_section_title = serializers.SerializerMethodField()
     faq_section_title = serializers.SerializerMethodField()
@@ -113,7 +114,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'id', 'slug', 'title', 'name', 'path', 'subtitle', 'accent', 'parent', 'sub_services',
             'eyebrow', 'description', 'icon', 'image_file', 'image', 'floating_badge', 'benefits', 'faqs',
             'locations', 'features', 'indications', 'lab_columns', 'reasons', 'steps',
-            'about_section_title', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
+            'about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
             'created_at', 'updated_at'
         ]
 
@@ -136,6 +137,9 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     def get_about_section_title(self, obj):
         return self._get_badge_field(obj, 'about_section_title')
+
+    def get_about_description(self, obj):
+        return self._get_badge_field(obj, 'about_description')
 
     def get_indications_section_title(self, obj):
         return self._get_badge_field(obj, 'indications_section_title')
