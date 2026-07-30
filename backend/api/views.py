@@ -288,6 +288,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
 
     def get_object(self):
+        import re
         queryset = self.filter_queryset(self.get_queryset())
         slug_param = self.kwargs.get('slug', '')
         if not slug_param:
@@ -297,20 +298,32 @@ class ServiceViewSet(viewsets.ModelViewSet):
         if not slug_val:
             return super().get_object()
 
-        # 1. Exact slug match
+        # 1. Numeric ID lookup (e.g. /api/services/5/)
+        if slug_val.isdigit():
+            obj = queryset.filter(id=int(slug_val)).first()
+            if obj:
+                self.check_object_permissions(self.request, obj)
+                return obj
+
+        # 2. Exact slug match
         obj = queryset.filter(slug__iexact=slug_val).first()
         if obj:
             self.check_object_permissions(self.request, obj)
             return obj
 
-        # 2. Keyword/substring match (e.g. 'physiotherapy-at-home-in-dubai' -> 'physiotherapy')
+        # 3. Keyword / Substring / Multi-word match (e.g. 'elderly-care' -> 'elderly-home-care')
         if len(slug_val) >= 3:
+            slug_words = [w for w in re.split(r'[^a-z0-9]+', slug_val) if len(w) >= 3]
             for item in queryset:
                 if item.slug and isinstance(item.slug, str):
                     item_slug = item.slug.strip().lower()
-                    if item_slug and (item_slug in slug_val or slug_val in item_slug):
-                        self.check_object_permissions(self.request, item)
-                        return item
+                    if item_slug:
+                        if item_slug in slug_val or slug_val in item_slug:
+                            self.check_object_permissions(self.request, item)
+                            return item
+                        if slug_words and all(w in item_slug for w in slug_words):
+                            self.check_object_permissions(self.request, item)
+                            return item
 
         return super().get_object()
 
