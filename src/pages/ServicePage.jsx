@@ -25,6 +25,7 @@ import {
   Syringe,
   Clock3,
   PhoneCall,
+  Users,
   Edit3,
   RotateCcw
 } from 'lucide-react';
@@ -1073,143 +1074,96 @@ const reasons = [
 
 const stepsData = [
   {
-    icon: <CalendarDays size={30} />,
+    icon: <PhoneCall size={36} className="text-[#08709d]" strokeWidth={1.75} />,
     title: "1. Book An Appointment",
-    desc: "Call +971 4 332 0776 or WhatsApp Us at +971 54 703 3311 for doctor-on-call service."
+    desc: "Call +971 43320776 or WhatsApp Us at +971547033311 for doctor-on-call service."
   },
   {
-    icon: <Stethoscope size={30} />,
-    title: "2. Doctors & Nurses Will Be At Your Doorstep",
+    icon: <Stethoscope size={36} className="text-[#08709d]" strokeWidth={1.75} />,
+    title: "2. Doctors & Nurses Will Be At your Doorstep",
     desc: "Our team of DHA-certified Nurses is dedicated to your prompt care. Expect them at your doorstep within just 30 minutes for blood test home service."
   },
   {
-    icon: <CheckCircle2 size={30} />,
-    title: "3. Accurate Results 24/7 at CORx Healthcare",
+    icon: <Users size={36} className="text-[#08709d]" strokeWidth={1.75} />,
+    title: "3. Accurate Results 24/7 at Corx Healthcare",
     desc: "For routine tests, receive your results in just 2 to 3 hours. Confirm the turnaround time (TAT) with our patient relationship executives for precise details."
   }
 ];
 
 function ThreeStepsLabProcessSection({ stepsList = [], serviceData, isEditMode, slug }) {
-  const displaySteps = stepsList || [];
-  if (displaySteps.length === 0) return null;
+  const displaySteps = (stepsList && stepsList.length > 0) ? stepsList : stepsData;
+  if (!displaySteps || displaySteps.length === 0) return null;
+
+  const defaultStepIcons = [
+    <PhoneCall key="0" size={36} className="text-[#08709d]" strokeWidth={1.75} />,
+    <Stethoscope key="1" size={36} className="text-[#08709d]" strokeWidth={1.75} />,
+    <Users key="2" size={36} className="text-[#08709d]" strokeWidth={1.75} />
+  ];
+
   return (
-    <Section variant="slate" className="relative overflow-hidden py-20">
-      <Container className="max-w-[1480px]">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          
-          {/* Left Column - List Content / Vertical Timeline */}
-          <div className="w-full lg:w-1/2">
-            <div className="mb-4">
-              <EditableText
-                slug={slug}
-                fieldKey="steps_eyebrow"
-                defaultText="HOW IT WORKS"
-                isEditMode={isEditMode}
-                tagName="span"
-                className="text-[#08709d] text-xs sm:text-sm font-bold uppercase tracking-widest bg-[#08709d]/10 px-4 py-2 rounded-full border border-[#08709d]/20 inline-block"
-              />
-            </div>
+    <Section variant="slate" className="py-16 sm:py-24 bg-slate-50/50">
+      <Container className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Centered Title - matching exact design in screenshot */}
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#08709d] tracking-tight leading-snug font-montserrat">
+            <EditableText
+              slug={slug}
+              fieldKey="steps_title"
+              defaultText={serviceData?.title ? `Get ${serviceData.title} at your doorstep in 3 easy steps!` : 'Get 10,000+ Lab Tests at your doorstep in 3 easy steps!'}
+              isEditMode={isEditMode}
+              tagName="span"
+            />
+          </h2>
+        </div>
 
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-8 text-[#1a294a] tracking-tight leading-tight font-montserrat">
-              <EditableText
-                slug={slug}
-                fieldKey="steps_title"
-                defaultText={serviceData?.title ? `Get ${serviceData.title} in 3 Easy Steps!` : 'Get 10,000+ Lab Tests at Your Doorstep in 3 Easy Steps!'}
-                isEditMode={isEditMode}
-                tagName="span"
-              />
-            </h2>
-
-            {/* ── VERTICAL TIMELINE DESIGN (NO ICONS) ── */}
-            <div className="relative my-8">
-              {/* Timeline Connecting Line */}
-              <div className="absolute left-[22px] sm:left-[26px] top-6 bottom-8 w-1 bg-gradient-to-b from-[#08709d] via-[#08709d]/40 to-emerald-500 rounded-full z-0 pointer-events-none" />
-
-              <div className="space-y-6 sm:space-y-7 relative z-10">
-                {displaySteps.map((item, i) => (
-                  <div key={i} className="relative flex items-start gap-4 sm:gap-6 group">
-                    {/* Timeline Step Badge Number (No Icon) */}
-                    <div className="shrink-0 relative z-10">
-                      <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-[#08709d] to-[#065679] text-white shadow-md shadow-[#08709d]/25 flex items-center justify-center font-black text-sm sm:text-base tracking-wider border-2 border-white ring-4 ring-[#08709d]/10 group-hover:scale-110 group-hover:from-emerald-500 group-hover:to-emerald-700 transition-all duration-300">
-                        {`0${i + 1}`}
-                      </div>
-                    </div>
-
-                    {/* Step Card Content */}
-                    <div className="flex-1 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm group-hover:shadow-md group-hover:border-[#08709d]/30 transition-all duration-300">
-                      <h3 className="text-lg sm:text-xl font-extrabold mb-1.5 text-[#1a294a] font-montserrat leading-snug">
-                        <EditableText
-                          slug={slug}
-                          fieldKey={`step_title_${i}`}
-                          defaultText={item.title}
-                          isEditMode={isEditMode}
-                          tagName="span"
-                        />
-                      </h3>
-                      <p className="text-slate-600 leading-relaxed text-sm sm:text-base font-normal font-sans m-0">
-                        <EditableText
-                          slug={slug}
-                          fieldKey={`step_desc_${i}`}
-                          defaultText={item.desc}
-                          isEditMode={isEditMode}
-                          tagName="span"
-                          multiline={true}
-                        />
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-2 flex items-center gap-4 flex-wrap">
-              <Button variant="primary" href="tel:+971547033311">
-                <CalendarDays size={18} />
-                <span>Book An Appointment</span>
-              </Button>
-              <Button variant="whatsapp" href="https://wa.me/971547033311" target="_blank" rel="noopener noreferrer">
-                <MessageSquare size={18} />
-                <span>WhatsApp Us</span>
-              </Button>
-            </div>
-          </div>
-
-          {/* Right Column - Floating Card Style */}
-          <div className="w-full lg:w-1/2">
-            <div className="relative rounded-[30px] overflow-hidden shadow-[0_30px_70px_rgba(0,0,0,0.12)] border-[8px] border-white w-full min-h-[480px] lg:h-[530px] bg-white p-6 flex flex-col justify-between">
-              <div className="relative w-full h-full rounded-[20px] overflow-hidden bg-gradient-to-br from-[#08709d]/10 via-slate-50 to-[#08709d]/5 border border-slate-100 p-8 flex flex-col items-center justify-center text-center">
-                
-                <div className="w-20 h-20 rounded-full bg-[#08709d] text-white flex items-center justify-center shadow-lg mb-6 animate-pulse">
-                  <Stethoscope size={40} strokeWidth={2} />
+        {/* 3 Horizontal Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+          {displaySteps.map((item, i) => (
+            <div 
+              key={i} 
+              className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200/90 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-xl transition-all duration-300 flex flex-col justify-between items-start text-left h-full group"
+            >
+              <div className="w-full">
+                {/* Step Icon */}
+                <div className="mb-5 text-[#08709d]">
+                  {item.icon || defaultStepIcons[i % defaultStepIcons.length]}
                 </div>
 
-                <span className="text-xs font-bold uppercase tracking-widest text-[#08709d] bg-[#08709d]/10 px-4 py-1.5 rounded-full border border-[#08709d]/20 mb-3">
-                  CORX HOME HEALTHCARE DUBAI
-                </span>
-
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-[#1a294a] mb-3 leading-snug">
-                  DHA-Certified Doorstep Healthcare
+                {/* Step Title */}
+                <h3 className="text-lg sm:text-xl font-bold mb-3 text-[#08709d] font-montserrat leading-snug">
+                  <EditableText
+                    slug={slug}
+                    fieldKey={`step_title_${i}`}
+                    defaultText={item.title}
+                    isEditMode={isEditMode}
+                    tagName="span"
+                  />
                 </h3>
 
-                <p className="text-slate-600 text-base max-w-md leading-relaxed mb-6">
-                  Certified medical staff equipped with single-use sterile kits arriving at your home, hotel, or office within 30 minutes.
+                {/* Step Description */}
+                <p className="text-slate-600 text-sm leading-relaxed mb-6 font-sans">
+                  <EditableText
+                    slug={slug}
+                    fieldKey={`step_desc_${i}`}
+                    defaultText={item.desc}
+                    isEditMode={isEditMode}
+                    tagName="span"
+                    multiline={true}
+                  />
                 </p>
+              </div>
 
-                <div className="grid grid-cols-2 gap-4 w-full max-w-md pt-4 border-t border-slate-200/80">
-                  <div className="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs">
-                    <p className="text-xs font-bold text-gray-400 uppercase">Arrival Time</p>
-                    <p className="text-lg font-extrabold text-[#08709d]">~30 Mins</p>
-                  </div>
-                  <div className="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs">
-                    <p className="text-xs font-bold text-gray-400 uppercase">Report Turnaround</p>
-                    <p className="text-lg font-extrabold text-emerald-600">2 - 3 Hours</p>
-                  </div>
-                </div>
-
+              {/* Book Now Button */}
+              <div className="pt-2">
+                <a
+                  href="tel:+971547033311"
+                  className="inline-flex items-center justify-center px-6 py-2.5 bg-[#08709d] hover:bg-[#065679] text-white font-semibold text-sm rounded-md transition-colors shadow-sm shadow-[#08709d]/20"
+                >
+                  Book Now
+                </a>
               </div>
             </div>
-          </div>
-
+          ))}
         </div>
       </Container>
     </Section>
