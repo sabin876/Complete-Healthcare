@@ -595,7 +595,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
               
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-4 w-full items-center mt-6">
-                <Button variant="primary" href="tel:+971547033311">
+                <Button variant="primary" href="/contact">
                   <CalendarDays size={18} />
                   <span>Book An Appointment</span>
                 </Button>
@@ -1155,12 +1155,12 @@ function ThreeStepsLabProcessSection({ stepsList = [], serviceData, isEditMode, 
 
               {/* Book Now Button */}
               <div className="pt-2">
-                <a
-                  href="tel:+971547033311"
+                <Link
+                  to="/contact"
                   className="inline-flex items-center justify-center px-6 py-2.5 bg-[#08709d] hover:bg-[#065679] text-white font-semibold text-sm rounded-md transition-colors shadow-sm shadow-[#08709d]/20"
                 >
                   Book Now
-                </a>
+                </Link>
               </div>
             </div>
           ))}
