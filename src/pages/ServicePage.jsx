@@ -522,8 +522,11 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
+      {/* ── HIGHLIGHTS BANNER (Staff, 24/7 Service, Dubai 30 Mins) ── */}
+      <ServiceHighlightsBar />
+
       {/* ── HERO SECTION ── */}
-      <Section variant="white" className="pt-20 pb-16 md:pt-28 md:pb-20 relative overflow-hidden">
+      <Section variant="white" className="pt-12 pb-16 md:pt-20 md:pb-20 relative overflow-hidden">
         <HeroBackgroundAnimation />
         <Container className="relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -632,9 +635,6 @@ function LabServicesLanding({ slug = 'lab-services' }) {
           </div>
         </Container>
       </Section>
-
-      {/* ── HIGHLIGHTS BANNER (Staff, 24/7 Service, Dubai 30 Mins) ── */}
-      <ServiceHighlightsBar />
 
       {/* ── BENEFITS SECTION ── */}
       <ServiceBenefitsSection 
