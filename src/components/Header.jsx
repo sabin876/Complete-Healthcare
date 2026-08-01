@@ -356,22 +356,9 @@ const Header = () => {
                               onClick={() => setActiveDropdown(null)}
                               className="flex items-center justify-between flex-1 rounded-[16px] transition-all duration-200 text-[13px] font-black uppercase tracking-wider text-emerald-300 hover:text-white bg-white/12 hover:bg-white/20 py-2.5 px-4 border border-emerald-400/20"
                             >
-                              <span>All Services</span>
+                              <span>All Services Overview</span>
                               <ArrowRight size={14} />
                             </Link>
-
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setActiveDropdown(null);
-                                setIsAddServiceOpen(true);
-                              }}
-                              className="flex items-center gap-1.5 rounded-[16px] transition-all duration-200 text-[12px] font-bold uppercase tracking-wider text-white bg-[#63b158] hover:bg-[#529d48] py-2.5 px-3.5 shadow-md shadow-emerald-900/40 cursor-pointer shrink-0"
-                            >
-                              <Plus size={14} />
-                              <span>Add Service</span>
-                            </button>
                           </div>
 
                           {link.dropdown.map((item) => {
@@ -611,19 +598,6 @@ const Header = () => {
                         </div>
                       );
                     })}
-                    {link.name === 'Services' && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMobileMenuOpen(false);
-                          setIsAddServiceOpen(true);
-                        }}
-                        className="mt-3 flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#63b158] text-white font-bold text-xs uppercase tracking-wider shadow-md"
-                      >
-                        <Plus size={16} />
-                        <span>+ Add New Service / Sub-Service</span>
-                      </button>
-                    )}
                   </motion.div>
                 )}
               </div>
@@ -631,13 +605,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-
-      {/* Dynamic Service & Sub-Service Creation Modal */}
-      <AddServiceModal
-        isOpen={isAddServiceOpen}
-        onClose={() => setIsAddServiceOpen(false)}
-        onServiceAdded={fetchServices}
-      />
     </header>
   );
 };

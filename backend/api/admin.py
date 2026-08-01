@@ -1288,15 +1288,40 @@ class BlogPostAdminForm(forms.ModelForm):
         fields = '__all__'
 
 
+class SubServiceInline(admin.TabularInline):
+    model = Service
+    fk_name = 'parent'
+    extra = 1
+    verbose_name = "Nested Sub-Service"
+    verbose_name_plural = "➕ Nested Sub-Services (Add & Edit Sub-Services under this Parent Service)"
+    fields = ('title', 'slug', 'tagline', 'icon', 'theme_color')
+    prepopulated_fields = {"slug": ("title",)}
+    show_change_link = True
+
+
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     form = ServiceAdminForm
-    list_display = ('title', 'slug', 'eyebrow', 'theme_color', 'parent')
+    inlines = [SubServiceInline]
+    list_display = ('title', 'service_hierarchy', 'slug', 'icon', 'theme_color', 'sub_services_count')
     search_fields = ('title', 'slug', 'tagline', 'description')
     list_filter = ('parent', 'created_at', 'updated_at')
     prepopulated_fields = {"slug": ("title",)}
     readonly_fields = ('created_at', 'updated_at')
     actions = ['duplicate_as_lab_template']
+
+    def service_hierarchy(self, obj):
+        if obj.parent:
+            return mark_safe(f'<span style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 14px; font-weight: 700; font-size: 11.5px; border: 1px solid #bae6fd;">🔷 Sub-Service of <strong>{obj.parent.title}</strong></span>')
+        return mark_safe('<span style="background: #dcfce7; color: #15803d; padding: 4px 12px; border-radius: 14px; font-weight: 700; font-size: 11.5px; border: 1px solid #bbf7d0;">🟢 Top-Level Service</span>')
+    service_hierarchy.short_description = "Service Level & Parent"
+
+    def sub_services_count(self, obj):
+        count = obj.sub_services.count()
+        if count > 0:
+            return mark_safe(f'<span style="font-weight: 800; color: #08709d; background: #f0f9ff; padding: 3px 10px; border-radius: 10px; border: 1px solid #e0f2fe;">{count} Sub-Services</span>')
+        return mark_safe('<span style="color: #94a3b8; font-style: italic;">—</span>')
+    sub_services_count.short_description = "Sub-Services"
 
     @admin.action(description="📋 Duplicate selected service(s) using Lab-Services template structure")
     def duplicate_as_lab_template(self, request, queryset):
