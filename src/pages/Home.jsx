@@ -57,6 +57,7 @@ import img1 from '../assets/img1.jpg';
 import img2 from '../assets/img2.jpg';
 import img3 from '../assets/img3.jpg';
 import img4 from '../assets/img4.jpg';
+import aboutUsBg from '../assets/About us .jpg';
 
 
 
@@ -1042,18 +1043,16 @@ const Home = () => {
 
 
       {/* Testimonials Section */}
-      <section style={{
-        fontFamily: "'Helvetica Neue', Arial, sans-serif",
-        background: "linear-gradient(135deg, #08709d 0%, #1a294a 100%)",
-
-        padding: "40px 20px",
-        position: "relative",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}>
-        <div style={{ position: "absolute", inset: 0, opacity: 0.05, backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
+      <section 
+        className="relative py-16 px-5 flex flex-col items-center overflow-hidden bg-cover bg-center"
+        style={{
+          fontFamily: "'Helvetica Neue', Arial, sans-serif",
+          backgroundImage: `url(${aboutUsBg})`,
+          backgroundPosition: 'center 35%'
+        }}
+      >
+        {/* Backdrop Overlay matching About Us Hero Style */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0c2e56]/90 via-[#08709d]/85 to-[#071f3b]/90 backdrop-blur-[2px] z-0 pointer-events-none" />
         <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
           <h2 style={{ color: "#fff", fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 900, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8, textAlign: "center" }}>
             Testimonials
