@@ -636,15 +636,17 @@ function LabServicesLanding({ slug = 'lab-services' }) {
         </Container>
       </Section>
 
-      {/* ── BENEFITS SECTION ── */}
-      <ServiceBenefitsSection 
-        benefitsList={benefitsList} 
-        benefitsTitle={benefitsTitle} 
-        serviceTitle={serviceData?.title} 
-        isEditMode={isEditMode} 
-        slug={slug} 
-        imageUrl={serviceData?.image || serviceData?.image_file} 
-      />
+      {/* ── BENEFITS SECTION (Only rendered if benefits exist for this service) ── */}
+      {((benefitsList && benefitsList.length > 0) || (benefitsTitle && benefitsTitle.trim() !== '') || isEditMode) && (
+        <ServiceBenefitsSection 
+          benefitsList={benefitsList} 
+          benefitsTitle={benefitsTitle} 
+          serviceTitle={serviceData?.title} 
+          isEditMode={isEditMode} 
+          slug={slug} 
+          imageUrl={serviceData?.image || serviceData?.image_file} 
+        />
+      )}
 
       {/* ── WHO MAY NEED SECTION ── */}
       {(!serviceData || (serviceData?.indications && serviceData.indications.length > 0) || (serviceData?.description)) && (

@@ -33,6 +33,13 @@ export default function ServiceBenefitsSection({
   slug = 'default',
   imageUrl = null
 }) {
+  const hasCustomBenefits = (benefitsList && benefitsList.length > 0) || Boolean(benefitsTitle && benefitsTitle.trim() !== '');
+
+  // Only show benefits section on services where benefits have been explicitly added/configured
+  if (!hasCustomBenefits && !isEditMode) {
+    return null;
+  }
+
   const displayBenefits = (benefitsList && benefitsList.length > 0) ? benefitsList : defaultBenefitsData;
   const defaultTitleText = benefitsTitle || (serviceTitle ? `Benefits of Our ${serviceTitle} Service at Corx Healthcare` : "Benefits of Our Home Healthcare Service at Corx Healthcare");
   
