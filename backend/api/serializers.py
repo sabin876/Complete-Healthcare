@@ -4,6 +4,7 @@ from .models import (
     OtApplication, SalaryApplication, NoticeApplication, DutyApplication,
     BlogPost, Service, TeamMember
 )
+from django.utils.text import slugify
 
 
 class StaffProfileSerializer(serializers.ModelSerializer):
@@ -81,26 +82,27 @@ class BlogPostSerializer(serializers.ModelSerializer):
 
 
 class SubServiceSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(source='title', required=False, allow_null=True, allow_blank=True)
+    name = serializers.CharField(source='title', read_only=True)
     path = serializers.SerializerMethodField()
-    desc = serializers.CharField(source='tagline', default='', required=False, allow_null=True, allow_blank=True)
-    accent = serializers.CharField(source='theme_color', default='#08709d', required=False, allow_null=True, allow_blank=True)
+    desc = serializers.CharField(source='tagline', default='', read_only=True)
+    accent = serializers.CharField(source='theme_color', default='#08709d', read_only=True)
+    icon = serializers.CharField(read_only=True)
 
     class Meta:
         model = Service
-        fields = ['id', 'name', 'slug', 'path', 'desc', 'accent']
+        fields = ['id', 'name', 'title', 'slug', 'path', 'desc', 'accent', 'icon']
 
     def get_path(self, obj):
         return f'/services/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
 
 
 class ServiceSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField(read_only=True)
     sub_services = SubServiceSerializer(many=True, read_only=True)
-    name = serializers.CharField(source='title', required=False, allow_null=True, allow_blank=True)
-    path = serializers.SerializerMethodField()
-    subtitle = serializers.CharField(source='tagline', required=False, allow_null=True, allow_blank=True)
-    accent = serializers.CharField(source='theme_color', default='#08709d', required=False, allow_null=True, allow_blank=True)
+    name = serializers.CharField(source='title', required=False, read_only=True)
+    path = serializers.SerializerMethodField(read_only=True)
+    subtitle = serializers.CharField(source='tagline', required=False, allow_blank=True)
+    accent = serializers.CharField(source='theme_color', default='#08709d', required=False)
 
     about_section_title = serializers.SerializerMethodField()
     about_description = serializers.SerializerMethodField()
@@ -112,11 +114,15 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = [
             'id', 'slug', 'title', 'name', 'path', 'subtitle', 'accent', 'parent', 'sub_services',
-            'eyebrow', 'description', 'icon', 'image_file', 'image', 'floating_badge', 'benefits', 'faqs',
+            'eyebrow', 'tagline', 'description', 'icon', 'theme_color', 'image_file', 'image', 'floating_badge', 'benefits', 'faqs',
             'locations', 'features', 'indications', 'lab_columns', 'reasons', 'steps',
             'about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
             'created_at', 'updated_at'
         ]
+        extra_kwargs = {
+            'slug': {'required': False, 'allow_blank': True},
+            'title': {'required': True},
+        }
 
     def get_path(self, obj):
         return f'/services/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
@@ -153,10 +159,25 @@ class ServiceSerializer(serializers.ModelSerializer):
     def get_faq_section_title(self, obj):
         return self._get_badge_field(obj, 'faq_section_title')
 
+    def create(self, validated_data):
+        title = validated_data.get('title', 'service')
+        provided_slug = validated_data.get('slug', '').strip()
+        if not provided_slug:
+            base_slug = slugify(title)
+            slug = base_slug
+            count = 1
+            while Service.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{count}"
+                count += 1
+            validated_data['slug'] = slug
+
+        if not validated_data.get('eyebrow'):
+            validated_data['eyebrow'] = 'DHA-Licensed Healthcare Service Across Dubai'
+
+        return super().create(validated_data)
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamMember
         fields = ['id', 'name', 'post', 'photo', 'created_at', 'updated_at']
-

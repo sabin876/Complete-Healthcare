@@ -216,3 +216,39 @@ class HealthcareAPITests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['duty_replacement'], 'STF-CO5678')
+
+    def test_create_parent_and_sub_service(self):
+        url = reverse('services-list')
+        # 1. Create parent service
+        parent_data = {
+            'title': 'Emergency Home Care',
+            'tagline': '24/7 Rapid Emergency Response',
+            'icon': 'Activity',
+            'theme_color': '#f43f5e'
+        }
+        response = self.client.post(url, parent_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['slug'], 'emergency-home-care')
+        parent_id = response.data['id']
+
+        # 2. Create sub-service linked to parent
+        sub_data = {
+            'title': 'Pediatric Urgent Care',
+            'tagline': 'Dedicated at-home child healthcare',
+            'icon': 'HeartPulse',
+            'theme_color': '#38bdf8',
+            'parent': parent_id
+        }
+        sub_response = self.client.post(url, sub_data, format='json')
+        self.assertEqual(sub_response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(sub_response.data['parent'], parent_id)
+        self.assertEqual(sub_response.data['slug'], 'pediatric-urgent-care')
+
+        # 3. Retrieve list and verify parent contains sub-service in sub_services field
+        get_response = self.client.get(url)
+        self.assertEqual(get_response.status_code, status.HTTP_200_OK)
+        parents_in_api = [s for s in get_response.data if s['id'] == parent_id]
+        self.assertEqual(len(parents_in_api), 1)
+        self.assertEqual(len(parents_in_api[0]['sub_services']), 1)
+        self.assertEqual(parents_in_api[0]['sub_services'][0]['title'], 'Pediatric Urgent Care')
+
