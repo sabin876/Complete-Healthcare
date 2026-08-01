@@ -207,7 +207,7 @@ export default function Contact() {
 
           {/* Address */}
           <div style={styles.contactCard}>
-            <div style={{ ...styles.iconWrap, color: "#5eb63b", background: "rgba(94, 182, 59, 0.1)" }}>
+            <div style={{ ...styles.iconWrap, color: "#5eb63b" }}>
               <LocationIcon />
             </div>
             <div>
@@ -232,7 +232,7 @@ export default function Contact() {
 
           {/* Working Hours */}
           <div style={styles.contactCard}>
-            <div style={{ ...styles.iconWrap, color: "#08709d", background: "rgba(8, 112, 157, 0.1)" }}>
+            <div style={styles.iconWrap}>
               <ClockIcon />
             </div>
             <div>
@@ -505,30 +505,32 @@ const styles = {
     gap: "12px",
   },
   contactCard: {
-    background: "#ffffff",
+    background: "linear-gradient(135deg, #f0f7fd 0%, #e4f1f9 100%)",
     borderRadius: "12px",
     padding: "18px 20px",
     display: "flex",
     alignItems: "flex-start",
     gap: "16px",
-    boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+    border: "1px solid #cbe3f5",
+    boxShadow: "0 4px 15px rgba(8, 112, 157, 0.06)",
   },
   iconWrap: {
     width: "36px",
     height: "36px",
     borderRadius: "50%",
-    background: "rgba(8, 112, 157, 0.1)",
+    background: "#ffffff",
     color: "#08709d",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
     marginTop: "2px",
+    boxShadow: "0 2px 8px rgba(8, 112, 157, 0.12)",
   },
   cardLabel: {
     fontWeight: "700",
     fontSize: "16px",
-    color: "#1a294a",
+    color: "#08709d",
     margin: "0 0 4px",
     fontFamily: "'Montserrat', sans-serif",
   },
