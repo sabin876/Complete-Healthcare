@@ -1051,8 +1051,8 @@ const Home = () => {
           backgroundPosition: 'center 35%'
         }}
       >
-        {/* Backdrop Overlay matching About Us Hero Style */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0c2e56]/90 via-[#08709d]/85 to-[#071f3b]/90 backdrop-blur-[2px] z-0 pointer-events-none" />
+        {/* Clean overlay so background image is clearly visible without blue tint */}
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] z-0 pointer-events-none" />
         <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
           <h2 style={{ color: "#fff", fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 900, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8, textAlign: "center" }}>
             Testimonials
