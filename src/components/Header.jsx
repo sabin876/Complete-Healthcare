@@ -237,7 +237,7 @@ const Header = () => {
                     }}
                     whileHover={{ y: -3, transition: { duration: 0.2 } }}
                     className="inline-block font-['Montserrat'] font-black uppercase tracking-[0.12em] transition-colors duration-300 cursor-default"
-                    style={{ color: '#2596be', fontSize: '19px' }}
+                    style={{ color: '#2596be', fontSize: '13px' }}
                   >
                     {word}
                   </motion.span>
