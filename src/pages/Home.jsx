@@ -502,16 +502,14 @@ const Home = () => {
     {
       badgeNode: (
         <span className="flex items-center gap-2">
-          <Heart size={16} className="text-red-500 fill-red-500 animate-pulse" />
-          <span className="text-white/95">Trusted by</span>
-          <span className="text-[#2ebd6e] font-black">5,00,000+</span>
-          <span className="text-white/95">Happy Patients</span>
+          <Shield size={16} className="text-[#2ebd6e] fill-[#2ebd6e]/10" />
+          <span className="text-white/95 font-semibold">Trusted Home healthcare services in Dubai</span>
         </span>
       ),
-      titlePre: "Your Health is Our ",
-      titleHighlight: "Priority",
+      titlePre: "Get Hospital-Quality Care ",
+      titleHighlight: "Without Leaving Your Home",
       titlePost: "",
-      subtitle: "Providing quality healthcare services with compassion and excellence. Your trusted partner in health and wellness.",
+      subtitle: "Looking for trusted home health care services in Dubai, Corx Healthcare is available 24×7 to meet your medical needs anytime. Our team of highly skilled professionals delivers personalized, high-quality care tailored to your unique health requirements, all in the comfort of your home.",
       image: hero1,
       videoUrl: "https://www.facebook.com/plugins/video.php?height=373&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1667889694549028%2F&show_text=false&width=560&t=0",
       cta1: "Book Appointment",
