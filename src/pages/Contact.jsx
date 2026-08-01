@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { API_BASE_URL } from "../config/api";
 
 const PhoneIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -97,6 +98,32 @@ const faqData = [
 
 export default function Contact() {
   const [activeIndex, setActiveIndex] = useState(null);
+  const [servicesList, setServicesList] = useState([
+    "Home Physiotherapy",
+    "IV Therapy / IV Drip at Home",
+    "Home Nursing Care",
+    "Doctor On Call (24/7 Home Doctor)",
+    "Elderly Care Givers",
+    "Lab Test At Home",
+    "Post-Surgery Home Care",
+    "Wound Care & Dressing",
+    "Medication Management"
+  ]);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/services/`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data && Array.isArray(data) && data.length > 0) {
+          const titles = data.map(s => s.title).filter(Boolean);
+          if (titles.length > 0) {
+            setServicesList(Array.from(new Set(titles)));
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -300,10 +327,11 @@ export default function Contact() {
               onChange={handleChange}
             >
               <option value="">Select a service</option>
-              <option value="consultation">Consultation</option>
-              <option value="surgery">Surgery</option>
-              <option value="physiotherapy">Physiotherapy</option>
-              <option value="second-opinion">Second Opinion</option>
+              {servicesList.map((serviceName, idx) => (
+                <option key={idx} value={serviceName}>
+                  {serviceName}
+                </option>
+              ))}
             </select>
           </div>
 
