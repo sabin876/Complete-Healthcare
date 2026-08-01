@@ -197,13 +197,16 @@ const TestimonialsSection = () => {
 
       {/* Leave a Review */}
       <div style={{ textAlign: "center", marginTop: 32 }}>
-        <button
-          style={{ padding: "14px 48px", background: "transparent", border: "2px solid rgba(255,255,255,0.6)", borderRadius: 50, color: "#fff", fontWeight: 700, fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase", cursor: "pointer", transition: "all 0.25s" }}
+        <a
+          href="https://www.google.com/maps/place/CORx+Healthcare/@24.9981035,55.1675379,622m/data=!3m2!1e3!4b1!4m6!3m5!1s0xa6b0036ffadede71:0xff91b5de95976932!8m2!3d24.9981035!4d55.1701128!16s%2Fg%2F11vxqqxt2z?entry=ttu&g_ep=EgoyMDI2MDcyOS4wIKXMDSoASAFQAw%3D%3D"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ display: "inline-block", padding: "14px 48px", background: "transparent", border: "2px solid rgba(255,255,255,0.6)", borderRadius: 50, color: "#fff", fontWeight: 700, fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase", cursor: "pointer", transition: "all 0.25s", textDecoration: "none" }}
           onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
           onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.transform = "translateY(0)"; }}
         >
           Leave a Review
-        </button>
+        </a>
       </div>
     </div>
   );

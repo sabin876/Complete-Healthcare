@@ -179,10 +179,13 @@ const GoogleReviews = () => {
             viewport={{ once: true }}
             className="inline-block relative"
           >
-            <motion.button
+            <motion.a
+              href="https://www.google.com/maps/place/CORx+Healthcare/@24.9981035,55.1675379,622m/data=!3m2!1e3!4b1!4m6!3m5!1s0xa6b0036ffadede71:0xff91b5de95976932!8m2!3d24.9981035!4d55.1701128!16s%2Fg%2F11vxqqxt2z?entry=ttu&g_ep=EgoyMDI2MDcyOS4wIKXMDSoASAFQAw%3D%3D"
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.05, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
               whileTap={{ scale: 0.95 }}
-              className="relative overflow-hidden border-2 border-white/60 text-white rounded-2xl font-black uppercase tracking-[0.3em] text-xs transition-all duration-500 group shadow-2xl"
+              className="inline-block relative overflow-hidden border-2 border-white/60 text-white rounded-2xl font-black uppercase tracking-[0.3em] text-xs transition-all duration-500 group shadow-2xl"
               style={{ padding: '18px 50px' }}
             >
               {/* Continuous Shine Effect */}
@@ -192,7 +195,7 @@ const GoogleReviews = () => {
                 className="absolute top-0 w-24 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 z-0"
               />
               <span className="relative z-10">LEAVE A REVIEW</span>
-            </motion.button>
+            </motion.a>
           </motion.div>
         </div>
       </div>
