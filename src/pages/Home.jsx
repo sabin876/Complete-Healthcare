@@ -206,7 +206,7 @@ const TestimonialsSection = () => {
       {/* Leave a Review */}
       <div style={{ textAlign: "center", marginTop: 32 }}>
         <a
-          href="https://www.google.com/maps/place/CORx+Healthcare/@24.9981035,55.1675379,622m/data=!3m2!1e3!4b1!4m6!3m5!1s0xa6b0036ffadede71:0xff91b5de95976932!8m2!3d24.9981035!4d55.1701128!16s%2Fg%2F11vxqqxt2z?entry=ttu&g_ep=EgoyMDI2MDcyOS4wIKXMDSoASAFQAw%3D%3D"
+          href="https://www.google.com/maps/place/CORx+Healthcare/@24.9981035,55.1675379,622m/data=!3m2!1e3!4b1!4m6!3m5!1s0xa6b0036ffadede71:0xff91b5de95976932!8m2!3d24.9981035!4d55.1701128!16s%2Fg%2F11vxqqxt2z?action=write_review"
           target="_blank"
           rel="noopener noreferrer"
           style={{ display: "inline-block", padding: "14px 48px", background: "#08709d", border: "none", borderRadius: 50, color: "#fff", fontWeight: 700, fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase", cursor: "pointer", transition: "all 0.25s", textDecoration: "none", boxShadow: "0 6px 20px rgba(8, 112, 157, 0.4)" }}
