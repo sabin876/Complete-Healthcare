@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function ServiceHighlightsBar() {
   return (
-    <div className="w-full bg-[#1b88c4] text-white py-4 md:py-5 border-y border-white/10 shadow-md relative z-20 font-sans">
+    <div className="w-full bg-[#1b88c4] text-white py-4 md:py-5 border-y border-white/10 shadow-md font-sans">
       <div className="container max-w-[1400px] mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 items-center justify-between">
           
