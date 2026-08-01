@@ -87,13 +87,17 @@ class SubServiceSerializer(serializers.ModelSerializer):
     desc = serializers.CharField(source='tagline', default='', read_only=True)
     accent = serializers.CharField(source='theme_color', default='#08709d', read_only=True)
     icon = serializers.CharField(read_only=True)
+    parent_title = serializers.SerializerMethodField()
 
     class Meta:
         model = Service
-        fields = ['id', 'name', 'title', 'slug', 'path', 'desc', 'accent', 'icon']
+        fields = ['id', 'name', 'title', 'slug', 'path', 'desc', 'accent', 'icon', 'parent', 'parent_title']
 
     def get_path(self, obj):
         return f'/services/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
+
+    def get_parent_title(self, obj):
+        return obj.parent.title if getattr(obj, 'parent', None) else ''
 
 
 class ServiceSerializer(serializers.ModelSerializer):

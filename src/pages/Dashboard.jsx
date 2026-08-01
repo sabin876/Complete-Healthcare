@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, CheckCircle2, Activity, Droplets, HeartPulse, 
   Stethoscope, HeartHandshake, TestTube, Sparkles, Clock, 
-  ShieldCheck, Layers, Trash2, ExternalLink, RefreshCw, LayoutDashboard
+  ShieldCheck, Layers, Trash2, ExternalLink, RefreshCw,
+  LayoutDashboard, CornerDownRight, Edit3, Save, X, ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
-import { Container, Section, SectionTitle, Paragraph, Card } from '../components/ui';
+import { Container } from '../components/ui';
 
 const AVAILABLE_ICONS = [
   { name: 'Activity', icon: Activity, label: 'Activity' },
@@ -32,25 +33,30 @@ const PRESET_COLORS = [
 ];
 
 export default function Dashboard() {
+  const [activeTab, setActiveTab] = useState('subservices'); // 'subservices' | 'parents' | 'hierarchy'
   const [servicesData, setServicesData] = useState([]);
   const [parentServices, setParentServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Form State
-  const [serviceType, setServiceType] = useState('sub'); // 'sub' or 'parent'
+  // Sub-Service Form State
   const [selectedParentId, setSelectedParentId] = useState('');
-  const [title, setTitle] = useState('');
-  const [slug, setSlug] = useState('');
-  const [tagline, setTagline] = useState('');
-  const [description, setDescription] = useState('');
+  const [subTitle, setSubTitle] = useState('');
+  const [subSlug, setSubSlug] = useState('');
+  const [subTagline, setSubTagline] = useState('');
+  const [subDescription, setSubDescription] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('Activity');
   const [themeColor, setThemeColor] = useState('#08709d');
+
+  // Parent Service Form State
+  const [parentTitle, setParentTitle] = useState('');
+  const [parentSlug, setParentSlug] = useState('');
+  const [parentTagline, setParentTagline] = useState('');
 
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Fetch Services from Django API
+  // Fetch all services from Django API
   const loadServices = async () => {
     setLoading(true);
     try {
@@ -75,32 +81,33 @@ export default function Dashboard() {
     loadServices();
   }, []);
 
-  const handleAddService = async (e) => {
+  // Submit Sub-Service
+  const handleAddSubService = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
 
-    if (!title.trim()) {
-      setErrorMsg('Please enter a service title.');
+    if (!subTitle.trim()) {
+      setErrorMsg('Please enter a sub-service title.');
       return;
     }
 
-    if (serviceType === 'sub' && !selectedParentId) {
-      setErrorMsg('Please select a parent service from the navbar list.');
+    if (!selectedParentId) {
+      setErrorMsg('Please choose a parent service for this sub-service.');
       return;
     }
 
     setSubmitting(true);
 
     const payload = {
-      title: title.trim(),
-      slug: slug.trim() || undefined,
-      tagline: tagline.trim(),
-      description: description.trim() || tagline.trim() || title.trim(),
+      title: subTitle.trim(),
+      slug: subSlug.trim() || undefined,
+      tagline: subTagline.trim(),
+      description: subDescription.trim() || subTagline.trim() || subTitle.trim(),
       icon: selectedIcon,
       theme_color: themeColor,
-      parent: serviceType === 'sub' ? parseInt(selectedParentId, 10) : null,
-      floating_badge: { title: 'Navbar Service', desc: tagline.trim() || title.trim() },
+      parent: parseInt(selectedParentId, 10),
+      floating_badge: { title: 'Sub-Service', desc: subTagline.trim() || subTitle.trim() },
     };
 
     try {
@@ -112,31 +119,108 @@ export default function Dashboard() {
 
       if (!res.ok) {
         const errData = await res.json();
-        throw new Error(errData.detail || JSON.stringify(errData) || 'Failed to add service');
+        throw new Error(errData.detail || JSON.stringify(errData) || 'Failed to add sub-service');
       }
 
       const created = await res.json();
-      setSuccessMsg(`Successfully added "${created.title || title}" to the navbar service list!`);
+      const parentObj = parentServices.find(p => p.id.toString() === selectedParentId);
+      const parentName = parentObj ? (parentObj.name || parentObj.title) : 'Parent Service';
 
-      // Reset form
-      setTitle('');
-      setSlug('');
-      setTagline('');
-      setDescription('');
+      setSuccessMsg(`Successfully added sub-service "${created.title || subTitle}" under "${parentName}"!`);
+
+      // Reset fields
+      setSubTitle('');
+      setSubSlug('');
+      setSubTagline('');
+      setSubDescription('');
 
       // Reload dataset
       loadServices();
 
     } catch (err) {
-      console.error('Error adding service:', err);
+      console.error('Error adding sub-service:', err);
       setErrorMsg(err.message || 'Error connecting to Django backend.');
     } finally {
       setSubmitting(false);
     }
   };
 
+  // Submit Top-Level Parent Service
+  const handleAddParentService = async (e) => {
+    e.preventDefault();
+    setErrorMsg('');
+    setSuccessMsg('');
+
+    if (!parentTitle.trim()) {
+      setErrorMsg('Please enter a parent service title.');
+      return;
+    }
+
+    setSubmitting(true);
+
+    const payload = {
+      title: parentTitle.trim(),
+      slug: parentSlug.trim() || undefined,
+      tagline: parentTagline.trim(),
+      description: parentTagline.trim() || parentTitle.trim(),
+      icon: selectedIcon,
+      theme_color: themeColor,
+      parent: null,
+      floating_badge: { title: 'Parent Service', desc: parentTagline.trim() || parentTitle.trim() },
+    };
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/services/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.detail || JSON.stringify(errData) || 'Failed to add parent service');
+      }
+
+      const created = await res.json();
+      setSuccessMsg(`Successfully added parent service "${created.title || parentTitle}" to top-level navbar!`);
+
+      setParentTitle('');
+      setParentSlug('');
+      setParentTagline('');
+
+      loadServices();
+
+    } catch (err) {
+      console.error('Error adding parent service:', err);
+      setErrorMsg(err.message || 'Error connecting to Django backend.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Re-assign Sub-Service Parent Service
+  const handleChangeParent = async (subServiceSlug, newParentId) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/services/${subServiceSlug}/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          parent: newParentId ? parseInt(newParentId, 10) : null
+        })
+      });
+      if (res.ok) {
+        loadServices();
+      } else {
+        alert('Failed to update parent service assignment.');
+      }
+    } catch (err) {
+      console.error('Update parent error:', err);
+    }
+  };
+
+  // Delete Service
   const handleDeleteService = async (serviceSlug, serviceTitle) => {
-    if (!window.confirm(`Are you sure you want to remove "${serviceTitle}" from the navbar list?`)) return;
+    if (!window.confirm(`Are you sure you want to remove "${serviceTitle}"?`)) return;
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/services/${serviceSlug}/`, {
@@ -152,27 +236,28 @@ export default function Dashboard() {
     }
   };
 
-  const parentList = servicesData.filter((s) => s.parent === null);
+  const selectedParentObj = parentServices.find(p => p.id.toString() === selectedParentId);
   const totalSubServices = servicesData.filter((s) => s.parent !== null).length;
+  const allSubServicesList = servicesData.filter((s) => s.parent !== null);
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-20 pt-8">
+    <div className="bg-slate-50 min-h-screen pb-24 pt-8 font-sans">
       <Container className="max-w-[1350px]">
         
         {/* Dashboard Header Banner */}
-        <div className="bg-gradient-to-r from-[#065b80] via-[#08709d] to-[#0a86bd] rounded-3xl p-8 md:p-10 text-white shadow-xl mb-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-[#065b80] via-[#08709d] to-[#0a86bd] rounded-3xl p-8 md:p-10 text-white shadow-xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
           <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="relative z-10">
             <div className="flex items-center gap-2 bg-white/15 px-3.5 py-1.5 rounded-full border border-white/20 text-xs font-black uppercase tracking-widest text-emerald-300 w-fit mb-3">
               <LayoutDashboard size={14} />
-              <span>Admin Services Control Panel</span>
+              <span>Services & Sub-Services Control Dashboard</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight font-montserrat">
-              Navbar Services Dashboard
+              Sub-Services Management Section
             </h1>
             <p className="text-white/80 text-sm md:text-base mt-2 max-w-2xl font-sans">
-              Manage parent services and add sub-services directly onto your main navbar dropdown list with real-time backend updates.
+              Create sub-services under chosen parent services and manage your entire navbar hierarchy dynamically with live Django backend updates.
             </p>
           </div>
 
@@ -181,359 +266,538 @@ export default function Dashboard() {
             className="flex items-center gap-2 bg-white/15 hover:bg-white/25 px-5 py-3 rounded-2xl border border-white/20 text-xs font-extrabold uppercase tracking-wider transition-all shrink-0 cursor-pointer"
           >
             <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
-            <span>Sync Data</span>
+            <span>Refresh Backend Data</span>
           </button>
         </div>
 
-        {/* Overview Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0">
-              <Layers size={24} />
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Parent Navbar Services</p>
-              <h3 className="text-2xl font-extrabold text-slate-800">{parentList.length}</h3>
-            </div>
-          </div>
+        {/* Dashboard Section Tabs */}
+        <div className="flex items-center gap-3 mb-8 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+          <button
+            onClick={() => setActiveTab('subservices')}
+            className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'subservices'
+                ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            <CornerDownRight size={18} />
+            <span>🔷 Sub-Services Manager</span>
+            <span className="ml-1 text-xs px-2 py-0.5 rounded-full bg-white/20">
+              {totalSubServices}
+            </span>
+          </button>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
-              <CheckCircle2 size={24} />
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Sub-Services</p>
-              <h3 className="text-2xl font-extrabold text-slate-800">{totalSubServices}</h3>
-            </div>
-          </div>
+          <button
+            onClick={() => setActiveTab('parents')}
+            className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'parents'
+                ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            <Layers size={18} />
+            <span>🟢 Parent Navbar Services</span>
+            <span className="ml-1 text-xs px-2 py-0.5 rounded-full bg-white/20">
+              {parentServices.length}
+            </span>
+          </button>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
-              <Sparkles size={24} />
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Backend API Status</p>
-              <h3 className="text-sm font-extrabold text-emerald-600 flex items-center gap-1.5 mt-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping inline-block" />
-                Active (Django REST)
-              </h3>
-            </div>
-          </div>
+          <button
+            onClick={() => setActiveTab('hierarchy')}
+            className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'hierarchy'
+                ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            <Activity size={18} />
+            <span>📊 Complete Hierarchy Tree</span>
+          </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* SEPARATE SECTION: ADD SUB-SERVICE TO PARENT NAVBAR LIST */}
-          <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-              <div className="w-10 h-10 rounded-2xl bg-[#63b158] text-white flex items-center justify-center font-bold">
-                <Plus size={22} />
-              </div>
-              <div>
-                <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat">
-                  Add Sub-Service To Navbar
-                </h3>
-                <p className="text-xs text-slate-500 font-sans">
-                  Attach new sub-services directly to your parent navbar list
-                </p>
-              </div>
-            </div>
-
-            <form onSubmit={handleAddService} className="space-y-5">
-              {errorMsg && (
-                <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold">
-                  ⚠️ {errorMsg}
+        {/* TAB 1: SUB-SERVICES MANAGER */}
+        {activeTab === 'subservices' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* SUB-SERVICES FORM */}
+            <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                <div className="w-10 h-10 rounded-2xl bg-[#63b158] text-white flex items-center justify-center font-bold">
+                  <Plus size={22} />
                 </div>
-              )}
-
-              {successMsg && (
-                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
-                  ✅ {successMsg}
-                </div>
-              )}
-
-              {/* Service Type Selection */}
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
-                  Category Option
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setServiceType('sub')}
-                    className={`p-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                      serviceType === 'sub'
-                        ? 'border-[#08709d] bg-[#08709d]/10 text-[#08709d]'
-                        : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                    }`}
-                  >
-                    🔷 Sub-Service (Nested)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setServiceType('parent')}
-                    className={`p-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                      serviceType === 'parent'
-                        ? 'border-[#08709d] bg-[#08709d]/10 text-[#08709d]'
-                        : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                    }`}
-                  >
-                    🟢 Top Navbar Parent
-                  </button>
-                </div>
-              </div>
-
-              {/* Parent Selection */}
-              {serviceType === 'sub' && (
                 <div>
-                  <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
-                    Select Parent Navbar List Item <span className="text-rose-500">*</span>
+                  <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat">
+                    Create New Sub-Service
+                  </h3>
+                  <p className="text-xs text-slate-500 font-sans">
+                    Choose a parent service from the list below and add a nested sub-service
+                  </p>
+                </div>
+              </div>
+
+              <form onSubmit={handleAddSubService} className="space-y-5">
+                {errorMsg && (
+                  <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center gap-2">
+                    <X size={16} />
+                    <span>{errorMsg}</span>
+                  </div>
+                )}
+
+                {successMsg && (
+                  <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
+                    <CheckCircle2 size={16} />
+                    <span>{successMsg}</span>
+                  </div>
+                )}
+
+                {/* STEP 1: CHOOSE PARENT SERVICE */}
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                  <label className="block text-xs font-extrabold uppercase tracking-wider text-[#08709d] mb-2 flex items-center gap-2">
+                    <Layers size={15} />
+                    <span>1. Choose Parent Navbar Service</span>
+                    <span className="text-rose-500">*</span>
                   </label>
                   <select
                     value={selectedParentId}
                     onChange={(e) => setSelectedParentId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 font-semibold text-sm focus:outline-none focus:border-[#08709d]"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-slate-800 font-extrabold text-sm focus:outline-none focus:border-[#08709d] shadow-sm"
                   >
-                    {parentServices.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name || p.title} ({p.slug})
-                      </option>
-                    ))}
+                    {parentServices.map((p) => {
+                      const count = servicesData.filter((s) => s.parent === p.id).length;
+                      return (
+                        <option key={p.id} value={p.id}>
+                          {p.name || p.title} — ({count} existing sub-services)
+                        </option>
+                      );
+                    })}
                   </select>
+                  {selectedParentObj && (
+                    <p className="text-xs text-slate-500 mt-2 font-medium flex items-center gap-1.5">
+                      <CornerDownRight size={13} className="text-[#63b158]" />
+                      <span>Sub-service will appear under: <strong>{selectedParentObj.name || selectedParentObj.title}</strong></span>
+                    </p>
+                  )}
                 </div>
-              )}
 
-              {/* Service Title */}
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
-                  Sub-Service Title <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Wound Care & Dressing"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm font-semibold focus:outline-none focus:border-[#08709d]"
-                />
-              </div>
-
-              {/* Custom Slug */}
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
-                  Custom Slug <span className="text-slate-400 font-normal">(Optional)</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. wound-care"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-xs font-mono focus:outline-none focus:border-[#08709d]"
-                />
-              </div>
-
-              {/* Tagline */}
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
-                  Tagline / Subtitle
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Clinical dressing & specialized wound management"
-                  value={tagline}
-                  onChange={(e) => setTagline(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-[#08709d]"
-                />
-              </div>
-
-              {/* Icon Choice */}
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
-                  Icon
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {AVAILABLE_ICONS.map((item) => {
-                    const IconComp = item.icon;
-                    const isSelected = selectedIcon === item.name;
-                    return (
-                      <button
-                        key={item.name}
-                        type="button"
-                        onClick={() => setSelectedIcon(item.name)}
-                        className={`p-2.5 rounded-xl border flex items-center gap-1.5 transition-all text-xs cursor-pointer ${
-                          isSelected
-                            ? 'border-[#08709d] bg-[#08709d] text-white font-bold'
-                            : 'border-slate-200 text-slate-700 hover:bg-slate-100'
-                        }`}
-                      >
-                        <IconComp size={15} />
-                        <span>{item.name}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Accent Color */}
-              <div>
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
-                  Theme Accent Color
-                </label>
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  {PRESET_COLORS.map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => setThemeColor(c)}
-                      style={{ backgroundColor: c }}
-                      className={`w-7 h-7 rounded-full border-2 cursor-pointer ${
-                        themeColor === c ? 'scale-110 border-slate-900 shadow-sm' : 'border-transparent'
-                      }`}
-                    />
-                  ))}
+                {/* STEP 2: SUB-SERVICE DETAILS */}
+                <div>
+                  <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                    2. Sub-Service Title <span className="text-rose-500">*</span>
+                  </label>
                   <input
-                    type="color"
-                    value={themeColor}
-                    onChange={(e) => setThemeColor(e.target.value)}
-                    className="w-7 h-7 rounded-full border-0 bg-transparent cursor-pointer"
+                    type="text"
+                    placeholder="e.g. Night Care Nurse, Post-Op Wound Dressing, Injection Care"
+                    value={subTitle}
+                    onChange={(e) => setSubTitle(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm font-semibold focus:outline-none focus:border-[#08709d]"
                   />
                 </div>
-              </div>
 
-              {/* Submit Action Button */}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full py-4 rounded-2xl bg-[#63b158] hover:bg-[#529d48] text-white font-extrabold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
-              >
-                {submitting ? (
-                  <span>Adding Service...</span>
+                <div>
+                  <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                    Custom Slug <span className="text-slate-400 font-normal">(Optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. night-care-nurse"
+                    value={subSlug}
+                    onChange={(e) => setSubSlug(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-xs font-mono focus:outline-none focus:border-[#08709d]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                    Tagline / Subtitle Description
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 24/7 dedicated overnight monitoring & nursing care"
+                    value={subTagline}
+                    onChange={(e) => setSubTagline(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-[#08709d]"
+                  />
+                </div>
+
+                {/* Icon Choice */}
+                <div>
+                  <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                    Choose Icon
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {AVAILABLE_ICONS.map((item) => {
+                      const IconComp = item.icon;
+                      const isSelected = selectedIcon === item.name;
+                      return (
+                        <button
+                          key={item.name}
+                          type="button"
+                          onClick={() => setSelectedIcon(item.name)}
+                          className={`p-2.5 rounded-xl border flex items-center gap-1.5 transition-all text-xs cursor-pointer ${
+                            isSelected
+                              ? 'border-[#08709d] bg-[#08709d] text-white font-bold shadow-md'
+                              : 'border-slate-200 text-slate-700 hover:bg-slate-100'
+                          }`}
+                        >
+                          <IconComp size={15} />
+                          <span>{item.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Accent Color */}
+                <div>
+                  <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                    Theme Accent Color
+                  </label>
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    {PRESET_COLORS.map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => setThemeColor(c)}
+                        style={{ backgroundColor: c }}
+                        className={`w-7 h-7 rounded-full border-2 cursor-pointer ${
+                          themeColor === c ? 'scale-110 border-slate-900 shadow-sm' : 'border-transparent'
+                        }`}
+                      />
+                    ))}
+                    <input
+                      type="color"
+                      value={themeColor}
+                      onChange={(e) => setThemeColor(e.target.value)}
+                      className="w-7 h-7 rounded-full border-0 bg-transparent cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                {/* SUBMIT BUTTON */}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-4 rounded-2xl bg-[#63b158] hover:bg-[#529d48] text-white font-extrabold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                >
+                  {submitting ? (
+                    <span>Adding Sub-Service...</span>
+                  ) : (
+                    <>
+                      <Plus size={18} />
+                      <span>Create Sub-Service under {selectedParentObj ? (selectedParentObj.name || selectedParentObj.title) : 'Parent'}</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            {/* SUB-SERVICES LIST WITH RE-ASSIGNMENT */}
+            <div className="lg:col-span-6 space-y-6">
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+                  <div>
+                    <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat">
+                      Sub-Services Directory ({allSubServicesList.length})
+                    </h3>
+                    <p className="text-xs text-slate-500 font-sans">
+                      All created sub-services with quick parent re-assignment options
+                    </p>
+                  </div>
+                  <span className="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">
+                    {allSubServicesList.length} Active
+                  </span>
+                </div>
+
+                {allSubServicesList.length === 0 ? (
+                  <div className="py-12 text-center text-slate-400 font-medium border border-dashed rounded-2xl">
+                    No sub-services created yet. Use the form on the left!
+                  </div>
                 ) : (
-                  <>
-                    <Plus size={18} />
-                    <span>Add To Parent Navbar List</span>
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
+                  <div className="space-y-4 max-h-[680px] overflow-y-auto pr-1">
+                    {allSubServicesList.map((sub) => {
+                      const currentParent = parentServices.find(p => p.id === sub.parent);
+                      return (
+                        <div
+                          key={sub.id}
+                          className="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-white transition-all space-y-3 shadow-xs"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0 font-bold">
+                                <CornerDownRight size={16} />
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-extrabold text-slate-800 leading-snug">
+                                  {sub.title || sub.name}
+                                </h4>
+                                <p className="text-xs text-slate-500 line-clamp-1">{sub.tagline || `/services/${sub.slug}`}</p>
+                              </div>
+                            </div>
 
-          {/* RIGHT COLUMN: CURRENT NAVBAR SERVICES & SUB-SERVICES HIERARCHY */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <Link
+                                to={`/services/${sub.slug}`}
+                                target="_blank"
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-[#08709d] transition-colors"
+                                title="View Page"
+                              >
+                                <ExternalLink size={15} />
+                              </Link>
+                              <button
+                                onClick={() => handleDeleteService(sub.slug, sub.title)}
+                                className="p-1.5 rounded-lg text-rose-400 hover:text-rose-600 transition-colors cursor-pointer"
+                                title="Delete Sub-Service"
+                              >
+                                <Trash2 size={15} />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Quick Change Parent Selector */}
+                          <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between gap-2 flex-wrap text-xs">
+                            <span className="font-bold text-slate-500 flex items-center gap-1">
+                              <Layers size={13} className="text-[#08709d]" />
+                              <span>Parent Service:</span>
+                            </span>
+
+                            <select
+                              value={sub.parent || ''}
+                              onChange={(e) => handleChangeParent(sub.slug, e.target.value)}
+                              className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white font-extrabold text-xs text-slate-700 focus:outline-none focus:border-[#08709d]"
+                            >
+                              <option value="">-- No Parent (Make Standalone) --</option>
+                              {parentServices.map((p) => (
+                                <option key={p.id} value={p.id}>
+                                  {p.name || p.title}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+          </div>
+        )}
+
+        {/* TAB 2: PARENT SERVICES MANAGER */}
+        {activeTab === 'parents' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* PARENT FORM */}
+            <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                <div className="w-10 h-10 rounded-2xl bg-[#08709d] text-white flex items-center justify-center font-bold">
+                  <Layers size={22} />
+                </div>
                 <div>
                   <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat">
-                    Live Navbar Services Hierarchy
+                    Create Top-Level Parent Service
                   </h3>
                   <p className="text-xs text-slate-500 font-sans">
-                    Current list of parent services and their nested sub-services
+                    Add a new main category to your navbar dropdown list
                   </p>
                 </div>
-                <span className="px-3 py-1 bg-[#08709d]/10 text-[#08709d] rounded-full text-xs font-bold">
-                  {parentList.length} Parent Categories
-                </span>
               </div>
 
-              {loading ? (
-                <div className="py-12 text-center text-slate-400 font-medium">
-                  Loading services list from backend...
+              <form onSubmit={handleAddParentService} className="space-y-5">
+                {errorMsg && (
+                  <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold">
+                    ⚠️ {errorMsg}
+                  </div>
+                )}
+
+                {successMsg && (
+                  <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
+                    ✅ {successMsg}
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                    Parent Service Title <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Telehealth & Online Consultation"
+                    value={parentTitle}
+                    onChange={(e) => setParentTitle(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm font-semibold focus:outline-none focus:border-[#08709d]"
+                  />
                 </div>
-              ) : parentList.length === 0 ? (
-                <div className="py-12 text-center text-slate-400 font-medium border border-dashed rounded-2xl">
-                  No parent services found. Add one on the left!
+
+                <div>
+                  <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                    Custom Slug <span className="text-slate-400 font-normal">(Optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. telehealth"
+                    value={parentSlug}
+                    onChange={(e) => setParentSlug(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-xs font-mono focus:outline-none focus:border-[#08709d]"
+                  />
                 </div>
-              ) : (
-                <div className="space-y-6">
-                  {parentList.map((parent) => {
-                    const subs = servicesData.filter((s) => s.parent === parent.id);
+
+                <div>
+                  <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                    Tagline / Subtitle
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 24/7 Virtual doctor consultations & prescriptions"
+                    value={parentTagline}
+                    onChange={(e) => setParentTagline(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-[#08709d]"
+                  />
+                </div>
+
+                {/* Icon Choice */}
+                <div>
+                  <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                    Icon
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {AVAILABLE_ICONS.map((item) => {
+                      const IconComp = item.icon;
+                      const isSelected = selectedIcon === item.name;
+                      return (
+                        <button
+                          key={item.name}
+                          type="button"
+                          onClick={() => setSelectedIcon(item.name)}
+                          className={`p-2.5 rounded-xl border flex items-center gap-1.5 transition-all text-xs cursor-pointer ${
+                            isSelected
+                              ? 'border-[#08709d] bg-[#08709d] text-white font-bold'
+                              : 'border-slate-200 text-slate-700 hover:bg-slate-100'
+                          }`}
+                        >
+                          <IconComp size={15} />
+                          <span>{item.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-4 rounded-2xl bg-[#08709d] hover:bg-[#065b80] text-white font-extrabold text-sm uppercase tracking-wider shadow-lg shadow-[#08709d]/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                >
+                  {submitting ? (
+                    <span>Adding Parent...</span>
+                  ) : (
+                    <>
+                      <Plus size={18} />
+                      <span>Add Top-Level Navbar Parent</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            {/* PARENT LIST TABLE */}
+            <div className="lg:col-span-7 space-y-4">
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+                <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat mb-4">
+                  Top Navbar Parent Services ({parentServices.length})
+                </h3>
+                <div className="space-y-3">
+                  {parentServices.map((p) => {
+                    const subCount = servicesData.filter(s => s.parent === p.id).length;
                     return (
-                      <div key={parent.id} className="border border-slate-200 rounded-2xl p-5 bg-slate-50/50 hover:bg-white transition-all">
-                        
-                        {/* Parent Service Card Header */}
-                        <div className="flex items-center justify-between gap-3 mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: parent.accent || parent.theme_color || '#08709d' }}>
-                              <Layers size={18} />
-                            </div>
-                            <div>
-                              <h4 className="text-base font-extrabold text-slate-800 flex items-center gap-2">
-                                <span>{parent.name || parent.title}</span>
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
-                                  Top Navbar
-                                </span>
-                              </h4>
-                              <p className="text-xs text-slate-500">{parent.subtitle || parent.tagline || `/services/${parent.slug}`}</p>
-                            </div>
+                      <div key={p.id} className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl bg-[#08709d] text-white flex items-center justify-center font-bold">
+                            <Layers size={18} />
                           </div>
-
-                          <div className="flex items-center gap-2">
-                            <Link
-                              to={`/services/${parent.slug}`}
-                              target="_blank"
-                              className="p-2 rounded-xl text-slate-400 hover:text-[#08709d] hover:bg-slate-100 transition-colors"
-                              title="View Page"
-                            >
-                              <ExternalLink size={16} />
-                            </Link>
-                            <button
-                              onClick={() => handleDeleteService(parent.slug, parent.title)}
-                              className="p-2 rounded-xl text-rose-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-                              title="Delete Parent Service"
-                            >
-                              <Trash2 size={16} />
-                            </button>
+                          <div>
+                            <h4 className="text-sm font-extrabold text-slate-800">{p.name || p.title}</h4>
+                            <p className="text-xs text-slate-500">{p.subtitle || p.tagline || `/services/${p.slug}`}</p>
                           </div>
                         </div>
 
-                        {/* Sub-Services List */}
-                        <div className="pl-6 border-l-2 border-slate-200 ml-4 space-y-2 mt-3">
-                          {subs.length === 0 ? (
-                            <p className="text-xs text-slate-400 font-italic py-1">
-                              No sub-services attached. Add one using the form on the left!
-                            </p>
-                          ) : (
-                            subs.map((sub) => (
-                              <div
-                                key={sub.id}
-                                className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs hover:border-[#08709d]/30 transition-all"
-                              >
-                                <div className="flex items-center gap-2.5">
-                                  <span className="w-2 h-2 rounded-full bg-[#63b158]" />
-                                  <div>
-                                    <span className="text-xs font-bold text-slate-800">{sub.title || sub.name}</span>
-                                    {sub.tagline && <span className="text-[11px] text-slate-500 block">{sub.tagline}</span>}
-                                  </div>
-                                </div>
-
-                                <div className="flex items-center gap-1.5">
-                                  <Link
-                                    to={`/services/${sub.slug}`}
-                                    target="_blank"
-                                    className="p-1.5 rounded-lg text-slate-400 hover:text-[#08709d] transition-colors"
-                                  >
-                                    <ExternalLink size={14} />
-                                  </Link>
-                                  <button
-                                    onClick={() => handleDeleteService(sub.slug, sub.title)}
-                                    className="p-1.5 rounded-lg text-rose-400 hover:text-rose-600 transition-colors cursor-pointer"
-                                  >
-                                    <Trash2 size={14} />
-                                  </button>
-                                </div>
-                              </div>
-                            ))
-                          )}
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">
+                            {subCount} Sub-Services
+                          </span>
+                          <button
+                            onClick={() => handleDeleteService(p.slug, p.title)}
+                            className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg cursor-pointer"
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         </div>
-
                       </div>
                     );
                   })}
                 </div>
-              )}
+              </div>
+            </div>
+
+          </div>
+        )}
+
+        {/* TAB 3: COMPLETE HIERARCHY TREE */}
+        {activeTab === 'hierarchy' && (
+          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-md">
+            <h3 className="text-xl font-extrabold text-slate-800 uppercase tracking-tight font-montserrat mb-6">
+              Complete Services & Sub-Services Navbar Hierarchy
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {parentServices.map((parent) => {
+                const subs = servicesData.filter((s) => s.parent === parent.id);
+                return (
+                  <div key={parent.id} className="border border-slate-200 rounded-2xl p-5 bg-slate-50 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center gap-2.5 mb-3 pb-2 border-b border-slate-200">
+                        <div className="w-8 h-8 rounded-lg bg-[#08709d] text-white flex items-center justify-center shrink-0">
+                          <Layers size={16} />
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-extrabold text-slate-800">{parent.name || parent.title}</h4>
+                          <span className="text-[10px] text-slate-500 uppercase font-bold">Top Navbar Parent</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 pl-2">
+                        {subs.length === 0 ? (
+                          <p className="text-xs text-slate-400 italic">No sub-services attached</p>
+                        ) : (
+                          subs.map((s) => (
+                            <div key={s.id} className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-200 text-xs">
+                              <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                                <CornerDownRight size={13} className="text-[#63b158]" />
+                                {s.title || s.name}
+                              </span>
+                              <Link to={`/services/${s.slug}`} target="_blank" className="text-slate-400 hover:text-[#08709d]">
+                                <ExternalLink size={13} />
+                              </Link>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-slate-200 flex justify-between items-center text-xs">
+                      <span className="font-bold text-slate-500">{subs.length} Sub-Services</span>
+                      <Link to={`/services/${parent.slug}`} target="_blank" className="text-[#08709d] font-bold hover:underline flex items-center gap-1">
+                        <span>View Page</span>
+                        <ArrowRight size={12} />
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
-
-        </div>
+        )}
 
       </Container>
     </div>
