@@ -1051,15 +1051,15 @@ const Home = () => {
 
       {/* Testimonials Section */}
       <section 
-        className="relative py-16 px-5 flex flex-col items-center overflow-hidden bg-cover bg-center"
+        className="relative py-20 px-5 flex flex-col items-center overflow-hidden bg-black bg-cover bg-center"
         style={{
           fontFamily: "'Helvetica Neue', Arial, sans-serif",
           backgroundImage: `url(${aboutUsBg})`,
           backgroundPosition: 'center 35%'
         }}
       >
-        {/* Clean overlay so background image is clearly visible without blue tint */}
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] z-0 pointer-events-none" />
+        {/* Rich black background overlay */}
+        <div className="absolute inset-0 bg-black/65 backdrop-blur-[2px] z-0 pointer-events-none" />
         <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
           <h2 style={{ color: "#fff", fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 900, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8, textAlign: "center" }}>
             Testimonials
