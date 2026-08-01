@@ -227,16 +227,16 @@ const Header = () => {
 
           {/* Tagline */}
           <div className="hidden lg:block text-center flex-1 px-8">
-            <motion.div initial="hidden" animate="visible" className="flex justify-center flex-wrap gap-x-[0.5em] gap-y-0">
+            <motion.div initial="hidden" animate="visible" className="flex justify-center flex-wrap gap-x-1.5 gap-y-0">
               {"24/7 PREMIUM HOME HEALTHCARE SERVICES IN DUBAI".split(" ").map((word, i) => (
-                <div key={i} className="relative overflow-hidden py-1 px-1">
+                <div key={i} className="relative overflow-hidden py-0.5 px-0">
                   <motion.span
                     variants={{
                       hidden: { y: "110%", opacity: 0 },
                       visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.33, 1, 0.68, 1], delay: i * 0.1 } }
                     }}
                     whileHover={{ y: -3, transition: { duration: 0.2 } }}
-                    className="inline-block font-['Montserrat'] font-black uppercase tracking-[0.12em] transition-colors duration-300 cursor-default"
+                    className="inline-block font-['Montserrat'] font-black uppercase tracking-[0.05em] transition-colors duration-300 cursor-default"
                     style={{ color: '#2596be', fontSize: '11px' }}
                   >
                     {word}
