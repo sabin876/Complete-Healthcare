@@ -97,27 +97,34 @@ const TestimonialCard = ({ testimonial }) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: "#fff", borderRadius: 12, padding: "20px 20px 24px",
-        boxShadow: hovered ? "0 12px 36px rgba(0,0,0,0.22)" : "0 4px 18px rgba(0,0,0,0.14)",
-        transform: hovered ? "translateY(-4px)" : "translateY(0)",
-        transition: "all 0.25s ease",
-        display: "flex", flexDirection: "column",
+        background: "#ffffff", 
+        borderRadius: 16, 
+        padding: "26px 24px 28px",
+        minHeight: "220px",
+        boxShadow: hovered ? "0 20px 40px rgba(0,0,0,0.22)" : "0 6px 24px rgba(0,0,0,0.12)",
+        transform: hovered ? "translateY(-6px)" : "translateY(0)",
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        display: "flex", 
+        flexDirection: "column",
+        justifyContent: "between",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 42, height: 42, borderRadius: "50%", background: testimonial.color, color: "#fff", fontWeight: 700, fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            {testimonial.initial}
+      <div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ width: 46, height: 46, borderRadius: "50%", background: testimonial.color, color: "#fff", fontWeight: 700, fontSize: 19, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              {testimonial.initial}
+            </div>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: 15.5, color: "#08709d", lineHeight: 1.25 }}>{testimonial.name}</div>
+              <div style={{ fontSize: 12.5, color: "#777", marginTop: 3 }}>{testimonial.time}</div>
+            </div>
           </div>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 14, color: "#2a52be", lineHeight: 1.2 }}>{testimonial.name}</div>
-            <div style={{ fontSize: 12, color: "#888", marginTop: 2 }}>{testimonial.time}</div>
-          </div>
+          <GoogleIcon />
         </div>
-        <GoogleIcon />
+        <StarRating count={testimonial.rating} />
+        <p style={{ fontSize: 14.5, color: "#334155", lineHeight: 1.65, margin: 0, fontWeight: 500 }}>{testimonial.text}</p>
       </div>
-      <StarRating count={testimonial.rating} />
-      <p style={{ fontSize: 13.5, color: "#444", lineHeight: 1.65, margin: 0 }}>{testimonial.text}</p>
     </div>
   );
 };
@@ -158,23 +165,23 @@ const TestimonialsSection = () => {
 
   return (
     <div
-      style={{ width: "100%", maxWidth: 1100 }}
+      style={{ width: "100%", maxWidth: 1280 }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 16, width: "100%" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 20, width: "100%" }}>
         {/* Prev */}
         <button
           onClick={prev}
-          style={{ flexShrink: 0, width: 40, height: 40, borderRadius: "50%", border: "1.5px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.1)", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s" }}
-          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.25)"}
-          onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+          style={{ flexShrink: 0, width: 46, height: 46, borderRadius: "50%", border: "1.5px solid rgba(255,255,255,0.4)", background: "rgba(255,255,255,0.15)", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s" }}
+          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.3)"}
+          onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15,18 9,12 15,6" /></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15,18 9,12 15,6" /></svg>
         </button>
 
         {/* Cards grid */}
-        <div style={{ flex: 1, display: "grid", gridTemplateColumns: `repeat(${visibleCount}, 1fr)`, gap: 16 }}>
+        <div style={{ flex: 1, display: "grid", gridTemplateColumns: `repeat(${visibleCount}, 1fr)`, gap: 20 }}>
           {visible.map((t) => <TestimonialCard key={t.name + startIndex} testimonial={t} />)}
         </div>
 
