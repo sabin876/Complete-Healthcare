@@ -68,27 +68,30 @@ const ClockIcon = () => (
   </svg>
 );
 
-/* ─── FAQ Data ───────────────────────────────────── */
 const faqData = [
   {
-    question: "How do I book an appointment?",
-    answer: "Simply fill out the form above with your name, email, phone number, and optional message. Our dedicated patient care team will contact you within 15 to 30 minutes to confirm your preferred doctor, consultation time slot, and specific medical needs."
+    question: "What services does Corx Home Healthcare offer?",
+    answer: "Corx Home Healthcare provides a wide range of services including physiotherapy, nursing care, medical equipment rental, wound care, and medication management, among others."
   },
   {
-    question: "Can I schedule a home health visit or lab test?",
-    answer: "Yes, absolutely! We offer comprehensive home healthcare services, including home doctor consultancies, skilled nursing care, physiotherapy, and sample collections for laboratory tests in the comfort of your home. Please mention your preference in the message field."
+    question: "Who can benefit from Corx Home Healthcare Services?",
+    answer: "Our services cater to individuals of all ages who require healthcare assistance in the comfort of their own homes. This includes seniors, individuals recovering from surgery, those with chronic illnesses, and anyone in need of rehabilitation."
   },
   {
-    question: "What happens after I submit the appointment form?",
-    answer: "Once submitted, you will see a confirmation message on your screen. An automated notification is sent to our medical coordinators immediately. A dedicated agent will contact you shortly via phone or WhatsApp to finalize your booking."
+    question: "How can I request services from Corx Home Healthcare?",
+    answer: "You can request our services by contacting us via phone at +971547033311 or by filling out the contact form on our website. Our team will promptly assess your needs and schedule a visit."
   },
   {
-    question: "Is 24/7 medical assistance available?",
-    answer: "Yes, Complete Healthcare operates 24 hours a day, 7 days a week. For urgent consultations or late-night medical guidance, you can call our hotlines directly at +971 54 703 3311 or +971 50 278 5990 for immediate assistance."
+    question: "Are your caregivers trained and certified?",
+    answer: "Yes, all our caregivers are highly trained, certified professionals with experience in their respective fields. We ensure that they undergo rigorous training and background checks to provide the highest quality care."
   },
   {
-    question: "Which locations do you serve in the UAE?",
-    answer: "We primarily serve across Dubai, including Dubai Investment Park (DIP), Green Community, Jumeirah, Marina, and surrounding areas. Our home healthcare teams are equipped to reach you anywhere in Dubai rapidly."
+    question: "What are your service hours?",
+    answer: "Corx Home Healthcare operates 24 hours a day, 7 days a week, including holidays. We understand that healthcare needs can arise at any time, and our team is dedicated to being there for you whenever you need us."
+  },
+  {
+    question: "How do I pay for Corx Home Healthcare services?",
+    answer: "We accept various payment methods including cash, credit/debit cards, and bank transfers. We also work with insurance providers for direct billing whenever possible. Our team will provide you with detailed payment options and assist you with any billing inquiries."
   }
 ];
 
