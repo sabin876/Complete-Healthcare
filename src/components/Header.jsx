@@ -336,7 +336,7 @@ const Header = () => {
                   </Link>
                 )}
                 
-                {/* Services Dropdown - Enhanced Dark Green Design (#0c361d, rounded-[24px]) */}
+                {/* Services Dropdown - Exact Dark Green Previous Design (#0c361d, rounded-[24px]) */}
                 {link.dropdown && link.name === 'Services' && (
                   <AnimatePresence>
                     {activeDropdown === 'Services' && (
@@ -346,23 +346,18 @@ const Header = () => {
                         exit={{ opacity: 0, y: 8, scale: 0.98, transition: { duration: 0.15 } }}
                         transition={{ duration: 0.22, ease: "easeOut" }}
                         className="absolute top-[calc(100%+8px)] left-0 z-[100] bg-[#0c361d] rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.55)] text-white"
-                        style={{ padding: '20px 24px', width: '380px' }}
+                        style={{ padding: '24px', width: '360px' }}
                       >
                         <div className="flex flex-col gap-2 w-full">
-                          {/* Header Bar */}
-                          <div className="flex items-center justify-between gap-2 mb-1">
-                            <Link
-                              to="/services"
-                              onClick={() => setActiveDropdown(null)}
-                              className="flex items-center justify-between flex-1 rounded-[16px] transition-all duration-200 text-[13px] font-black uppercase tracking-wider text-emerald-300 hover:text-white bg-white/12 hover:bg-white/20 py-2.5 px-4 border border-emerald-400/20"
-                            >
-                              <span>All Services Overview</span>
-                              <ArrowRight size={14} />
-                            </Link>
-                          </div>
-
+                          <Link
+                            to="/services"
+                            onClick={() => setActiveDropdown(null)}
+                            className="flex items-center justify-between w-full rounded-[18px] transition-all duration-200 text-[14px] font-black uppercase tracking-wider text-emerald-300 hover:text-white bg-white/12 hover:bg-white/20 py-3 px-6 mb-1 border border-emerald-400/20"
+                          >
+                            <span>All Services Overview</span>
+                            <ArrowRight size={15} />
+                          </Link>
                           {link.dropdown.map((item) => {
-                            const ItemIcon = item.icon || Activity;
                             const hasSubItems = item.subItems && item.subItems.length > 0;
                             const isSubOpen = openSubMenu === item.name;
                             return (
@@ -378,52 +373,30 @@ const Header = () => {
                               >
                                 {hasSubItems ? (
                                   <div 
-                                    className={`flex items-center justify-between w-full rounded-[18px] transition-all duration-200 cursor-pointer py-3 px-4 ${isSubOpen ? 'bg-white/14 shadow-sm border border-white/10' : 'hover:bg-white/10'}`}
+                                    className={`flex items-center justify-between w-full rounded-[18px] transition-all duration-200 cursor-pointer text-[15.5px] font-semibold tracking-wide text-white/95 hover:text-white py-3.5 px-6 ${isSubOpen ? 'bg-white/12 shadow-sm' : 'hover:bg-white/10'}`}
                                   >
-                                    <div className="flex items-center gap-3 min-w-0">
-                                      <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0" style={{ color: item.accent || '#34d399' }}>
-                                        <ItemIcon size={18} />
-                                      </div>
-                                      <div className="flex flex-col min-w-0">
-                                        <span className="text-[15px] font-semibold tracking-wide text-white/95 truncate">{item.name}</span>
-                                        <span className="text-[11px] text-white/60 font-normal truncate">{item.subtitle || `${item.subItems.length} sub-services`}</span>
-                                      </div>
-                                    </div>
-                                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
-                                        {item.subItems.length} Sub
-                                      </span>
-                                      <ChevronRight size={15} className={`transition-all duration-200 ${isSubOpen ? 'translate-x-1 text-emerald-300 opacity-100' : 'text-white/60 group-hover/sub:text-white'}`} />
-                                    </div>
+                                    <span>{item.name}</span>
+                                    <ChevronRight size={15} className={`transition-all duration-200 ${isSubOpen ? 'translate-x-1 text-emerald-300 opacity-100' : 'text-white/60 group-hover/sub:text-white group-hover/sub:translate-x-0.5'}`} />
                                   </div>
                                 ) : (
                                   <Link
                                     to={item.path}
                                     onClick={() => setActiveDropdown(null)}
-                                    className="flex items-center justify-between w-full rounded-[18px] transition-all duration-200 hover:bg-white/10 py-3 px-4"
+                                    className="flex items-center justify-between w-full rounded-[18px] transition-all duration-200 text-[15.5px] font-semibold tracking-wide text-white/95 hover:text-white hover:bg-white/10 py-3.5 px-6"
                                   >
-                                    <div className="flex items-center gap-3 min-w-0">
-                                      <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0" style={{ color: item.accent || '#34d399' }}>
-                                        <ItemIcon size={18} />
-                                      </div>
-                                      <div className="flex flex-col min-w-0">
-                                        <span className="text-[15px] font-semibold tracking-wide text-white/95 truncate">{item.name}</span>
-                                        {item.subtitle && <span className="text-[11px] text-white/60 font-normal truncate">{item.subtitle}</span>}
-                                      </div>
-                                    </div>
-                                    <ArrowRight size={14} className="text-white/40 group-hover/sub:text-white shrink-0" />
+                                    <span>{item.name}</span>
                                   </Link>
                                 )}
 
-                                {/* Sub-Services Flyout Card */}
+                                {/* Matching Dark Green Sub-menu Flyout */}
                                 {hasSubItems && isSubOpen && (
                                   <motion.div
-                                    initial={{ opacity: 0, x: 12, scale: 0.98 }}
-                                    animate={{ opacity: 1, x: 0, scale: 1 }}
-                                    exit={{ opacity: 0, x: 12, scale: 0.98 }}
-                                    transition={{ duration: 0.18, ease: 'easeOut' }}
+                                    initial={{ opacity: 0, x: 10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 10 }}
+                                    transition={{ duration: 0.18 }}
                                     className="absolute top-0 left-full ml-3 bg-[#0c361d] rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.55)] text-white z-[110]"
-                                    style={{ padding: '20px', width: '330px' }}
+                                    style={{ padding: '24px', width: '310px' }}
                                   >
                                     <div className="flex flex-col gap-2 w-full">
                                       <Link
@@ -432,40 +405,23 @@ const Header = () => {
                                           setActiveDropdown(null);
                                           setOpenSubMenu(null);
                                         }}
-                                        className="flex items-center justify-between w-full rounded-[16px] hover:bg-white/10 transition-all duration-200 text-[12px] font-extrabold text-emerald-300 uppercase tracking-wider py-2 px-3 mb-1 border-b border-white/10"
+                                        className="flex items-center w-full rounded-[16px] hover:bg-white/10 transition-all duration-200 text-[13px] font-bold text-emerald-300 uppercase tracking-wider py-2.5 px-4 mb-1 border-b border-white/10"
                                       >
                                         <span>View All {item.name}</span>
-                                        <ArrowRight size={14} />
                                       </Link>
-                                      {item.subItems.map((sub) => {
-                                        const SubIcon = sub.icon || CheckCircle2;
-                                        return (
-                                          <Link
-                                            key={sub.name}
-                                            to={sub.path}
-                                            onClick={() => {
-                                              setActiveDropdown(null);
-                                              setOpenSubMenu(null);
-                                            }}
-                                            className="group/subitem flex items-start gap-3 w-full rounded-[16px] hover:bg-white/12 hover:translate-x-1 transition-all duration-200 py-2.5 px-3 border border-transparent hover:border-white/10"
-                                          >
-                                            <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center text-emerald-300 shrink-0 mt-0.5 group-hover/subitem:bg-emerald-500 group-hover/subitem:text-white transition-colors">
-                                              <SubIcon size={15} />
-                                            </div>
-                                            <div className="flex flex-col flex-1 min-w-0">
-                                              <span className="text-[14px] font-semibold text-white/95 group-hover/subitem:text-white leading-snug">
-                                                {sub.name}
-                                              </span>
-                                              {sub.desc && (
-                                                <span className="text-[11.5px] text-white/60 group-hover/subitem:text-white/80 line-clamp-1 mt-0.5">
-                                                  {sub.desc}
-                                                </span>
-                                              )}
-                                            </div>
-                                            <ChevronRight size={14} className="text-white/30 group-hover/subitem:text-emerald-300 opacity-0 group-hover/subitem:opacity-100 transition-all shrink-0 mt-1" />
-                                          </Link>
-                                        );
-                                      })}
+                                      {item.subItems.map((sub) => (
+                                        <Link
+                                          key={sub.name}
+                                          to={sub.path}
+                                          onClick={() => {
+                                            setActiveDropdown(null);
+                                            setOpenSubMenu(null);
+                                          }}
+                                          className="flex items-center w-full rounded-[16px] hover:bg-white/10 hover:translate-x-1 transition-all duration-200 text-[14.5px] font-semibold text-white/90 hover:text-white py-3 px-4"
+                                        >
+                                          <span>{sub.name}</span>
+                                        </Link>
+                                      ))}
                                     </div>
                                   </motion.div>
                                 )}
@@ -475,7 +431,6 @@ const Header = () => {
                         </div>
                       </motion.div>
                     )}
-
                   </AnimatePresence>
                 )}
 

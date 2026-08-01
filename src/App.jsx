@@ -14,6 +14,7 @@ import Blog from './pages/Blog';
 import BlogDetails from './pages/BlogDetails';
 import Team from './pages/Team';
 import ServicePage from './pages/ServicePage';
+import Dashboard from './pages/Dashboard';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -22,6 +23,7 @@ const AnimatedRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/services" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/services/lab-services" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/services/:serviceSlug" element={<ServicePage />} />

@@ -80,7 +80,7 @@ const Footer = () => {
                 { name: 'About Us', path: '/about' },
                 { name: 'Our Team', path: '/team' },
                 { name: 'Contact Us', path: '/contact' },
-                { name: 'Frequently Asked Questions', path: '/#faq' }
+                { name: 'Services Dashboard', path: '/dashboard' }
               ].map((link, index) => (
                 <li key={index} style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
                   <Link 
