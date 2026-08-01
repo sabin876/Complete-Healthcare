@@ -5,7 +5,8 @@ import {
   Stethoscope, HeartHandshake, TestTube, Sparkles, Clock, 
   ShieldCheck, Layers, Trash2, ExternalLink, RefreshCw,
   LayoutDashboard, CornerDownRight, Edit3, Save, X, ArrowRight,
-  Gift, ListChecks, Image as ImageIcon, HelpCircle, BookOpen
+  Gift, ListChecks, Image as ImageIcon, HelpCircle, BookOpen,
+  ArrowUp, ArrowDown, Sparkle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
@@ -136,8 +137,8 @@ export default function Dashboard() {
     if (Array.isArray(serviceObj.understanding_items) && serviceObj.understanding_items.length > 0) {
       setUnderstandingItems(serviceObj.understanding_items.map((it, idx) => ({
         num: it.num || (idx + 1).toString(),
-        title: it.title || '',
-        desc: it.desc || it.description || ''
+        title: typeof it === 'string' ? it : (it.title || ''),
+        desc: typeof it === 'string' ? '' : (it.desc || it.description || '')
       })));
     } else {
       setUnderstandingItems([
@@ -182,6 +183,36 @@ export default function Dashboard() {
 
   const handleRemoveUnderstandingRow = (idx) => {
     setUnderstandingItems(understandingItems.filter((_, i) => i !== idx));
+  };
+
+  const handleMoveUnderstandingItem = (idx, direction) => {
+    const updated = [...understandingItems];
+    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= updated.length) return;
+    const temp = updated[idx];
+    updated[idx] = updated[targetIdx];
+    updated[targetIdx] = temp;
+    setUnderstandingItems(updated);
+  };
+
+  const handleLoadPresetUnderstanding = (presetType) => {
+    if (presetType === 'frozen_shoulder') {
+      setUnderstandingTitleText('What is Frozen Shoulder / Understanding Frozen Shoulder');
+      setUnderstandingIntroText('Inflammation and tightness of the connective tissue around the shoulder joint cause frozen shoulder or adhesive capsulitis. Three stages are typically associated with the condition:');
+      setUnderstandingItems([
+        { num: '1', title: 'Freezing Stage:', desc: 'This is the first stage in the progression of frozen shoulder symptoms. Your shoulder starts paining whenever you move it. It usually aches even when your shoulder is not in use.' },
+        { num: '2', title: 'Frozen Stage:', desc: 'In this stage, the pain in your shoulder may decrease, but the movement of it becomes more and more limited. Its symptoms may have persisted for 9 to 14 months.' },
+        { num: '3', title: 'Thawing Stage:', desc: 'Symptoms last for 12 to 15 months during this stage, and pain is significantly reduced. However, your ability to perform daily activities is improving rapidly.' }
+      ]);
+    } else if (presetType === 'knee_pain') {
+      setUnderstandingTitleText('Understanding Knee Osteoarthritis & Joint Stiffness');
+      setUnderstandingIntroText('Knee osteoarthritis involves progressive wear of the joint cartilage, leading to pain and movement restriction across three distinct phases:');
+      setUnderstandingItems([
+        { num: '1', title: 'Early Mild Stage:', desc: 'Occasional stiffness after prolonged sitting or physical exertion with minor discomfort.' },
+        { num: '2', title: 'Moderate Stiffness Stage:', desc: 'Noticeable pain while walking, climbing stairs, or bending the joint, requiring specialized care.' },
+        { num: '3', title: 'Recovery & Mobility Stage:', desc: 'Targeted physical therapy restores functional range of motion and prevents long-term joint degradation.' }
+      ]);
+    }
   };
 
   const handleUnderstandingItemChange = (idx, field, val) => {
@@ -541,17 +572,38 @@ export default function Dashboard() {
         {/* TAB: UNDERSTANDING BUILDER (Matching User Screenshot Layout) */}
         {activeTab === 'understanding' && (
           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-              <div className="w-10 h-10 rounded-2xl bg-[#08709d] text-white flex items-center justify-center font-bold">
-                <BookOpen size={22} />
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 flex-wrap gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#08709d] text-white flex items-center justify-center font-bold">
+                  <BookOpen size={22} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat">
+                    Understanding Section & Stages Builder
+                  </h3>
+                  <p className="text-xs text-slate-500 font-sans">
+                    Configure condition overview, intro paragraph, numbered stages, and medical illustration image matching your design
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat">
-                  Understanding Section & Stages Builder
-                </h3>
-                <p className="text-xs text-slate-500 font-sans">
-                  Configure condition overview, intro paragraph, numbered stages, and medical illustration image matching your design
-                </p>
+
+              {/* 1-Click Presets Bar */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-400">1-Click Presets:</span>
+                <button
+                  type="button"
+                  onClick={() => handleLoadPresetUnderstanding('frozen_shoulder')}
+                  className="px-3 py-1.5 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 text-xs font-bold transition-all cursor-pointer flex items-center gap-1"
+                >
+                  <span>Frozen Shoulder</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleLoadPresetUnderstanding('knee_pain')}
+                  className="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold transition-all cursor-pointer flex items-center gap-1"
+                >
+                  <span>Knee Pain</span>
+                </button>
               </div>
             </div>
 
@@ -674,13 +726,34 @@ export default function Dashboard() {
                             Stage / Subheading #{idx + 1}
                           </span>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveUnderstandingRow(idx)}
-                          className="p-1 text-rose-500 hover:bg-rose-100 rounded-lg cursor-pointer"
-                        >
-                          <Trash2 size={15} />
-                        </button>
+
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            disabled={idx === 0}
+                            onClick={() => handleMoveUnderstandingItem(idx, 'up')}
+                            className="p-1.5 text-slate-500 hover:bg-slate-200 rounded cursor-pointer disabled:opacity-30"
+                            title="Move Up"
+                          >
+                            <ArrowUp size={14} />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={idx === understandingItems.length - 1}
+                            onClick={() => handleMoveUnderstandingItem(idx, 'down')}
+                            className="p-1.5 text-slate-500 hover:bg-slate-200 rounded cursor-pointer disabled:opacity-30"
+                            title="Move Down"
+                          >
+                            <ArrowDown size={14} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveUnderstandingRow(idx)}
+                            className="p-1 text-rose-500 hover:bg-rose-100 rounded-lg cursor-pointer ml-1"
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        </div>
                       </div>
 
                       <div>
@@ -688,7 +761,7 @@ export default function Dashboard() {
                           type="text"
                           value={item.title}
                           onChange={(e) => handleUnderstandingItemChange(idx, 'title', e.target.value)}
-                          placeholder="Subheading Title (e.g. Freezing Stage:)"
+                          placeholder="Subheading Title (e.g. 1. Freezing Stage:)"
                           className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs font-bold focus:outline-none focus:border-[#08709d]"
                         />
                       </div>

@@ -512,7 +512,147 @@ class TitleDescListJsonWidget(forms.Widget):
             }}
 
             addBtn.addEventListener('click', () => {{
-                listData.push({{ title: '', desc: '' }});
+                listData.push({{ num: (listData.length + 1).toString(), title: '', desc: '' }});
+                render();
+                sync();
+            }});
+
+            render();
+        }})();
+        </script>
+        """
+        return mark_safe(html)
+
+
+# ----------------------------------------------------------------------
+# Understanding Condition Stages Widget
+# ----------------------------------------------------------------------
+class UnderstandingStagesJsonWidget(forms.Widget):
+    def render(self, name, value, attrs=None, renderer=None):
+        escaped_json = escape_json_for_attr(value)
+        container_id = f"us-widget-{name}"
+
+        html = f"""
+        <div id="{container_id}" style="max-width: 950px; background: #f0f9ff; border: 1.5px solid #08709d; border-radius: 12px; padding: 20px; font-family: system-ui, -apple-system, sans-serif;">
+            <input type="hidden" name="{name}" id="id_{name}_hidden" value="{escaped_json}" />
+            
+            <div style="font-weight: 800; font-size: 13px; color: #08709d; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: space-between;">
+                <span>💡 Condition Stages Builder (Numbered Points matching user screenshot)</span>
+            </div>
+
+            <div id="{container_id}-items" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed #cbd5e1;">
+                <button type="button" id="{container_id}-add-btn" style="background: #08709d; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 12.5px; cursor: pointer;">
+                    + Add New Condition Stage / Numbered Point
+                </button>
+            </div>
+        </div>
+
+        <script>
+        (function() {{
+            const hiddenInput = document.getElementById('id_{name}_hidden');
+            const container = document.getElementById('{container_id}-items');
+            const addBtn = document.getElementById('{container_id}-add-btn');
+            
+            let listData = [];
+            try {{
+                listData = JSON.parse(hiddenInput.value || '[]');
+            }} catch(e) {{
+                listData = [];
+            }}
+            if (!Array.isArray(listData)) listData = [];
+
+            function escapeHtml(str) {{
+                if (!str) return '';
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+            }}
+
+            function sync() {{
+                hiddenInput.value = JSON.stringify(listData);
+            }}
+
+            function render() {{
+                container.innerHTML = '';
+                if (listData.length === 0) {{
+                    container.innerHTML = '<div style="color: #94a3b8; font-size: 13px; font-style: italic; padding: 10px; background: white; border-radius: 6px; border: 1px dashed #cbd5e1;">No condition stages added yet. Click "+ Add New Condition Stage".</div>';
+                    return;
+                }}
+
+                listData.forEach((item, idx) => {{
+                    const card = document.createElement('div');
+                    card.style.cssText = "background: white; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);";
+                    
+                    const numVal = item.num || (idx + 1).toString();
+                    const titleVal = typeof item === 'string' ? item : (item.title || '');
+                    const descVal = typeof item === 'string' ? '' : (item.desc || item.description || '');
+
+                    card.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="font-weight: 800; font-size: 12px; color: #08709d;">Stage #${{idx + 1}}</span>
+                            <button type="button" class="del-item-btn" data-idx="${{idx}}" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">🗑️ Remove</button>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                            <div style="width: 70px;">
+                                <label style="display: block; font-weight: 700; font-size: 11px; color: #475569; margin-bottom: 3px;">Number:</label>
+                                <input type="text" class="item-num" data-idx="${{idx}}" value="${{escapeHtml(numVal)}}" style="width: 100%; box-sizing: border-box; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; font-weight: bold; text-align: center;" />
+                            </div>
+                            <div style="flex: 1;">
+                                <label style="display: block; font-weight: 700; font-size: 11px; color: #475569; margin-bottom: 3px;">Subheading (e.g. 1. Freezing Stage:):</label>
+                                <input type="text" class="item-title" data-idx="${{idx}}" value="${{escapeHtml(titleVal)}}" placeholder="e.g. 1. Freezing Stage:" style="width: 100%; box-sizing: border-box; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; font-weight: bold;" />
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 700; font-size: 11px; color: #475569; margin-bottom: 3px;">Detailed Description:</label>
+                            <textarea class="item-desc" data-idx="${{idx}}" rows="3" placeholder="Enter detailed description..." style="width: 100%; box-sizing: border-box; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12.5px; font-family: inherit; resize: vertical;">${{escapeHtml(descVal)}}</textarea>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }});
+
+                container.querySelectorAll('.item-num').forEach(inp => {{
+                    inp.addEventListener('input', (e) => {{
+                        const idx = parseInt(e.target.getAttribute('data-idx'));
+                        if (!listData[idx]) listData[idx] = {{}};
+                        listData[idx].num = e.target.value;
+                        sync();
+                    }});
+                }});
+
+                container.querySelectorAll('.item-title').forEach(inp => {{
+                    inp.addEventListener('input', (e) => {{
+                        const idx = parseInt(e.target.getAttribute('data-idx'));
+                        if (typeof listData[idx] === 'string') listData[idx] = {{ title: listData[idx] }};
+                        listData[idx].title = e.target.value;
+                        sync();
+                    }});
+                }});
+
+                container.querySelectorAll('.item-desc').forEach(ta => {{
+                    ta.addEventListener('input', (e) => {{
+                        const idx = parseInt(e.target.getAttribute('data-idx'));
+                        if (typeof listData[idx] === 'string') listData[idx] = {{ title: listData[idx] }};
+                        listData[idx].desc = e.target.value;
+                        sync();
+                    }});
+                }});
+
+                container.querySelectorAll('.del-item-btn').forEach(btn => {{
+                    btn.addEventListener('click', (e) => {{
+                        const idx = parseInt(e.target.getAttribute('data-idx'));
+                        listData.splice(idx, 1);
+                        render();
+                        sync();
+                    }});
+                }});
+            }}
+
+            addBtn.addEventListener('click', () => {{
+                listData.push({{ num: (listData.length + 1).toString(), title: '', desc: '' }});
                 render();
                 sync();
             }});
@@ -1122,6 +1262,24 @@ class ServiceAdminForm(forms.ModelForm):
         help_text="User-Friendly FAQ Builder: Add, edit, or remove Question & Answer cards without writing JSON."
     )
 
+    understanding_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+        required=False,
+        help_text="Main heading e.g. What is Frozen Shoulder / Understanding Frozen Shoulder"
+    )
+
+    understanding_intro = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
+        required=False,
+        help_text="Introductory paragraph explaining the condition or service overview"
+    )
+
+    understanding_items = forms.JSONField(
+        widget=UnderstandingStagesJsonWidget(),
+        required=False,
+        help_text="Interactive Builder for Numbered Condition Stages (e.g. 1. Freezing Stage, 2. Frozen Stage, 3. Thawing Stage)"
+    )
+
     def clean_floating_badge(self):
         val = self.cleaned_data.get('floating_badge')
         if not val or val == '':
@@ -1201,6 +1359,17 @@ class ServiceAdminForm(forms.ModelForm):
 
     def clean_faqs(self):
         val = self.cleaned_data.get('faqs')
+        if not val or val == '':
+            return []
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return []
+        return val
+
+    def clean_understanding_items(self):
+        val = self.cleaned_data.get('understanding_items')
         if not val or val == '':
             return []
         if isinstance(val, str):
