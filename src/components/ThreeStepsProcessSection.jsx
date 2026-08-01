@@ -185,7 +185,7 @@ export default function ThreeStepsProcessSection() {
               {/* Book Now Button */}
               <Link
                 to="/contact"
-                className="inline-flex items-center justify-center px-6 py-2.5 bg-[#63b158] hover:bg-[#529b48] text-white font-bold text-sm rounded-lg transition-colors shadow-md hover:shadow-lg"
+                className="inline-flex items-center justify-center px-6 py-2.5 bg-[#08709d] hover:bg-[#065679] text-white font-bold text-sm rounded-lg transition-colors shadow-md hover:shadow-lg"
               >
                 Book Now
               </Link>
