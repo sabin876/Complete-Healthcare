@@ -6,38 +6,47 @@ const GoogleReviews = () => {
   const reviews = [
     {
       id: 1,
-      name: "Amber Basbagill",
-      initial: "A",
-      color: "#f4511e",
-      time: "a year ago",
-      text: "Staff reassured me they listen to everything I needed to say I would definitely recommend this place.",
+      name: "Beata Hilger",
+      initial: "B",
+      color: "#e87c2e",
+      time: "a month ago",
+      text: "Outstanding and respectful care for my grandfather in Dubai. The nurses were well-trained, punctual, and extremely patient throughout his recovery.",
       rating: 5
     },
     {
       id: 2,
-      name: "Mia Edwards",
-      initial: "M",
-      color: "#673ab7",
-      time: "a year ago",
-      text: "Their individualized approach made me feel seen and heard. I wasn't just another patient — they truly cared about my journey.",
+      name: "Tariq Al-Maktoum",
+      initial: "T",
+      color: "#3a7bd5",
+      time: "2 months ago",
+      text: "Called CORx Healthcare for Doctor on Call at our hotel in Dubai. The DHA licensed doctor arrived in under 30 minutes! Truly impressive 24/7 service.",
       rating: 5
     },
     {
       id: 3,
-      name: "Lucas Kelly",
-      initial: "L",
-      color: "#455a64",
-      time: "a year ago",
-      text: "The detox program here is compassionate and effective. They prioritize patient safety and comfort every step of the way.",
+      name: "Sarah Jenkins",
+      initial: "S",
+      color: "#6b3fa0",
+      time: "3 months ago",
+      text: "Extremely professional home nursing and IV drip therapy. The nurse was very gentle, knowledgeable, and caring. Highly recommended in Dubai!",
       rating: 5
     },
     {
       id: 4,
-      name: "Grace Phillips",
-      initial: "G",
-      color: "#546e7a",
-      time: "a year ago",
-      text: "I appreciated how they customized my treatment plan to fit my specific challenges and goals. It made a huge difference.",
+      name: "Dr. Ahmed Al-Rashid",
+      initial: "A",
+      color: "#2596be",
+      time: "4 months ago",
+      text: "Excellent home physiotherapy service for post-op knee recovery. The therapist was punctual and built a personalized rehab routine that worked wonders.",
+      rating: 5
+    },
+    {
+      id: 5,
+      name: "Fatima Al-Zahra",
+      initial: "F",
+      color: "#63b158",
+      time: "5 months ago",
+      text: "Quick and painless home lab sample collection in Dubai. Results were sent digitally within 3 hours. Will definitely use CORx Healthcare again!",
       rating: 5
     }
   ];
