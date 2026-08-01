@@ -1558,8 +1558,8 @@ class ServiceAdmin(admin.ModelAdmin):
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
     form = BlogPostAdminForm
-    list_display = ('title', 'category', 'date', 'author', 'read_time')
-    list_filter = ('category', 'author')
+    list_display = ('title',)
+    list_filter = ('category',)
     search_fields = ('title', 'content', 'category', 'author')
 
     fieldsets = (
