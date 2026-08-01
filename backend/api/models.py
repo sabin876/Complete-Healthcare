@@ -123,6 +123,10 @@ class Service(models.Model):
     benefits_title = models.CharField(max_length=300, blank=True, default='')
     benefits = models.JSONField(default=list, blank=True)  # [{title, desc}]
     benefits_image_file = models.FileField(upload_to='service_images/', null=True, blank=True, help_text="Upload custom image file for Benefits Section")
+    understanding_title = models.CharField(max_length=300, blank=True, default='')
+    understanding_intro = models.TextField(blank=True, default='')
+    understanding_items = models.JSONField(default=list, blank=True)  # [{num, title, desc}]
+    understanding_image_file = models.FileField(upload_to='service_images/', null=True, blank=True, help_text="Upload custom illustration for Understanding Section")
     faqs = models.JSONField(default=list, blank=True)  # [{q, a}]
     locations = models.JSONField(default=list, blank=True)  # [{label}]
     features = models.JSONField(default=list, blank=True)  # [{title}]

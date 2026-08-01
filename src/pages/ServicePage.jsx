@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../config/api';
 import { Container, Section, Button, Card, HeroTitle, SectionTitle, CardTitle, Paragraph, SmallText } from '../components/ui';
 import ServiceHighlightsBar from '../components/ServiceHighlightsBar';
 import ServiceBenefitsSection from '../components/ServiceBenefitsSection';
+import ServiceUnderstandingSection from '../components/ServiceUnderstandingSection';
 import { 
   Check, 
   Home, 
@@ -519,6 +520,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
   const faqList = serviceData ? (serviceData.faqs || []) : labFaqs;
   const benefitsList = serviceData ? (serviceData.benefits || []) : [];
   const benefitsTitle = serviceData ? (serviceData.benefits_title || '') : '';
+  const understandingTitle = serviceData ? (serviceData.understanding_title || '') : '';
+  const understandingIntro = serviceData ? (serviceData.understanding_intro || '') : '';
+  const understandingItems = serviceData ? (serviceData.understanding_items || []) : [];
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
@@ -645,6 +649,19 @@ function LabServicesLanding({ slug = 'lab-services' }) {
           isEditMode={isEditMode} 
           slug={slug} 
           imageUrl={serviceData?.benefits_image || serviceData?.benefits_image_file || serviceData?.image || serviceData?.image_file} 
+        />
+      )}
+
+      {/* ── UNDERSTANDING / CONDITION STAGES SECTION (Matching User Screenshot Layout) ── */}
+      {((understandingItems && understandingItems.length > 0) || (understandingTitle && understandingTitle.trim() !== '') || isEditMode) && (
+        <ServiceUnderstandingSection
+          understandingTitle={understandingTitle}
+          understandingIntro={understandingIntro}
+          understandingItems={understandingItems}
+          serviceTitle={serviceData?.title}
+          isEditMode={isEditMode}
+          slug={slug}
+          imageUrl={serviceData?.understanding_image || serviceData?.understanding_image_file || serviceData?.image || serviceData?.image_file}
         />
       )}
 

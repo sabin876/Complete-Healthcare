@@ -1373,6 +1373,9 @@ class ServiceAdmin(admin.ModelAdmin):
         ('⭐ Process & Benefits Section', {
             'fields': ('steps', 'reasons', 'benefits_title', 'benefits', 'benefits_image_file')
         }),
+        ('💡 Understanding & Condition Stages Section', {
+            'fields': ('understanding_title', 'understanding_intro', 'understanding_items', 'understanding_image_file')
+        }),
         ('❓ FAQs', {
             'fields': ('faqs',)
         }),

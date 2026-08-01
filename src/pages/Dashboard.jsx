@@ -5,7 +5,7 @@ import {
   Stethoscope, HeartHandshake, TestTube, Sparkles, Clock, 
   ShieldCheck, Layers, Trash2, ExternalLink, RefreshCw,
   LayoutDashboard, CornerDownRight, Edit3, Save, X, ArrowRight,
-  Gift, ListChecks, Image as ImageIcon
+  Gift, ListChecks, Image as ImageIcon, HelpCircle, BookOpen
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
@@ -34,7 +34,7 @@ const PRESET_COLORS = [
 ];
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('subservices'); // 'subservices' | 'parents' | 'benefits' | 'hierarchy'
+  const [activeTab, setActiveTab] = useState('subservices'); // 'subservices' | 'parents' | 'benefits' | 'understanding' | 'hierarchy'
   const [servicesData, setServicesData] = useState([]);
   const [parentServices, setParentServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,6 +63,18 @@ export default function Dashboard() {
     { title: 'Pain Relief & Mobility Restoration', desc: 'Our expert clinical team uses proven techniques to reduce pain and restore full motion.' }
   ]);
 
+  // Understanding Form State (Matching Screenshot Layout)
+  const [selectedUnderstandingServiceSlug, setSelectedUnderstandingServiceSlug] = useState('');
+  const [understandingTitleText, setUnderstandingTitleText] = useState('');
+  const [understandingIntroText, setUnderstandingIntroText] = useState('');
+  const [understandingImageFile, setUnderstandingImageFile] = useState(null);
+  const [understandingImagePreview, setUnderstandingImagePreview] = useState('');
+  const [understandingItems, setUnderstandingItems] = useState([
+    { num: '1', title: 'Freezing Stage:', desc: 'This is the first stage in the progression of symptoms. Your shoulder starts paining whenever you move it.' },
+    { num: '2', title: 'Frozen Stage:', desc: 'In this stage, the pain in your shoulder may decrease, but movement becomes limited.' },
+    { num: '3', title: 'Thawing Stage:', desc: 'Symptoms last for 12 to 15 months during this stage, and pain is significantly reduced.' }
+  ]);
+
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -83,6 +95,10 @@ export default function Dashboard() {
         if (data.length > 0 && !selectedBenefitsServiceSlug) {
           setSelectedBenefitsServiceSlug(data[0].slug);
           loadBenefitsForService(data[0]);
+        }
+        if (data.length > 0 && !selectedUnderstandingServiceSlug) {
+          setSelectedUnderstandingServiceSlug(data[0].slug);
+          loadUnderstandingForService(data[0]);
         }
       }
     } catch (err) {
@@ -111,11 +127,39 @@ export default function Dashboard() {
     }
   };
 
+  const loadUnderstandingForService = (serviceObj) => {
+    if (!serviceObj) return;
+    setUnderstandingTitleText(serviceObj.understanding_title || `What is ${serviceObj.title || serviceObj.name} / Understanding ${serviceObj.title || serviceObj.name}`);
+    setUnderstandingIntroText(serviceObj.understanding_intro || `Inflammation and tightness of the connective tissue cause symptoms. Distinct stages are typically associated with this condition:`);
+    setUnderstandingImagePreview(serviceObj.understanding_image || serviceObj.understanding_image_file || '');
+    setUnderstandingImageFile(null);
+    if (Array.isArray(serviceObj.understanding_items) && serviceObj.understanding_items.length > 0) {
+      setUnderstandingItems(serviceObj.understanding_items.map((it, idx) => ({
+        num: it.num || (idx + 1).toString(),
+        title: it.title || '',
+        desc: it.desc || it.description || ''
+      })));
+    } else {
+      setUnderstandingItems([
+        { num: '1', title: 'Freezing Stage:', desc: 'This is the first stage in the progression of symptoms. Your shoulder starts paining whenever you move it.' },
+        { num: '2', title: 'Frozen Stage:', desc: 'In this stage, the pain in your shoulder may decrease, but movement becomes more and more limited.' },
+        { num: '3', title: 'Thawing Stage:', desc: 'Symptoms last for 12 to 15 months during this stage, and pain is significantly reduced.' }
+      ]);
+    }
+  };
+
   const handleBenefitsServiceChange = (e) => {
     const slugVal = e.target.value;
     setSelectedBenefitsServiceSlug(slugVal);
     const found = servicesData.find(s => s.slug === slugVal);
     if (found) loadBenefitsForService(found);
+  };
+
+  const handleUnderstandingServiceChange = (e) => {
+    const slugVal = e.target.value;
+    setSelectedUnderstandingServiceSlug(slugVal);
+    const found = servicesData.find(s => s.slug === slugVal);
+    if (found) loadUnderstandingForService(found);
   };
 
   const handleAddBenefitRow = () => {
@@ -130,6 +174,20 @@ export default function Dashboard() {
     const updated = [...benefitsItems];
     updated[idx][field] = val;
     setBenefitsItems(updated);
+  };
+
+  const handleAddUnderstandingRow = () => {
+    setUnderstandingItems([...understandingItems, { num: (understandingItems.length + 1).toString(), title: '', desc: '' }]);
+  };
+
+  const handleRemoveUnderstandingRow = (idx) => {
+    setUnderstandingItems(understandingItems.filter((_, i) => i !== idx));
+  };
+
+  const handleUnderstandingItemChange = (idx, field, val) => {
+    const updated = [...understandingItems];
+    updated[idx][field] = val;
+    setUnderstandingItems(updated);
   };
 
   const handleSaveBenefits = async (e) => {
@@ -173,6 +231,54 @@ export default function Dashboard() {
     } catch (err) {
       console.error(err);
       setErrorMsg(err.message || 'Failed to save benefits.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleSaveUnderstanding = async (e) => {
+    e.preventDefault();
+    if (!selectedUnderstandingServiceSlug) {
+      setErrorMsg('Please select a service to update understanding section.');
+      return;
+    }
+    setSubmitting(true);
+    setErrorMsg('');
+    setSuccessMsg('');
+
+    try {
+      let res;
+      if (understandingImageFile) {
+        const formData = new FormData();
+        formData.append('understanding_title', understandingTitleText.trim());
+        formData.append('understanding_intro', understandingIntroText.trim());
+        formData.append('understanding_items', JSON.stringify(understandingItems.filter(it => it.title.trim() !== '')));
+        formData.append('understanding_image_file', understandingImageFile);
+
+        res = await fetch(`${API_BASE_URL}/api/services/${selectedUnderstandingServiceSlug}/`, {
+          method: 'PATCH',
+          body: formData,
+        });
+      } else {
+        res = await fetch(`${API_BASE_URL}/api/services/${selectedUnderstandingServiceSlug}/`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            understanding_title: understandingTitleText.trim(),
+            understanding_intro: understandingIntroText.trim(),
+            understanding_items: understandingItems.filter(it => it.title.trim() !== '')
+          })
+        });
+      }
+
+      if (!res.ok) throw new Error('Failed to save understanding section.');
+      
+      setSuccessMsg('Successfully saved understanding section & illustration to backend!');
+      setUnderstandingImageFile(null);
+      loadServices();
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(err.message || 'Failed to save understanding section.');
     } finally {
       setSubmitting(false);
     }
@@ -225,13 +331,11 @@ export default function Dashboard() {
 
       setSuccessMsg(`Successfully added sub-service "${created.title || subTitle}" under "${parentName}"!`);
 
-      // Reset fields
       setSubTitle('');
       setSubSlug('');
       setSubTagline('');
       setSubDescription('');
 
-      // Reload dataset
       loadServices();
 
     } catch (err) {
@@ -295,7 +399,6 @@ export default function Dashboard() {
     }
   };
 
-  // Re-assign Sub-Service Parent Service
   const handleChangeParent = async (subServiceSlug, newParentId) => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/services/${subServiceSlug}/`, {
@@ -315,7 +418,6 @@ export default function Dashboard() {
     }
   };
 
-  // Delete Service
   const handleDeleteService = async (serviceSlug, serviceTitle) => {
     if (!window.confirm(`Are you sure you want to remove "${serviceTitle}"?`)) return;
 
@@ -348,13 +450,13 @@ export default function Dashboard() {
           <div className="relative z-10">
             <div className="flex items-center gap-2 bg-white/15 px-3.5 py-1.5 rounded-full border border-white/20 text-xs font-black uppercase tracking-widest text-emerald-300 w-fit mb-3">
               <LayoutDashboard size={14} />
-              <span>Services & Sub-Services Control Dashboard</span>
+              <span>Services & Content Control Dashboard</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight font-montserrat">
-              Services & Benefits Control Center
+              Services & Content Control Center
             </h1>
             <p className="text-white/80 text-sm md:text-base mt-2 max-w-2xl font-sans">
-              Manage parent services, sub-services, custom benefits section, and image uploads backed directly by Django REST API.
+              Manage parent services, sub-services, custom benefits, understanding condition stages, and image uploads backed directly by Django REST API.
             </p>
           </div>
 
@@ -371,7 +473,7 @@ export default function Dashboard() {
         <div className="flex items-center gap-3 mb-8 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
           <button
             onClick={() => setActiveTab('subservices')}
-            className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'subservices'
                 ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -385,8 +487,20 @@ export default function Dashboard() {
           </button>
 
           <button
+            onClick={() => setActiveTab('understanding')}
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'understanding'
+                ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            <BookOpen size={18} />
+            <span>💡 Understanding Section Builder</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('benefits')}
-            className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'benefits'
                 ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -398,7 +512,7 @@ export default function Dashboard() {
 
           <button
             onClick={() => setActiveTab('parents')}
-            className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'parents'
                 ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -413,7 +527,7 @@ export default function Dashboard() {
 
           <button
             onClick={() => setActiveTab('hierarchy')}
-            className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'hierarchy'
                 ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -423,6 +537,187 @@ export default function Dashboard() {
             <span>📊 Complete Hierarchy Tree</span>
           </button>
         </div>
+
+        {/* TAB: UNDERSTANDING BUILDER (Matching User Screenshot Layout) */}
+        {activeTab === 'understanding' && (
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+              <div className="w-10 h-10 rounded-2xl bg-[#08709d] text-white flex items-center justify-center font-bold">
+                <BookOpen size={22} />
+              </div>
+              <div>
+                <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat">
+                  Understanding Section & Stages Builder
+                </h3>
+                <p className="text-xs text-slate-500 font-sans">
+                  Configure condition overview, intro paragraph, numbered stages, and medical illustration image matching your design
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSaveUnderstanding} className="space-y-6 max-w-4xl">
+              {errorMsg && (
+                <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center gap-2">
+                  <X size={16} />
+                  <span>{errorMsg}</span>
+                </div>
+              )}
+
+              {successMsg && (
+                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
+                  <CheckCircle2 size={16} />
+                  <span>{successMsg}</span>
+                </div>
+              )}
+
+              {/* Select Service */}
+              <div>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-[#08709d] mb-2">
+                  Select Target Service
+                </label>
+                <select
+                  value={selectedUnderstandingServiceSlug}
+                  onChange={handleUnderstandingServiceChange}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-slate-800 font-extrabold text-sm focus:outline-none focus:border-[#08709d]"
+                >
+                  {servicesData.map((s) => (
+                    <option key={s.id} value={s.slug}>
+                      {s.title || s.name} ({s.slug}) {s.parent ? '— Sub-Service' : '— Top Parent'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Section Main Title */}
+              <div>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                  Understanding Main Heading
+                </label>
+                <input
+                  type="text"
+                  value={understandingTitleText}
+                  onChange={(e) => setUnderstandingTitleText(e.target.value)}
+                  placeholder="e.g. What is Frozen Shoulder / Understanding Frozen Shoulder"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm font-bold focus:outline-none focus:border-[#08709d]"
+                />
+              </div>
+
+              {/* Intro Paragraph */}
+              <div>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                  Introductory Paragraph
+                </label>
+                <textarea
+                  rows={3}
+                  value={understandingIntroText}
+                  onChange={(e) => setUnderstandingIntroText(e.target.value)}
+                  placeholder="Inflammation and tightness of the connective tissue around the joint cause adhesive capsulitis..."
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-[#08709d]"
+                />
+              </div>
+
+              {/* Illustration Image Upload */}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
+                  <ImageIcon size={16} className="text-[#08709d]" />
+                  <span>Upload Medical Illustration Image</span>
+                </label>
+                <div className="flex items-center gap-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        setUnderstandingImageFile(e.target.files[0]);
+                        setUnderstandingImagePreview(URL.createObjectURL(e.target.files[0]));
+                      }
+                    }}
+                    className="block w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-extrabold file:bg-[#08709d]/10 file:text-[#08709d] hover:file:bg-[#08709d]/20 cursor-pointer"
+                  />
+                  {understandingImagePreview && (
+                    <div className="w-16 h-16 rounded-xl border border-slate-300 overflow-hidden shrink-0 shadow-sm">
+                      <img src={understandingImagePreview} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Numbered Stages Builder */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+                    Numbered Stages / Points List ({understandingItems.length})
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleAddUnderstandingRow}
+                    className="px-3 py-1.5 rounded-lg bg-[#08709d]/10 text-[#08709d] hover:bg-[#08709d]/20 text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1"
+                  >
+                    <Plus size={14} />
+                    <span>Add Stage / Point</span>
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {understandingItems.map((item, idx) => (
+                    <div key={idx} className="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={item.num}
+                            onChange={(e) => handleUnderstandingItemChange(idx, 'num', e.target.value)}
+                            placeholder="#"
+                            className="w-12 px-2 py-1 rounded border border-slate-300 text-xs font-bold text-center"
+                          />
+                          <span className="text-xs font-extrabold text-[#08709d] uppercase tracking-wide">
+                            Stage / Subheading #{idx + 1}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveUnderstandingRow(idx)}
+                          className="p-1 text-rose-500 hover:bg-rose-100 rounded-lg cursor-pointer"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+
+                      <div>
+                        <input
+                          type="text"
+                          value={item.title}
+                          onChange={(e) => handleUnderstandingItemChange(idx, 'title', e.target.value)}
+                          placeholder="Subheading Title (e.g. Freezing Stage:)"
+                          className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs font-bold focus:outline-none focus:border-[#08709d]"
+                        />
+                      </div>
+
+                      <div>
+                        <textarea
+                          rows={2}
+                          value={item.desc}
+                          onChange={(e) => handleUnderstandingItemChange(idx, 'desc', e.target.value)}
+                          placeholder="Description (e.g. This is the first stage in the progression of symptoms...)"
+                          className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#08709d]"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-4 rounded-2xl bg-[#08709d] hover:bg-[#065b80] text-white font-extrabold text-sm uppercase tracking-wider shadow-lg shadow-[#08709d]/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+              >
+                {submitting ? 'Saving Understanding Section...' : 'Save Understanding Section To Backend'}
+              </button>
+            </form>
+          </div>
+        )}
 
         {/* TAB: BENEFITS BUILDER */}
         {activeTab === 'benefits' && (
@@ -782,7 +1077,6 @@ export default function Dashboard() {
                 ) : (
                   <div className="space-y-4 max-h-[680px] overflow-y-auto pr-1">
                     {allSubServicesList.map((sub) => {
-                      const currentParent = parentServices.find(p => p.id === sub.parent);
                       return (
                         <div
                           key={sub.id}
