@@ -390,40 +390,44 @@ const Header = () => {
 
                                 {/* Matching Dark Green Sub-menu Flyout */}
                                 {hasSubItems && isSubOpen && (
-                                  <motion.div
-                                    initial={{ opacity: 0, x: 10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 10 }}
-                                    transition={{ duration: 0.18 }}
-                                    className="absolute top-0 left-full ml-3 bg-[#0c361d] rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.55)] text-white z-[110]"
-                                    style={{ padding: '24px', width: '310px' }}
-                                  >
-                                    <div className="flex flex-col gap-0.5 w-full">
-                                      <Link
-                                        to={item.path}
-                                        onClick={() => {
-                                          setActiveDropdown(null);
-                                          setOpenSubMenu(null);
-                                        }}
-                                        className="flex items-center w-full rounded-[16px] hover:bg-white/10 transition-all duration-200 text-[13px] font-bold text-emerald-300 uppercase tracking-wider py-2.5 px-4 mb-1 border-b border-white/10"
-                                      >
-                                        <span>View All {item.name}</span>
-                                      </Link>
-                                      {item.subItems.map((sub) => (
+                                  <>
+                                    {/* Transparent bridge to fill the gap between parent and flyout so mouse doesn't trigger onMouseLeave */}
+                                    <div className="absolute top-0 h-full z-[109]" style={{ left: '100%', width: '14px' }} />
+                                    <motion.div
+                                      initial={{ opacity: 0, x: 10 }}
+                                      animate={{ opacity: 1, x: 0 }}
+                                      exit={{ opacity: 0, x: 10 }}
+                                      transition={{ duration: 0.18 }}
+                                      className="absolute top-0 left-full ml-3 bg-[#0c361d] rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.55)] text-white z-[110]"
+                                      style={{ padding: '24px', width: '310px' }}
+                                    >
+                                      <div className="flex flex-col gap-0.5 w-full">
                                         <Link
-                                          key={sub.name}
-                                          to={sub.path}
+                                          to={item.path}
                                           onClick={() => {
                                             setActiveDropdown(null);
                                             setOpenSubMenu(null);
                                           }}
-                                          className="flex items-center w-full rounded-[16px] hover:bg-white/10 hover:translate-x-1 transition-all duration-200 text-[13px] font-semibold text-white/90 hover:text-white py-2 px-4"
+                                          className="flex items-center w-full rounded-[16px] hover:bg-white/10 transition-all duration-200 text-[13px] font-bold text-emerald-300 uppercase tracking-wider py-2.5 px-4 mb-1 border-b border-white/10"
                                         >
-                                          <span>{sub.name}</span>
+                                          <span>View All {item.name}</span>
                                         </Link>
-                                      ))}
-                                    </div>
-                                  </motion.div>
+                                        {item.subItems.map((sub) => (
+                                          <Link
+                                            key={sub.name}
+                                            to={sub.path}
+                                            onClick={() => {
+                                              setActiveDropdown(null);
+                                              setOpenSubMenu(null);
+                                            }}
+                                            className="flex items-center w-full rounded-[16px] hover:bg-white/10 hover:translate-x-1 transition-all duration-200 text-[13px] font-semibold text-white/90 hover:text-white py-2 px-4"
+                                          >
+                                            <span>{sub.name}</span>
+                                          </Link>
+                                        ))}
+                                      </div>
+                                    </motion.div>
+                                  </>
                                 )}
                               </div>
                             );
