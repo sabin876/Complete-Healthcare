@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { User, Calendar, ArrowRight, Search, Tag, BookOpen } from "lucide-react";
+import { User, Calendar, ArrowRight, Search, Tag, BookOpen, PenLine, HeartPulse, Stethoscope } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { API_BASE_URL } from "../config/api";
+
 
 const DUMMY_IMAGE =
   "https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop";
@@ -234,45 +236,103 @@ export default function OrthopedicArticlesPage() {
   }, []);
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Poppins', 'Inter', sans-serif", paddingTop: "90px", paddingBottom: "50px" }}>
-      <div style={{ maxWidth: "1140px", margin: "0 auto", padding: "0 24px" }}>
-        
-        {/* Header Section */}
-        <div style={{ textAlign: "center", marginBottom: "28px" }}>
-          <span
-            style={{
-              display: "inline-block",
-              backgroundColor: "#eff6ff",
-              color: "#2563eb",
-              fontSize: "12px",
-              fontWeight: "700",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              padding: "6px 18px",
-              borderRadius: "9999px",
-              marginBottom: "12px",
-              border: "1px solid #dbeafe",
-            }}
-          >
-            Medical Insights
-          </span>
+    <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Poppins', 'Inter', sans-serif", paddingBottom: "50px" }}>
 
-          <h1
-            style={{
-              fontSize: "clamp(28px, 3.5vw, 42px)",
-              fontWeight: "800",
-              color: "#0f172a",
-              marginBottom: "8px",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Expert Orthopedic <span style={{ color: "#2563eb" }}>Articles</span>
-          </h1>
+      {/* ── PREMIUM BLOG HERO HEADING ── */}
+      <div className="relative w-full overflow-hidden bg-gradient-to-br from-[#0a1628] via-[#08709d] to-[#063d57]" style={{ paddingTop: "120px", paddingBottom: "80px" }}>
 
-          <p style={{ fontSize: "15px", color: "#64748b", maxWidth: "560px", margin: "0 auto", lineHeight: "1.5" }}>
-            Stay informed with the latest insights on orthopedic health, treatments, and surgical innovations.
-          </p>
+        {/* Animated Floating Orbs */}
+        <motion.div
+          animate={{ scale: [1, 1.3, 1], x: [0, 60, 0], y: [0, -40, 0], opacity: [0.25, 0.45, 0.25] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#38bdf8]/20 via-[#08709d]/15 to-transparent blur-[120px] pointer-events-none"
+        />
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], x: [0, -40, 0], y: [0, 50, 0], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          className="absolute bottom-0 -left-24 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-emerald-500/20 via-[#08709d]/10 to-transparent blur-[100px] pointer-events-none"
+        />
+        {/* Dot Grid Overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.04] pointer-events-none" />
+
+        <div className="relative z-10 max-w-[1140px] mx-auto px-6 text-center">
+
+          {/* Eyebrow Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center justify-center gap-2 mb-6"
+          >
+            <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-widest px-5 py-2 rounded-full backdrop-blur-sm">
+              <PenLine size={13} className="text-emerald-400" />
+              Healthcare Insights & Medical Articles
+            </span>
+          </motion.div>
+
+          {/* Main Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="font-black tracking-tight leading-tight mb-5"
+            style={{ fontSize: "clamp(36px, 5vw, 68px)", fontFamily: "'Montserrat', 'Poppins', sans-serif" }}
+          >
+            <span className="text-white">Expert </span>
+            <span className="bg-gradient-to-r from-emerald-400 via-[#38bdf8] to-emerald-300 bg-clip-text text-transparent">
+              Medical Blog
+            </span>
+            <br />
+            <span className="text-white/90" style={{ fontSize: "clamp(22px, 3vw, 42px)", fontWeight: 600 }}>
+              for Healthcare in Dubai
+            </span>
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="text-white/70 mx-auto mb-10 leading-relaxed"
+            style={{ fontSize: "clamp(14px, 1.6vw, 18px)", maxWidth: "620px" }}
+          >
+            Stay informed with the latest insights on orthopedic health, home nursing, IV therapy, physiotherapy treatments, and surgical innovations from our DHA-licensed medical team.
+          </motion.p>
+
+          {/* Stats Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="flex flex-wrap items-center justify-center gap-6 md:gap-10"
+          >
+            {[
+              { icon: <BookOpen size={18} />, value: "50+", label: "Articles Published" },
+              { icon: <Stethoscope size={18} />, value: "DHA", label: "Licensed Experts" },
+              { icon: <HeartPulse size={18} />, value: "24/7", label: "Healthcare Support" },
+            ].map((stat, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-emerald-400 shrink-0">
+                  {stat.icon}
+                </div>
+                <div className="text-left">
+                  <div className="text-white font-black text-lg leading-tight">{stat.value}</div>
+                  <div className="text-white/60 text-xs font-medium">{stat.label}</div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
         </div>
+
+        {/* Bottom Wave */}
+        <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
+          <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full" style={{ height: "60px" }}>
+            <path d="M0,60 C360,0 1080,0 1440,60 L1440,60 L0,60 Z" fill="#f8fafc" />
+          </svg>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: "1140px", margin: "0 auto", padding: "40px 24px 0" }}>
 
         {/* Article Grid */}
         {currentPosts.length > 0 ? (
