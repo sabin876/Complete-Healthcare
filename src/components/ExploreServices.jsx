@@ -248,7 +248,9 @@ export default function ExploreServices() {
       })
       .then(data => {
         if (data && Array.isArray(data) && data.length > 0) {
-          setServiceList(data.map((item, index) => {
+          const mainParents = data.filter(item => item.parent === null || !item.parent);
+          const listToDisplay = mainParents.length > 0 ? mainParents : data;
+          setServiceList(listToDisplay.map((item, index) => {
             const defaultItem = services.find(s => s.path.includes(item.slug) || item.slug.includes(s.path.split('/').pop())) || services[index % services.length];
             return {
               id: item.id || index + 1,
