@@ -4,7 +4,8 @@ import {
   Plus, CheckCircle2, Activity, Droplets, HeartPulse, 
   Stethoscope, HeartHandshake, TestTube, Sparkles, Clock, 
   ShieldCheck, Layers, Trash2, ExternalLink, RefreshCw,
-  LayoutDashboard, CornerDownRight, Edit3, Save, X, ArrowRight
+  LayoutDashboard, CornerDownRight, Edit3, Save, X, ArrowRight,
+  Gift, ListChecks
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
@@ -33,7 +34,7 @@ const PRESET_COLORS = [
 ];
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('subservices'); // 'subservices' | 'parents' | 'hierarchy'
+  const [activeTab, setActiveTab] = useState('subservices'); // 'subservices' | 'parents' | 'benefits' | 'hierarchy'
   const [servicesData, setServicesData] = useState([]);
   const [parentServices, setParentServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,6 +53,14 @@ export default function Dashboard() {
   const [parentSlug, setParentSlug] = useState('');
   const [parentTagline, setParentTagline] = useState('');
 
+  // Benefits Form State
+  const [selectedBenefitsServiceSlug, setSelectedBenefitsServiceSlug] = useState('');
+  const [benefitsTitleText, setBenefitsTitleText] = useState('');
+  const [benefitsItems, setBenefitsItems] = useState([
+    { title: 'Customized Treatment Plans', desc: 'Every patient receives a tailored therapy plan to address their specific needs.' },
+    { title: 'Pain Relief & Mobility Restoration', desc: 'Our expert clinical team uses proven techniques to reduce pain and restore full motion.' }
+  ]);
+
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -69,6 +78,10 @@ export default function Dashboard() {
         if (parents.length > 0 && !selectedParentId) {
           setSelectedParentId(parents[0].id.toString());
         }
+        if (data.length > 0 && !selectedBenefitsServiceSlug) {
+          setSelectedBenefitsServiceSlug(data[0].slug);
+          loadBenefitsForService(data[0]);
+        }
       }
     } catch (err) {
       console.error('Error fetching services for Dashboard:', err);
@@ -80,6 +93,72 @@ export default function Dashboard() {
   useEffect(() => {
     loadServices();
   }, []);
+
+  const loadBenefitsForService = (serviceObj) => {
+    if (!serviceObj) return;
+    setBenefitsTitleText(serviceObj.benefits_title || `Benefits of Our ${serviceObj.title || serviceObj.name} Service at Corx Healthcare`);
+    if (Array.isArray(serviceObj.benefits) && serviceObj.benefits.length > 0) {
+      setBenefitsItems(serviceObj.benefits.map(b => typeof b === 'string' ? { title: b, desc: '' } : { title: b.title || '', desc: b.desc || b.description || '' }));
+    } else {
+      setBenefitsItems([
+        { title: 'Customized Treatment Plans', desc: 'Every patient receives a tailored therapy plan to address their specific needs.' },
+        { title: 'Pain Relief & Mobility Restoration', desc: 'Our expert clinical team uses proven techniques to reduce pain and restore motion.' }
+      ]);
+    }
+  };
+
+  const handleBenefitsServiceChange = (e) => {
+    const slugVal = e.target.value;
+    setSelectedBenefitsServiceSlug(slugVal);
+    const found = servicesData.find(s => s.slug === slugVal);
+    if (found) loadBenefitsForService(found);
+  };
+
+  const handleAddBenefitRow = () => {
+    setBenefitsItems([...benefitsItems, { title: '', desc: '' }]);
+  };
+
+  const handleRemoveBenefitRow = (idx) => {
+    setBenefitsItems(benefitsItems.filter((_, i) => i !== idx));
+  };
+
+  const handleBenefitItemChange = (idx, field, val) => {
+    const updated = [...benefitsItems];
+    updated[idx][field] = val;
+    setBenefitsItems(updated);
+  };
+
+  const handleSaveBenefits = async (e) => {
+    e.preventDefault();
+    if (!selectedBenefitsServiceSlug) {
+      setErrorMsg('Please select a service to update benefits.');
+      return;
+    }
+    setSubmitting(true);
+    setErrorMsg('');
+    setSuccessMsg('');
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/services/${selectedBenefitsServiceSlug}/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          benefits_title: benefitsTitleText.trim(),
+          benefits: benefitsItems.filter(b => b.title.trim() !== '')
+        })
+      });
+
+      if (!res.ok) throw new Error('Failed to save benefits section.');
+      
+      setSuccessMsg('Successfully saved benefits section to backend!');
+      loadServices();
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(err.message || 'Failed to save benefits.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   // Submit Sub-Service
   const handleAddSubService = async (e) => {
@@ -254,10 +333,10 @@ export default function Dashboard() {
               <span>Services & Sub-Services Control Dashboard</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight font-montserrat">
-              Sub-Services Management Section
+              Services & Benefits Control Center
             </h1>
             <p className="text-white/80 text-sm md:text-base mt-2 max-w-2xl font-sans">
-              Create sub-services under chosen parent services and manage your entire navbar hierarchy dynamically with live Django backend updates.
+              Manage parent services, sub-services, and build custom benefits bulleted sections directly backed by Django REST API.
             </p>
           </div>
 
@@ -288,6 +367,18 @@ export default function Dashboard() {
           </button>
 
           <button
+            onClick={() => setActiveTab('benefits')}
+            className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'benefits'
+                ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            <ListChecks size={18} />
+            <span>🎁 Benefits Section Builder</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('parents')}
             className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'parents'
@@ -314,6 +405,138 @@ export default function Dashboard() {
             <span>📊 Complete Hierarchy Tree</span>
           </button>
         </div>
+
+        {/* TAB: BENEFITS BUILDER */}
+        {activeTab === 'benefits' && (
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+              <div className="w-10 h-10 rounded-2xl bg-[#08709d] text-white flex items-center justify-center font-bold">
+                <ListChecks size={22} />
+              </div>
+              <div>
+                <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat">
+                  Benefits Section Builder
+                </h3>
+                <p className="text-xs text-slate-500 font-sans">
+                  Edit the benefits section title and bulleted points for any service
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSaveBenefits} className="space-y-6 max-w-4xl">
+              {errorMsg && (
+                <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center gap-2">
+                  <X size={16} />
+                  <span>{errorMsg}</span>
+                </div>
+              )}
+
+              {successMsg && (
+                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center gap-2">
+                  <CheckCircle2 size={16} />
+                  <span>{successMsg}</span>
+                </div>
+              )}
+
+              {/* Select Service */}
+              <div>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-[#08709d] mb-2">
+                  Select Target Service
+                </label>
+                <select
+                  value={selectedBenefitsServiceSlug}
+                  onChange={handleBenefitsServiceChange}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-slate-800 font-extrabold text-sm focus:outline-none focus:border-[#08709d]"
+                >
+                  {servicesData.map((s) => (
+                    <option key={s.id} value={s.slug}>
+                      {s.title || s.name} ({s.slug}) {s.parent ? '— Sub-Service' : '— Top Parent'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Benefits Section Main Title */}
+              <div>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2">
+                  Benefits Section Title
+                </label>
+                <input
+                  type="text"
+                  value={benefitsTitleText}
+                  onChange={(e) => setBenefitsTitleText(e.target.value)}
+                  placeholder="e.g. Benefits of Our Frozen Shoulder Physiotherapy Service at Corx Healthcare"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm font-semibold focus:outline-none focus:border-[#08709d]"
+                />
+              </div>
+
+              {/* Bullet Points Builder */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+                    Bulleted Benefits List ({benefitsItems.length})
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleAddBenefitRow}
+                    className="px-3 py-1.5 rounded-lg bg-[#08709d]/10 text-[#08709d] hover:bg-[#08709d]/20 text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1"
+                  >
+                    <Plus size={14} />
+                    <span>Add Benefit Point</span>
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {benefitsItems.map((item, idx) => (
+                    <div key={idx} className="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-extrabold text-[#08709d] uppercase tracking-wide">
+                          Benefit #{idx + 1}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveBenefitRow(idx)}
+                          className="p-1 text-rose-500 hover:bg-rose-100 rounded-lg cursor-pointer"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+
+                      <div>
+                        <input
+                          type="text"
+                          value={item.title}
+                          onChange={(e) => handleBenefitItemChange(idx, 'title', e.target.value)}
+                          placeholder="Benefit Title (e.g. Pain Relief & Mobility Restoration)"
+                          className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs font-bold focus:outline-none focus:border-[#08709d]"
+                        />
+                      </div>
+
+                      <div>
+                        <textarea
+                          rows={2}
+                          value={item.desc}
+                          onChange={(e) => handleBenefitItemChange(idx, 'desc', e.target.value)}
+                          placeholder="Benefit Description (e.g. Our expert physiotherapists use proven techniques...)"
+                          className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-[#08709d]"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-4 rounded-2xl bg-[#63b158] hover:bg-[#529d48] text-white font-extrabold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+              >
+                {submitting ? 'Saving Benefits...' : 'Save Benefits Section To Backend'}
+              </button>
+            </form>
+          </div>
+        )}
 
         {/* TAB 1: SUB-SERVICES MANAGER */}
         {activeTab === 'subservices' && (

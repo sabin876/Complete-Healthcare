@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../config/api';
 import { Container, Section, Button, Card, HeroTitle, SectionTitle, CardTitle, Paragraph, SmallText } from '../components/ui';
 import ServiceHighlightsBar from '../components/ServiceHighlightsBar';
+import ServiceBenefitsSection from '../components/ServiceBenefitsSection';
 import { 
   Check, 
   Home, 
@@ -516,6 +517,8 @@ function LabServicesLanding({ slug = 'lab-services' }) {
   const reasonsList = serviceData ? (serviceData.reasons || []) : reasons;
   const stepsList = serviceData ? (serviceData.steps || []) : stepsData;
   const faqList = serviceData ? (serviceData.faqs || []) : labFaqs;
+  const benefitsList = serviceData ? (serviceData.benefits || []) : [];
+  const benefitsTitle = serviceData ? (serviceData.benefits_title || '') : '';
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
@@ -632,6 +635,16 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
       {/* ── HIGHLIGHTS BANNER (Staff, 24/7 Service, Dubai 30 Mins) ── */}
       <ServiceHighlightsBar />
+
+      {/* ── BENEFITS SECTION ── */}
+      <ServiceBenefitsSection 
+        benefitsList={benefitsList} 
+        benefitsTitle={benefitsTitle} 
+        serviceTitle={serviceData?.title} 
+        isEditMode={isEditMode} 
+        slug={slug} 
+        imageUrl={serviceData?.image || serviceData?.image_file} 
+      />
 
       {/* ── WHO MAY NEED SECTION ── */}
       {(!serviceData || (serviceData?.indications && serviceData.indications.length > 0) || (serviceData?.description)) && (

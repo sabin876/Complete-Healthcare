@@ -118,7 +118,7 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = [
             'id', 'slug', 'title', 'name', 'path', 'subtitle', 'accent', 'parent', 'sub_services',
-            'eyebrow', 'tagline', 'description', 'icon', 'theme_color', 'image_file', 'image', 'floating_badge', 'benefits', 'faqs',
+            'eyebrow', 'tagline', 'description', 'icon', 'theme_color', 'image_file', 'image', 'floating_badge', 'benefits_title', 'benefits', 'faqs',
             'locations', 'features', 'indications', 'lab_columns', 'reasons', 'steps',
             'about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
             'created_at', 'updated_at'

@@ -120,6 +120,7 @@ class Service(models.Model):
     image_file = models.FileField(upload_to='service_images/', null=True, blank=True, help_text="Upload a local image file from your computer")
     theme_color = models.CharField(max_length=20, default='#08709d', blank=True)
     floating_badge = models.JSONField(default=dict, blank=True)  # {title, desc}
+    benefits_title = models.CharField(max_length=300, blank=True, default='')
     benefits = models.JSONField(default=list, blank=True)  # [{title, desc}]
     faqs = models.JSONField(default=list, blank=True)  # [{q, a}]
     locations = models.JSONField(default=list, blank=True)  # [{label}]
