@@ -13,6 +13,7 @@ import hero1 from '../assets/hero/hero1.png';
 import GoogleReviews from '../components/GoogleReviews';
 
 import ExploreServices from '../components/ExploreServices';
+import ThreeStepsProcessSection from '../components/ThreeStepsProcessSection';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FAQ from '../components/FAQ';
@@ -802,6 +803,9 @@ const Home = () => {
 
       {/* Explore Services Section */}
       <ExploreServices />
+
+      {/* 3 Simple Steps Process Section */}
+      <ThreeStepsProcessSection />
 
       {/* Community Voice / Featured Section */}
       <section 
