@@ -122,6 +122,7 @@ class Service(models.Model):
     floating_badge = models.JSONField(default=dict, blank=True)  # {title, desc}
     benefits_title = models.CharField(max_length=300, blank=True, default='')
     benefits = models.JSONField(default=list, blank=True)  # [{title, desc}]
+    benefits_image_file = models.FileField(upload_to='service_images/', null=True, blank=True, help_text="Upload custom image file for Benefits Section")
     faqs = models.JSONField(default=list, blank=True)  # [{q, a}]
     locations = models.JSONField(default=list, blank=True)  # [{label}]
     features = models.JSONField(default=list, blank=True)  # [{title}]

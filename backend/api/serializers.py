@@ -102,6 +102,7 @@ class SubServiceSerializer(serializers.ModelSerializer):
 
 class ServiceSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField(read_only=True)
+    benefits_image = serializers.SerializerMethodField(read_only=True)
     sub_services = SubServiceSerializer(many=True, read_only=True)
     name = serializers.CharField(source='title', required=False, read_only=True)
     path = serializers.SerializerMethodField(read_only=True)
@@ -118,7 +119,8 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = [
             'id', 'slug', 'title', 'name', 'path', 'subtitle', 'accent', 'parent', 'sub_services',
-            'eyebrow', 'tagline', 'description', 'icon', 'theme_color', 'image_file', 'image', 'floating_badge', 'benefits_title', 'benefits', 'faqs',
+            'eyebrow', 'tagline', 'description', 'icon', 'theme_color', 'image_file', 'image', 'floating_badge', 
+            'benefits_title', 'benefits', 'benefits_image_file', 'benefits_image', 'faqs',
             'locations', 'features', 'indications', 'lab_columns', 'reasons', 'steps',
             'about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
             'created_at', 'updated_at'
@@ -141,6 +143,17 @@ class ServiceSerializer(serializers.ModelSerializer):
         except Exception:
             pass
         return getattr(obj, 'image', '') or ''
+
+    def get_benefits_image(self, obj):
+        try:
+            if getattr(obj, 'benefits_image_file', None) and hasattr(obj.benefits_image_file, 'url') and obj.benefits_image_file.name:
+                request = self.context.get('request')
+                if request:
+                    return request.build_absolute_uri(obj.benefits_image_file.url)
+                return f"http://localhost:8000{obj.benefits_image_file.url}"
+        except Exception:
+            pass
+        return ''
 
     def _get_badge_field(self, obj, key):
         badge = getattr(obj, 'floating_badge', None)

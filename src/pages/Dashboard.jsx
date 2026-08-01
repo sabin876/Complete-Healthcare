@@ -5,7 +5,7 @@ import {
   Stethoscope, HeartHandshake, TestTube, Sparkles, Clock, 
   ShieldCheck, Layers, Trash2, ExternalLink, RefreshCw,
   LayoutDashboard, CornerDownRight, Edit3, Save, X, ArrowRight,
-  Gift, ListChecks
+  Gift, ListChecks, Image as ImageIcon
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
@@ -56,6 +56,8 @@ export default function Dashboard() {
   // Benefits Form State
   const [selectedBenefitsServiceSlug, setSelectedBenefitsServiceSlug] = useState('');
   const [benefitsTitleText, setBenefitsTitleText] = useState('');
+  const [benefitsImageFile, setBenefitsImageFile] = useState(null);
+  const [benefitsImagePreview, setBenefitsImagePreview] = useState('');
   const [benefitsItems, setBenefitsItems] = useState([
     { title: 'Customized Treatment Plans', desc: 'Every patient receives a tailored therapy plan to address their specific needs.' },
     { title: 'Pain Relief & Mobility Restoration', desc: 'Our expert clinical team uses proven techniques to reduce pain and restore full motion.' }
@@ -97,6 +99,8 @@ export default function Dashboard() {
   const loadBenefitsForService = (serviceObj) => {
     if (!serviceObj) return;
     setBenefitsTitleText(serviceObj.benefits_title || `Benefits of Our ${serviceObj.title || serviceObj.name} Service at Corx Healthcare`);
+    setBenefitsImagePreview(serviceObj.benefits_image || serviceObj.benefits_image_file || '');
+    setBenefitsImageFile(null);
     if (Array.isArray(serviceObj.benefits) && serviceObj.benefits.length > 0) {
       setBenefitsItems(serviceObj.benefits.map(b => typeof b === 'string' ? { title: b, desc: '' } : { title: b.title || '', desc: b.desc || b.description || '' }));
     } else {
@@ -139,18 +143,32 @@ export default function Dashboard() {
     setSuccessMsg('');
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/services/${selectedBenefitsServiceSlug}/`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          benefits_title: benefitsTitleText.trim(),
-          benefits: benefitsItems.filter(b => b.title.trim() !== '')
-        })
-      });
+      let res;
+      if (benefitsImageFile) {
+        const formData = new FormData();
+        formData.append('benefits_title', benefitsTitleText.trim());
+        formData.append('benefits', JSON.stringify(benefitsItems.filter(b => b.title.trim() !== '')));
+        formData.append('benefits_image_file', benefitsImageFile);
+
+        res = await fetch(`${API_BASE_URL}/api/services/${selectedBenefitsServiceSlug}/`, {
+          method: 'PATCH',
+          body: formData,
+        });
+      } else {
+        res = await fetch(`${API_BASE_URL}/api/services/${selectedBenefitsServiceSlug}/`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            benefits_title: benefitsTitleText.trim(),
+            benefits: benefitsItems.filter(b => b.title.trim() !== '')
+          })
+        });
+      }
 
       if (!res.ok) throw new Error('Failed to save benefits section.');
       
-      setSuccessMsg('Successfully saved benefits section to backend!');
+      setSuccessMsg('Successfully saved benefits section & custom image to backend!');
+      setBenefitsImageFile(null);
       loadServices();
     } catch (err) {
       console.error(err);
@@ -336,7 +354,7 @@ export default function Dashboard() {
               Services & Benefits Control Center
             </h1>
             <p className="text-white/80 text-sm md:text-base mt-2 max-w-2xl font-sans">
-              Manage parent services, sub-services, and build custom benefits bulleted sections directly backed by Django REST API.
+              Manage parent services, sub-services, custom benefits section, and image uploads backed directly by Django REST API.
             </p>
           </div>
 
@@ -375,7 +393,7 @@ export default function Dashboard() {
             }`}
           >
             <ListChecks size={18} />
-            <span>🎁 Benefits Section Builder</span>
+            <span>🎁 Benefits & Image Builder</span>
           </button>
 
           <button
@@ -415,10 +433,10 @@ export default function Dashboard() {
               </div>
               <div>
                 <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat">
-                  Benefits Section Builder
+                  Benefits Section & Custom Image Builder
                 </h3>
                 <p className="text-xs text-slate-500 font-sans">
-                  Edit the benefits section title and bulleted points for any service
+                  Edit the benefits section title, upload custom photo, and manage bulleted points for any service
                 </p>
               </div>
             </div>
@@ -468,6 +486,32 @@ export default function Dashboard() {
                   placeholder="e.g. Benefits of Our Frozen Shoulder Physiotherapy Service at Corx Healthcare"
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm font-semibold focus:outline-none focus:border-[#08709d]"
                 />
+              </div>
+
+              {/* Benefits Section Image Upload */}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
+                  <ImageIcon size={16} className="text-[#08709d]" />
+                  <span>Upload Benefits Section Image</span>
+                </label>
+                <div className="flex items-center gap-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        setBenefitsImageFile(e.target.files[0]);
+                        setBenefitsImagePreview(URL.createObjectURL(e.target.files[0]));
+                      }
+                    }}
+                    className="block w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-extrabold file:bg-[#08709d]/10 file:text-[#08709d] hover:file:bg-[#08709d]/20 cursor-pointer"
+                  />
+                  {benefitsImagePreview && (
+                    <div className="w-16 h-16 rounded-xl border border-slate-300 overflow-hidden shrink-0 shadow-sm">
+                      <img src={benefitsImagePreview} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Bullet Points Builder */}
@@ -532,7 +576,7 @@ export default function Dashboard() {
                 disabled={submitting}
                 className="w-full py-4 rounded-2xl bg-[#63b158] hover:bg-[#529d48] text-white font-extrabold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
               >
-                {submitting ? 'Saving Benefits...' : 'Save Benefits Section To Backend'}
+                {submitting ? 'Saving Benefits & Image...' : 'Save Benefits Section & Image To Backend'}
               </button>
             </form>
           </div>

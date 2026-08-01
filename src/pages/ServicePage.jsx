@@ -644,7 +644,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
           serviceTitle={serviceData?.title} 
           isEditMode={isEditMode} 
           slug={slug} 
-          imageUrl={serviceData?.image || serviceData?.image_file} 
+          imageUrl={serviceData?.benefits_image || serviceData?.benefits_image_file || serviceData?.image || serviceData?.image_file} 
         />
       )}
 

@@ -1370,8 +1370,8 @@ class ServiceAdmin(admin.ModelAdmin):
         ('📋 Diagnostic Test Suites & Indications', {
             'fields': ('indications', 'lab_columns')
         }),
-        ('⭐ Process & Why Choose Us', {
-            'fields': ('steps', 'reasons', 'benefits')
+        ('⭐ Process & Benefits Section', {
+            'fields': ('steps', 'reasons', 'benefits_title', 'benefits', 'benefits_image_file')
         }),
         ('❓ FAQs', {
             'fields': ('faqs',)
