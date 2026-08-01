@@ -3,6 +3,7 @@ import { useParams, Navigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../config/api';
 import { Container, Section, Button, Card, HeroTitle, SectionTitle, CardTitle, Paragraph, SmallText } from '../components/ui';
+import ServiceHighlightsBar from '../components/ServiceHighlightsBar';
 import { 
   Check, 
   Home, 
@@ -628,6 +629,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
           </div>
         </Container>
       </Section>
+
+      {/* ── HIGHLIGHTS BANNER (Staff, 24/7 Service, Dubai 30 Mins) ── */}
+      <ServiceHighlightsBar />
 
       {/* ── WHO MAY NEED SECTION ── */}
       {(!serviceData || (serviceData?.indications && serviceData.indications.length > 0) || (serviceData?.description)) && (

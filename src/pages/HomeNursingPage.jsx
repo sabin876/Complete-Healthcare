@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import ServiceHighlightsBar from '../components/ServiceHighlightsBar';
 import {
   Container,
   Section,
@@ -706,6 +707,8 @@ export default function HomeNursingPage() {
           </div>
         </Container>
       </Section>
+
+      <ServiceHighlightsBar />
 
       {/* ══════════════════════════════════════════════════════════════
           SECTION 2 — ABOUT & CLINICAL INDICATIONS
