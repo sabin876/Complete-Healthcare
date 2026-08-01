@@ -1,5 +1,5 @@
 import React from 'react';
-import { PhoneCall, Stethoscope, HeartHandshake } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 const steps = [
@@ -44,37 +44,130 @@ const steps = [
 
 export default function ThreeStepsProcessSection() {
   return (
-    <section className="py-16 md:py-20 bg-white font-sans">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
+    <section className="relative py-20 md:py-28 bg-gradient-to-b from-slate-50/80 via-white to-slate-50/60 font-sans overflow-hidden">
+      {/* ── Animated Ambient Background ── */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Floating Gradient Orb 1 */}
+        <motion.div
+          animate={{
+            scale: [1, 1.25, 1],
+            x: [0, 50, 0],
+            y: [0, -30, 0],
+            opacity: [0.25, 0.45, 0.25],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute -top-24 -left-24 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-[#2596be]/15 via-[#38bdf8]/10 to-transparent blur-[110px]"
+        />
+
+        {/* Floating Gradient Orb 2 */}
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, -60, 0],
+            y: [0, 40, 0],
+            opacity: [0.2, 0.4, 0.2],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2
+          }}
+          className="absolute -bottom-28 -right-28 w-[550px] h-[550px] rounded-full bg-gradient-to-tr from-emerald-500/15 via-[#2596be]/10 to-transparent blur-[120px]"
+        />
+
+        {/* Floating Particles */}
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{
+              x: Math.random() * 1000 - 300,
+              y: Math.random() * 500,
+              opacity: 0.2
+            }}
+            animate={{
+              y: [0, -140, 0],
+              x: [0, Math.random() * 30 - 15, 0],
+              opacity: [0.2, 0.5, 0.2],
+              scale: [1, 1.3, 1]
+            }}
+            transition={{
+              duration: 8 + i * 2.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 1.5
+            }}
+            className={`absolute rounded-full blur-[2px] ${
+              i % 2 === 0 ? "w-4 h-4 bg-[#2596be]/25" : "w-3 h-3 bg-emerald-400/35"
+            }`}
+            style={{
+              left: `${20 + i * 16}%`,
+              top: `${15 + (i * 18) % 60}%`
+            }}
+          />
+        ))}
+
+        {/* Delicate Radial Pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(#2596be_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.03]" />
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 text-center">
         {/* Main Heading */}
-        <h2 className="text-2xl md:text-4xl font-extrabold text-[#2596be] tracking-tight mb-3 font-['Montserrat']">
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-2xl md:text-4xl font-extrabold text-[#2596be] tracking-tight mb-3 font-['Montserrat'] leading-snug"
+        >
           Book DHA Certified Doctors and Nurses Visit in Just 3 Simple Steps!
-        </h2>
+        </motion.h2>
 
         {/* Sub Heading */}
-        <h3 className="text-xl md:text-2xl font-semibold text-[#2596be] mb-6 font-['Montserrat']">
+        <motion.h3 
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-xl md:text-2xl font-semibold text-[#2596be] mb-6 font-['Montserrat']"
+        >
           Home healthcare services in Dubai
-        </h3>
+        </motion.h3>
 
         {/* Paragraph */}
-        <p className="text-slate-600 text-sm md:text-base max-w-4xl mx-auto leading-relaxed mb-12">
+        <motion.p 
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-slate-600 text-sm md:text-base max-w-4xl mx-auto leading-relaxed mb-12"
+        >
           We’re passionately devoted to your well-being. Our{' '}
           <a href="#" className="text-[#2596be] font-semibold underline hover:opacity-80">
             DHA Certified
           </a>{' '}
           medical team in UAE goes above and beyond, delivering tailored, all-encompassing medical care directly to you, wherever you are. Your health and recovery are our utmost concerns, and we bring both the expertise and equipment right to your doorstep for your utmost comfort and convenience.
-        </p>
+        </motion.p>
 
         {/* 3 Step Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch">
           {steps.map((step, idx) => (
-            <div
+            <motion.div
               key={idx}
-              className="bg-white rounded-2xl p-7 md:p-8 border border-slate-200/90 shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:shadow-xl transition-all duration-300 flex flex-col justify-between items-start text-left group"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 + idx * 0.15 }}
+              whileHover={{ y: -8, transition: { duration: 0.25 } }}
+              className="bg-white rounded-2xl p-7 md:p-8 border border-slate-200/90 shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:shadow-2xl transition-all duration-300 flex flex-col justify-between items-start text-left group"
             >
               <div className="w-full">
                 {/* Icon */}
-                <div className="mb-6 text-[#2596be]">
+                <div className="mb-6 text-[#2596be] group-hover:scale-110 transition-transform duration-300">
                   {step.icon}
                 </div>
 
@@ -96,7 +189,7 @@ export default function ThreeStepsProcessSection() {
               >
                 Book Now
               </Link>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
