@@ -612,12 +612,11 @@ export default function HomeNursingPage() {
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
-      <ServiceHighlightsBar />
 
       {/* ══════════════════════════════════════════════════════════════
           SECTION 1 — HERO
       ══════════════════════════════════════════════════════════════ */}
-      <Section variant="white" className="pt-12 pb-16 md:pt-20 md:pb-20 relative overflow-hidden">
+      <Section variant="white" className="pt-20 pb-16 md:pt-28 md:pb-20 relative overflow-hidden">
         <HeroBackgroundAnimation />
         <Container className="relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -708,6 +707,8 @@ export default function HomeNursingPage() {
           </div>
         </Container>
       </Section>
+
+      <ServiceHighlightsBar />
 
       {/* ══════════════════════════════════════════════════════════════
           SECTION 2 — ABOUT & CLINICAL INDICATIONS
