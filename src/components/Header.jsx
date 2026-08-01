@@ -348,7 +348,7 @@ const Header = () => {
                         className="absolute top-[calc(100%+8px)] left-0 z-[100] bg-[#0c361d] rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.55)] text-white"
                         style={{ padding: '24px', width: '360px' }}
                       >
-                        <div className="flex flex-col gap-1.5 w-full">
+                        <div className="flex flex-col gap-0.5 w-full">
                           <Link
                             to="/services"
                             onClick={() => setActiveDropdown(null)}
@@ -373,7 +373,7 @@ const Header = () => {
                               >
                                 {hasSubItems ? (
                                   <div 
-                                    className={`flex items-center justify-between w-full rounded-[18px] transition-all duration-200 cursor-pointer text-[14px] font-semibold tracking-wide text-white/95 hover:text-white py-3.5 px-6 ${isSubOpen ? 'bg-white/12 shadow-sm' : 'hover:bg-white/10'}`}
+                                    className={`flex items-center justify-between w-full rounded-[18px] transition-all duration-200 cursor-pointer text-[14px] font-semibold tracking-wide text-white/95 hover:text-white py-2 px-6 ${isSubOpen ? 'bg-white/12 shadow-sm' : 'hover:bg-white/10'}`}
                                   >
                                     <span>{item.name}</span>
                                     <ChevronRight size={15} className={`transition-all duration-200 ${isSubOpen ? 'translate-x-1 text-emerald-300 opacity-100' : 'text-white/60 group-hover/sub:text-white group-hover/sub:translate-x-0.5'}`} />
@@ -382,7 +382,7 @@ const Header = () => {
                                   <Link
                                     to={item.path}
                                     onClick={() => setActiveDropdown(null)}
-                                    className="flex items-center justify-between w-full rounded-[18px] transition-all duration-200 text-[15.5px] font-semibold tracking-wide text-white/95 hover:text-white hover:bg-white/10 py-3.5 px-6"
+                                    className="flex items-center justify-between w-full rounded-[18px] transition-all duration-200 text-[14px] font-semibold tracking-wide text-white/95 hover:text-white hover:bg-white/10 py-2 px-6"
                                   >
                                     <span>{item.name}</span>
                                   </Link>
@@ -398,7 +398,7 @@ const Header = () => {
                                     className="absolute top-0 left-full ml-3 bg-[#0c361d] rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.55)] text-white z-[110]"
                                     style={{ padding: '24px', width: '310px' }}
                                   >
-                                    <div className="flex flex-col gap-1.5 w-full">
+                                    <div className="flex flex-col gap-0.5 w-full">
                                       <Link
                                         to={item.path}
                                         onClick={() => {
@@ -417,7 +417,7 @@ const Header = () => {
                                             setActiveDropdown(null);
                                             setOpenSubMenu(null);
                                           }}
-                                          className="flex items-center w-full rounded-[16px] hover:bg-white/10 hover:translate-x-1 transition-all duration-200 text-[13px] font-semibold text-white/90 hover:text-white py-3 px-4"
+                                          className="flex items-center w-full rounded-[16px] hover:bg-white/10 hover:translate-x-1 transition-all duration-200 text-[13px] font-semibold text-white/90 hover:text-white py-2 px-4"
                                         >
                                           <span>{sub.name}</span>
                                         </Link>
