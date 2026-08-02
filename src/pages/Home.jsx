@@ -586,6 +586,7 @@ const Home = () => {
   }, []);
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   const getEmbedVideoUrl = (url) => {
     if (!url) return '';
     if (url.includes('facebook.com')) {
