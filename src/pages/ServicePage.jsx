@@ -262,7 +262,7 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData, isEditM
               <EditableText
                 slug={slug}
                 fieldKey="indications_title"
-                defaultText={serviceData?.indications_section_title || (serviceData?.title ? `Who May Need ${serviceData.title}?` : "Who May Need a Blood Test at Home in Dubai?")}
+                defaultText={(serviceData?.indications_section_title && serviceData.indications_section_title.trim()) ? serviceData.indications_section_title : (serviceData?.title ? `Who May Need ${serviceData.title}?` : "Who May Need a Blood Test at Home in Dubai?")}
                 isEditMode={isEditMode}
                 tagName="h2"
                 className="text-3xl sm:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-4"
@@ -505,19 +505,19 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       });
   }, [slug]);
 
-  const featuresList = serviceData ? (serviceData.features || []) : labFeatures;
-  const indicationsList = serviceData ? (serviceData.indications || []) : bloodTestIndications;
-  const labColumns = serviceData 
-    ? (serviceData.lab_columns || []).map((col, idx) => ({
+  const featuresList = (serviceData?.features && serviceData.features.length > 0) ? serviceData.features : labFeatures;
+  const indicationsList = (serviceData?.indications && serviceData.indications.length > 0) ? serviceData.indications : bloodTestIndications;
+  const labColumns = (serviceData?.lab_columns && serviceData.lab_columns.length > 0) 
+    ? serviceData.lab_columns.map((col, idx) => ({
         ...col,
         icon: col.icon || defaultLabColumns[idx % defaultLabColumns.length]?.icon,
         iconBg: col.iconBg || defaultLabColumns[idx % defaultLabColumns.length]?.iconBg,
         delay: 0.05 + idx * 0.07
       })) 
     : defaultLabColumns;
-  const reasonsList = serviceData ? (serviceData.reasons || []) : reasons;
-  const stepsList = serviceData ? (serviceData.steps || []) : stepsData;
-  const faqList = serviceData ? (serviceData.faqs || []) : labFaqs;
+  const reasonsList = (serviceData?.reasons && serviceData.reasons.length > 0) ? serviceData.reasons : reasons;
+  const stepsList = (serviceData?.steps && serviceData.steps.length > 0) ? serviceData.steps : stepsData;
+  const faqList = (serviceData?.faqs && serviceData.faqs.length > 0) ? serviceData.faqs : labFaqs;
   const benefitsList = serviceData ? (serviceData.benefits || []) : [];
   const benefitsTitle = serviceData ? (serviceData.benefits_title || '') : '';
   const understandingTitle = serviceData ? (serviceData.understanding_title || '') : '';
@@ -666,9 +666,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       )}
 
       {/* ── WHO MAY NEED SECTION ── */}
-      {(!serviceData || (serviceData?.indications && serviceData.indications.length > 0) || (serviceData?.description)) && (
-        <WhoMayNeedBloodTestSection indicationsList={indicationsList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
-      )}
+      <WhoMayNeedBloodTestSection indicationsList={indicationsList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
 
       {/* ── CONDITIONS SECTION ── */}
       {(!serviceData || (serviceData?.lab_columns && serviceData.lab_columns.length > 0)) && (

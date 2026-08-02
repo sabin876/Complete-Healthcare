@@ -586,35 +586,97 @@ const Home = () => {
   }, []);
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-
-
+  const getEmbedVideoUrl = (url) => {
+    if (!url) return '';
+    if (url.includes('facebook.com')) {
+      let embedUrl = url;
+      if (!url.includes('plugins/video.php')) {
+        const encoded = encodeURIComponent(url);
+        embedUrl = `https://www.facebook.com/plugins/video.php?href=${encoded}&show_text=false`;
+      }
+      if (!embedUrl.includes('autoplay')) {
+        embedUrl += '&autoplay=true';
+      }
+      if (!embedUrl.includes('muted')) {
+        embedUrl += '&muted=true';
+      }
+      return embedUrl;
+    }
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      let videoId = '';
+      if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1]?.split('?')[0];
+      } else if (url.includes('v=')) {
+        videoId = url.split('v=')[1]?.split('&')[0];
+      }
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&playsinline=1`;
+      }
+    }
+    return url;
+  };
 
   return (
     <main>
       {/* Hero Slider */}
       <section className="relative min-h-[95vh] flex items-center py-20 md:py-28 overflow-hidden bg-black">
-        {/* Dynamic Background Slide Image */}
+        {/* Dynamic Background Slide Image & Video */}
         <div className="absolute inset-0 z-0 w-full h-full overflow-hidden bg-black">
           <AnimatePresence mode="popLayout">
             <motion.div
-              key={currentSlide}
+              key={`image-${currentSlide}`}
               initial={{ opacity: 0, scale: 1.05 }}
               animate={{ opacity: 0.55, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.85, ease: "easeInOut" }}
-              className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+              className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-[0]"
               style={{
                 backgroundImage: `url(${slides[currentSlide].image})`,
                 filter: 'brightness(0.5) contrast(1.05)'
               }}
             />
           </AnimatePresence>
+
+          {/* Background Video Layer (Facebook Reel / iFrame / Video File) */}
+          <AnimatePresence mode="wait">
+            {slides[currentSlide].videoUrl && (
+              <motion.div
+                key={`video-${currentSlide}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.65 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8 }}
+                className="absolute inset-0 z-[1] w-full h-full overflow-hidden pointer-events-none"
+              >
+                {slides[currentSlide].videoUrl.endsWith('.mp4') || slides[currentSlide].videoUrl.endsWith('.webm') ? (
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover"
+                  >
+                    <source src={slides[currentSlide].videoUrl} type="video/mp4" />
+                  </video>
+                ) : (
+                  <iframe
+                    src={getEmbedVideoUrl(slides[currentSlide].videoUrl)}
+                    title="Background Video"
+                    className="absolute top-1/2 left-1/2 w-[300vw] h-[300vh] min-w-[150%] min-h-[150%] -translate-x-1/2 -translate-y-1/2 border-0 pointer-events-none scale-125 md:scale-110"
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                    allowFullScreen
+                    style={{ pointerEvents: 'none' }}
+                  />
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Deep Blue Overlay matching the reference design */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0c2e56]/95 via-[#0b2848]/85 to-[#071f3b]/95 mix-blend-multiply"></div>
+          <div className="absolute inset-0 z-[2] bg-gradient-to-br from-[#0c2e56]/90 via-[#0b2848]/80 to-[#071f3b]/90 mix-blend-multiply pointer-events-none"></div>
           {/* Soft dark vignettes */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 z-[2] bg-gradient-to-r from-black/50 via-transparent to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 z-[2] bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
         </div>
         
         <div className="container relative z-10 text-white">
