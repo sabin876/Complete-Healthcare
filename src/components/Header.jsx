@@ -372,12 +372,17 @@ const Header = () => {
                                 }}
                               >
                                 {hasSubItems ? (
-                                  <div 
+                                  <Link 
+                                    to={item.path}
+                                    onClick={() => {
+                                      setActiveDropdown(null);
+                                      setOpenSubMenu(null);
+                                    }}
                                     className={`flex items-center justify-between w-full rounded-[18px] transition-all duration-200 cursor-pointer text-[14px] font-semibold tracking-wide text-white/95 hover:text-white py-2 px-6 ${isSubOpen ? 'bg-white/12 shadow-sm' : 'hover:bg-white/10'}`}
                                   >
                                     <span>{item.name}</span>
                                     <ChevronRight size={15} className={`transition-all duration-200 ${isSubOpen ? 'translate-x-1 text-emerald-300 opacity-100' : 'text-white/60 group-hover/sub:text-white group-hover/sub:translate-x-0.5'}`} />
-                                  </div>
+                                  </Link>
                                 ) : (
                                   <Link
                                     to={item.path}

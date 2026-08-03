@@ -6,6 +6,7 @@ import { Container, Section, Button, Card, HeroTitle, SectionTitle, CardTitle, P
 import ServiceHighlightsBar from '../components/ServiceHighlightsBar';
 import ServiceBenefitsSection from '../components/ServiceBenefitsSection';
 import ServiceUnderstandingSection from '../components/ServiceUnderstandingSection';
+import { servicesData as staticServicesData } from '../data/servicesData';
 import { 
   Check, 
   Home, 
@@ -452,9 +453,14 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
+  const cleanSlug = (slug || '').toLowerCase().replace(/^(services\/)/, '');
+  const staticFallback = staticServicesData[cleanSlug] || staticServicesData[cleanSlug.replace(/-/g, '')] || null;
+  const mergedData = serviceData || staticFallback;
+
   useEffect(() => {
     if (!slug) return;
-    fetch(`${API_BASE_URL}/api/services/${slug}/`)
+    const lowerSlug = slug.toLowerCase();
+    fetch(`${API_BASE_URL}/api/services/${lowerSlug}/`)
       .then(res => {
         if (!res.ok) return null;
         return res.json();
@@ -471,8 +477,8 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   // Dynamic SEO Meta Tags & Head Title Update
   useEffect(() => {
-    const pageTitle = serviceData?.meta_title || (serviceData?.title ? `${serviceData.title} in Dubai | Corx Healthcare` : 'Corx Healthcare: Home Healthcare Services in Dubai, UAE');
-    const pageDesc = serviceData?.meta_description || serviceData?.description || serviceData?.tagline || 'Professional, reliable, and on-demand DHA-certified medical care at your doorstep across Dubai.';
+    const pageTitle = mergedData?.meta_title || (mergedData?.title ? `${mergedData.title} in Dubai | Corx Healthcare` : 'Corx Healthcare: Home Healthcare Services in Dubai, UAE');
+    const pageDesc = mergedData?.meta_description || mergedData?.description || mergedData?.tagline || 'Professional, reliable, and on-demand DHA-certified medical care at your doorstep across Dubai.';
 
     document.title = pageTitle;
 
@@ -489,12 +495,12 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     setMetaTag('name', 'description', pageDesc);
     setMetaTag('property', 'og:title', pageTitle);
     setMetaTag('property', 'og:description', pageDesc);
-  }, [serviceData, slug]);
+  }, [mergedData, slug]);
 
-  const formatSlugToTitle = (slug, serviceData) => {
-    if (serviceData?.title) return serviceData.title;
+  const formatSlugToTitle = (slug, dataObj) => {
+    if (dataObj?.title) return dataObj.title;
     if (!slug) return 'Blood Test in Dubai';
-    const clean = slug.replace(/^(services\/)/, '');
+    const clean = slug.toLowerCase().replace(/^(services\/)/, '');
     if (clean === 'doctor-on-call' || clean === 'doctor-at-home') return 'Doctor On Call in Dubai';
     if (clean === 'doctor-at-office') return 'Doctor at Office in Dubai';
     if (clean === 'doctor-at-hotel') return 'Doctor at Hotel in Dubai';
@@ -508,9 +514,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       .join(' ') + ' in Dubai';
   };
 
-  const getFallbackEyebrow = (slug, serviceData) => {
-    if (serviceData?.eyebrow) return serviceData.eyebrow;
-    const clean = slug ? slug.replace(/^(services\/)/, '') : '';
+  const getFallbackEyebrow = (slug, dataObj) => {
+    if (dataObj?.eyebrow) return dataObj.eyebrow;
+    const clean = (slug ? slug.replace(/^(services\/)/, '') : '').toLowerCase();
     if (clean.includes('doctor')) return '24/7 DHA-Licensed Doctor Home & Hotel Visits Across Dubai';
     if (clean.includes('iv') || clean.includes('drip')) return 'DHA-Certified Vitamin Drips & Hydration at Home';
     if (clean.includes('nursing')) return 'DHA-Certified Registered Nurses at Your Doorstep';
@@ -518,9 +524,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     return 'DHA-Licensed Home Sample Collection Across Dubai';
   };
 
-  const getFallbackTagline = (slug, serviceData) => {
-    if (serviceData?.tagline) return serviceData.tagline;
-    const clean = slug ? slug.replace(/^(services\/)/, '') : '';
+  const getFallbackTagline = (slug, dataObj) => {
+    if (dataObj?.tagline) return dataObj.tagline;
+    const clean = (slug ? slug.replace(/^(services\/)/, '') : '').toLowerCase();
     if (clean.includes('doctor')) return 'Qualified Medical Doctors at Your Doorstep Day or Night';
     if (clean.includes('iv') || clean.includes('drip')) return 'Instant Energy, Immunity Boost & Fast Hydration';
     if (clean.includes('nursing')) return 'Compassionate Post-Operative & Specialized Medical Care';
@@ -528,9 +534,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     return 'Get an Accurate Lab Result at Your Doorsteps';
   };
 
-  const getFallbackDescription = (slug, serviceData) => {
-    if (serviceData?.description) return serviceData.description;
-    const clean = slug ? slug.replace(/^(services\/)/, '') : '';
+  const getFallbackDescription = (slug, dataObj) => {
+    if (dataObj?.description) return dataObj.description;
+    const clean = (slug ? slug.replace(/^(services\/)/, '') : '').toLowerCase();
     if (clean.includes('doctor')) return 'Experience prompt, professional medical care without visiting a clinic or hospital. Our DHA-certified doctors arrive at your home, hotel, or office within 30–45 minutes for diagnosis, treatment, and prescription issuance.';
     if (clean.includes('iv') || clean.includes('drip')) return 'Revitalize your body with personalized IV drip therapy delivered at your home, hotel, or office by DHA-certified healthcare professionals at an affordable price.';
     if (clean.includes('nursing')) return 'Receive professional nursing care in the comfort of your home. Our DHA-licensed nurses provide post-surgical care, wound dressing, medication administration, and 24/7 medical assistance.';
@@ -538,9 +544,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     return 'Book a blood test at home in Dubai without visiting a clinic or Hospital. Our home care service provides convenient blood sample collection at your home, hotel, or office by DHA-certified healthcare professionals at an affordable price.';
   };
 
-  const getFallbackFeatures = (slug, serviceData) => {
-    if (serviceData?.features && serviceData.features.length > 0) return serviceData.features;
-    const clean = slug ? slug.replace(/^(services\/)/, '') : '';
+  const getFallbackFeatures = (slug, dataObj) => {
+    if (dataObj?.features && dataObj.features.length > 0) return dataObj.features;
+    const clean = (slug ? slug.replace(/^(services\/)/, '') : '').toLowerCase();
     if (clean.includes('doctor')) return [
       { title: "24/7 Doctor home & hotel visits" },
       { title: "Arrives at your doorstep within 30-45 mins" },
@@ -572,9 +578,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     return labFeatures;
   };
 
-  const getFallbackIndications = (slug, serviceData) => {
-    if (serviceData?.indications && serviceData.indications.length > 0) return serviceData.indications;
-    const clean = slug ? slug.replace(/^(services\/)/, '') : '';
+  const getFallbackIndications = (slug, dataObj) => {
+    if (dataObj?.indications && dataObj.indications.length > 0) return dataObj.indications;
+    const clean = (slug ? slug.replace(/^(services\/)/, '') : '').toLowerCase();
     if (clean.includes('doctor')) return [
       "High fever, severe flu & respiratory symptoms",
       "Severe migraines, headache & muscular pain",
@@ -610,24 +616,24 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     return bloodTestIndications;
   };
 
-  const featuresList = getFallbackFeatures(slug, serviceData);
-  const indicationsList = getFallbackIndications(slug, serviceData);
-  const labColumns = (serviceData?.lab_columns && serviceData.lab_columns.length > 0) 
-    ? serviceData.lab_columns.map((col, idx) => ({
+  const featuresList = getFallbackFeatures(slug, mergedData);
+  const indicationsList = getFallbackIndications(slug, mergedData);
+  const labColumns = (mergedData?.lab_columns && mergedData.lab_columns.length > 0) 
+    ? mergedData.lab_columns.map((col, idx) => ({
         ...col,
         icon: col.icon || defaultLabColumns[idx % defaultLabColumns.length]?.icon,
         iconBg: col.iconBg || defaultLabColumns[idx % defaultLabColumns.length]?.iconBg,
         delay: 0.05 + idx * 0.07
       })) 
     : defaultLabColumns;
-  const reasonsList = (serviceData?.reasons && serviceData.reasons.length > 0) ? serviceData.reasons : reasons;
-  const stepsList = (serviceData?.steps && serviceData.steps.length > 0) ? serviceData.steps : stepsData;
-  const faqList = (serviceData?.faqs && serviceData.faqs.length > 0) ? serviceData.faqs : labFaqs;
-  const benefitsList = serviceData ? (serviceData.benefits || []) : [];
-  const benefitsTitle = serviceData ? (serviceData.benefits_title || '') : '';
-  const understandingTitle = serviceData ? (serviceData.understanding_title || '') : '';
-  const understandingIntro = serviceData ? (serviceData.understanding_intro || '') : '';
-  const understandingItems = serviceData ? (serviceData.understanding_items || []) : [];
+  const reasonsList = (mergedData?.reasons && mergedData.reasons.length > 0) ? mergedData.reasons : reasons;
+  const stepsList = (mergedData?.steps && mergedData.steps.length > 0) ? mergedData.steps : stepsData;
+  const faqList = (mergedData?.faqs && mergedData.faqs.length > 0) ? mergedData.faqs : labFaqs;
+  const benefitsList = mergedData ? (mergedData.benefits || []) : [];
+  const benefitsTitle = mergedData ? (mergedData.benefits_title || '') : '';
+  const understandingTitle = mergedData ? (mergedData.understanding_title || '') : '';
+  const understandingIntro = mergedData ? (mergedData.understanding_intro || '') : '';
+  const understandingItems = mergedData ? (mergedData.understanding_items || []) : [];
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
@@ -1413,6 +1419,7 @@ function WhyChooseCorxBloodTest({ reasonsList = [], serviceData, isEditMode, slu
 
 export default function ServicePage({ serviceId }) {
   const params = useParams();
-  const activeSlug = serviceId || params?.serviceSlug || 'lab-services';
+  const rawSlug = serviceId || params?.serviceSlug || 'lab-services';
+  const activeSlug = rawSlug.toLowerCase();
   return <LabServicesLanding slug={activeSlug} />;
 }
