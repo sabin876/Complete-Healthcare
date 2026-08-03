@@ -6,7 +6,7 @@ import {
   ShieldCheck, Layers, Trash2, ExternalLink, RefreshCw,
   LayoutDashboard, CornerDownRight, Edit3, Save, X, ArrowRight,
   Gift, ListChecks, Image as ImageIcon, HelpCircle, BookOpen,
-  ArrowUp, ArrowDown, Sparkle
+  ArrowUp, ArrowDown, Sparkle, Search
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
@@ -39,6 +39,7 @@ export default function Dashboard() {
   const [servicesData, setServicesData] = useState([]);
   const [parentServices, setParentServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Sub-Service Form State
   const [selectedParentId, setSelectedParentId] = useState('');
@@ -474,98 +475,151 @@ export default function Dashboard() {
     <div className="bg-slate-50 min-h-screen pb-24 pt-8 font-sans">
       <Container className="max-w-[1350px]">
         
-        {/* Dashboard Header Banner */}
-        <div className="bg-gradient-to-r from-[#065b80] via-[#08709d] to-[#0a86bd] rounded-3xl p-8 md:p-10 text-white shadow-xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+        {/* Executive Header Banner */}
+        <div className="bg-gradient-to-r from-[#065b80] via-[#08709d] to-[#0a86bd] rounded-3xl p-6 sm:p-8 md:p-10 text-white shadow-xl mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
           <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute left-1/3 bottom-0 w-64 h-64 bg-emerald-400/10 rounded-full blur-2xl pointer-events-none" />
           
           <div className="relative z-10">
-            <div className="flex items-center gap-2 bg-white/15 px-3.5 py-1.5 rounded-full border border-white/20 text-xs font-black uppercase tracking-widest text-emerald-300 w-fit mb-3">
+            <div className="flex items-center gap-2 bg-white/15 px-3.5 py-1.5 rounded-full border border-white/20 text-xs font-black uppercase tracking-widest text-emerald-300 w-fit mb-3 backdrop-blur-md">
               <LayoutDashboard size={14} />
-              <span>Services & Content Control Dashboard</span>
+              <span>Executive Content Control Dashboard</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight font-montserrat">
-              Services & Content Control Center
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight font-montserrat">
+              Services & Content Management Hub
             </h1>
-            <p className="text-white/80 text-sm md:text-base mt-2 max-w-2xl font-sans">
-              Manage parent services, sub-services, custom benefits, understanding condition stages, and image uploads backed directly by Django REST API.
+            <p className="text-white/85 text-xs sm:text-sm md:text-base mt-2 max-w-2xl font-sans leading-relaxed">
+              Real-time administration suite for parent navbar services, nested sub-services, custom benefits, condition stages, and medical media.
             </p>
           </div>
 
-          <button
-            onClick={loadServices}
-            className="flex items-center gap-2 bg-white/15 hover:bg-white/25 px-5 py-3 rounded-2xl border border-white/20 text-xs font-extrabold uppercase tracking-wider transition-all shrink-0 cursor-pointer"
-          >
-            <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
-            <span>Refresh Backend Data</span>
-          </button>
+          <div className="flex items-center gap-3 relative z-10 shrink-0">
+            <button
+              onClick={loadServices}
+              className="flex items-center gap-2 bg-white/15 hover:bg-white/25 active:scale-95 px-5 py-3 rounded-2xl border border-white/25 text-xs font-extrabold uppercase tracking-wider transition-all shadow-md cursor-pointer backdrop-blur-md"
+            >
+              <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
+              <span>Sync API</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Executive Stats & Metrics Bar */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
+            <div>
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">Total Services</span>
+              <span className="text-2xl font-extrabold text-slate-800 tracking-tight">{servicesData.length}</span>
+              <span className="text-[11px] text-emerald-600 font-bold block mt-1">Live in Django API</span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+              <Activity size={22} />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
+            <div>
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">Navbar Parents</span>
+              <span className="text-2xl font-extrabold text-slate-800 tracking-tight">{parentServices.length}</span>
+              <span className="text-[11px] text-[#08709d] font-bold block mt-1">Top-Level Categories</span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-[#63b158] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+              <Layers size={22} />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
+            <div>
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">Sub-Services</span>
+              <span className="text-2xl font-extrabold text-slate-800 tracking-tight">{totalSubServices}</span>
+              <span className="text-[11px] text-sky-600 font-bold block mt-1">Nested Offerings</span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+              <CornerDownRight size={22} />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
+            <div>
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">API Status</span>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                <span className="text-sm font-extrabold text-emerald-700 uppercase">Operational</span>
+              </div>
+              <span className="text-[11px] text-slate-400 font-medium block mt-1">Django REST Engine</span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-emerald-100/60 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+              <ShieldCheck size={22} />
+            </div>
+          </div>
         </div>
 
         {/* Dashboard Section Tabs */}
-        <div className="flex items-center gap-3 mb-8 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+        <div className="flex items-center gap-2 mb-8 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
           <button
             onClick={() => setActiveTab('subservices')}
-            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'subservices'
                 ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            <CornerDownRight size={18} />
-            <span>🔷 Sub-Services Manager</span>
-            <span className="ml-1 text-xs px-2 py-0.5 rounded-full bg-white/20">
+            <CornerDownRight size={17} />
+            <span>Sub-Services Manager</span>
+            <span className={`ml-1 text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === 'subservices' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'}`}>
               {totalSubServices}
             </span>
           </button>
 
           <button
             onClick={() => setActiveTab('understanding')}
-            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'understanding'
                 ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            <BookOpen size={18} />
-            <span>💡 Understanding Section Builder</span>
+            <BookOpen size={17} />
+            <span>Understanding Section Builder</span>
           </button>
 
           <button
             onClick={() => setActiveTab('benefits')}
-            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'benefits'
                 ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            <ListChecks size={18} />
-            <span>🎁 Benefits & Image Builder</span>
+            <ListChecks size={17} />
+            <span>Benefits & Image Builder</span>
           </button>
 
           <button
             onClick={() => setActiveTab('parents')}
-            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'parents'
                 ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            <Layers size={18} />
-            <span>🟢 Parent Navbar Services</span>
-            <span className="ml-1 text-xs px-2 py-0.5 rounded-full bg-white/20">
+            <Layers size={17} />
+            <span>Parent Navbar Services</span>
+            <span className={`ml-1 text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === 'parents' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'}`}>
               {parentServices.length}
             </span>
           </button>
 
           <button
             onClick={() => setActiveTab('hierarchy')}
-            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'hierarchy'
                 ? 'bg-[#08709d] text-white shadow-md shadow-[#08709d]/30'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
-            <Activity size={18} />
-            <span>📊 Complete Hierarchy Tree</span>
+            <Activity size={17} />
+            <span>Hierarchy Tree</span>
           </button>
         </div>
 
@@ -1124,23 +1178,79 @@ export default function Dashboard() {
                   )}
                 </button>
               </form>
+
+              {/* LIVE CARD PREVIEW WIDGET */}
+              <div className="mt-8 pt-6 border-t border-slate-100">
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkle size={15} className="text-[#08709d]" />
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-400">Live Website Card Preview</span>
+                </div>
+                
+                <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/80 shadow-sm flex items-start gap-4 relative overflow-hidden">
+                  <div 
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-md transition-all"
+                    style={{ backgroundColor: themeColor || '#08709d' }}
+                  >
+                    {React.createElement(AVAILABLE_ICONS.find(i => i.name === selectedIcon)?.icon || Activity, { size: 22 })}
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="text-xs font-extrabold text-slate-900 truncate">
+                        {subTitle || 'Your Sub-Service Title'}
+                      </span>
+                      {selectedParentObj && (
+                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#08709d]/10 text-[#08709d] border border-[#08709d]/20">
+                          {selectedParentObj.name || selectedParentObj.title}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-500 line-clamp-2">
+                      {subTagline || 'Subtitle description preview will show here...'}
+                    </p>
+                    <span className="text-[10px] font-mono text-slate-400 mt-2 block">
+                      Route URL: /services/{subSlug || (subTitle ? subTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'custom-slug')}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* SUB-SERVICES LIST WITH RE-ASSIGNMENT */}
+            {/* SUB-SERVICES LIST WITH SEARCH & RE-ASSIGNMENT */}
             <div className="lg:col-span-6 space-y-6">
               <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
-                <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+                <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-100 flex-wrap gap-3">
                   <div>
                     <h3 className="text-lg font-extrabold text-slate-800 uppercase tracking-tight font-montserrat">
                       Sub-Services Directory ({allSubServicesList.length})
                     </h3>
                     <p className="text-xs text-slate-500 font-sans">
-                      All created sub-services with quick parent re-assignment options
+                      Manage existing sub-services with live search & instant parent re-assignment
                     </p>
                   </div>
                   <span className="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">
                     {allSubServicesList.length} Active
                   </span>
+                </div>
+
+                {/* Instant Search Bar */}
+                <div className="relative mb-5">
+                  <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search sub-services by title, slug, or parent..."
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#08709d] focus:bg-white transition-all"
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                    >
+                      <X size={14} />
+                    </button>
+                  )}
                 </div>
 
                 {allSubServicesList.length === 0 ? (
@@ -1149,7 +1259,18 @@ export default function Dashboard() {
                   </div>
                 ) : (
                   <div className="space-y-4 max-h-[680px] overflow-y-auto pr-1">
-                    {allSubServicesList.map((sub) => {
+                    {allSubServicesList
+                      .filter((s) => {
+                        if (!searchTerm) return true;
+                        const term = searchTerm.toLowerCase();
+                        return (
+                          (s.title && s.title.toLowerCase().includes(term)) ||
+                          (s.name && s.name.toLowerCase().includes(term)) ||
+                          (s.slug && s.slug.toLowerCase().includes(term)) ||
+                          (s.tagline && s.tagline.toLowerCase().includes(term))
+                        );
+                      })
+                      .map((sub) => {
                       return (
                         <div
                           key={sub.id}
