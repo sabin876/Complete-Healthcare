@@ -1000,7 +1000,7 @@ const Home = () => {
       >
         {/* Subtle Watermarked Logo Background */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] opacity-[0.1] pointer-events-none z-0 select-none flex items-center justify-center">
-          <img src={logo} alt="Corx Watermark" className="w-full h-full object-contain" />
+          <img src={logo} alt="CORx Healthcare Background Watermark Logo" className="w-full h-full object-contain" />
         </div>
 
         <div className="container relative z-10">
@@ -1190,7 +1190,7 @@ const Home = () => {
                 className="w-32 md:w-40 lg:w-44 flex-shrink-0 transition-all duration-300"
                 style={{ filter: "grayscale(60%)", opacity: 0.8 }}
               >
-                <img src={imgSrc} alt={`Partner ${(index % 7) + 1}`} className="w-full h-auto object-contain" />
+                <img src={imgSrc} alt={`CORx Healthcare Partner Brand Logo ${(index % 7) + 1}`} className="w-full h-auto object-contain" />
               </motion.div>
             ))}
           </motion.div>

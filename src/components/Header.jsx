@@ -214,7 +214,7 @@ const Header = () => {
               }}
               className="relative group h-full flex items-center"
             >
-              <img src={logo} alt="COMPLETE HEALTHCARE" className="h-[80%] md:h-[90%] w-auto object-contain relative z-10" />
+              <img src={logo} alt="CORx Healthcare - 24/7 Home Healthcare Dubai" className="h-[80%] md:h-[90%] w-auto object-contain relative z-10" />
               <motion.div 
                 initial={{ x: "-100%", opacity: 0 }}
                 animate={{ x: "200%", opacity: [0, 0.5, 0] }}
@@ -282,7 +282,7 @@ const Header = () => {
                 }}
                 className="block ml-2 cursor-pointer"
               >
-                <img src={tollfree} alt="Toll Free" className="h-12 md:h-16 w-auto object-contain" />
+                <img src={tollfree} alt="CORx Healthcare 24/7 Toll Free Helpline" className="h-12 md:h-16 w-auto object-contain" />
               </motion.a>
             </div>
             <button className="lg:hidden p-2 text-secondary-color" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -501,7 +501,7 @@ const Header = () => {
       <div className={`fixed inset-0 bg-white z-[60] transition-transform duration-300 transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} lg:hidden`}>
         <div className="flex flex-col h-full overflow-y-auto">
           <div className="flex justify-between items-center p-6 border-b border-gray-100 bg-white">
-            <img src={logo} alt="Logo" className="h-24 w-auto object-contain" />
+            <img src={logo} alt="CORx Healthcare Navigation Logo" className="h-24 w-auto object-contain" />
             <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
               <X size={32} className="text-secondary-color" />
             </button>

@@ -688,7 +688,7 @@ export default function Dashboard() {
                   />
                   {understandingImagePreview && (
                     <div className="w-16 h-16 rounded-xl border border-slate-300 overflow-hidden shrink-0 shadow-sm">
-                      <img src={understandingImagePreview} alt="Preview" className="w-full h-full object-cover" />
+                      <img src={understandingImagePreview} alt="Understanding Section Image Preview" className="w-full h-full object-cover" />
                     </div>
                   )}
                 </div>
@@ -876,7 +876,7 @@ export default function Dashboard() {
                   />
                   {benefitsImagePreview && (
                     <div className="w-16 h-16 rounded-xl border border-slate-300 overflow-hidden shrink-0 shadow-sm">
-                      <img src={benefitsImagePreview} alt="Preview" className="w-full h-full object-cover" />
+                      <img src={benefitsImagePreview} alt="Benefits Section Image Preview" className="w-full h-full object-cover" />
                     </div>
                   )}
                 </div>

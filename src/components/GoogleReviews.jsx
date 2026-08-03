@@ -163,7 +163,7 @@ const GoogleReviews = () => {
                   <div className="mt-6 pt-4 border-t border-gray-50 flex justify-end">
                     <img 
                       src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" 
-                      alt="Google" 
+                      alt="Google Patient Reviews" 
                       className="h-3 w-auto grayscale opacity-40 group-hover/card:grayscale-0 group-hover/card:opacity-100 transition-all duration-500"
                     />
                   </div>
