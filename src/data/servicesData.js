@@ -588,3 +588,13 @@ export const servicesData = {
     ]
   }
 };
+
+// Aliases for API database slugs
+servicesData['docotor-on-call'] = servicesData['doctor-on-call'];
+servicesData['home-nursing'] = servicesData['nursing'];
+servicesData['elderly-home-care'] = servicesData['elderly-care'];
+servicesData['lab-test-at-home'] = servicesData['lab-services'];
+servicesData['iv-therapy-iv-drip'] = servicesData['iv-therapy'];
+servicesData['physiotherapy-services'] = servicesData['physiotherapy'];
+servicesData['physiotherapy'] = servicesData['physiotherapy'];
+

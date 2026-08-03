@@ -457,18 +457,20 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  const cleanSlug = (slug || '').toLowerCase().replace(/^(services\/)/, '');
-  const staticFallback = staticServicesData[cleanSlug] || staticServicesData[cleanSlug.replace(/-/g, '')] || {};
+  const cleanSlug = (slug || '').toLowerCase().replace(/^(services\/)/, '').replace(/\/+$/, '');
+  const altSlug = cleanSlug.replace(/docotor/g, 'doctor');
+  const altSlug2 = cleanSlug.replace(/doctor/g, 'docotor');
+  const staticFallback = staticServicesData[cleanSlug] || staticServicesData[altSlug] || staticServicesData[altSlug2] || staticServicesData[cleanSlug.replace(/-/g, '')] || staticServicesData['lab-services'] || {};
   const validServiceData = (serviceData && typeof serviceData === 'object' && !Array.isArray(serviceData)) ? serviceData : null;
   const mergedData = validServiceData ? {
     ...staticFallback,
     ...validServiceData,
-    features: (Array.isArray(validServiceData.features) && validServiceData.features.length > 0) ? validServiceData.features : staticFallback.features,
-    indications: (Array.isArray(validServiceData.indications) && validServiceData.indications.length > 0) ? validServiceData.indications : staticFallback.indications,
-    reasons: (Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0) ? validServiceData.reasons : staticFallback.reasons,
-    steps: (Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0) ? validServiceData.steps : staticFallback.steps,
-    faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0) ? validServiceData.faqs : staticFallback.faqs,
-    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : staticFallback.benefits,
+    features: (Array.isArray(validServiceData.features) && validServiceData.features.length > 0) ? validServiceData.features : (staticFallback.features || []),
+    indications: (Array.isArray(validServiceData.indications) && validServiceData.indications.length > 0) ? validServiceData.indications : (staticFallback.indications || []),
+    reasons: (Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0) ? validServiceData.reasons : (staticFallback.reasons || []),
+    steps: (Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0) ? validServiceData.steps : (staticFallback.steps || []),
+    faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0) ? validServiceData.faqs : (staticFallback.faqs || []),
+    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : (staticFallback.benefits || []),
   } : staticFallback;
 
   useEffect(() => {
