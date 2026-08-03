@@ -459,15 +459,16 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const cleanSlug = (slug || '').toLowerCase().replace(/^(services\/)/, '');
   const staticFallback = staticServicesData[cleanSlug] || staticServicesData[cleanSlug.replace(/-/g, '')] || {};
-  const mergedData = serviceData ? {
+  const validServiceData = (serviceData && typeof serviceData === 'object' && !Array.isArray(serviceData)) ? serviceData : null;
+  const mergedData = validServiceData ? {
     ...staticFallback,
-    ...serviceData,
-    features: (serviceData.features && serviceData.features.length > 0) ? serviceData.features : staticFallback.features,
-    indications: (serviceData.indications && serviceData.indications.length > 0) ? serviceData.indications : staticFallback.indications,
-    reasons: (serviceData.reasons && serviceData.reasons.length > 0) ? serviceData.reasons : staticFallback.reasons,
-    steps: (serviceData.steps && serviceData.steps.length > 0) ? serviceData.steps : staticFallback.steps,
-    faqs: (serviceData.faqs && serviceData.faqs.length > 0) ? serviceData.faqs : staticFallback.faqs,
-    benefits: (serviceData.benefits && serviceData.benefits.length > 0) ? serviceData.benefits : staticFallback.benefits,
+    ...validServiceData,
+    features: (Array.isArray(validServiceData.features) && validServiceData.features.length > 0) ? validServiceData.features : staticFallback.features,
+    indications: (Array.isArray(validServiceData.indications) && validServiceData.indications.length > 0) ? validServiceData.indications : staticFallback.indications,
+    reasons: (Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0) ? validServiceData.reasons : staticFallback.reasons,
+    steps: (Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0) ? validServiceData.steps : staticFallback.steps,
+    faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0) ? validServiceData.faqs : staticFallback.faqs,
+    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : staticFallback.benefits,
   } : staticFallback;
 
   useEffect(() => {
@@ -479,7 +480,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
         return res.json();
       })
       .then(data => {
-        if (data && data.slug) {
+        if (data && typeof data === 'object' && !Array.isArray(data)) {
           setServiceData(data);
         }
       })

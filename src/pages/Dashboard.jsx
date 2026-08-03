@@ -506,9 +506,11 @@ export default function Dashboard() {
     }
   };
 
-  const selectedParentObj = parentServices.find(p => p.id.toString() === selectedParentId);
-  const totalSubServices = servicesData.filter((s) => s.parent !== null).length;
-  const allSubServicesList = servicesData.filter((s) => s.parent !== null);
+  const safeServicesData = Array.isArray(servicesData) ? servicesData : [];
+  const safeParentServices = Array.isArray(parentServices) ? parentServices : [];
+  const selectedParentObj = safeParentServices.find(p => p && p.id && p.id.toString() === selectedParentId);
+  const totalSubServices = safeServicesData.filter((s) => s && s.parent !== null).length;
+  const allSubServicesList = safeServicesData.filter((s) => s && s.parent !== null);
 
   return (
     <div className="bg-slate-50 min-h-screen pb-24 pt-8 font-sans">
