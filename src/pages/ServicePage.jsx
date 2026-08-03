@@ -491,8 +491,127 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     setMetaTag('property', 'og:description', pageDesc);
   }, [serviceData, slug]);
 
-  const featuresList = (serviceData?.features && serviceData.features.length > 0) ? serviceData.features : labFeatures;
-  const indicationsList = (serviceData?.indications && serviceData.indications.length > 0) ? serviceData.indications : bloodTestIndications;
+  const formatSlugToTitle = (slug, serviceData) => {
+    if (serviceData?.title) return serviceData.title;
+    if (!slug) return 'Blood Test in Dubai';
+    const clean = slug.replace(/^(services\/)/, '');
+    if (clean === 'doctor-on-call' || clean === 'doctor-at-home') return 'Doctor On Call in Dubai';
+    if (clean === 'doctor-at-office') return 'Doctor at Office in Dubai';
+    if (clean === 'doctor-at-hotel') return 'Doctor at Hotel in Dubai';
+    if (clean === 'iv-therapy' || clean === 'iv-drip-at-home') return 'IV Therapy at Home in Dubai';
+    if (clean === 'nursing' || clean === 'home-nursing') return 'Home Nursing Services in Dubai';
+    if (clean === 'elderly-care') return 'Elderly Care at Home in Dubai';
+    
+    return clean
+      .split('-')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ') + ' in Dubai';
+  };
+
+  const getFallbackEyebrow = (slug, serviceData) => {
+    if (serviceData?.eyebrow) return serviceData.eyebrow;
+    const clean = slug ? slug.replace(/^(services\/)/, '') : '';
+    if (clean.includes('doctor')) return '24/7 DHA-Licensed Doctor Home & Hotel Visits Across Dubai';
+    if (clean.includes('iv') || clean.includes('drip')) return 'DHA-Certified Vitamin Drips & Hydration at Home';
+    if (clean.includes('nursing')) return 'DHA-Certified Registered Nurses at Your Doorstep';
+    if (clean.includes('elderly')) return 'Dedicated Senior Care & Assisted Living at Home';
+    return 'DHA-Licensed Home Sample Collection Across Dubai';
+  };
+
+  const getFallbackTagline = (slug, serviceData) => {
+    if (serviceData?.tagline) return serviceData.tagline;
+    const clean = slug ? slug.replace(/^(services\/)/, '') : '';
+    if (clean.includes('doctor')) return 'Qualified Medical Doctors at Your Doorstep Day or Night';
+    if (clean.includes('iv') || clean.includes('drip')) return 'Instant Energy, Immunity Boost & Fast Hydration';
+    if (clean.includes('nursing')) return 'Compassionate Post-Operative & Specialized Medical Care';
+    if (clean.includes('elderly')) return 'Comprehensive Elderly Care & Medical Support 24/7';
+    return 'Get an Accurate Lab Result at Your Doorsteps';
+  };
+
+  const getFallbackDescription = (slug, serviceData) => {
+    if (serviceData?.description) return serviceData.description;
+    const clean = slug ? slug.replace(/^(services\/)/, '') : '';
+    if (clean.includes('doctor')) return 'Experience prompt, professional medical care without visiting a clinic or hospital. Our DHA-certified doctors arrive at your home, hotel, or office within 30–45 minutes for diagnosis, treatment, and prescription issuance.';
+    if (clean.includes('iv') || clean.includes('drip')) return 'Revitalize your body with personalized IV drip therapy delivered at your home, hotel, or office by DHA-certified healthcare professionals at an affordable price.';
+    if (clean.includes('nursing')) return 'Receive professional nursing care in the comfort of your home. Our DHA-licensed nurses provide post-surgical care, wound dressing, medication administration, and 24/7 medical assistance.';
+    if (clean.includes('elderly')) return 'Empowering seniors to live comfortably and independently with compassionate at-home nursing, mobility assistance, vital monitoring, and personalized care plans.';
+    return 'Book a blood test at home in Dubai without visiting a clinic or Hospital. Our home care service provides convenient blood sample collection at your home, hotel, or office by DHA-certified healthcare professionals at an affordable price.';
+  };
+
+  const getFallbackFeatures = (slug, serviceData) => {
+    if (serviceData?.features && serviceData.features.length > 0) return serviceData.features;
+    const clean = slug ? slug.replace(/^(services\/)/, '') : '';
+    if (clean.includes('doctor')) return [
+      { title: "24/7 Doctor home & hotel visits" },
+      { title: "Arrives at your doorstep within 30-45 mins" },
+      { title: "DHA-licensed general practitioners & specialists" },
+      { title: "On-site diagnosis & instant prescriptions" },
+      { title: "High security, privacy & patient confidentiality" }
+    ];
+    if (clean.includes('iv') || clean.includes('drip')) return [
+      { title: "Customized IV drip formulas for immunity & energy" },
+      { title: "Administered by DHA-certified clinical nurses" },
+      { title: "Fast absorption & instant body rehydration" },
+      { title: "100% sterile, single-use medical kits" },
+      { title: "24/7 flexible scheduling across Dubai" }
+    ];
+    if (clean.includes('nursing')) return [
+      { title: "Post-operative clinical wound care & dressing" },
+      { title: "Continuous vital signs & patient monitoring" },
+      { title: "DHA-certified registered nurses 24/7" },
+      { title: "IV fluid, injection & medication administration" },
+      { title: "Tailored long-term nursing care plans" }
+    ];
+    if (clean.includes('elderly')) return [
+      { title: "24/7 Dedicated senior care assistance" },
+      { title: "Mobility, hygiene & daily activity support" },
+      { title: "Medication management & health tracking" },
+      { title: "DHA-certified compassionate nurses" },
+      { title: "Personalized home care routines" }
+    ];
+    return labFeatures;
+  };
+
+  const getFallbackIndications = (slug, serviceData) => {
+    if (serviceData?.indications && serviceData.indications.length > 0) return serviceData.indications;
+    const clean = slug ? slug.replace(/^(services\/)/, '') : '';
+    if (clean.includes('doctor')) return [
+      "High fever, severe flu & respiratory symptoms",
+      "Severe migraines, headache & muscular pain",
+      "Gastrointestinal distress, nausea & vomiting",
+      "Blood pressure spikes & dizziness management",
+      "Minor injuries, wound inspections & burns",
+      "Prescription refills & urgent doctor advice",
+      "Hotel guest emergency medical consultation",
+      "Corporate staff wellness checkups & sick leaves"
+    ];
+    if (clean.includes('iv') || clean.includes('drip')) return [
+      "Severe dehydration, jet lag & chronic fatigue",
+      "Immunity boost before or after travel",
+      "Hangover recovery & rapid electrolyte balance",
+      "Skin glow, anti-aging & collagen support",
+      "Post-illness physical weakness & recovery",
+      "Athletic recovery & muscle soreness relief"
+    ];
+    if (clean.includes('nursing')) return [
+      "Post-surgical recovery & wound management",
+      "Intravenous (IV) medication & injection needs",
+      "Chronic illness monitoring & palliative care",
+      "Tracheostomy, catheter & feeding tube care",
+      "Elderly bedridden care & pressure sore prevention"
+    ];
+    if (clean.includes('elderly')) return [
+      "Senior citizens needing daily activity assistance",
+      "Post-stroke or mobility-impaired elderly care",
+      "Dementia or Alzheimer's compassionate support",
+      "Medication adherence & vital checks for seniors",
+      "Companion care & emergency assistance at home"
+    ];
+    return bloodTestIndications;
+  };
+
+  const featuresList = getFallbackFeatures(slug, serviceData);
+  const indicationsList = getFallbackIndications(slug, serviceData);
   const labColumns = (serviceData?.lab_columns && serviceData.lab_columns.length > 0) 
     ? serviceData.lab_columns.map((col, idx) => ({
         ...col,
@@ -519,7 +638,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Column */}
             <div 
-              className="lg:col-span-6 space-y-6 flex flex-col items-start text-left transition-all duration-700"
+              className="lg:col-span-6 flex flex-col items-start text-left space-y-5 transition-all duration-700"
               style={{ 
                 opacity: visible ? 1 : 0, 
                 transform: visible ? "translateY(0)" : "translateY(24px)" 
@@ -530,7 +649,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 <EditableText
                   slug={slug}
                   fieldKey="hero_eyebrow"
-                  defaultText={serviceData?.eyebrow || "DHA-Licensed Home Sample Collection Across Dubai"}
+                  defaultText={getFallbackEyebrow(slug, serviceData)}
                   isEditMode={isEditMode}
                   tagName="span"
                   className="text-[#08709d] text-xs font-bold uppercase tracking-wider"
@@ -541,7 +660,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 <EditableText
                   slug={slug}
                   fieldKey="hero_title"
-                  defaultText={serviceData?.title ? serviceData.title : "Blood Test in Dubai"}
+                  defaultText={formatSlugToTitle(slug, serviceData)}
                   isEditMode={isEditMode}
                   tagName="span"
                 />
@@ -551,7 +670,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 <EditableText
                   slug={slug}
                   fieldKey="hero_tagline"
-                  defaultText={serviceData?.tagline || "Get an Accurate Lab Result at Your Doorsteps"}
+                  defaultText={getFallbackTagline(slug, serviceData)}
                   isEditMode={isEditMode}
                   tagName="span"
                 />
@@ -561,7 +680,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 <EditableText
                   slug={slug}
                   fieldKey="hero_description"
-                  defaultText={serviceData?.description || "Book a blood test at home in Dubai without visiting a clinic or Hospital. Our home care service provides convenient blood sample collection at your home, hotel, or office by DHA-certified healthcare professionals at an affordable price."}
+                  defaultText={getFallbackDescription(slug, serviceData)}
                   isEditMode={isEditMode}
                   tagName="span"
                   multiline={true}
