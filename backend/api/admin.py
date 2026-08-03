@@ -1544,7 +1544,7 @@ class ServiceAdmin(admin.ModelAdmin):
             'fields': ('indications_title', 'indications_description', 'indications', 'lab_columns_title', 'lab_columns_description', 'lab_columns')
         }),
         ('⭐ Process & Benefits Section', {
-            'fields': ('steps', 'reasons', 'benefits_title', 'benefits', 'benefits_image_file')
+            'fields': ('why_choose_title', 'why_choose_desc', 'reasons', 'steps', 'benefits_title', 'benefits', 'benefits_image_file')
         }),
         ('💡 Understanding & Condition Stages Section', {
             'fields': ('understanding_title', 'understanding_intro', 'understanding_items', 'understanding_image_file')

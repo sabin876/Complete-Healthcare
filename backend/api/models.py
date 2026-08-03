@@ -137,6 +137,8 @@ class Service(models.Model):
     lab_columns_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom Heading for Diagnostic Test Suites / Lab Columns Section")
     lab_columns_description = models.TextField(blank=True, default='', help_text="Custom Heading Description for Diagnostic Test Suites / Lab Columns Section")
     reasons = models.JSONField(default=list, blank=True)  # [{num, label, title, desc}]
+    why_choose_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom Heading for Why Choose CORx Healthcare / Reasons Section")
+    why_choose_desc = models.TextField(blank=True, default='', help_text="Custom Heading Description for Why Choose CORx Healthcare / Reasons Section")
     steps = models.JSONField(default=list, blank=True)  # [{title, desc}]
     meta_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom SEO & OpenGraph Title Tag for this Service Page")
     meta_description = models.TextField(blank=True, default='', help_text="Custom SEO & OpenGraph Meta Description for this Service Page")

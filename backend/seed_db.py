@@ -544,6 +544,8 @@ def seed():
             lab_columns_title=s.get("lab_columns_title", "Comprehensive Diagnostic Test Suites Covered"),
             lab_columns_description=s.get("lab_columns_description", "High-precision laboratory test packages performed by certified clinical specialists right at your home."),
             reasons=s.get("reasons", []),
+            why_choose_title=s.get("why_choose_title", f"Why Choose CORx Healthcare for {s['title']}?"),
+            why_choose_desc=s.get("why_choose_desc", s.get("description", "Enjoy the convenience and reliability of top-notch healthcare without stepping outside your door.")),
             steps=s.get("steps", []),
             benefits=s.get("benefits", []),
             faqs=s.get("faqs", [])
