@@ -3,7 +3,7 @@ import {
   Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, 
   Printer, ArrowRight, Linkedin, User, ChevronRight, Activity, Droplets, 
   HeartPulse, Stethoscope, HeartHandshake, TestTube, Globe, Sparkles, CheckCircle2,
-  Clock, Plus
+  Clock, Plus, MessageSquare
 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
