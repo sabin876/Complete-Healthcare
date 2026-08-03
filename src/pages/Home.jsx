@@ -568,6 +568,27 @@ const Home = () => {
   const [diffImageIndex, setDiffImageIndex] = useState(0);
 
   useEffect(() => {
+    const titleText = "Corx Healthcare: Home Healthcare Services in Dubai, UAE - Corx Healthcare";
+    const descText = "24/7 Home Healthcare Services in Dubai | DHA-Certified Doctors & Nurses at Your Doorstep. Your health, our priority — Professional, reliable, and on-demand medical care at your doorstep across Dubai. Corx Healthcare brings professional medical care to your doorstep with visiting doctors and nurses. Experience the highest standard of healthcare from skilled experts, all in the comfort of your own home.";
+
+    document.title = titleText;
+
+    const setMetaTag = (attrName, attrVal, contentVal) => {
+      let metaElem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
+      if (!metaElem) {
+        metaElem = document.createElement('meta');
+        metaElem.setAttribute(attrName, attrVal);
+        document.head.appendChild(metaElem);
+      }
+      metaElem.setAttribute('content', contentVal);
+    };
+
+    setMetaTag('name', 'description', descText);
+    setMetaTag('property', 'og:title', titleText);
+    setMetaTag('property', 'og:description', descText);
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setDiffImageIndex((prev) => (prev + 1) % 4);
     }, 4000);
