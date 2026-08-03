@@ -512,6 +512,15 @@ export default function Dashboard() {
   const totalSubServices = safeServicesData.filter((s) => s && s.parent !== null).length;
   const allSubServicesList = safeServicesData.filter((s) => s && s.parent !== null);
 
+  const filteredSubServices = allSubServicesList.filter((s) => {
+    if (!searchTerm.trim()) return true;
+    const q = searchTerm.toLowerCase().trim();
+    const title = (s.title || s.name || '').toLowerCase();
+    const slug = (s.slug || '').toLowerCase();
+    const tagline = (s.tagline || s.subtitle || '').toLowerCase();
+    return title.includes(q) || slug.includes(q) || tagline.includes(q);
+  });
+
   return (
     <div className="bg-slate-50 min-h-screen pb-24 pt-8 font-sans">
       <Container className="max-w-[1350px]">
@@ -534,10 +543,19 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 relative z-10 shrink-0">
+          <div className="flex flex-wrap items-center gap-3 relative z-10 shrink-0">
+            <a
+              href="/admin/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-white/15 hover:bg-white/25 active:scale-95 px-4 py-3 rounded-2xl border border-white/25 text-xs font-extrabold uppercase tracking-wider transition-all shadow-md cursor-pointer backdrop-blur-md text-white"
+            >
+              <ExternalLink size={15} />
+              <span>Django Admin</span>
+            </a>
             <button
               onClick={loadServices}
-              className="flex items-center gap-2 bg-white/15 hover:bg-white/25 active:scale-95 px-5 py-3 rounded-2xl border border-white/25 text-xs font-extrabold uppercase tracking-wider transition-all shadow-md cursor-pointer backdrop-blur-md"
+              className="flex items-center gap-2 bg-[#63b158] hover:bg-[#529b47] active:scale-95 px-5 py-3 rounded-2xl border border-white/25 text-xs font-extrabold uppercase tracking-wider transition-all shadow-md cursor-pointer text-white"
             >
               <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
               <span>Sync API</span>
@@ -592,6 +610,32 @@ export default function Dashboard() {
             <div className="w-12 h-12 rounded-2xl bg-emerald-100/60 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
               <ShieldCheck size={22} />
             </div>
+          </div>
+        </div>
+
+        {/* Global Search & Search Filter Control */}
+        <div className="mb-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="relative w-full sm:w-96">
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Filter services by title or slug..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:border-[#08709d] focus:ring-2 focus:ring-[#08709d]/20 transition-all placeholder:text-slate-400"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-slate-600 bg-slate-100 rounded-full w-5 h-5 flex items-center justify-center cursor-pointer"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+            <span>Showing <strong className="text-slate-800 font-extrabold">{searchTerm ? filteredSubServices.length : totalSubServices}</strong> of <strong className="text-slate-800 font-extrabold">{totalSubServices}</strong> sub-services</span>
           </div>
         </div>
 
