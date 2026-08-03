@@ -132,6 +132,8 @@ class Service(models.Model):
     features = models.JSONField(default=list, blank=True)  # [{title}]
     indications = models.JSONField(default=list, blank=True)  # [str]
     lab_columns = models.JSONField(default=list, blank=True)  # [{title, tagline, iconBg, tests}]
+    lab_columns_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom Heading for Diagnostic Test Suites / Lab Columns Section")
+    lab_columns_description = models.TextField(blank=True, default='', help_text="Custom Heading Description for Diagnostic Test Suites / Lab Columns Section")
     reasons = models.JSONField(default=list, blank=True)  # [{num, label, title, desc}]
     steps = models.JSONField(default=list, blank=True)  # [{title, desc}]
     meta_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom SEO & OpenGraph Title Tag for this Service Page")

@@ -1541,7 +1541,7 @@ class ServiceAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
         }),
         ('📋 Diagnostic Test Suites & Indications', {
-            'fields': ('indications', 'lab_columns')
+            'fields': ('lab_columns_title', 'lab_columns_description', 'indications', 'lab_columns')
         }),
         ('⭐ Process & Benefits Section', {
             'fields': ('steps', 'reasons', 'benefits_title', 'benefits', 'benefits_image_file')

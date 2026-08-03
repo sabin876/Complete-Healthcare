@@ -43,6 +43,8 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
   const [themeColor, setThemeColor] = useState('#08709d');
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
+  const [labColumnsTitle, setLabColumnsTitle] = useState('');
+  const [labColumnsDescription, setLabColumnsDescription] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -94,6 +96,8 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
       theme_color: themeColor,
       meta_title: metaTitle.trim() || undefined,
       meta_description: metaDescription.trim() || undefined,
+      lab_columns_title: labColumnsTitle.trim() || undefined,
+      lab_columns_description: labColumnsDescription.trim() || undefined,
       parent: serviceType === 'sub' ? parseInt(selectedParentId, 10) : null,
       floating_badge: { title: 'New Service', desc: tagline.trim() || title.trim() },
     };
@@ -122,6 +126,8 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
       setDescription('');
       setMetaTitle('');
       setMetaDescription('');
+      setLabColumnsTitle('');
+      setLabColumnsDescription('');
 
       if (onServiceAdded) {
         onServiceAdded(created);
@@ -389,6 +395,39 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
                     placeholder="e.g. Professional DHA-certified home nursing care at your doorstep in Dubai. 24/7 on-demand medical assistance..."
                     value={metaDescription}
                     onChange={(e) => setMetaDescription(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-800 text-sm focus:outline-none focus:border-[#08709d] placeholder:text-gray-400"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Diagnostic Test Suites / Lab Columns Section Heading */}
+            <div className="pt-2 border-t border-gray-200">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#08709d] mb-3">
+                📋 Diagnostic Test Suites Section Heading (Optional)
+              </label>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Section Heading
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Comprehensive Diagnostic Test Suites Covered"
+                    value={labColumnsTitle}
+                    onChange={(e) => setLabColumnsTitle(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-800 text-sm focus:outline-none focus:border-[#08709d] placeholder:text-gray-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Section Heading Description
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="e.g. High-precision laboratory test packages performed by certified clinical specialists right at your home."
+                    value={labColumnsDescription}
+                    onChange={(e) => setLabColumnsDescription(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-800 text-sm focus:outline-none focus:border-[#08709d] placeholder:text-gray-400"
                   />
                 </div>

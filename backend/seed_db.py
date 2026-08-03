@@ -539,6 +539,8 @@ def seed():
             features=s.get("features", []),
             indications=s.get("indications", []),
             lab_columns=s.get("lab_columns", []),
+            lab_columns_title=s.get("lab_columns_title", "Comprehensive Diagnostic Test Suites Covered"),
+            lab_columns_description=s.get("lab_columns_description", "High-precision laboratory test packages performed by certified clinical specialists right at your home."),
             reasons=s.get("reasons", []),
             steps=s.get("steps", []),
             benefits=s.get("benefits", []),

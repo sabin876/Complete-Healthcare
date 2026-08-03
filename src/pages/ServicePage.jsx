@@ -690,10 +690,35 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       {/* ── WHO MAY NEED SECTION ── */}
       <WhoMayNeedBloodTestSection indicationsList={indicationsList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
 
-      {/* ── CONDITIONS SECTION ── */}
+      {/* ── CONDITIONS / LAB COLUMNS SECTION ── */}
       {(!serviceData || (serviceData?.lab_columns && serviceData.lab_columns.length > 0)) && (
       <Section variant="warm">
         <Container className="flex flex-col items-center">
+          <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08709d]/10 text-[#08709d] text-xs font-bold uppercase tracking-wider mb-3">
+              ⊙ Diagnostic Test Suites
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#1a294a] tracking-tight leading-snug font-montserrat mb-3">
+              <EditableText
+                slug={slug}
+                fieldKey="lab_columns_title"
+                defaultText={serviceData?.lab_columns_title || serviceData?.comprehensive_section_title || "Comprehensive Diagnostic Test Suites Covered"}
+                isEditMode={isEditMode}
+                tagName="span"
+              />
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-medium">
+              <EditableText
+                slug={slug}
+                fieldKey="lab_columns_description"
+                defaultText={serviceData?.lab_columns_description || "High-precision laboratory test packages performed by certified clinical specialists right at your home."}
+                isEditMode={isEditMode}
+                tagName="span"
+                multiline={true}
+              />
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full">
             {labColumns.map((col, idx) => (
               <motion.div
