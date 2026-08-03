@@ -128,43 +128,6 @@ function EditableText({
   );
 }
 
-function EditControlBar({ isEditMode, setIsEditMode, onResetDefaults }) {
-  return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-[#1a294a]/95 text-white backdrop-blur-md px-4 py-3 rounded-full shadow-2xl border border-white/20">
-      <div className="flex items-center gap-2 pr-2 border-r border-white/20">
-        <span className={`w-2.5 h-2.5 rounded-full ${isEditMode ? 'bg-emerald-400 animate-pulse' : 'bg-gray-400'}`} />
-        <span className="text-xs font-bold uppercase tracking-wider">
-          {isEditMode ? 'Live Edit Mode ON' : 'Live Editor'}
-        </span>
-      </div>
-
-      <button
-        onClick={() => setIsEditMode(!isEditMode)}
-        className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
-          isEditMode 
-            ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-md' 
-            : 'bg-white/10 hover:bg-white/20 text-white'
-        }`}
-        title={isEditMode ? "Click to lock edits" : "Click to edit titles & headings live"}
-      >
-        <Edit3 size={14} />
-        <span>{isEditMode ? 'Done Editing' : 'Edit Headings'}</span>
-      </button>
-
-      {isEditMode && (
-        <button
-          onClick={onResetDefaults}
-          className="px-3 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 transition-all flex items-center gap-1 border border-rose-500/30"
-          title="Reset all edited text on this page to default"
-        >
-          <RotateCcw size={13} />
-          <span>Reset</span>
-        </button>
-      )}
-    </div>
-  );
-}
-
 function LabIllustration() {
   return (
     <div className="relative w-full max-w-[620px] mx-auto flex items-center justify-center">
@@ -800,13 +763,6 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
       {/* ── FAQ SECTION ── */}
       <LabServiceFAQ faqList={faqList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
-
-      {/* ── FLOATING LIVE EDIT CONTROL TOOLBAR ── */}
-      <EditControlBar 
-        isEditMode={isEditMode} 
-        setIsEditMode={setIsEditMode} 
-        onResetDefaults={handleResetDefaults} 
-      />
     </div>
   );
 }
