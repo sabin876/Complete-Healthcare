@@ -35,6 +35,16 @@ const Header = () => {
 
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false);
 
+  const renderIcon = (IconComp, size = 16, className = '') => {
+    if (!IconComp) return <CheckCircle2 size={size} className={className} />;
+    if (React.isValidElement(IconComp)) return IconComp;
+    if (typeof IconComp === 'function' || (typeof IconComp === 'object' && IconComp.$$typeof)) {
+      const Comp = IconComp;
+      return <Comp size={size} className={className} />;
+    }
+    return <CheckCircle2 size={size} className={className} />;
+  };
+
   const defaultServices = [
     { 
       name: 'Physiotherapy', 
@@ -541,7 +551,6 @@ const Header = () => {
                 {link.dropdown && openDropdown === link.name && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="overflow-hidden bg-gray-50/70 rounded-2xl p-2 mb-4 flex flex-col gap-1">
                     {link.dropdown.map((sub) => {
-                      const SubIcon = sub.icon || CheckCircle2;
                       return (
                         <div key={sub.name} className="flex flex-col">
                           <Link 
@@ -549,7 +558,7 @@ const Header = () => {
                             className="flex items-center gap-3 px-4 py-3 text-[13.5px] font-bold text-gray-700 hover:text-primary-color rounded-xl hover:bg-white transition-all"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
-                            <SubIcon size={16} className="text-[#63b158]" />
+                            {renderIcon(sub.icon, 16, "text-[#63b158]")}
                             <span>{sub.name}</span>
                           </Link>
                           {sub.subItems && (
