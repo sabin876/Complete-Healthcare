@@ -55,9 +55,20 @@ const MainLayout = ({ children }) => {
   );
 };
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <MainLayout>
         <AnimatedRoutes />
       </MainLayout>

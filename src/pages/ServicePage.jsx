@@ -453,9 +453,22 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
+
   const cleanSlug = (slug || '').toLowerCase().replace(/^(services\/)/, '');
-  const staticFallback = staticServicesData[cleanSlug] || staticServicesData[cleanSlug.replace(/-/g, '')] || null;
-  const mergedData = serviceData || staticFallback;
+  const staticFallback = staticServicesData[cleanSlug] || staticServicesData[cleanSlug.replace(/-/g, '')] || {};
+  const mergedData = serviceData ? {
+    ...staticFallback,
+    ...serviceData,
+    features: (serviceData.features && serviceData.features.length > 0) ? serviceData.features : staticFallback.features,
+    indications: (serviceData.indications && serviceData.indications.length > 0) ? serviceData.indications : staticFallback.indications,
+    reasons: (serviceData.reasons && serviceData.reasons.length > 0) ? serviceData.reasons : staticFallback.reasons,
+    steps: (serviceData.steps && serviceData.steps.length > 0) ? serviceData.steps : staticFallback.steps,
+    faqs: (serviceData.faqs && serviceData.faqs.length > 0) ? serviceData.faqs : staticFallback.faqs,
+    benefits: (serviceData.benefits && serviceData.benefits.length > 0) ? serviceData.benefits : staticFallback.benefits,
+  } : staticFallback;
 
   useEffect(() => {
     if (!slug) return;
@@ -616,6 +629,74 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     return bloodTestIndications;
   };
 
+  const getFallbackSteps = (clean, dataObj) => {
+    if (dataObj?.steps && dataObj.steps.length > 0) return dataObj.steps;
+    if (clean.includes('doctor')) return [
+      {
+        icon: <PhoneCall size={36} className="text-[#08709d]" strokeWidth={1.75} />,
+        title: "1. Request Doctor Visit 24/7",
+        desc: "Call +971 43320776 or WhatsApp Us at +971 547033311 to request a physician at your location."
+      },
+      {
+        icon: <Stethoscope size={36} className="text-[#08709d]" strokeWidth={1.75} />,
+        title: "2. Doctor Arrives in 30-45 Mins",
+        desc: "Our DHA-licensed doctor arrives at your home, hotel, or office fully equipped for consultation."
+      },
+      {
+        icon: <Users size={36} className="text-[#08709d]" strokeWidth={1.75} />,
+        title: "3. On-Site Treatment & Prescription",
+        desc: "Receive professional diagnosis, prescription, medical certificates, and personalized treatment plans."
+      }
+    ];
+    return stepsData;
+  };
+
+  const getFallbackFaqs = (clean, dataObj) => {
+    if (dataObj?.faqs && dataObj.faqs.length > 0) return dataObj.faqs;
+    if (clean.includes('doctor')) return [
+      {
+        q: "How quickly can a doctor reach my home or hotel in Dubai?",
+        a: "Our typical response time is between 30 to 45 minutes from the moment your request is confirmed, depending on your precise location and traffic conditions in Dubai."
+      },
+      {
+        q: "What illnesses and conditions can the Doctor On Call treat?",
+        a: "We treat a wide range of acute, non-life-threatening conditions, including high fever, seasonal flu, respiratory infections, severe throat pain, food poisoning, vomiting/nausea, urinary tract infections (UTIs), ear/eye infections, back pain, and mild asthma."
+      },
+      {
+        q: "Can your doctor issue official prescriptions and sick leaves?",
+        a: "Yes. Our DHA-licensed doctors can write official DHA-compliant electronic prescriptions that are accepted at all pharmacies, order necessary laboratory tests, and issue official medical certificates or sick leaves."
+      },
+      {
+        q: "Are Doctor On Call services available on weekends and holidays?",
+        a: "Yes! Our home doctor service is operational 24 hours a day, 7 days a week, 365 days a year across all areas of Dubai."
+      }
+    ];
+    return labFaqs;
+  };
+
+  const getFallbackReasons = (clean, dataObj) => {
+    if (dataObj?.reasons && dataObj.reasons.length > 0) return dataObj.reasons;
+    if (clean.includes('doctor')) return [
+      {
+        title: "Rapid 30–45 Mins Arrival",
+        desc: "Skip long emergency room wait times. Our licensed doctors reach your home, hotel, or office in under 45 minutes anywhere in Dubai."
+      },
+      {
+        title: "DHA-Licensed Medical Team",
+        desc: "Experienced general practitioners and medical specialists providing top-quality, compassionate clinical care at your doorstep."
+      },
+      {
+        title: "Official Prescriptions & Sick Leaves",
+        desc: "Receive DHA-compliant electronic prescriptions, lab test requisitions, and official medical certificates on the spot."
+      },
+      {
+        title: "Complete Confidentiality & Privacy",
+        desc: "Enjoy private, personalized medical care in the comfort and security of your own living room or hotel room."
+      }
+    ];
+    return reasons;
+  };
+
   const featuresList = getFallbackFeatures(slug, mergedData);
   const indicationsList = getFallbackIndications(slug, mergedData);
   const labColumns = (mergedData?.lab_columns && mergedData.lab_columns.length > 0) 
@@ -626,9 +707,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
         delay: 0.05 + idx * 0.07
       })) 
     : defaultLabColumns;
-  const reasonsList = (mergedData?.reasons && mergedData.reasons.length > 0) ? mergedData.reasons : reasons;
-  const stepsList = (mergedData?.steps && mergedData.steps.length > 0) ? mergedData.steps : stepsData;
-  const faqList = (mergedData?.faqs && mergedData.faqs.length > 0) ? mergedData.faqs : labFaqs;
+  const reasonsList = getFallbackReasons(cleanSlug, mergedData);
+  const stepsList = getFallbackSteps(cleanSlug, mergedData);
+  const faqList = getFallbackFaqs(cleanSlug, mergedData);
   const benefitsList = mergedData ? (mergedData.benefits || []) : [];
   const benefitsTitle = mergedData ? (mergedData.benefits_title || '') : '';
   const understandingTitle = mergedData ? (mergedData.understanding_title || '') : '';
@@ -734,10 +815,10 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 transitionDelay: "0.2s"
               }}
             >
-              {(serviceData?.image_file || serviceData?.image) ? (
+              {(mergedData?.image_file || mergedData?.image || cleanSlug.includes('doctor')) ? (
                 <img 
-                  src={serviceData.image_file || serviceData.image} 
-                  alt={serviceData.title || "Service"} 
+                  src={mergedData?.image_file || mergedData?.image || "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80"} 
+                  alt={mergedData?.title || "Doctor On Call Services"} 
                   className="w-full h-[380px] sm:h-[480px] lg:h-[540px] rounded-[32px] shadow-2xl object-cover border-[6px] border-white/90 ring-1 ring-slate-900/10 hover:scale-[1.01] transition-transform duration-500" 
                 />
               ) : (
@@ -756,10 +837,10 @@ function LabServicesLanding({ slug = 'lab-services' }) {
         <ServiceBenefitsSection 
           benefitsList={benefitsList} 
           benefitsTitle={benefitsTitle} 
-          serviceTitle={serviceData?.title} 
+          serviceTitle={mergedData?.title} 
           isEditMode={isEditMode} 
           slug={slug} 
-          imageUrl={serviceData?.benefits_image || serviceData?.benefits_image_file || serviceData?.image || serviceData?.image_file} 
+          imageUrl={mergedData?.benefits_image || mergedData?.benefits_image_file || mergedData?.image || mergedData?.image_file} 
         />
       )}
 
@@ -769,18 +850,18 @@ function LabServicesLanding({ slug = 'lab-services' }) {
           understandingTitle={understandingTitle}
           understandingIntro={understandingIntro}
           understandingItems={understandingItems}
-          serviceTitle={serviceData?.title}
+          serviceTitle={mergedData?.title}
           isEditMode={isEditMode}
           slug={slug}
-          imageUrl={serviceData?.understanding_image || serviceData?.understanding_image_file || serviceData?.image || serviceData?.image_file}
+          imageUrl={mergedData?.understanding_image || mergedData?.understanding_image_file || mergedData?.image || mergedData?.image_file}
         />
       )}
 
       {/* ── WHO MAY NEED SECTION ── */}
-      <WhoMayNeedBloodTestSection indicationsList={indicationsList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
+      <WhoMayNeedBloodTestSection indicationsList={indicationsList} serviceData={mergedData} isEditMode={isEditMode} slug={slug} />
 
-      {/* ── CONDITIONS / LAB COLUMNS SECTION ── */}
-      {(!serviceData || (serviceData?.lab_columns && serviceData.lab_columns.length > 0)) && (
+      {/* ── CONDITIONS / LAB COLUMNS SECTION (Hidden for Doctor On Call services) ── */}
+      {(!cleanSlug.includes('doctor') && (mergedData?.lab_columns && mergedData.lab_columns.length > 0)) && (
       <Section variant="warm">
         <Container className="flex flex-col items-center">
           <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
@@ -791,7 +872,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
               <EditableText
                 slug={slug}
                 fieldKey="lab_columns_title"
-                defaultText={serviceData?.lab_columns_title || serviceData?.comprehensive_section_title || "Comprehensive Diagnostic Test Suites Covered"}
+                defaultText={mergedData?.lab_columns_title || mergedData?.comprehensive_section_title || "Comprehensive Diagnostic Test Suites Covered"}
                 isEditMode={isEditMode}
                 tagName="span"
               />
@@ -800,7 +881,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
               <EditableText
                 slug={slug}
                 fieldKey="lab_columns_description"
-                defaultText={serviceData?.lab_columns_description || "High-precision laboratory test packages performed by certified clinical specialists right at your home."}
+                defaultText={mergedData?.lab_columns_description || "High-precision laboratory test packages performed by certified clinical specialists right at your home."}
                 isEditMode={isEditMode}
                 tagName="span"
                 multiline={true}
@@ -845,7 +926,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
               </svg>
             </span>
             <p className="text-base leading-7 text-white m-0 font-medium">
-              <strong className="font-extrabold uppercase tracking-wider mr-1">Note:</strong> All {serviceData?.title ? serviceData.title.toLowerCase() : "health services"} at home at CORx are coordinated based on your medical requirements and doctor's advice, where applicable.
+              <strong className="font-extrabold uppercase tracking-wider mr-1">Note:</strong> All {mergedData?.title ? mergedData.title.toLowerCase() : "health services"} at home at CORx are coordinated based on your medical requirements and doctor's advice, where applicable.
             </p>
           </div>
         </Container>
@@ -853,12 +934,10 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       )}
 
       {/* ── THREE STEPS PROCESS SECTION ── */}
-      <ThreeStepsLabProcessSection stepsList={stepsList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
+      <ThreeStepsLabProcessSection stepsList={stepsList} serviceData={mergedData} isEditMode={isEditMode} slug={slug} />
 
       {/* ── WHY CHOOSE SECTION ── */}
-      {(!serviceData || (serviceData?.reasons && serviceData.reasons.length > 0)) && (
-        <WhyChooseCorxBloodTest reasonsList={reasonsList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
-      )}
+      <WhyChooseCorxBloodTest reasonsList={reasonsList} serviceData={mergedData} isEditMode={isEditMode} slug={slug} />
 
       {/* ── CTA BANNER ── */}
       <Section variant="dark" className="relative overflow-hidden">
@@ -888,7 +967,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       </Section>
 
       {/* ── FAQ SECTION ── */}
-      <LabServiceFAQ faqList={faqList} serviceData={serviceData} isEditMode={isEditMode} slug={slug} />
+      <LabServiceFAQ faqList={faqList} serviceData={mergedData} isEditMode={isEditMode} slug={slug} />
     </div>
   );
 }
