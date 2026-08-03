@@ -225,7 +225,7 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData, isEditM
               <EditableText
                 slug={slug}
                 fieldKey="indications_title"
-                defaultText={(serviceData?.indications_section_title && serviceData.indications_section_title.trim()) ? serviceData.indications_section_title : (serviceData?.title ? `Who May Need ${serviceData.title}?` : "Who May Need a Blood Test at Home in Dubai?")}
+                defaultText={serviceData?.indications_title || (serviceData?.indications_section_title && serviceData.indications_section_title.trim()) || (serviceData?.title ? `Who May Need ${serviceData.title}?` : "Who May Need a Blood Test at Home in Dubai?")}
                 isEditMode={isEditMode}
                 tagName="h2"
                 className="text-3xl sm:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-4"
@@ -234,10 +234,11 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData, isEditM
               <div className="mb-7">
                 <EditableText
                   slug={slug}
-                  fieldKey="indications_subheading"
-                  defaultText={`You may benefit from our DHA-certified ${serviceData?.title || "home health service"} if you have:`}
+                  fieldKey="indications_description"
+                  defaultText={serviceData?.indications_description || `You may benefit from our DHA-certified ${serviceData?.title || "home health service"} if you have:`}
                   isEditMode={isEditMode}
                   tagName="p"
+                  multiline={true}
                   className="text-slate-600 text-base sm:text-lg font-medium leading-relaxed font-sans"
                 />
               </div>

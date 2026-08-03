@@ -45,6 +45,8 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
   const [metaDescription, setMetaDescription] = useState('');
   const [labColumnsTitle, setLabColumnsTitle] = useState('');
   const [labColumnsDescription, setLabColumnsDescription] = useState('');
+  const [indicationsTitle, setIndicationsTitle] = useState('');
+  const [indicationsDescription, setIndicationsDescription] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -98,6 +100,8 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
       meta_description: metaDescription.trim() || undefined,
       lab_columns_title: labColumnsTitle.trim() || undefined,
       lab_columns_description: labColumnsDescription.trim() || undefined,
+      indications_title: indicationsTitle.trim() || undefined,
+      indications_description: indicationsDescription.trim() || undefined,
       parent: serviceType === 'sub' ? parseInt(selectedParentId, 10) : null,
       floating_badge: { title: 'New Service', desc: tagline.trim() || title.trim() },
     };
@@ -128,6 +132,8 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
       setMetaDescription('');
       setLabColumnsTitle('');
       setLabColumnsDescription('');
+      setIndicationsTitle('');
+      setIndicationsDescription('');
 
       if (onServiceAdded) {
         onServiceAdded(created);
@@ -428,6 +434,39 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
                     placeholder="e.g. High-precision laboratory test packages performed by certified clinical specialists right at your home."
                     value={labColumnsDescription}
                     onChange={(e) => setLabColumnsDescription(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-800 text-sm focus:outline-none focus:border-[#08709d] placeholder:text-gray-400"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Clinical Indications Section Heading */}
+            <div className="pt-2 border-t border-gray-200">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#08709d] mb-3">
+                🩺 Clinical Indications Section Heading (Optional)
+              </label>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Section Heading
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Who May Need a Blood Test at Home in Dubai?"
+                    value={indicationsTitle}
+                    onChange={(e) => setIndicationsTitle(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-800 text-sm focus:outline-none focus:border-[#08709d] placeholder:text-gray-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Section Subtitle / Description
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="e.g. You may benefit from our DHA-certified home health service if you have:"
+                    value={indicationsDescription}
+                    onChange={(e) => setIndicationsDescription(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-800 text-sm focus:outline-none focus:border-[#08709d] placeholder:text-gray-400"
                   />
                 </div>

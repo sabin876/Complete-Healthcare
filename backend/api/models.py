@@ -131,6 +131,8 @@ class Service(models.Model):
     locations = models.JSONField(default=list, blank=True)  # [{label}]
     features = models.JSONField(default=list, blank=True)  # [{title}]
     indications = models.JSONField(default=list, blank=True)  # [str]
+    indications_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom Heading for Indications / Who May Need Section")
+    indications_description = models.TextField(blank=True, default='', help_text="Custom Heading Description for Indications / Who May Need Section")
     lab_columns = models.JSONField(default=list, blank=True)  # [{title, tagline, iconBg, tests}]
     lab_columns_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom Heading for Diagnostic Test Suites / Lab Columns Section")
     lab_columns_description = models.TextField(blank=True, default='', help_text="Custom Heading Description for Diagnostic Test Suites / Lab Columns Section")

@@ -123,7 +123,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'eyebrow', 'tagline', 'description', 'icon', 'theme_color', 'image_file', 'image', 'floating_badge', 
             'benefits_title', 'benefits', 'benefits_image_file', 'benefits_image', 
             'understanding_title', 'understanding_intro', 'understanding_items', 'understanding_image_file', 'understanding_image',
-            'faqs', 'locations', 'features', 'indications', 'lab_columns', 'lab_columns_title', 'lab_columns_description', 'reasons', 'steps',
+            'faqs', 'locations', 'features', 'indications', 'indications_title', 'indications_description', 'lab_columns', 'lab_columns_title', 'lab_columns_description', 'reasons', 'steps',
             'meta_title', 'meta_description',
             'about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
             'created_at', 'updated_at'

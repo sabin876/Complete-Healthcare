@@ -538,6 +538,8 @@ def seed():
             floating_badge=s.get("floating_badge", {}),
             features=s.get("features", []),
             indications=s.get("indications", []),
+            indications_title=s.get("indications_title", f"Who May Need {s['title']}?"),
+            indications_description=s.get("indications_description", f"You may benefit from our DHA-certified {s['title']} home health service if you have:"),
             lab_columns=s.get("lab_columns", []),
             lab_columns_title=s.get("lab_columns_title", "Comprehensive Diagnostic Test Suites Covered"),
             lab_columns_description=s.get("lab_columns_description", "High-precision laboratory test packages performed by certified clinical specialists right at your home."),
