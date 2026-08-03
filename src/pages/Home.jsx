@@ -709,7 +709,7 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -25 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="max-w-4xl text-left relative top-[-35px] md:top-[-80px]"
+              className="max-w-4xl text-left relative top-0 sm:top-[-35px] md:top-[-80px] py-4 sm:py-0"
             >
               {/* Badge matching Reference Design */}
               <div 
@@ -727,7 +727,7 @@ const Home = () => {
               </div>
 
               {/* Title matching Reference Design */}
-              <h1 className="text-4xl md:text-6xl !font-normal leading-[1.15] mb-6 !text-white tracking-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl !font-normal leading-[1.15] mb-6 !text-white tracking-tight">
                 {slides[currentSlide].titlePre}
                 <span className="text-[#2ebd6e] !font-normal">
                   {slides[currentSlide].titleHighlight}

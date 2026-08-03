@@ -174,7 +174,7 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData, isEditM
         <div className={`grid grid-cols-1 ${displayIndications.length > 0 ? 'lg:grid-cols-2' : ''} gap-8 lg:gap-12 items-stretch`}>
           
           {/* Left Card: ABOUT THE SERVICE */}
-          <div className="rounded-3xl border-l-[6px] border-l-[#08709d] border-t border-r border-b border-slate-200/90 bg-white p-8 sm:p-12 lg:p-14 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between min-h-[540px]">
+          <div className="rounded-3xl border-l-[6px] border-l-[#08709d] border-t border-r border-b border-slate-200/90 bg-white p-6 sm:p-10 lg:p-14 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between min-h-0 md:min-h-[540px]">
             <div>
               <div className="mb-5">
                 <EditableText
@@ -193,7 +193,7 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData, isEditM
                 defaultText={serviceData?.about_section_title || (serviceData?.title ? `About ${serviceData.title}` : "About Blood Test at Home & Home Sample Collection")}
                 isEditMode={isEditMode}
                 tagName="h2"
-                className="text-3xl sm:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-6"
+                className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-snug mb-6"
               />
 
               <EditableText
@@ -210,7 +210,7 @@ function WhoMayNeedBloodTestSection({ indicationsList = [], serviceData, isEditM
 
           {/* Right Card: CLINICAL INDICATIONS */}
           {displayIndications.length > 0 && (
-          <div className="rounded-3xl border border-slate-200/90 bg-white p-8 sm:p-12 lg:p-14 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between min-h-[540px]">
+          <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-10 lg:p-14 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between min-h-0 md:min-h-[540px]">
             <div>
               <div className="mb-5">
                 <EditableText
@@ -743,7 +743,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 />
               </div>
               
-              <HeroTitle className="text-4xl sm:text-5xl lg:text-6xl">
+              <HeroTitle className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
                 <EditableText
                   slug={slug}
                   fieldKey="hero_title"
@@ -753,7 +753,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 />
               </HeroTitle>
               
-              <h2 className="text-lg sm:text-xl font-bold text-[#08709d] uppercase tracking-wide -mt-2">
+              <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#08709d] uppercase tracking-wide -mt-2">
                 <EditableText
                   slug={slug}
                   fieldKey="hero_tagline"
@@ -794,12 +794,12 @@ function LabServicesLanding({ slug = 'lab-services' }) {
               </div>
               
               {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4 w-full items-center mt-6">
-                <Button variant="primary" href="/contact">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3.5 sm:gap-4 w-full items-stretch sm:items-center mt-6">
+                <Button variant="primary" href="/contact" className="w-full sm:w-auto justify-center">
                   <CalendarDays size={18} />
                   <span>Book An Appointment</span>
                 </Button>
-                <Button variant="whatsapp" href="https://wa.me/97143320776" target="_blank" rel="noopener noreferrer">
+                <Button variant="whatsapp" href="https://wa.me/97143320776" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto justify-center">
                   <MessageSquare size={18} />
                   <span>WhatsApp Us</span>
                 </Button>

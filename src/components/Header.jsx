@@ -254,7 +254,14 @@ const Header = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 text-[#63b158] mr-4 md:mr-8">
+          <div className="flex items-center gap-2 sm:gap-3 text-[#63b158] mr-2 sm:mr-4 md:mr-8">
+            <a 
+              href="tel:8002679" 
+              className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#63b158] text-white text-[11px] font-extrabold uppercase shadow-sm tracking-wide shrink-0"
+            >
+              <Phone size={13} fill="currentColor" />
+              <span>800 2679</span>
+            </a>
             <div className="hidden md:flex items-center gap-4">
               <a href="https://www.facebook.com/corxhealthcare" target="_blank" rel="noopener noreferrer" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Facebook size={20} style={{ color: '#63b158' }} /></a>
               <a href="https://www.instagram.com/corx_healthcare" target="_blank" rel="noopener noreferrer" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Instagram size={20} style={{ color: '#63b158' }} /></a>
@@ -505,19 +512,19 @@ const Header = () => {
       {/* Mobile Menu */}
       <div className={`fixed inset-0 bg-white z-[60] transition-transform duration-300 transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} lg:hidden`}>
         <div className="flex flex-col h-full overflow-y-auto">
-          <div className="flex justify-between items-center p-6 border-b border-gray-100 bg-white">
-            <img src={logo} alt="CORx Healthcare Navigation Logo" className="h-24 w-auto object-contain" />
+          <div className="flex justify-between items-center p-5 sm:p-6 border-b border-gray-100 bg-white">
+            <img src={logo} alt="CORx Healthcare Navigation Logo" className="h-14 sm:h-16 w-auto object-contain" />
             <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <X size={32} className="text-secondary-color" />
+              <X size={28} className="text-secondary-color" />
             </button>
           </div>
-          <div className="p-8 flex flex-col gap-2">
+          <div className="p-6 sm:p-8 flex flex-col gap-2">
             {navLinks.map((link) => (
-              <div key={link.name} className="py-2 border-b border-gray-50 flex flex-col">
-                <div className="flex justify-between items-center py-4 group">
+              <div key={link.name} className="py-1 border-b border-gray-50 flex flex-col">
+                <div className="flex justify-between items-center py-3 group">
                   <Link 
                     to={link.path} 
-                    className="text-[17px] font-extrabold text-secondary-color uppercase tracking-wide group-hover:text-primary-color transition-colors flex-grow"
+                    className="text-[16px] sm:text-[17px] font-extrabold text-secondary-color uppercase tracking-wide group-hover:text-primary-color transition-colors flex-grow"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
@@ -566,6 +573,28 @@ const Header = () => {
                 )}
               </div>
             ))}
+
+            {/* Quick Action CTAs inside Mobile Drawer */}
+            <div className="mt-6 pt-5 border-t border-gray-100 flex flex-col gap-3">
+              <a 
+                href="tel:8002679" 
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#63b158] text-white text-sm font-bold shadow-md"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Phone size={16} fill="currentColor" />
+                <span>Call 24/7 Toll Free: 800 2679</span>
+              </a>
+              <a 
+                href="https://wa.me/971547033311" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#08709d] text-white text-sm font-bold shadow-md"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <MessageSquare size={16} />
+                <span>WhatsApp Us: +971 54 703 3311</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
