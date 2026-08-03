@@ -41,6 +41,8 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
   const [description, setDescription] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('Activity');
   const [themeColor, setThemeColor] = useState('#08709d');
+  const [metaTitle, setMetaTitle] = useState('');
+  const [metaDescription, setMetaDescription] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -72,7 +74,7 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
     setSuccessMsg('');
 
     if (!title.trim()) {
-      setErrorMsg('Service title is required.');
+      setErrorMsg('Please enter a service title.');
       return;
     }
 
@@ -90,6 +92,8 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
       description: description.trim() || tagline.trim() || title.trim(),
       icon: selectedIcon,
       theme_color: themeColor,
+      meta_title: metaTitle.trim() || undefined,
+      meta_description: metaDescription.trim() || undefined,
       parent: serviceType === 'sub' ? parseInt(selectedParentId, 10) : null,
       floating_badge: { title: 'New Service', desc: tagline.trim() || title.trim() },
     };
@@ -116,6 +120,8 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
       setSlug('');
       setTagline('');
       setDescription('');
+      setMetaTitle('');
+      setMetaDescription('');
 
       if (onServiceAdded) {
         onServiceAdded(created);
@@ -328,8 +334,8 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
                     type="button"
                     onClick={() => setThemeColor(c)}
                     style={{ backgroundColor: c }}
-                    className={`w-9 h-9 rounded-full transition-transform border-2 cursor-pointer ${
-                      themeColor === c ? 'scale-110 border-gray-900 shadow-md' : 'border-transparent hover:scale-105'
+                    className={`w-9 h-9 rounded-full transition-transform cursor-pointer ${
+                      themeColor === c ? 'ring-4 ring-slate-950/20 scale-110' : 'hover:scale-105'
                     }`}
                   />
                 ))}
@@ -354,6 +360,39 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full px-4 py-3 rounded-2xl border border-gray-200 text-gray-800 font-normal focus:outline-none focus:border-[#08709d] transition-colors placeholder:text-gray-400"
               />
+            </div>
+
+            {/* SEO Meta Title & Meta Description */}
+            <div className="pt-2 border-t border-gray-200">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#08709d] mb-3">
+                🔍 SEO & OpenGraph Meta Tags (Optional)
+              </label>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Meta Title Tag
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Best Home Nursing Services in Dubai | Corx Healthcare"
+                    value={metaTitle}
+                    onChange={(e) => setMetaTitle(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-800 text-sm focus:outline-none focus:border-[#08709d] placeholder:text-gray-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Meta Description Tag
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="e.g. Professional DHA-certified home nursing care at your doorstep in Dubai. 24/7 on-demand medical assistance..."
+                    value={metaDescription}
+                    onChange={(e) => setMetaDescription(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-800 text-sm focus:outline-none focus:border-[#08709d] placeholder:text-gray-400"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Preview Box */}

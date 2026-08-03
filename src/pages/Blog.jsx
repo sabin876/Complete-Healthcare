@@ -217,7 +217,10 @@ export default function OrthopedicArticlesPage() {
 
   React.useEffect(() => {
     fetch(`${API_BASE_URL}/api/blogs/`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) return null;
+        return res.json();
+      })
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const formatted = data.map(item => ({

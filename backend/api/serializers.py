@@ -77,7 +77,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
             request = self.context.get('request')
             if request:
                 return request.build_absolute_uri(obj.image_file.url)
-            return f"http://localhost:8000{obj.image_file.url}"
+            return obj.image_file.url
         return obj.image or 'https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop'
 
 
@@ -124,6 +124,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'benefits_title', 'benefits', 'benefits_image_file', 'benefits_image', 
             'understanding_title', 'understanding_intro', 'understanding_items', 'understanding_image_file', 'understanding_image',
             'faqs', 'locations', 'features', 'indications', 'lab_columns', 'reasons', 'steps',
+            'meta_title', 'meta_description',
             'about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
             'created_at', 'updated_at'
         ]
@@ -141,7 +142,7 @@ class ServiceSerializer(serializers.ModelSerializer):
                 request = self.context.get('request')
                 if request:
                     return request.build_absolute_uri(obj.image_file.url)
-                return f"http://localhost:8000{obj.image_file.url}"
+                return obj.image_file.url
         except Exception:
             pass
         return getattr(obj, 'image', '') or ''
@@ -152,10 +153,10 @@ class ServiceSerializer(serializers.ModelSerializer):
                 request = self.context.get('request')
                 if request:
                     return request.build_absolute_uri(obj.benefits_image_file.url)
-                return f"http://localhost:8000{obj.benefits_image_file.url}"
+                return obj.benefits_image_file.url
         except Exception:
             pass
-        return ''
+        return getattr(obj, 'benefits_image', '') or ''
 
     def get_understanding_image(self, obj):
         try:
@@ -163,10 +164,10 @@ class ServiceSerializer(serializers.ModelSerializer):
                 request = self.context.get('request')
                 if request:
                     return request.build_absolute_uri(obj.understanding_image_file.url)
-                return f"http://localhost:8000{obj.understanding_image_file.url}"
+                return obj.understanding_image_file.url
         except Exception:
             pass
-        return ''
+        return getattr(obj, 'understanding_image', '') or ''
 
     def _get_badge_field(self, obj, key):
         badge = getattr(obj, 'floating_badge', None)

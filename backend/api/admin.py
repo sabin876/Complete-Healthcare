@@ -1528,6 +1528,10 @@ class ServiceAdmin(admin.ModelAdmin):
         ('📌 General Information', {
             'fields': ('title', 'slug', 'parent', 'theme_color', 'icon', 'image_file')
         }),
+        ('🔍 SEO & OpenGraph Meta Tags', {
+            'fields': ('meta_title', 'meta_description'),
+            'description': 'Custom SEO Title and Meta Description for search engines and social media sharing previews.',
+        }),
         ('✨ Hero Section Content', {
             'fields': ('eyebrow', 'tagline', 'description', 'floating_badge', 'features')
         }),

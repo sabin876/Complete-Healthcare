@@ -505,6 +505,28 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       });
   }, [slug]);
 
+  // Dynamic SEO Meta Tags & Head Title Update
+  useEffect(() => {
+    const pageTitle = serviceData?.meta_title || (serviceData?.title ? `${serviceData.title} in Dubai | Corx Healthcare` : 'Corx Healthcare: Home Healthcare Services in Dubai, UAE');
+    const pageDesc = serviceData?.meta_description || serviceData?.description || serviceData?.tagline || 'Professional, reliable, and on-demand DHA-certified medical care at your doorstep across Dubai.';
+
+    document.title = pageTitle;
+
+    const setMetaTag = (attrName, attrVal, contentVal) => {
+      let metaElem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
+      if (!metaElem) {
+        metaElem = document.createElement('meta');
+        metaElem.setAttribute(attrName, attrVal);
+        document.head.appendChild(metaElem);
+      }
+      metaElem.setAttribute('content', contentVal);
+    };
+
+    setMetaTag('name', 'description', pageDesc);
+    setMetaTag('property', 'og:title', pageTitle);
+    setMetaTag('property', 'og:description', pageDesc);
+  }, [serviceData, slug]);
+
   const featuresList = (serviceData?.features && serviceData.features.length > 0) ? serviceData.features : labFeatures;
   const indicationsList = (serviceData?.indications && serviceData.indications.length > 0) ? serviceData.indications : bloodTestIndications;
   const labColumns = (serviceData?.lab_columns && serviceData.lab_columns.length > 0) 
@@ -623,9 +645,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 transitionDelay: "0.2s"
               }}
             >
-              {serviceData?.image_file ? (
+              {(serviceData?.image_file || serviceData?.image) ? (
                 <img 
-                  src={serviceData.image_file} 
+                  src={serviceData.image_file || serviceData.image} 
                   alt={serviceData.title || "Service"} 
                   className="w-full h-[380px] sm:h-[480px] lg:h-[540px] rounded-[32px] shadow-2xl object-cover border-[6px] border-white/90 ring-1 ring-slate-900/10 hover:scale-[1.01] transition-transform duration-500" 
                 />

@@ -533,6 +533,8 @@ def seed():
             description=s.get("description", ""),
             icon=s.get("icon", "Activity"),
             theme_color=s.get("theme_color", "#08709d"),
+            meta_title=s.get("meta_title", f"{s['title']} in Dubai | Corx Healthcare"),
+            meta_description=s.get("meta_description", s.get("description", s.get("tagline", ""))),
             floating_badge=s.get("floating_badge", {}),
             features=s.get("features", []),
             indications=s.get("indications", []),

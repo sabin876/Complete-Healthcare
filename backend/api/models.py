@@ -134,6 +134,8 @@ class Service(models.Model):
     lab_columns = models.JSONField(default=list, blank=True)  # [{title, tagline, iconBg, tests}]
     reasons = models.JSONField(default=list, blank=True)  # [{num, label, title, desc}]
     steps = models.JSONField(default=list, blank=True)  # [{title, desc}]
+    meta_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom SEO & OpenGraph Title Tag for this Service Page")
+    meta_description = models.TextField(blank=True, default='', help_text="Custom SEO & OpenGraph Meta Description for this Service Page")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
