@@ -65,14 +65,67 @@ const ScrollToTop = () => {
   return null;
 };
 
+class GlobalErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Uncaught application error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
+          <div className="bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-xl max-w-md w-full">
+            <div className="w-16 h-16 rounded-2xl bg-sky-50 text-[#08709d] flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h1 className="text-xl font-extrabold text-slate-900 mb-2">CORx Healthcare</h1>
+            <p className="text-slate-600 text-sm mb-6">
+              We experienced a temporary glitch while loading this view. Please refresh or return to the homepage.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => window.location.reload()}
+                className="px-6 py-3 rounded-xl bg-[#08709d] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#065679] transition-all cursor-pointer"
+              >
+                Reload Page
+              </button>
+              <a
+                href="/"
+                className="px-6 py-3 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs uppercase tracking-wider hover:bg-slate-200 transition-all"
+              >
+                Go Home
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <MainLayout>
-        <AnimatedRoutes />
-      </MainLayout>
-    </Router>
+    <GlobalErrorBoundary>
+      <Router>
+        <ScrollToTop />
+        <MainLayout>
+          <AnimatedRoutes />
+        </MainLayout>
+      </Router>
+    </GlobalErrorBoundary>
   );
 }
 
