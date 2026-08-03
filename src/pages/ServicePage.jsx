@@ -1212,19 +1212,16 @@ function WhyChooseCorxBloodTest({ reasonsList = [], serviceData, isEditMode, slu
   const displayReasons = reasonsList || [];
   if (displayReasons.length === 0) return null;
   return (
-    <Section variant="slate">
+    <Section variant="slate" className="overflow-hidden py-16 sm:py-24">
       <Container className="flex flex-col items-center">
-        <div className="mb-10 text-center max-w-3xl">
-          <div className="mb-2">
-            <EditableText
-              slug={slug}
-              fieldKey="why_choose_eyebrow"
-              defaultText={serviceData?.eyebrow || 'BLOOD TEST AT HOME'}
-              isEditMode={isEditMode}
-              tagName="p"
-              className="text-[#08709d] text-sm font-bold uppercase tracking-wider inline-block"
-            />
-          </div>
+        {/* Animated Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="mb-12 text-center max-w-3xl"
+        >
           <SectionTitle className="mb-4">
             <EditableText
               slug={slug}
@@ -1244,42 +1241,50 @@ function WhyChooseCorxBloodTest({ reasonsList = [], serviceData, isEditMode, slu
               multiline={true}
             />
           </Paragraph>
-        </div>
+        </motion.div>
 
+        {/* Animated Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 w-full">
           {displayReasons.map((r, i) => (
-            <Card key={i} className="flex flex-col justify-between p-6">
-              <div>
-                <div className="flex items-center justify-between w-full mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#08709d] bg-[#08709d]/10 px-3 py-1 rounded-full border border-[#08709d]/20">
-                    {r.label}
-                  </span>
-                  <span className="text-xs font-bold text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
-                    {r.num}
-                  </span>
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 0.5, delay: i * 0.12, ease: "easeOut" }}
+              whileHover={{ y: -6, transition: { duration: 0.25 } }}
+              className="h-full"
+            >
+              <Card className="h-full flex flex-col justify-between p-7 sm:p-8 border-slate-200/90 shadow-sm hover:shadow-xl hover:border-[#08709d]/30 transition-all duration-300 group">
+                <div>
+                  <div className="flex items-center justify-end w-full mb-4">
+                    <span className="text-xs font-black text-[#08709d] bg-[#08709d]/10 px-3 py-1 rounded-full border border-[#08709d]/20 tracking-wider">
+                      {r.num || `0${i + 1}`}
+                    </span>
+                  </div>
+                  <CardTitle className="mb-3 text-[#1a294a] group-hover:text-[#08709d] transition-colors duration-300">
+                    <EditableText
+                      slug={slug}
+                      fieldKey={`reason_title_${i}`}
+                      defaultText={r.title}
+                      isEditMode={isEditMode}
+                      tagName="span"
+                    />
+                  </CardTitle>
+                  <hr className="border-t border-slate-100 mb-4 group-hover:border-[#08709d]/20 transition-colors" />
+                  <Paragraph className="m-0 text-slate-600 leading-relaxed font-normal">
+                    <EditableText
+                      slug={slug}
+                      fieldKey={`reason_desc_${i}`}
+                      defaultText={r.desc}
+                      isEditMode={isEditMode}
+                      tagName="span"
+                      multiline={true}
+                    />
+                  </Paragraph>
                 </div>
-                <CardTitle className="mb-2">
-                  <EditableText
-                    slug={slug}
-                    fieldKey={`reason_title_${i}`}
-                    defaultText={r.title}
-                    isEditMode={isEditMode}
-                    tagName="span"
-                  />
-                </CardTitle>
-                <hr className="border-t border-gray-100 mb-4" />
-                <Paragraph className="m-0">
-                  <EditableText
-                    slug={slug}
-                    fieldKey={`reason_desc_${i}`}
-                    defaultText={r.desc}
-                    isEditMode={isEditMode}
-                    tagName="span"
-                    multiline={true}
-                  />
-                </Paragraph>
-              </div>
-            </Card>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </Container>
