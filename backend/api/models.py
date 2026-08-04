@@ -112,6 +112,7 @@ class BlogPost(models.Model):
 class Service(models.Model):
     parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='sub_services', help_text="Select a parent service if this is a sub-service")
     slug = models.CharField(max_length=100, unique=True, db_index=True)
+    custom_url_path = models.CharField(max_length=200, blank=True, default='', help_text="Custom URL path alias for frontend navigation (e.g. '/lab-test-at-home')")
     title = models.CharField(max_length=200)
     eyebrow = models.CharField(max_length=250, blank=True, default='')
     tagline = models.TextField(blank=True, default='')

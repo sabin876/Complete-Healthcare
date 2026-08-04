@@ -91,10 +91,12 @@ class SubServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ['id', 'name', 'title', 'slug', 'path', 'desc', 'accent', 'icon', 'parent', 'parent_title']
+        fields = ['id', 'name', 'title', 'slug', 'custom_url_path', 'path', 'desc', 'accent', 'icon', 'parent', 'parent_title']
 
     def get_path(self, obj):
-        return f'/services/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
+        if getattr(obj, 'custom_url_path', None):
+            return obj.custom_url_path
+        return f'/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
 
     def get_parent_title(self, obj):
         return obj.parent.title if getattr(obj, 'parent', None) else ''
@@ -119,7 +121,7 @@ class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = [
-            'id', 'slug', 'title', 'name', 'path', 'subtitle', 'accent', 'parent', 'sub_services',
+            'id', 'slug', 'custom_url_path', 'title', 'name', 'path', 'subtitle', 'accent', 'parent', 'sub_services',
             'eyebrow', 'tagline', 'description', 'icon', 'theme_color', 'image_file', 'image', 'floating_badge', 
             'benefits_title', 'benefits', 'benefits_image_file', 'benefits_image', 
             'understanding_title', 'understanding_intro', 'understanding_items', 'understanding_image_file', 'understanding_image',
@@ -130,11 +132,14 @@ class ServiceSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'slug': {'required': False, 'allow_blank': True},
+            'custom_url_path': {'required': False, 'allow_blank': True},
             'title': {'required': True},
         }
 
     def get_path(self, obj):
-        return f'/services/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
+        if getattr(obj, 'custom_url_path', None):
+            return obj.custom_url_path
+        return f'/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
 
     def get_image(self, obj):
         try:

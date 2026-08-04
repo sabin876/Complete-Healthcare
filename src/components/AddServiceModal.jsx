@@ -37,6 +37,7 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
   
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
+  const [customUrlPath, setCustomUrlPath] = useState('');
   const [tagline, setTagline] = useState('');
   const [description, setDescription] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('Activity');
@@ -94,6 +95,7 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
     const payload = {
       title: title.trim(),
       slug: slug.trim() || undefined,
+      custom_url_path: customUrlPath.trim() || undefined,
       tagline: tagline.trim(),
       description: description.trim() || tagline.trim() || title.trim(),
       icon: selectedIcon,
