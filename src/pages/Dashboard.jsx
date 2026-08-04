@@ -622,15 +622,7 @@ export default function Dashboard() {
                 <span>Sync API</span>
               </button>
 
-              <a
-                href="/"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-lg shadow-cyan-500/20"
-              >
-                <Globe size={15} />
-                <span>Live Website</span>
-              </a>
+
             </div>
           </div>
 
@@ -934,7 +926,7 @@ export default function Dashboard() {
                         <tr className="bg-[#0a1122] text-white text-sm font-extrabold border-b border-[#1b2742]">
                           <th className="py-4 px-4 font-montserrat">Service Title</th>
                           <th className="py-4 px-4 font-montserrat">Parent Category</th>
-                          <th className="py-4 px-4 text-center font-montserrat w-16">View</th>
+
                           <th className="py-4 px-4 text-center font-montserrat font-bold text-white text-sm w-24">Edit</th>
                           <th className="py-4 px-4 text-center font-montserrat font-bold text-white text-sm w-24">Delete</th>
                         </tr>
@@ -964,18 +956,7 @@ export default function Dashboard() {
                                   {parentObj ? (parentObj.name || parentObj.title) : 'Standalone'}
                                 </span>
                               </td>
-                              {/* View Icon Link */}
-                              <td className="py-4 px-4 text-center">
-                                <a
-                                  href={`/services/${sub.slug}`}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-emerald-500/20 text-emerald-400 transition-colors"
-                                  title="View Public Page"
-                                >
-                                  <ExternalLink size={18} className="stroke-[2.2]" />
-                                </a>
-                              </td>
+
                               {/* Edit Icon -> EXACT MATCH TO SCREENSHOT (Cyan outline pencil icon) */}
                               <td className="py-4 px-4 text-center">
                                 <a
@@ -1517,9 +1498,7 @@ export default function Dashboard() {
                                 >
                                   <Edit3 size={14} />
                                 </a>
-                                <Link to={`/services/${s.slug}`} target="_blank" className="text-slate-400 hover:text-emerald-400" title="View Live Page">
-                                  <ExternalLink size={14} />
-                                </Link>
+
                               </div>
                             </div>
                           ))
