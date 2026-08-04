@@ -115,22 +115,35 @@ const Header = () => {
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const parents = data.filter(s => s.parent === null);
-          const mapped = parents.map(s => ({
-            id: s.id,
-            name: s.name || s.title,
-            path: s.path || `/${s.slug}`,
-            icon: ICON_MAP[s.icon] || Activity,
-            subtitle: s.subtitle || s.tagline || '',
-            badge: s.floating_badge && s.floating_badge.title ? s.floating_badge.title : '',
-            accent: s.accent || s.theme_color || '#08709d',
-            subItems: (s.sub_services || []).map(sub => ({
-              id: sub.id,
-              name: sub.name,
-              path: sub.path || `/${sub.slug}`,
-              icon: ICON_MAP[sub.icon] || CheckCircle2,
-              desc: sub.desc || ''
-            }))
-          }));
+          const mapped = parents.map(s => {
+            const rawSlug = (s.slug || '').toLowerCase();
+            const isPhysio = rawSlug.includes('physio');
+            const targetPath = (s.custom_url_path && s.custom_url_path.trim()) 
+              ? s.custom_url_path 
+              : (isPhysio ? '/physiotherapy-at-home-in-dubai/' : (s.path || `/${s.slug}`));
+            return {
+              id: s.id,
+              name: s.name || s.title,
+              path: targetPath,
+              icon: ICON_MAP[s.icon] || Activity,
+              subtitle: s.subtitle || s.tagline || '',
+              badge: s.floating_badge && s.floating_badge.title ? s.floating_badge.title : '',
+              accent: s.accent || s.theme_color || '#08709d',
+              subItems: (s.sub_services || []).map(sub => ({
+                id: sub.id,
+                name: sub.name,
+                path: sub.custom_url_path || sub.path || `/${sub.slug}`,
+                icon: ICON_MAP[sub.icon] || CheckCircle2,
+                desc: sub.desc || ''
+              }))
+            };
+          });
+
+          const hasPhysio = mapped.some(m => (m.path && m.path.includes('physio')) || (m.name && m.name.toLowerCase().includes('physio')));
+          if (!hasPhysio) {
+            mapped.unshift(defaultServices[0]);
+          }
+
           setServicesDropdown(mapped);
         }
       })
