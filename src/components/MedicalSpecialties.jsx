@@ -18,7 +18,7 @@ const specialties = [
         <path d="M16 6a6 6 0 0 1 0 5" />
       </svg>
     ),
-    link: "/contact"
+    link: "/book-an-appointment"
   },
   {
     title: "Gynaecology Department",
@@ -30,7 +30,7 @@ const specialties = [
         <path d="M12 13v8M9 17h6" />
       </svg>
     ),
-    link: "/contact"
+    link: "/book-an-appointment"
   },
   {
     title: "Internal Medicine",
@@ -41,7 +41,7 @@ const specialties = [
         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
       </svg>
     ),
-    link: "/contact"
+    link: "/book-an-appointment"
   },
   {
     title: "Neurology Department",
@@ -53,7 +53,7 @@ const specialties = [
         <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 0-3.12 3 3 0 0 0 0-4.88 2.5 2.5 0 0 0 0-3.12A2.5 2.5 0 0 0 14.5 2Z" />
       </svg>
     ),
-    link: "/contact"
+    link: "/book-an-appointment"
   }
 ];
 

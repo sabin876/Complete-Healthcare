@@ -709,7 +709,7 @@ const Home = () => {
               {/* Action Buttons matching Reference Design */}
               <div className="flex flex-wrap gap-4 mt-6">
                 <Link 
-                  to="/contact" 
+                  to="/book-an-appointment" 
                   className="inline-flex items-center gap-2 hover:scale-[1.02] text-white font-semibold text-base transition-all duration-200 cursor-pointer shadow-md"
                   style={{
                     backgroundColor: '#004e92',
@@ -1027,7 +1027,7 @@ const Home = () => {
                     className="relative group inline-block"
                   >
                     <Link 
-                      to="/contact" 
+                      to="/book-an-appointment" 
                       className="inline-flex items-center gap-2 hover:scale-[1.02] text-white font-semibold text-base transition-all duration-200 cursor-pointer shadow-md"
                       style={{
                         backgroundColor: '#004e92',

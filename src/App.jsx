@@ -45,7 +45,9 @@ const AnimatedRoutes = () => {
         <Route path="/blog/:id" element={<BlogDetails />} />
         <Route path="/blog/details" element={<BlogDetails />} />
         <Route path="/locations" element={<Locations />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/contact" element={<Navigate to="/book-an-appointment" replace />} />
+        <Route path="/book-an-appointment" element={<Contact />} />
+        <Route path="/book-an-appointment/" element={<Contact />} />
         <Route path="/team" element={<Team />} />
 
         {/* Dynamic Flat Service Route */}

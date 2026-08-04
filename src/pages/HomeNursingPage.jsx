@@ -591,7 +591,7 @@ function NursingFAQ() {
 
         <p className="nursing-faq-footer">
           Still have questions?{' '}
-          <a href="/contact">Contact our support team</a>
+          <a href="/book-an-appointment">Contact our support team</a>
         </p>
       </div>
     </section>

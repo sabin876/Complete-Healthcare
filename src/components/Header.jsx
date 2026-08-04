@@ -174,8 +174,8 @@ const Header = () => {
       accent: '#2ebd6e',
       dropdown: servicesDropdown
     },
-    { name: 'Book Appointment', path: '/contact', icon: Calendar, accent: '#f59e0b' },
-    { name: 'Contact us', path: '/contact', icon: Phone, accent: '#08709d' },
+    { name: 'Book Appointment', path: '/book-an-appointment', icon: Calendar, accent: '#f59e0b' },
+    { name: 'Contact us', path: '/book-an-appointment', icon: Phone, accent: '#08709d' },
 
     { 
       name: 'Language', 

@@ -486,7 +486,7 @@ export default function OrthopedicArticlesPage() {
             Book a consultation with Dr. Ulhas Sonar for personalized assessment and expert orthopedic care.
           </p>
           <Link
-            to="/contact"
+            to="/book-an-appointment"
             style={{
               display: "inline-flex",
               alignItems: "center",
