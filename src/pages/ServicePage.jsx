@@ -864,19 +864,18 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       {/* ── WHO MAY NEED SECTION ── */}
       <WhoMayNeedBloodTestSection indicationsList={indicationsList} serviceData={mergedData} isEditMode={isEditMode} slug={slug} />
 
-      {/* ── CONDITIONS / LAB COLUMNS SECTION (Hidden for Doctor On Call services) ── */}
-      {(!cleanSlug.includes('doctor') && ((mergedData?.lab_columns && mergedData.lab_columns.length > 0) || Boolean(mergedData?.lab_columns_title) || Boolean(mergedData?.lab_columns_description))) && (
+      {/* ── CONDITIONS / LAB COLUMNS SECTION ── */}
       <Section variant="warm">
         <Container className="flex flex-col items-center">
           <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
             <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08709d]/10 text-[#08709d] text-xs font-bold uppercase tracking-wider mb-3">
-              ⊙ Diagnostic Test Suites
+              ⊙ Covered Packages & Categories
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#1a294a] tracking-tight leading-snug font-montserrat mb-3">
               <EditableText
                 slug={slug}
                 fieldKey="lab_columns_title"
-                defaultText={mergedData?.lab_columns_title || mergedData?.comprehensive_section_title || "Comprehensive Diagnostic Test Suites Covered"}
+                defaultText={mergedData?.lab_columns_title || mergedData?.comprehensive_section_title || (mergedData?.title ? `${mergedData.title} Packages & Coverage` : "Comprehensive Service Packages Covered")}
                 isEditMode={isEditMode}
                 tagName="span"
               />
@@ -885,7 +884,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
               <EditableText
                 slug={slug}
                 fieldKey="lab_columns_description"
-                defaultText={mergedData?.lab_columns_description || "High-precision laboratory test packages performed by certified clinical specialists right at your home."}
+                defaultText={mergedData?.lab_columns_description || (mergedData?.title ? `Structured ${mergedData.title.toLowerCase()} packages performed by DHA-certified clinical specialists right at your home.` : "High-precision healthcare service packages performed by certified clinical specialists right at your home.")}
                 isEditMode={isEditMode}
                 tagName="span"
                 multiline={true}
@@ -935,7 +934,6 @@ function LabServicesLanding({ slug = 'lab-services' }) {
           </div>
         </Container>
       </Section>
-      )}
 
       {/* ── THREE STEPS PROCESS SECTION ── */}
       <ThreeStepsLabProcessSection stepsList={stepsList} serviceData={mergedData} isEditMode={isEditMode} slug={slug} />
