@@ -583,6 +583,97 @@ export const servicesData = {
   }
 };
 
+// Specialized Physiotherapy Sub-services
+servicesData['geriatric-physiotherapy'] = {
+  ...servicesData['physiotherapy'],
+  title: "Geriatric Physiotherapy at Home",
+  eyebrow: "Specialized Senior Mobility & Fall Prevention in Dubai",
+  tagline: "Helping seniors maintain independence, balance, and pain-free movement at home.",
+  description: "Aging can impact joint flexibility, muscle strength, and balance. Our DHA-licensed geriatric physiotherapists visit senior patients at home to deliver safe, low-impact exercises, gait training, and fall-prevention routines tailored for senior comfort.",
+  about_section_title: "About Senior & Geriatric Physiotherapy at Home",
+  indications_title: "Who Needs Geriatric Physiotherapy?",
+  indications: [
+    "Senior citizens experiencing balance issues or frequent falls",
+    "Post-stroke or neurological mobility impairment in elderly",
+    "Arthritis, joint stiffness, and chronic hip/knee pain",
+    "Post-hip replacement or orthopedic surgery recovery",
+    "General muscle weakness and difficulty standing or walking",
+    "Parkinson's disease mobility and gait maintenance"
+  ]
+};
+
+servicesData['chest-physiotherapy'] = {
+  ...servicesData['physiotherapy'],
+  title: "Chest & Respiratory Physiotherapy",
+  eyebrow: "At-Home Cardiorespiratory Rehabilitation in Dubai",
+  tagline: "Improve breathing, clear lung secretions, and boost lung capacity at home.",
+  description: "Recovering from pneumonia, COPD, bronchitis, or chest surgery? Our specialized respiratory physical therapists provide chest percussion, postural drainage, breathing exercises, and lung expansion therapy in the comfort of your residence.",
+  about_section_title: "About Chest & Respiratory Physiotherapy",
+  indications_title: "Who Benefits from Chest Physiotherapy?",
+  indications: [
+    "Patients recovering from pneumonia or chest infections",
+    "Chronic Obstructive Pulmonary Disease (COPD) management",
+    "Post-cardiac or abdominal surgery respiratory recovery",
+    "Bronchiectasis, asthma, and chronic mucus buildup",
+    "Bedridden patients needing lung secretion clearance",
+    "Shortness of breath and reduced lung capacity support"
+  ]
+};
+
+servicesData['neurological-rehab'] = {
+  ...servicesData['physiotherapy'],
+  title: "Neurological Rehabilitation at Home",
+  eyebrow: "Stroke, Parkinson's & Neurological Care in Dubai",
+  tagline: "Restoring neuromuscular function, motor skills, and physical independence.",
+  description: "Our DHA-certified neuro-physiotherapists specialize in rehabilitation for stroke recovery, Parkinson's disease, multiple sclerosis, and spinal cord injuries. We provide structured, task-oriented physical therapy to retrain brain and body pathways.",
+  about_section_title: "About Neurological Rehabilitation at Home",
+  indications_title: "Who Needs Neurological Rehabilitation?",
+  indications: [
+    "Post-stroke hemiplegia and arm/leg weakness recovery",
+    "Parkinson's disease balance, tremor, and gait training",
+    "Multiple Sclerosis (MS) mobility and fatigue management",
+    "Spinal cord injury and peripheral neuropathy rehabilitation",
+    "Traumatic brain injury (TBI) motor skill retraining",
+    "Balance disorders, vertigo, and ataxia movement therapy"
+  ]
+};
+
+servicesData['sports-injury-rehab'] = {
+  ...servicesData['physiotherapy'],
+  title: "Sports Injury Rehabilitation at Home",
+  eyebrow: "Advanced Athletic Recovery & Joint Mobilization in Dubai",
+  tagline: "Fast-track your athletic recovery and return to peak performance safely.",
+  description: "Sustained a ligament tear, ankle sprain, tendonitis, or muscle strain? Our experienced sports physiotherapists bring targeted manual therapy, joint mobilization, and sport-specific conditioning directly to your home or hotel room.",
+  about_section_title: "About Sports Injury Rehabilitation at Home",
+  indications_title: "Who Needs Sports Injury Rehabilitation?",
+  indications: [
+    "ACL/MCL knee ligament tears and post-op rehabilitation",
+    "Ankle sprains, hamstring strains, and calf tears",
+    "Rotator cuff tendonitis and shoulder impingement",
+    "Tennis elbow, golfer's elbow, and wrist injuries",
+    "Runner's knee, shin splints, and Achilles tendonitis",
+    "Post-fracture joint stiffness and mobility restoration"
+  ]
+};
+
+servicesData['back-pain-treatment'] = {
+  ...servicesData['physiotherapy'],
+  title: "Back & Neck Pain Physiotherapy",
+  eyebrow: "Spine Realignment & Chronic Pain Relief in Dubai",
+  tagline: "Targeted spinal therapy, posture correction, and lasting pain relief.",
+  description: "Suffering from sciatica, herniated discs, lower back stiffness, or neck tension? Our spine rehabilitation specialists provide targeted manual therapy, core stabilization, and ergonomic guidance to eliminate back pain safely at your home.",
+  about_section_title: "About Back & Neck Pain Physiotherapy",
+  indications_title: "Who Needs Back & Neck Pain Therapy?",
+  indications: [
+    "Lower back pain, lumbago, and muscle spasms",
+    "Sciatica and radiating nerve pain down the leg",
+    "Herniated or bulging disc pain management",
+    "Cervical neck stiffness, headaches, and tension",
+    "Postural dysfunction from long desk hours",
+    "Spinal stenosis and degenerative disc disease"
+  ]
+};
+
 // Aliases for API database slugs
 servicesData['docotor-on-call'] = servicesData['doctor-on-call'];
 servicesData['home-nursing'] = servicesData['nursing'];
@@ -593,13 +684,8 @@ servicesData['iv-therapy-iv-drip'] = servicesData['iv-therapy'];
 servicesData['physiotherapy-services'] = servicesData['physiotherapy'];
 servicesData['Physiotherapy-Services'] = servicesData['physiotherapy'];
 servicesData['physiotherapy-at-home-in-dubai'] = servicesData['physiotherapy'];
-servicesData['physiotherapy'] = servicesData['physiotherapy'];
-servicesData['geriatric-physiotherapy'] = servicesData['physiotherapy'];
-servicesData['chest-physiotherapy'] = servicesData['physiotherapy'];
-servicesData['neurological-rehab'] = servicesData['physiotherapy'];
-servicesData['sports-injury-rehab'] = servicesData['physiotherapy'];
-servicesData['back-pain-treatment'] = servicesData['physiotherapy'];
 servicesData['nurse-at-home-for-injection'] = servicesData['injection-at-home'];
 servicesData['wound-care-service'] = servicesData['wound-care'];
 servicesData['oxygen-theraphy'] = servicesData['oxygen-therapy'];
+
 
