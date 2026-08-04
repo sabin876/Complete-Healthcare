@@ -70,7 +70,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
         model = BlogPost
         fields = [
             'id', 'title', 'slug', 'category', 'date', 'author', 'image', 'image_file',
-            'excerpt', 'read_time', 'content', 'created_at', 'updated_at'
+            'excerpt', 'read_time', 'content', 'meta_title', 'meta_description', 'created_at', 'updated_at'
         ]
 
     def get_slug(self, obj):

@@ -138,13 +138,53 @@ export default function BlogDetails() {
               date: data.date || 'May 22, 2026',
               heroImage: data.image && !data.image.includes('placeholder') ? data.image : 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80',
               tags: [data.category || 'Healthcare', 'Recovery'],
-              content: data.content || `<p>${data.excerpt}</p>`
+              content: data.content || `<p>${data.excerpt}</p>`,
+              meta_title: data.meta_title || undefined,
+              meta_description: data.meta_description || undefined,
+              excerpt: data.excerpt || undefined
             });
           }
         })
         .catch(err => console.log('Django API offline, using static details:', err));
     }
   }, [targetParam]);
+
+  useEffect(() => {
+    if (!post) return;
+
+    const pageTitle = post.meta_title || (post.title ? `${post.title} | Corx Healthcare Blog Dubai` : 'Corx Home Healthcare Blog');
+    const pageDesc = post.meta_description || post.excerpt || (post.title ? `Read ${post.title} on Corx Home Healthcare Blog.` : 'Explore the Corx Home Healthcare Blog for expert health tips, home care advice, and wellness guides.');
+
+    document.title = pageTitle;
+
+    const setMetaTag = (attrName, attrVal, contentVal) => {
+      let metaElem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
+      if (!metaElem) {
+        metaElem = document.createElement('meta');
+        metaElem.setAttribute(attrName, attrVal);
+        document.head.appendChild(metaElem);
+      }
+      metaElem.setAttribute('content', contentVal);
+    };
+
+    setMetaTag('name', 'description', pageDesc);
+    setMetaTag('property', 'og:title', pageTitle);
+    setMetaTag('property', 'og:description', pageDesc);
+    setMetaTag('property', 'og:type', 'article');
+    if (post.heroImage) {
+      setMetaTag('property', 'og:image', post.heroImage);
+    }
+    setMetaTag('property', 'twitter:title', pageTitle);
+    setMetaTag('property', 'twitter:description', pageDesc);
+
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', window.location.href);
+  }, [post]);
 
   const prevPost = blogDatabase.find((p) => p.id === articleId - 1) || blogDatabase[blogDatabase.length - 1];
   const nextPost = blogDatabase.find((p) => p.id === articleId + 1) || blogDatabase[0];

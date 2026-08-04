@@ -272,6 +272,8 @@ export default function OrthopedicArticlesPage() {
             author: item.author || 'Dr. Ulhas Sonar',
             date: item.date || '2026-05-30',
             image: item.image && !item.image.includes('placeholder') ? item.image : DUMMY_IMAGE,
+            meta_title: item.meta_title,
+            meta_description: item.meta_description,
           }));
           setBlogPostsList(formatted);
         }

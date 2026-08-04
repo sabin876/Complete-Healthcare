@@ -103,6 +103,8 @@ class BlogPost(models.Model):
     excerpt = models.TextField(blank=True, default='')
     read_time = models.CharField(max_length=50, default='5 min read')
     content = models.TextField(blank=True, default='')
+    meta_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom SEO & OpenGraph Title Tag for this Blog Post")
+    meta_description = models.TextField(blank=True, default='', help_text="Custom SEO & OpenGraph Meta Description for this Blog Post")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

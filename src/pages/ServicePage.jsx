@@ -749,7 +749,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
         iconBg: col.iconBg || defaultLabColumns[idx % defaultLabColumns.length]?.iconBg,
         delay: 0.05 + idx * 0.07
       })) 
-    : (isLabPage ? defaultLabColumns : []);
+    : [];
   const reasonsList = getFallbackReasons(cleanSlug, mergedData);
   const stepsList = getFallbackSteps(cleanSlug, mergedData);
   const faqList = getFallbackFaqs(cleanSlug, mergedData);

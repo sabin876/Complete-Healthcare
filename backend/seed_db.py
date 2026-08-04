@@ -108,7 +108,9 @@ def seed():
             image=post["image"],
             excerpt=post["excerpt"],
             read_time=post["read_time"],
-            content=post["content"]
+            content=post["content"],
+            meta_title=post.get("meta_title", f"{post['title']} | Corx Healthcare Blog Dubai"),
+            meta_description=post.get("meta_description", post["excerpt"])
         )
     print(f"Successfully seeded {len(all_posts_data)} blog posts.")
 

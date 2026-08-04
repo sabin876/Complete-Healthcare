@@ -1446,10 +1446,15 @@ class BlogPostAdminForm(forms.ModelForm):
         required=False,
         help_text="Brief summary snippet displayed on article cards"
     )
-    content = forms.CharField(
-        widget=RichTextEditorWidget(),
+    meta_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
         required=False,
-        help_text="Full article body content: Use formatting toolbar for Headings, Bold, Lists, Pull Quotes, Links & Images."
+        help_text="Custom HTML <title> tag for search engines & social previews (leave blank to auto-use article title)"
+    )
+    meta_description = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 14.5px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
+        required=False,
+        help_text="Custom meta description tag for search engines & social previews (leave blank to auto-use article excerpt)"
     )
 
     class Meta:
@@ -1581,7 +1586,11 @@ class BlogPostAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('📰 Article Header & Info', {
-            'fields': ('title', 'category', 'author', 'date', 'read_time')
+            'fields': ('title', 'slug', 'category', 'author', 'date', 'read_time')
+        }),
+        ('🔍 SEO & OpenGraph Meta Tags', {
+            'fields': ('meta_title', 'meta_description'),
+            'description': 'Custom SEO Title and Meta Description for search engines, Google indexing, and social media sharing.',
         }),
         ('🖼️ Featured Media & Excerpt', {
             'fields': ('image_file', 'image', 'excerpt')
