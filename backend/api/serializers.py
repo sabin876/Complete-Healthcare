@@ -100,8 +100,10 @@ class SubServiceSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'title', 'slug', 'custom_url_path', 'path', 'desc', 'accent', 'icon', 'parent', 'parent_title']
 
     def get_path(self, obj):
-        if getattr(obj, 'custom_url_path', None):
-            return obj.custom_url_path
+        cpath = getattr(obj, 'custom_url_path', None)
+        if cpath and isinstance(cpath, str) and cpath.strip():
+            path_str = cpath.strip()
+            return path_str if path_str.startswith('/') else f'/{path_str}'
         return f'/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
 
     def get_parent_title(self, obj):
@@ -161,8 +163,10 @@ class ServiceSerializer(serializers.ModelSerializer):
         return super().to_internal_value(mutable_data)
 
     def get_path(self, obj):
-        if getattr(obj, 'custom_url_path', None):
-            return obj.custom_url_path
+        cpath = getattr(obj, 'custom_url_path', None)
+        if cpath and isinstance(cpath, str) and cpath.strip():
+            path_str = cpath.strip()
+            return path_str if path_str.startswith('/') else f'/{path_str}'
         return f'/{obj.slug}' if getattr(obj, 'slug', None) else '/services'
 
     def get_image(self, obj):

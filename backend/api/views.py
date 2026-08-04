@@ -305,11 +305,19 @@ class ServiceViewSet(viewsets.ModelViewSet):
                 self.check_object_permissions(self.request, obj)
                 return obj
 
-        # 2. Exact slug or custom_url_path match
-        obj = queryset.filter(slug__iexact=slug_val).first() or queryset.filter(custom_url_path__iexact=slug_val).first() or queryset.filter(custom_url_path__iexact=f'/{slug_val}').first()
-        if obj:
-            self.check_object_permissions(self.request, obj)
-            return obj
+        # 2. Robust slug and custom_url_path matching (normalizes leading/trailing slashes)
+        for item in queryset:
+            item_slug = (item.slug or '').strip().lower()
+            item_cpath = (item.custom_url_path or '').strip().lower()
+            clean_cpath = item_cpath.strip('/')
+
+            if item_slug and (item_slug == slug_val or item_slug.strip('/') == slug_val):
+                self.check_object_permissions(self.request, item)
+                return item
+
+            if item_cpath and (item_cpath == slug_val or clean_cpath == slug_val or item_cpath == f'/{slug_val}' or item_cpath == f'/{slug_val}/'):
+                self.check_object_permissions(self.request, item)
+                return item
 
         # 3. Keyword / Substring / Multi-word match (e.g. 'elderly-care' -> 'elderly-home-care')
         if len(slug_val) >= 3:

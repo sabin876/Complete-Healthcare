@@ -125,9 +125,9 @@ const Header = () => {
           const mapped = parents.map(s => {
             const rawSlug = (s.slug || '').toLowerCase();
             const isPhysio = rawSlug.includes('physio');
-            const targetPath = (s.custom_url_path && s.custom_url_path.trim()) 
-              ? s.custom_url_path 
-              : (isPhysio ? '/physiotherapy-at-home-in-dubai/' : (s.path || `/${s.slug}`));
+            const cPath = (s.custom_url_path && s.custom_url_path.trim()) ? s.custom_url_path.trim() : '';
+            const formattedCPath = cPath ? (cPath.startsWith('/') ? cPath : `/${cPath}`) : '';
+            const targetPath = formattedCPath || (isPhysio ? '/physiotherapy-at-home-in-dubai/' : (s.path || `/${s.slug}`));
             return {
               id: s.id,
               name: s.name || s.title,
@@ -136,13 +136,17 @@ const Header = () => {
               subtitle: s.subtitle || s.tagline || '',
               badge: s.floating_badge && s.floating_badge.title ? s.floating_badge.title : '',
               accent: s.accent || s.theme_color || '#08709d',
-              subItems: (s.sub_services || []).map(sub => ({
-                id: sub.id,
-                name: sub.name,
-                path: sub.custom_url_path || sub.path || `/${sub.slug}`,
-                icon: ICON_MAP[sub.icon] || CheckCircle2,
-                desc: sub.desc || ''
-              }))
+              subItems: (s.sub_services || []).map(sub => {
+                const subCPath = (sub.custom_url_path && sub.custom_url_path.trim()) ? sub.custom_url_path.trim() : '';
+                const formattedSubPath = subCPath ? (subCPath.startsWith('/') ? subCPath : `/${subCPath}`) : (sub.path || `/${sub.slug}`);
+                return {
+                  id: sub.id,
+                  name: sub.name,
+                  path: formattedSubPath.startsWith('/') ? formattedSubPath : `/${formattedSubPath}`,
+                  icon: ICON_MAP[sub.icon] || CheckCircle2,
+                  desc: sub.desc || ''
+                };
+              })
             };
           });
 
