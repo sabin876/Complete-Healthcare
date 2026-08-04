@@ -3,6 +3,7 @@ import { User, Calendar, ArrowRight, Search, Tag, BookOpen, PenLine, HeartPulse,
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { API_BASE_URL } from "../config/api";
+import heroVideo from "../assets/Hero.mp4";
 
 
 const DUMMY_IMAGE =
@@ -281,22 +282,40 @@ export default function OrthopedicArticlesPage() {
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Poppins', 'Inter', sans-serif", paddingBottom: "50px" }}>
 
-      {/* ── PREMIUM BLOG HERO HEADING ── */}
-      <div className="relative w-full overflow-hidden bg-gradient-to-br from-[#0a1628] via-[#08709d] to-[#063d57]" style={{ paddingTop: "120px", paddingBottom: "80px" }}>
+      {/* ── PREMIUM BLOG HERO HEADING WITH HOME HERO VIDEO ── */}
+      <div className="relative w-full overflow-hidden bg-black" style={{ paddingTop: "120px", paddingBottom: "80px" }}>
+
+        {/* Background Video (Hero.mp4 - Same as Home Page) */}
+        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover opacity-80"
+          >
+            <source src={heroVideo} type="video/mp4" />
+          </video>
+
+          {/* Deep Blue & Dark Overlay matching Home Page */}
+          <div className="absolute inset-0 z-[2] bg-gradient-to-br from-[#0c2e56]/90 via-[#0b2848]/80 to-[#071f3b]/90 mix-blend-multiply pointer-events-none"></div>
+          <div className="absolute inset-0 z-[2] bg-gradient-to-r from-black/50 via-transparent to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 z-[2] bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+        </div>
 
         {/* Animated Floating Orbs */}
         <motion.div
           animate={{ scale: [1, 1.3, 1], x: [0, 60, 0], y: [0, -40, 0], opacity: [0.25, 0.45, 0.25] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#38bdf8]/20 via-[#08709d]/15 to-transparent blur-[120px] pointer-events-none"
+          className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#38bdf8]/20 via-[#08709d]/15 to-transparent blur-[120px] pointer-events-none z-[3]"
         />
         <motion.div
           animate={{ scale: [1, 1.2, 1], x: [0, -40, 0], y: [0, 50, 0], opacity: [0.2, 0.4, 0.2] }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-          className="absolute bottom-0 -left-24 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-emerald-500/20 via-[#08709d]/10 to-transparent blur-[100px] pointer-events-none"
+          className="absolute bottom-0 -left-24 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-emerald-500/20 via-[#08709d]/10 to-transparent blur-[100px] pointer-events-none z-[3]"
         />
         {/* Dot Grid Overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.04] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.04] pointer-events-none z-[3]" />
 
         <div className="relative z-10 max-w-[1140px] mx-auto px-6 text-center">
 
