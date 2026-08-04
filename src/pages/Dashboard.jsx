@@ -6,9 +6,10 @@ import {
   LayoutDashboard, CornerDownRight, Edit3, X, ArrowRight,
   ListChecks, Image as ImageIcon, BookOpen, ArrowUp, ArrowDown, 
   Search, Eye, EyeOff, Zap, Sliders, AlertCircle,
-  TrendingUp, ArrowUpRight, Server, Globe, Filter, ChevronRight
+  TrendingUp, ArrowUpRight, Server, Globe, Filter, ChevronRight, FileText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/logo.webp';
 import { API_BASE_URL } from '../config/api';
 import { Container } from '../components/ui';
 
@@ -538,21 +539,19 @@ export default function Dashboard() {
 
       <div className="flex min-h-screen">
         
-        {/* Futuristic Command Sidebar */}
+        {/* Futuristic Command Sidebar with CORx Official Logo */}
         <aside className="w-72 bg-[#090f1e]/90 border-r border-slate-800/80 p-6 flex flex-col justify-between hidden xl:flex shrink-0 backdrop-blur-2xl">
           <div>
-            {/* Logo */}
+            {/* CORx Logo Brand Section */}
             <div className="flex items-center gap-3 mb-10 pb-6 border-b border-slate-800/80">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 via-teal-500 to-emerald-400 p-0.5 shadow-lg shadow-cyan-500/20">
-                <div className="w-full h-full bg-[#090f1e] rounded-[14px] flex items-center justify-center text-cyan-400 font-black">
-                  <Zap size={22} />
-                </div>
+              <div className="p-1.5 rounded-2xl bg-white/10 border border-white/20 shadow-lg shadow-cyan-500/10 backdrop-blur-md shrink-0">
+                <img src={logo} alt="CORx Healthcare Logo" className="h-9 w-auto object-contain" />
               </div>
               <div>
                 <h1 className="text-lg font-black tracking-wider uppercase font-montserrat bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">
-                  Danjo Admin
+                  CORx Admin
                 </h1>
-                <p className="text-[10px] text-slate-400 font-mono font-bold tracking-widest uppercase">Healthcare Suite</p>
+                <p className="text-[10px] text-slate-400 font-mono font-bold tracking-widest uppercase">Healthcare Hub</p>
               </div>
             </div>
 
@@ -665,15 +664,18 @@ export default function Dashboard() {
           
           {/* Top Bar for Mobile & Quick Actions */}
           <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-800/80 flex-wrap gap-4">
-            <div>
-              <div className="flex items-center gap-2 text-xs text-cyan-400 font-mono font-bold uppercase tracking-wider mb-1">
-                <span>Danjo Executive Administration</span>
-                <ChevronRight size={14} />
-                <span className="text-slate-300">{activeTab}</span>
+            <div className="flex items-center gap-4">
+              <img src={logo} alt="CORx Healthcare" className="h-10 w-auto bg-white/10 p-1.5 rounded-2xl border border-white/20 shadow-md xl:hidden" />
+              <div>
+                <div className="flex items-center gap-2 text-xs text-cyan-400 font-mono font-bold uppercase tracking-wider mb-1">
+                  <span>CORx Healthcare Admin</span>
+                  <ChevronRight size={14} />
+                  <span className="text-slate-300">{activeTab}</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-black tracking-tight font-montserrat text-white">
+                  Content & Services Control Center
+                </h2>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight font-montserrat text-white">
-                Content & Services Control Center
-              </h2>
             </div>
 
             <div className="flex items-center gap-3">
@@ -820,7 +822,7 @@ export default function Dashboard() {
                             <button
                               type="button"
                               onClick={() => handleOpenEditModal(sub)}
-                              className="px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                              className="px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                             >
                               <Edit3 size={14} />
                               <span>Edit</span>
@@ -873,7 +875,7 @@ export default function Dashboard() {
           {activeTab === 'subservices' && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               
-              {/* CREATE SUB-SERVICE FORM */}
+              {/* CREATE SUB-SERVICE FORM WITH ENHANCED INPUT FIELDS */}
               <div className="lg:col-span-5 bg-[#0a1224]/90 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
                 <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
                   <div className="w-11 h-11 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold">
@@ -888,16 +890,16 @@ export default function Dashboard() {
                 </div>
 
                 <form onSubmit={handleAddSubService} className="space-y-5">
-                  <div className="bg-[#0f1933] p-4.5 rounded-2xl border border-slate-800">
-                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 mb-2 flex items-center gap-2">
+                  <div className="bg-[#0f1933] p-4.5 rounded-2xl border border-slate-800 space-y-2">
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
                       <Layers size={15} />
                       <span>Select Parent Service</span>
-                      <span className="text-rose-500">*</span>
+                      <span className="text-rose-400">*</span>
                     </label>
                     <select
                       value={selectedParentId}
                       onChange={(e) => setSelectedParentId(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-700 bg-[#060b17] text-white font-bold text-xs focus:outline-none focus:border-cyan-500"
+                      className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white font-bold text-xs focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner transition-all cursor-pointer"
                     >
                       {parentServices.map((p) => {
                         const count = servicesData.filter((s) => s.parent === p.id).length;
@@ -911,28 +913,31 @@ export default function Dashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">
-                      Sub-Service Title <span className="text-rose-500">*</span>
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-2">
+                      <FileText size={15} className="text-cyan-400" />
+                      <span>Sub-Service Title</span>
+                      <span className="text-rose-400">*</span>
                     </label>
                     <input
                       type="text"
                       placeholder="e.g. Night Care Nurse, Doctor on Call"
                       value={subTitle}
                       onChange={(e) => setSubTitle(e.target.value)}
-                      className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs font-bold focus:outline-none focus:border-cyan-500"
+                      className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner transition-all placeholder-slate-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">
-                      Tagline / Description
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-2">
+                      <BookOpen size={15} className="text-cyan-400" />
+                      <span>Tagline / Description</span>
                     </label>
                     <textarea
                       rows={3}
                       placeholder="e.g. 24/7 dedicated overnight clinical care at your doorstep in Dubai."
                       value={subTagline}
                       onChange={(e) => setSubTagline(e.target.value)}
-                      className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs focus:outline-none focus:border-cyan-500"
+                      className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs leading-relaxed focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner transition-all placeholder-slate-500"
                     />
                   </div>
 
@@ -946,7 +951,7 @@ export default function Dashboard() {
                 </form>
               </div>
 
-              {/* DIRECTORY TABLE - REMOVED SLUG & ICON Theme Color, ADDED PROMINENT EDIT, DELETE & VIEW PAGE BUTTONS */}
+              {/* DIRECTORY TABLE */}
               <div className="lg:col-span-7 space-y-6">
                 <div className="bg-[#0a1224]/90 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800 flex-wrap gap-4">
@@ -965,7 +970,7 @@ export default function Dashboard() {
                       <select
                         value={selectedParentFilter}
                         onChange={(e) => setSelectedParentFilter(e.target.value)}
-                        className="px-3 py-1.5 rounded-xl border border-slate-700 bg-[#060b17] text-xs font-bold text-white focus:outline-none focus:border-cyan-500"
+                        className="px-3.5 py-2 rounded-xl border border-slate-700/80 bg-[#060c19] text-xs font-bold text-white focus:outline-none focus:border-cyan-400 cursor-pointer"
                       >
                         <option value="all">All Parent Categories</option>
                         {parentServices.map(p => (
@@ -977,13 +982,13 @@ export default function Dashboard() {
 
                   {/* Search Input */}
                   <div className="relative mb-6">
-                    <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       type="text"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="Search services by title or description..."
-                      className="w-full pl-10 pr-10 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-xs font-bold text-white focus:outline-none focus:border-cyan-500"
+                      className="w-full pl-11 pr-10 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-xs font-bold text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                     />
                   </div>
 
@@ -1017,7 +1022,6 @@ export default function Dashboard() {
                                   {parentObj ? (parentObj.name || parentObj.title) : 'Standalone'}
                                 </span>
                               </td>
-                              {/* Prominent Action Buttons */}
                               <td className="py-4 px-4 text-center">
                                 <div className="flex items-center justify-center gap-2">
                                   <Link
@@ -1127,7 +1131,7 @@ export default function Dashboard() {
                       <select
                         value={selectedUnderstandingServiceSlug}
                         onChange={handleUnderstandingServiceChange}
-                        className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white font-bold text-xs focus:outline-none focus:border-cyan-500"
+                        className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white font-bold text-xs focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                       >
                         {servicesData.map((s) => (
                           <option key={s.id} value={s.slug}>
@@ -1138,41 +1142,48 @@ export default function Dashboard() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Section Heading Title</label>
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">Section Heading Title</label>
                       <input
                         type="text"
                         value={understandingTitleText}
                         onChange={(e) => setUnderstandingTitleText(e.target.value)}
-                        className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs font-bold focus:outline-none focus:border-cyan-500"
+                        className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Introductory Paragraph</label>
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">Introductory Paragraph</label>
                       <textarea
                         rows={3}
                         value={understandingIntroText}
                         onChange={(e) => setUnderstandingIntroText(e.target.value)}
-                        className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs focus:outline-none focus:border-cyan-500"
+                        className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs leading-relaxed focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                       />
                     </div>
 
-                    <div className="bg-[#0f1933] p-4 rounded-2xl border border-slate-800">
+                    <div className="p-5 rounded-2xl bg-[#091124] border-2 border-dashed border-slate-700 hover:border-cyan-500/50 transition-all">
                       <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-2">
                         <ImageIcon size={16} className="text-cyan-400" />
                         <span>Upload Illustration Graphic</span>
                       </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          if (e.target.files && e.target.files[0]) {
-                            setUnderstandingImageFile(e.target.files[0]);
-                            setUnderstandingImagePreview(URL.createObjectURL(e.target.files[0]));
-                          }
-                        }}
-                        className="block w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-cyan-500/10 file:text-cyan-400 hover:file:bg-cyan-500/20 cursor-pointer"
-                      />
+                      <div className="flex items-center gap-4">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files[0]) {
+                              setUnderstandingImageFile(e.target.files[0]);
+                              setUnderstandingImagePreview(URL.createObjectURL(e.target.files[0]));
+                            }
+                          }}
+                          className="block w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-cyan-500/10 file:text-cyan-400 hover:file:bg-cyan-500/20 cursor-pointer"
+                        />
+                        {understandingImagePreview && (
+                          <div className="w-16 h-16 rounded-xl border border-slate-700 overflow-hidden shrink-0 shadow-md">
+                            <img src={understandingImagePreview} alt="Preview" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     <div>
@@ -1190,7 +1201,7 @@ export default function Dashboard() {
 
                       <div className="space-y-4">
                         {understandingItems.map((item, idx) => (
-                          <div key={idx} className="p-4 rounded-2xl border border-slate-800 bg-[#060b17] space-y-3">
+                          <div key={idx} className="p-4 rounded-2xl border border-slate-800 bg-[#060c19] space-y-3">
                             <div className="flex items-center justify-between">
                               <span className="text-xs font-mono font-bold text-cyan-400 uppercase">Stage #{idx + 1}</span>
                               <div className="flex items-center gap-1">
@@ -1204,14 +1215,14 @@ export default function Dashboard() {
                               value={item.title}
                               onChange={(e) => handleUnderstandingItemChange(idx, 'title', e.target.value)}
                               placeholder="Title (e.g. 1. Freezing Stage)"
-                              className="w-full px-3 py-2 rounded-xl border border-slate-800 bg-[#0a1224] text-white text-xs font-bold focus:outline-none focus:border-cyan-500"
+                              className="w-full px-4 py-3 rounded-xl border border-slate-700/80 bg-[#0a1224] text-white text-xs font-bold focus:outline-none focus:border-cyan-400"
                             />
                             <textarea
                               rows={2}
                               value={item.desc}
                               onChange={(e) => handleUnderstandingItemChange(idx, 'desc', e.target.value)}
                               placeholder="Description..."
-                              className="w-full px-3 py-2 rounded-xl border border-slate-800 bg-[#0a1224] text-white text-xs focus:outline-none focus:border-cyan-500"
+                              className="w-full px-4 py-3 rounded-xl border border-slate-700/80 bg-[#0a1224] text-white text-xs focus:outline-none focus:border-cyan-400"
                             />
                           </div>
                         ))}
@@ -1284,7 +1295,7 @@ export default function Dashboard() {
                   <select
                     value={selectedBenefitsServiceSlug}
                     onChange={handleBenefitsServiceChange}
-                    className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white font-bold text-xs focus:outline-none focus:border-cyan-500"
+                    className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white font-bold text-xs focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                   >
                     {servicesData.map((s) => (
                       <option key={s.id} value={s.slug}>
@@ -1295,31 +1306,38 @@ export default function Dashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Benefits Section Title</label>
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">Benefits Section Title</label>
                   <input
                     type="text"
                     value={benefitsTitleText}
                     onChange={(e) => setBenefitsTitleText(e.target.value)}
-                    className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs font-bold focus:outline-none focus:border-cyan-500"
+                    className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                   />
                 </div>
 
-                <div className="bg-[#0f1933] p-4 rounded-2xl border border-slate-800">
+                <div className="p-5 rounded-2xl bg-[#091124] border-2 border-dashed border-slate-700 hover:border-emerald-500/50 transition-all">
                   <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-2">
                     <ImageIcon size={16} className="text-emerald-400" />
                     <span>Upload Custom Benefits Image</span>
                   </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      if (e.target.files && e.target.files[0]) {
-                        setBenefitsImageFile(e.target.files[0]);
-                        setBenefitsImagePreview(URL.createObjectURL(e.target.files[0]));
-                      }
-                    }}
-                    className="block w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-emerald-500/10 file:text-emerald-400 hover:file:bg-emerald-500/20 cursor-pointer"
-                  />
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setBenefitsImageFile(e.target.files[0]);
+                          setBenefitsImagePreview(URL.createObjectURL(e.target.files[0]));
+                        }
+                      }}
+                      className="block w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-emerald-500/10 file:text-emerald-400 hover:file:bg-emerald-500/20 cursor-pointer"
+                    />
+                    {benefitsImagePreview && (
+                      <div className="w-16 h-16 rounded-xl border border-slate-700 overflow-hidden shrink-0 shadow-md">
+                        <img src={benefitsImagePreview} alt="Preview" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div>
@@ -1337,7 +1355,7 @@ export default function Dashboard() {
 
                   <div className="space-y-4">
                     {benefitsItems.map((item, idx) => (
-                      <div key={idx} className="p-4 rounded-2xl border border-slate-800 bg-[#060b17] space-y-3">
+                      <div key={idx} className="p-4 rounded-2xl border border-slate-800 bg-[#060c19] space-y-3">
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-mono font-bold text-emerald-400 uppercase">Benefit #{idx + 1}</span>
                           <button type="button" onClick={() => handleRemoveBenefitRow(idx)} className="p-1 text-rose-400 hover:text-rose-300"><Trash2 size={14} /></button>
@@ -1347,14 +1365,14 @@ export default function Dashboard() {
                           value={item.title}
                           onChange={(e) => handleBenefitItemChange(idx, 'title', e.target.value)}
                           placeholder="Benefit Title..."
-                          className="w-full px-3 py-2 rounded-xl border border-slate-800 bg-[#0a1224] text-white text-xs font-bold focus:outline-none focus:border-emerald-500"
+                          className="w-full px-4 py-3 rounded-xl border border-slate-700/80 bg-[#0a1224] text-white text-xs font-bold focus:outline-none focus:border-emerald-500"
                         />
                         <textarea
                           rows={2}
                           value={item.desc}
                           onChange={(e) => handleBenefitItemChange(idx, 'desc', e.target.value)}
                           placeholder="Description..."
-                          className="w-full px-3 py-2 rounded-xl border border-slate-800 bg-[#0a1224] text-white text-xs focus:outline-none focus:border-emerald-500"
+                          className="w-full px-4 py-3 rounded-xl border border-slate-700/80 bg-[#0a1224] text-white text-xs focus:outline-none focus:border-emerald-500"
                         />
                       </div>
                     ))}
@@ -1390,24 +1408,24 @@ export default function Dashboard() {
 
                 <form onSubmit={handleAddParentService} className="space-y-5">
                   <div>
-                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Category Title <span className="text-rose-500">*</span></label>
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">Category Title <span className="text-rose-400">*</span></label>
                     <input
                       type="text"
                       placeholder="e.g. Telehealth & Online Care"
                       value={parentTitle}
                       onChange={(e) => setParentTitle(e.target.value)}
-                      className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs font-bold focus:outline-none focus:border-cyan-500"
+                      className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-bold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Tagline / Description</label>
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-2">Tagline / Description</label>
                     <textarea
                       rows={3}
                       placeholder="e.g. 24/7 Virtual doctor consultations in Dubai"
                       value={parentTagline}
                       onChange={(e) => setParentTagline(e.target.value)}
-                      className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs focus:outline-none focus:border-cyan-500"
+                      className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                     />
                   </div>
 
@@ -1421,7 +1439,7 @@ export default function Dashboard() {
                 </form>
               </div>
 
-              {/* PARENT TABLE - PROMINENT EDIT & DELETE BUTTONS */}
+              {/* PARENT TABLE */}
               <div className="lg:col-span-7 space-y-4">
                 <div className="bg-[#0a1224]/90 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
                   <h3 className="text-lg font-black text-white uppercase tracking-tight font-montserrat mb-6 pb-4 border-b border-slate-800">
@@ -1545,10 +1563,10 @@ export default function Dashboard() {
           <div className="bg-[#0a1224] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-800 relative">
             <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold">
-                  <Edit3 size={20} />
+                <div className="p-1.5 rounded-xl bg-white/10 border border-white/20">
+                  <img src={logo} alt="CORx Healthcare" className="h-6 w-auto object-contain" />
                 </div>
-                <h3 className="text-lg font-black text-white uppercase tracking-tight font-montserrat">Edit Service</h3>
+                <h3 className="text-lg font-black text-white uppercase tracking-tight font-montserrat">Edit Service Details</h3>
               </div>
               <button onClick={() => setEditingService(null)} className="p-2 text-slate-400 hover:text-white rounded-full hover:bg-slate-800">
                 <X size={20} />
@@ -1557,32 +1575,32 @@ export default function Dashboard() {
 
             <form onSubmit={handleSaveServiceEdit} className="space-y-4">
               <div>
-                <label className="block text-xs font-mono font-bold uppercase text-slate-400 mb-1.5">Service Title</label>
+                <label className="block text-xs font-mono font-bold uppercase text-slate-300 mb-1.5">Service Title</label>
                 <input
                   type="text"
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs font-bold focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-bold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono font-bold uppercase text-slate-400 mb-1.5">Tagline / Description</label>
+                <label className="block text-xs font-mono font-bold uppercase text-slate-300 mb-1.5">Tagline / Description</label>
                 <textarea
                   rows={3}
                   value={editTagline}
                   onChange={(e) => setEditTagline(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs leading-relaxed focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono font-bold uppercase text-slate-400 mb-1.5">Parent Category</label>
+                <label className="block text-xs font-mono font-bold uppercase text-slate-300 mb-1.5">Parent Category</label>
                 <select
                   value={editParentId}
                   onChange={(e) => setEditParentId(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs font-bold focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-bold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner cursor-pointer"
                 >
                   <option value="">-- Standalone (No Parent) --</option>
                   {parentServices.map((p) => (
@@ -1593,7 +1611,7 @@ export default function Dashboard() {
 
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800 mt-6">
                 <button type="button" onClick={() => setEditingService(null)} className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-400 font-bold text-xs hover:bg-slate-800">Cancel</button>
-                <button type="submit" disabled={savingEdit} className="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-cyan-400 cursor-pointer">
+                <button type="submit" disabled={savingEdit} className="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-cyan-400 cursor-pointer shadow-lg shadow-cyan-500/20">
                   {savingEdit ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>

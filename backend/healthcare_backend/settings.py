@@ -164,6 +164,8 @@ JAZZMIN_SETTINGS = {
     "site_title": "CORx Healthcare Operations & Admin",
     "site_header": "CORx Healthcare Admin",
     "site_brand": "CORx Healthcare",
+    "site_logo": "api/logo.webp",
+    "site_icon": "api/logo.webp",
     "welcome_sign": "Welcome to CORx Healthcare Executive Operations & Services Hub",
     "copyright": "CORx Healthcare Dubai",
     "user_avatar": None,
