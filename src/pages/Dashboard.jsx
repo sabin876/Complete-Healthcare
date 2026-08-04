@@ -314,52 +314,6 @@ export default function Dashboard() {
     }
   };
 
-  // Service Edit Modal State
-  const [editingService, setEditingService] = useState(null);
-  const [editTitle, setEditTitle] = useState('');
-  const [editTagline, setEditTagline] = useState('');
-  const [editParentId, setEditParentId] = useState('');
-  const [savingEdit, setSavingEdit] = useState(false);
-
-  const handleOpenEditModal = (service) => {
-    setEditingService(service);
-    setEditTitle(service.title || service.name || '');
-    setEditTagline(service.tagline || service.subtitle || '');
-    setEditParentId(service.parent ? service.parent.toString() : '');
-  };
-
-  const handleSaveServiceEdit = async (e) => {
-    e.preventDefault();
-    if (!editingService) return;
-    setSavingEdit(true);
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/services/${editingService.slug}/`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: editTitle.trim(),
-          tagline: editTagline.trim(),
-          description: editTagline.trim() || editTitle.trim(),
-          parent: editParentId ? parseInt(editParentId, 10) : null,
-        })
-      });
-
-      if (res.ok) {
-        setEditingService(null);
-        showToast('success', 'Service Updated', `Updated "${editTitle}" successfully!`);
-        loadServices();
-      } else {
-        showToast('error', 'Update Failed', 'Failed to save service updates.');
-      }
-    } catch (err) {
-      console.error('Save edit error:', err);
-      showToast('error', 'Update Error', 'An unexpected error occurred.');
-    } finally {
-      setSavingEdit(false);
-    }
-  };
-
   // Submit Sub-Service
   const handleAddSubService = async (e) => {
     e.preventDefault();
@@ -460,25 +414,6 @@ export default function Dashboard() {
       showToast('error', 'Creation Error', err.message || 'Error connecting to Django backend.');
     } finally {
       setSubmitting(false);
-    }
-  };
-
-  const handleDeleteService = async (serviceSlug, serviceTitle) => {
-    if (!window.confirm(`Are you sure you want to remove "${serviceTitle}"?`)) return;
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/services/${serviceSlug}/`, {
-        method: 'DELETE',
-      });
-      if (res.ok || res.status === 204) {
-        showToast('success', 'Service Removed', `Successfully deleted "${serviceTitle}".`);
-        loadServices();
-      } else {
-        showToast('error', 'Delete Failed', 'Failed to delete service.');
-      }
-    } catch (err) {
-      console.error('Delete error:', err);
-      showToast('error', 'Delete Error', 'An error occurred during deletion.');
     }
   };
 
@@ -819,14 +754,15 @@ export default function Dashboard() {
                             <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold">
                               {parentObj ? (parentObj.name || parentObj.title) : 'Parent Category'}
                             </span>
-                            <button
-                              type="button"
-                              onClick={() => handleOpenEditModal(sub)}
+                            <a
+                              href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`}
+                              target="_blank"
+                              rel="noreferrer"
                               className="px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                             >
                               <Edit3 size={14} />
                               <span>Edit</span>
-                            </button>
+                            </a>
                           </div>
                         </div>
                       );
@@ -951,7 +887,7 @@ export default function Dashboard() {
                 </form>
               </div>
 
-              {/* DIRECTORY TABLE MATCHING SCREENSHOT LAYOUT (Service Title | Parent Category | View | Edit | Delete) */}
+              {/* DIRECTORY TABLE: ALL ACTION BUTTONS DIRECTLY OPEN DJANGO ADMIN CHANGE/DELETE URLS AS REQUESTED */}
               <div className="lg:col-span-7 space-y-6">
                 <div className="bg-[#0b1329] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden text-white">
                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800 flex-wrap gap-4">
@@ -992,7 +928,7 @@ export default function Dashboard() {
                     />
                   </div>
 
-                  {/* Data Table Matching User Screenshot Header & Icons */}
+                  {/* Data Table with Direct Links to https://sabinsiwakoti.com.np/admin/api/service/{id}/change/ */}
                   <div className="overflow-x-auto rounded-2xl border border-slate-800/90 bg-[#0e172a]">
                     <table className="w-full text-left border-collapse">
                       <thead>
@@ -1010,9 +946,14 @@ export default function Dashboard() {
                           return (
                             <tr key={sub.id} className="hover:bg-[#182442] transition-colors group">
                               <td className="py-4 px-4">
-                                <div className="font-extrabold text-white text-sm group-hover:text-cyan-300 transition-colors">
+                                <a 
+                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`} 
+                                  target="_blank" 
+                                  rel="noreferrer"
+                                  className="font-extrabold text-white text-sm hover:text-cyan-300 transition-colors block"
+                                >
                                   {sub.title || sub.name}
-                                </div>
+                                </a>
                                 {sub.tagline && (
                                   <div className="text-slate-400 text-xs mt-0.5 line-clamp-1 font-sans">
                                     {sub.tagline}
@@ -1026,36 +967,39 @@ export default function Dashboard() {
                               </td>
                               {/* View Link Icon */}
                               <td className="py-4 px-4 text-center">
-                                <Link
-                                  to={`/services/${sub.slug}`}
+                                <a
+                                  href={`/services/${sub.slug}`}
                                   target="_blank"
+                                  rel="noreferrer"
                                   className="p-2 rounded-lg hover:bg-emerald-500/20 text-emerald-400 transition-all inline-flex items-center justify-center"
                                   title="View Public Page"
                                 >
                                   <ExternalLink size={18} className="stroke-[2.5]" />
-                                </Link>
+                                </a>
                               </td>
-                              {/* Edit Pencil Icon (Exact Match to User Screenshot) */}
+                              {/* Edit Pencil Icon -> OPENS https://sabinsiwakoti.com.np/admin/api/service/{id}/change/ */}
                               <td className="py-4 px-4 text-center">
-                                <button
-                                  type="button"
-                                  onClick={() => handleOpenEditModal(sub)}
+                                <a
+                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`}
+                                  target="_blank"
+                                  rel="noreferrer"
                                   className="p-2.5 rounded-xl hover:bg-sky-500/20 text-[#00a2ff] hover:text-sky-300 transition-all cursor-pointer inline-flex items-center justify-center"
-                                  title="Edit Service"
+                                  title={`Edit Service #${sub.id} in Django Admin`}
                                 >
                                   <Edit3 size={19} className="stroke-[2.5]" />
-                                </button>
+                                </a>
                               </td>
-                              {/* Delete Trash Icon (Exact Match to User Screenshot) */}
+                              {/* Delete Trash Icon -> OPENS https://sabinsiwakoti.com.np/admin/api/service/{id}/delete/ */}
                               <td className="py-4 px-4 text-center">
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteService(sub.slug, sub.title || sub.name)}
+                                <a
+                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/delete/`}
+                                  target="_blank"
+                                  rel="noreferrer"
                                   className="p-2.5 rounded-xl hover:bg-rose-500/20 text-[#ff3b3b] hover:text-rose-400 transition-all cursor-pointer inline-flex items-center justify-center"
-                                  title="Delete Service"
+                                  title={`Delete Service #${sub.id} in Django Admin`}
                                 >
                                   <Trash2 size={19} className="stroke-[2.5]" />
-                                </button>
+                                </a>
                               </td>
                             </tr>
                           );
@@ -1441,7 +1385,7 @@ export default function Dashboard() {
                 </form>
               </div>
 
-              {/* PARENT TABLE MATCHING USER SCREENSHOT */}
+              {/* PARENT TABLE */}
               <div className="lg:col-span-7 space-y-4">
                 <div className="bg-[#0b1329] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden text-white">
                   <h3 className="text-lg font-extrabold text-white uppercase tracking-tight font-montserrat mb-6 pb-4 border-b border-slate-800 flex items-center justify-between">
@@ -1467,9 +1411,14 @@ export default function Dashboard() {
                           return (
                             <tr key={p.id} className="hover:bg-[#182442] transition-colors group">
                               <td className="py-4 px-4">
-                                <div className="font-extrabold text-white text-sm group-hover:text-emerald-300 transition-colors">
+                                <a 
+                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${p.id}/change/`} 
+                                  target="_blank" 
+                                  rel="noreferrer"
+                                  className="font-extrabold text-white text-sm group-hover:text-emerald-300 transition-colors block"
+                                >
                                   {p.title || p.name}
-                                </div>
+                                </a>
                                 {(p.tagline || p.subtitle) && (
                                   <div className="text-slate-400 text-xs mt-0.5 line-clamp-1 font-sans">
                                     {p.tagline || p.subtitle}
@@ -1481,27 +1430,29 @@ export default function Dashboard() {
                                   {subCount} Items
                                 </span>
                               </td>
-                              {/* Edit Pencil Icon (Exact Match to User Screenshot) */}
+                              {/* Edit Pencil Icon -> OPENS https://sabinsiwakoti.com.np/admin/api/service/{id}/change/ */}
                               <td className="py-4 px-4 text-center">
-                                <button
-                                  type="button"
-                                  onClick={() => handleOpenEditModal(p)}
+                                <a
+                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${p.id}/change/`}
+                                  target="_blank"
+                                  rel="noreferrer"
                                   className="p-2.5 rounded-xl hover:bg-sky-500/20 text-[#00a2ff] hover:text-sky-300 transition-all cursor-pointer inline-flex items-center justify-center"
-                                  title="Edit Parent Category"
+                                  title={`Edit Category #${p.id} in Django Admin`}
                                 >
                                   <Edit3 size={19} className="stroke-[2.5]" />
-                                </button>
+                                </a>
                               </td>
-                              {/* Delete Trash Icon (Exact Match to User Screenshot) */}
+                              {/* Delete Trash Icon -> OPENS https://sabinsiwakoti.com.np/admin/api/service/{id}/delete/ */}
                               <td className="py-4 px-4 text-center">
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteService(p.slug, p.title || p.name)}
+                                <a
+                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${p.id}/delete/`}
+                                  target="_blank"
+                                  rel="noreferrer"
                                   className="p-2.5 rounded-xl hover:bg-rose-500/20 text-[#ff3b3b] hover:text-rose-400 transition-all cursor-pointer inline-flex items-center justify-center"
-                                  title="Delete Parent Category"
+                                  title={`Delete Category #${p.id} in Django Admin`}
                                 >
                                   <Trash2 size={19} className="stroke-[2.5]" />
-                                </button>
+                                </a>
                               </td>
                             </tr>
                           );
@@ -1526,14 +1477,25 @@ export default function Dashboard() {
                   const subs = servicesData.filter((s) => s.parent === parent.id);
                   return (
                     <div key={parent.id} className="border border-slate-800 rounded-3xl p-6 bg-[#060b17] hover:border-cyan-500/40 transition-all">
-                      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-slate-800">
-                        <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
-                          <Layers size={18} />
+                      <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
+                            <Layers size={18} />
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-black text-white font-montserrat">{parent.name || parent.title}</h4>
+                            <span className="text-[10px] text-slate-400 uppercase font-mono">Navbar Parent</span>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="text-sm font-black text-white font-montserrat">{parent.name || parent.title}</h4>
-                          <span className="text-[10px] text-slate-400 uppercase font-mono">Navbar Parent</span>
-                        </div>
+                        <a
+                          href={`https://sabinsiwakoti.com.np/admin/api/service/${parent.id}/change/`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-2 text-cyan-400 hover:bg-cyan-500/20 rounded-lg transition-all"
+                          title="Edit in Django Admin"
+                        >
+                          <Edit3 size={15} />
+                        </a>
                       </div>
 
                       <div className="space-y-2.5">
@@ -1546,9 +1508,20 @@ export default function Dashboard() {
                                 <CornerDownRight size={14} className="text-emerald-400" />
                                 {s.title || s.name}
                               </span>
-                              <Link to={`/services/${s.slug}`} target="_blank" className="text-slate-400 hover:text-cyan-400">
-                                <ExternalLink size={14} />
-                              </Link>
+                              <div className="flex items-center gap-2">
+                                <a
+                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${s.id}/change/`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-slate-400 hover:text-cyan-400"
+                                  title="Edit in Django Admin"
+                                >
+                                  <Edit3 size={14} />
+                                </a>
+                                <Link to={`/services/${s.slug}`} target="_blank" className="text-slate-400 hover:text-emerald-400" title="View Live Page">
+                                  <ExternalLink size={14} />
+                                </Link>
+                              </div>
                             </div>
                           ))
                         )}
@@ -1562,69 +1535,6 @@ export default function Dashboard() {
 
         </main>
       </div>
-
-      {/* EDIT MODAL DIALOG */}
-      {editingService && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-          <div className="bg-[#0a1224] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-800 relative">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
-              <div className="flex items-center gap-3">
-                <div className="p-1.5 rounded-xl bg-white/10 border border-white/20">
-                  <img src={logo} alt="CORx Healthcare" className="h-6 w-auto object-contain" />
-                </div>
-                <h3 className="text-lg font-black text-white uppercase tracking-tight font-montserrat">Edit Service Details</h3>
-              </div>
-              <button onClick={() => setEditingService(null)} className="p-2 text-slate-400 hover:text-white rounded-full hover:bg-slate-800">
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSaveServiceEdit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-mono font-bold uppercase text-slate-300 mb-1.5">Service Title</label>
-                <input
-                  type="text"
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-bold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono font-bold uppercase text-slate-300 mb-1.5">Tagline / Description</label>
-                <textarea
-                  rows={3}
-                  value={editTagline}
-                  onChange={(e) => setEditTagline(e.target.value)}
-                  className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs leading-relaxed focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono font-bold uppercase text-slate-300 mb-1.5">Parent Category</label>
-                <select
-                  value={editParentId}
-                  onChange={(e) => setEditParentId(e.target.value)}
-                  className="w-full px-4.5 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-bold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner cursor-pointer"
-                >
-                  <option value="">-- Standalone (No Parent) --</option>
-                  {parentServices.map((p) => (
-                    <option key={p.id} value={p.id}>{p.name || p.title}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800 mt-6">
-                <button type="button" onClick={() => setEditingService(null)} className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-400 font-bold text-xs hover:bg-slate-800">Cancel</button>
-                <button type="submit" disabled={savingEdit} className="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-cyan-400 cursor-pointer shadow-lg shadow-cyan-500/20">
-                  {savingEdit ? 'Saving...' : 'Save Changes'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
     </div>
   );
