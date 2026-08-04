@@ -951,15 +951,15 @@ export default function Dashboard() {
                 </form>
               </div>
 
-              {/* DIRECTORY TABLE */}
+              {/* DIRECTORY TABLE MATCHING SCREENSHOT LAYOUT (Service Title | Parent Category | View | Edit | Delete) */}
               <div className="lg:col-span-7 space-y-6">
-                <div className="bg-[#0a1224]/90 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
+                <div className="bg-[#0b1329] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden text-white">
                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800 flex-wrap gap-4">
                     <div>
-                      <h3 className="text-lg font-black text-white uppercase tracking-tight font-montserrat flex items-center gap-2">
+                      <h3 className="text-lg font-extrabold text-white uppercase tracking-tight font-montserrat flex items-center gap-2">
                         <span>Sub-Services Directory</span>
                         <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-mono font-bold">
-                          {filteredSubServices.length} Items
+                          {filteredSubServices.length} Total
                         </span>
                       </h3>
                     </div>
@@ -992,21 +992,23 @@ export default function Dashboard() {
                     />
                   </div>
 
-                  {/* Streamlined Data Table */}
-                  <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-[#060b17]">
+                  {/* Data Table Matching User Screenshot Header & Icons */}
+                  <div className="overflow-x-auto rounded-2xl border border-slate-800/90 bg-[#0e172a]">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="bg-[#0e172e] text-white text-xs font-black uppercase tracking-wider border-b border-slate-800">
-                          <th className="py-4 px-4 font-montserrat">Service Name & Description</th>
-                          <th className="py-4 px-4 font-montserrat">Category</th>
-                          <th className="py-4 px-4 text-center font-montserrat">Actions</th>
+                        <tr className="bg-[#141e36] text-white text-sm font-extrabold border-b border-slate-800">
+                          <th className="py-4 px-4 font-montserrat">Service Title</th>
+                          <th className="py-4 px-4 font-montserrat">Parent Category</th>
+                          <th className="py-4 px-4 text-center font-montserrat w-16">View</th>
+                          <th className="py-4 px-4 text-center font-montserrat w-20">Edit</th>
+                          <th className="py-4 px-4 text-center font-montserrat w-20">Delete</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800 text-xs font-medium">
+                      <tbody className="divide-y divide-slate-800/60 text-xs font-medium">
                         {filteredSubServices.map((sub) => {
                           const parentObj = parentServices.find(p => p.id === sub.parent);
                           return (
-                            <tr key={sub.id} className="hover:bg-[#0e172e] transition-colors group">
+                            <tr key={sub.id} className="hover:bg-[#182442] transition-colors group">
                               <td className="py-4 px-4">
                                 <div className="font-extrabold text-white text-sm group-hover:text-cyan-300 transition-colors">
                                   {sub.title || sub.name}
@@ -1018,42 +1020,42 @@ export default function Dashboard() {
                                 )}
                               </td>
                               <td className="py-4 px-4">
-                                <span className="inline-flex items-center px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 text-xs font-bold">
+                                <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[11px] font-bold">
                                   {parentObj ? (parentObj.name || parentObj.title) : 'Standalone'}
                                 </span>
                               </td>
+                              {/* View Link Icon */}
                               <td className="py-4 px-4 text-center">
-                                <div className="flex items-center justify-center gap-2">
-                                  <Link
-                                    to={`/services/${sub.slug}`}
-                                    target="_blank"
-                                    className="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/30 text-xs font-bold transition-all inline-flex items-center gap-1"
-                                    title="View Live Page"
-                                  >
-                                    <ExternalLink size={14} />
-                                    <span>View</span>
-                                  </Link>
-
-                                  <button
-                                    type="button"
-                                    onClick={() => handleOpenEditModal(sub)}
-                                    className="px-3.5 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
-                                    title="Edit Service"
-                                  >
-                                    <Edit3 size={14} />
-                                    <span>Edit</span>
-                                  </button>
-
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteService(sub.slug, sub.title || sub.name)}
-                                    className="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/30 text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
-                                    title="Delete Service"
-                                  >
-                                    <Trash2 size={14} />
-                                    <span>Delete</span>
-                                  </button>
-                                </div>
+                                <Link
+                                  to={`/services/${sub.slug}`}
+                                  target="_blank"
+                                  className="p-2 rounded-lg hover:bg-emerald-500/20 text-emerald-400 transition-all inline-flex items-center justify-center"
+                                  title="View Public Page"
+                                >
+                                  <ExternalLink size={18} className="stroke-[2.5]" />
+                                </Link>
+                              </td>
+                              {/* Edit Pencil Icon (Exact Match to User Screenshot) */}
+                              <td className="py-4 px-4 text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenEditModal(sub)}
+                                  className="p-2.5 rounded-xl hover:bg-sky-500/20 text-[#00a2ff] hover:text-sky-300 transition-all cursor-pointer inline-flex items-center justify-center"
+                                  title="Edit Service"
+                                >
+                                  <Edit3 size={19} className="stroke-[2.5]" />
+                                </button>
+                              </td>
+                              {/* Delete Trash Icon (Exact Match to User Screenshot) */}
+                              <td className="py-4 px-4 text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteService(sub.slug, sub.title || sub.name)}
+                                  className="p-2.5 rounded-xl hover:bg-rose-500/20 text-[#ff3b3b] hover:text-rose-400 transition-all cursor-pointer inline-flex items-center justify-center"
+                                  title="Delete Service"
+                                >
+                                  <Trash2 size={19} className="stroke-[2.5]" />
+                                </button>
                               </td>
                             </tr>
                           );
@@ -1439,29 +1441,33 @@ export default function Dashboard() {
                 </form>
               </div>
 
-              {/* PARENT TABLE */}
+              {/* PARENT TABLE MATCHING USER SCREENSHOT */}
               <div className="lg:col-span-7 space-y-4">
-                <div className="bg-[#0a1224]/90 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
-                  <h3 className="text-lg font-black text-white uppercase tracking-tight font-montserrat mb-6 pb-4 border-b border-slate-800">
-                    Top Navbar Parent Categories ({parentServices.length})
+                <div className="bg-[#0b1329] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden text-white">
+                  <h3 className="text-lg font-extrabold text-white uppercase tracking-tight font-montserrat mb-6 pb-4 border-b border-slate-800 flex items-center justify-between">
+                    <span>Top Navbar Parent Categories</span>
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
+                      {parentServices.length} Total
+                    </span>
                   </h3>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-[#060b17]">
+                  <div className="overflow-x-auto rounded-2xl border border-slate-800/90 bg-[#0e172a]">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="bg-[#0e172e] text-white text-xs font-black uppercase tracking-wider border-b border-slate-800">
-                          <th className="py-4 px-4 font-montserrat">Category Title & Description</th>
+                        <tr className="bg-[#141e36] text-white text-sm font-extrabold border-b border-slate-800">
+                          <th className="py-4 px-4 font-montserrat">Category Title</th>
                           <th className="py-4 px-4 text-center font-montserrat">Sub-Services</th>
-                          <th className="py-4 px-4 text-center font-montserrat">Actions</th>
+                          <th className="py-4 px-4 text-center font-montserrat w-20">Edit</th>
+                          <th className="py-4 px-4 text-center font-montserrat w-20">Delete</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800 text-xs font-medium">
+                      <tbody className="divide-y divide-slate-800/60 text-xs font-medium">
                         {parentServices.map((p) => {
                           const subCount = servicesData.filter(s => s.parent === p.id).length;
                           return (
-                            <tr key={p.id} className="hover:bg-[#0e172e] transition-colors">
+                            <tr key={p.id} className="hover:bg-[#182442] transition-colors group">
                               <td className="py-4 px-4">
-                                <div className="font-extrabold text-white text-sm">
+                                <div className="font-extrabold text-white text-sm group-hover:text-emerald-300 transition-colors">
                                   {p.title || p.name}
                                 </div>
                                 {(p.tagline || p.subtitle) && (
@@ -1471,31 +1477,31 @@ export default function Dashboard() {
                                 )}
                               </td>
                               <td className="py-4 px-4 text-center">
-                                <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold">
+                                <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold">
                                   {subCount} Items
                                 </span>
                               </td>
+                              {/* Edit Pencil Icon (Exact Match to User Screenshot) */}
                               <td className="py-4 px-4 text-center">
-                                <div className="flex items-center justify-center gap-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => handleOpenEditModal(p)}
-                                    className="px-3.5 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
-                                    title="Edit Parent Category"
-                                  >
-                                    <Edit3 size={14} />
-                                    <span>Edit</span>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteService(p.slug, p.title || p.name)}
-                                    className="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/30 text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
-                                    title="Delete Parent Category"
-                                  >
-                                    <Trash2 size={14} />
-                                    <span>Delete</span>
-                                  </button>
-                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenEditModal(p)}
+                                  className="p-2.5 rounded-xl hover:bg-sky-500/20 text-[#00a2ff] hover:text-sky-300 transition-all cursor-pointer inline-flex items-center justify-center"
+                                  title="Edit Parent Category"
+                                >
+                                  <Edit3 size={19} className="stroke-[2.5]" />
+                                </button>
+                              </td>
+                              {/* Delete Trash Icon (Exact Match to User Screenshot) */}
+                              <td className="py-4 px-4 text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteService(p.slug, p.title || p.name)}
+                                  className="p-2.5 rounded-xl hover:bg-rose-500/20 text-[#ff3b3b] hover:text-rose-400 transition-all cursor-pointer inline-flex items-center justify-center"
+                                  title="Delete Parent Category"
+                                >
+                                  <Trash2 size={19} className="stroke-[2.5]" />
+                                </button>
                               </td>
                             </tr>
                           );
