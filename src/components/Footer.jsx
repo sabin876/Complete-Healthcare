@@ -77,7 +77,7 @@ const Footer = () => {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }} className="flex flex-col gap-3.5">
               {[
                 { name: 'Home', path: '/' },
-                { name: 'About Us', path: '/about' },
+                { name: 'About Us', path: '/about-us' },
                 { name: 'Our Team', path: '/team' },
                 { name: 'Contact Us', path: '/book-an-appointment' },
                 { name: 'Services Dashboard', path: '/dashboard' }

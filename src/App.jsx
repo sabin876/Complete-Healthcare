@@ -27,7 +27,7 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/about" element={<Navigate to="/about-us" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         
         {/* Redirects to enforce Flat URL Structure */}
@@ -39,6 +39,8 @@ const AnimatedRoutes = () => {
         <Route path="/lab-test-at-home-dubai/" element={<Navigate to="/lab-test-at-home" replace />} />
         
         {/* Core Flat Pages */}
+        <Route path="/about-us" element={<About />} />
+        <Route path="/about-us/" element={<About />} />
         <Route path="/lab-test-at-home" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/lab-test-at-home/" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/blog" element={<Blog />} />

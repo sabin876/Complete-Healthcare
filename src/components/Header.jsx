@@ -164,7 +164,7 @@ const Header = () => {
 
   const navLinks = [
     { name: 'Home', path: '/', icon: Home, accent: '#08709d' },
-    { name: 'About us', path: '/about', icon: Users, accent: '#63b158' },
+    { name: 'About us', path: '/about-us', icon: Users, accent: '#63b158' },
     { name: 'Our Team', path: '/team', icon: Stethoscope, accent: '#38bdf8' },
     { name: 'Blog', path: '/blog', icon: FileText, accent: '#a78bfa' },
     { 
