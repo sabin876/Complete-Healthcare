@@ -52,7 +52,14 @@ const Header = () => {
       icon: Activity,
       subtitle: 'Rehabilitation & Pain Relief',
       badge: 'Popular',
-      accent: '#63e8a0'
+      accent: '#63e8a0',
+      subItems: [
+        { name: 'Geriatric Physiotherapy', path: '/geriatric-physiotherapy', desc: 'In-home mobility & senior physical rehab', icon: Activity },
+        { name: 'Chest Physiotherapy', path: '/chest-physiotherapy', desc: 'Airway clearance & respiratory therapy', icon: HeartPulse },
+        { name: 'Neurological Rehab', path: '/neurological-rehab', desc: 'Stroke recovery & nerve movement care', icon: Sparkles },
+        { name: 'Sports Injury Rehab', path: '/sports-injury-rehab', desc: 'Muscle recovery & joint mobilization', icon: Activity },
+        { name: 'Back & Joint Pain Relief', path: '/back-pain-treatment', desc: 'Spine & musculoskeletal therapy', icon: CheckCircle2 },
+      ]
     },
     { 
       name: 'IV Therapy | IV Drip', 

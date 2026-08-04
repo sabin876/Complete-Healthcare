@@ -594,4 +594,9 @@ servicesData['physiotherapy-services'] = servicesData['physiotherapy'];
 servicesData['Physiotherapy-Services'] = servicesData['physiotherapy'];
 servicesData['physiotherapy-at-home-in-dubai'] = servicesData['physiotherapy'];
 servicesData['physiotherapy'] = servicesData['physiotherapy'];
+servicesData['geriatric-physiotherapy'] = servicesData['physiotherapy'];
+servicesData['chest-physiotherapy'] = servicesData['physiotherapy'];
+servicesData['neurological-rehab'] = servicesData['physiotherapy'];
+servicesData['sports-injury-rehab'] = servicesData['physiotherapy'];
+servicesData['back-pain-treatment'] = servicesData['physiotherapy'];
 
