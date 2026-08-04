@@ -233,6 +233,29 @@ export default function OrthopedicArticlesPage() {
   };
 
   React.useEffect(() => {
+    const titleText = "Corx Home Healthcare Blog — Health Tips, Care Guides & Advice";
+    const descText = "Explore the Corx Home Healthcare Blog for expert health tips, home care advice, physiotherapy insights, and wellness guides";
+
+    document.title = titleText;
+
+    const setMetaTag = (attrName, attrVal, contentVal) => {
+      let metaElem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
+      if (!metaElem) {
+        metaElem = document.createElement('meta');
+        metaElem.setAttribute(attrName, attrVal);
+        document.head.appendChild(metaElem);
+      }
+      metaElem.setAttribute('content', contentVal);
+    };
+
+    setMetaTag('name', 'description', descText);
+    setMetaTag('property', 'og:title', titleText);
+    setMetaTag('property', 'og:description', descText);
+    setMetaTag('property', 'twitter:title', titleText);
+    setMetaTag('property', 'twitter:description', descText);
+  }, []);
+
+  React.useEffect(() => {
     fetch(`${API_BASE_URL}/api/blogs/`)
       .then(res => {
         if (!res.ok) return null;
