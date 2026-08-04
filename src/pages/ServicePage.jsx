@@ -6,6 +6,7 @@ import { Container, Section, Button, Card, HeroTitle, SectionTitle, CardTitle, P
 import ServiceHighlightsBar from '../components/ServiceHighlightsBar';
 import ServiceBenefitsSection from '../components/ServiceBenefitsSection';
 import ServiceUnderstandingSection from '../components/ServiceUnderstandingSection';
+import ExploreServices from '../components/ExploreServices';
 import { servicesData as staticServicesData } from '../data/servicesData';
 import { 
   Check, 
@@ -473,6 +474,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                          (cleanSlug.includes('iv') ? staticServicesData['iv-therapy'] : null) ||
                          (cleanSlug.includes('doctor') ? staticServicesData['doctor-on-call'] : null) ||
                          (cleanSlug.includes('elder') ? staticServicesData['elderly-care'] : null) ||
+                         (cleanSlug.includes('lab') ? staticServicesData['lab-services'] : null) ||
                          staticServicesData['lab-services'] || {};
 
   const validServiceData = (serviceData && typeof serviceData === 'object' && !Array.isArray(serviceData)) ? serviceData : null;
@@ -1534,10 +1536,47 @@ function WhyChooseCorxBloodTest({ reasonsList = [], serviceData, isEditMode, slu
   );
 }
 
+function ServicesOverviewPage() {
+  useEffect(() => {
+    document.title = "Home Healthcare Services in Dubai | CORx Healthcare";
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <div className="bg-white min-h-screen">
+      <Section variant="white" className="pt-20 pb-12 md:pt-24 md:pb-16 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-b border-slate-100">
+        <Container className="text-center max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 bg-[#08709d]/10 border border-[#08709d]/20 px-4 py-2 rounded-full mb-6">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#08709d] animate-pulse" />
+            <span className="text-[#08709d] text-xs sm:text-sm font-bold uppercase tracking-wider">
+              24/7 DHA-Licensed Medical Care Across Dubai
+            </span>
+          </div>
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#1a294a] tracking-tight font-montserrat mb-6">
+            Our Home Healthcare Services in Dubai
+          </h1>
+          <p className="text-slate-600 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-3xl mx-auto">
+            From 24/7 doctor home visits and IV drip therapy to home nursing, physiotherapy, and lab tests — receive hospital-grade medical care directly in the comfort of your home, hotel, or office.
+          </p>
+        </Container>
+      </Section>
+      <ExploreServices />
+    </div>
+  );
+}
+
 export default function ServicePage({ serviceId }) {
   const params = useParams();
   const location = useLocation();
-  const pathParts = (location?.pathname || '').split('/').filter(Boolean).filter(p => p !== 'services');
+  const pathname = (location?.pathname || '').toLowerCase();
+
+  // If path is exactly '/services' or '/services/' and no specific serviceId prop is passed
+  const isOverview = !serviceId && (pathname === '/services' || pathname === '/services/');
+  if (isOverview) {
+    return <ServicesOverviewPage />;
+  }
+
+  const pathParts = pathname.split('/').filter(Boolean).filter(p => p !== 'services');
   const lastPathPart = pathParts.length > 0 ? pathParts[pathParts.length - 1] : null;
 
   const rawSlug = serviceId || 

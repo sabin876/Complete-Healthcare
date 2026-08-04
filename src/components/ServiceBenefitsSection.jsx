@@ -34,6 +34,7 @@ export default function ServiceBenefitsSection({
   imageUrl = null
 }) {
   const hasCustomBenefits = Array.isArray(benefitsList) && benefitsList.length > 0;
+  const displayBenefits = hasCustomBenefits ? benefitsList : defaultBenefitsData;
 
   // Only show benefits section on services where benefits items have been explicitly added/configured
   if (!hasCustomBenefits && !isEditMode) {

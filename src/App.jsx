@@ -31,8 +31,8 @@ const AnimatedRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         
         {/* Service Routes supporting both /services/... and flat URLs */}
-        <Route path="/services" element={<ServicePage serviceId="lab-test-at-home" />} />
-        <Route path="/services/" element={<ServicePage serviceId="lab-test-at-home" />} />
+        <Route path="/services" element={<ServicePage />} />
+        <Route path="/services/" element={<ServicePage />} />
         <Route path="/services/:parentSlug/:serviceSlug" element={<ServicePage />} />
         <Route path="/services/:parentSlug/:serviceSlug/" element={<ServicePage />} />
         <Route path="/services/:serviceSlug" element={<ServicePage />} />
