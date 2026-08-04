@@ -1500,7 +1500,8 @@ class ServiceAdmin(admin.ModelAdmin):
     delete_button.short_description = "Delete"
 
     def view_public_button(self, obj):
-        return mark_safe(f'<a href="/services/{obj.slug}" target="_blank" style="background: #10b981; color: white; padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">🌐 View</a>')
+        target_path = obj.custom_url_path if getattr(obj, 'custom_url_path', None) else f'/{obj.slug}'
+        return mark_safe(f'<a href="{target_path}" target="_blank" style="background: #10b981; color: white; padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">🌐 View</a>')
     view_public_button.short_description = "View Live"
 
     @admin.action(description="📋 Duplicate selected service(s) using Lab-Services template structure")
@@ -1515,6 +1516,7 @@ class ServiceAdmin(admin.ModelAdmin):
             
             Service.objects.create(
                 slug=new_slug,
+                custom_url_path=service.custom_url_path,
                 title=f"{service.title} (Copy)",
                 parent=service.parent,
                 eyebrow=service.eyebrow,
@@ -1537,7 +1539,7 @@ class ServiceAdmin(admin.ModelAdmin):
     
     fieldsets = (
         ('📌 General Information', {
-            'fields': ('title', 'slug', 'parent', 'theme_color', 'icon', 'image_file')
+            'fields': ('title', 'slug', 'custom_url_path', 'parent', 'theme_color', 'icon', 'image_file')
         }),
         ('🔍 SEO & OpenGraph Meta Tags', {
             'fields': ('meta_title', 'meta_description'),
