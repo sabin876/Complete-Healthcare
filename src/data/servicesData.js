@@ -599,4 +599,7 @@ servicesData['chest-physiotherapy'] = servicesData['physiotherapy'];
 servicesData['neurological-rehab'] = servicesData['physiotherapy'];
 servicesData['sports-injury-rehab'] = servicesData['physiotherapy'];
 servicesData['back-pain-treatment'] = servicesData['physiotherapy'];
+servicesData['nurse-at-home-for-injection'] = servicesData['injection-at-home'];
+servicesData['wound-care-service'] = servicesData['wound-care'];
+servicesData['oxygen-theraphy'] = servicesData['oxygen-therapy'];
 

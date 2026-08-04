@@ -50,6 +50,13 @@ const AnimatedRoutes = () => {
         <Route path="/physiotherapy" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
         <Route path="/physiotherapy/" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
         
+        <Route path="/nursing" element={<Navigate to="/home-nursing" replace />} />
+        <Route path="/nursing/" element={<Navigate to="/home-nursing" replace />} />
+        <Route path="/services/nursing" element={<Navigate to="/home-nursing" replace />} />
+        <Route path="/services/nursing/" element={<Navigate to="/home-nursing" replace />} />
+        <Route path="/services/home-nursing" element={<Navigate to="/home-nursing" replace />} />
+        <Route path="/services/home-nursing/" element={<Navigate to="/home-nursing" replace />} />
+        
         {/* Core Flat Pages */}
         <Route path="/about-us" element={<About />} />
         <Route path="/about-us/" element={<About />} />
@@ -57,6 +64,8 @@ const AnimatedRoutes = () => {
         <Route path="/lab-test-at-home/" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/physiotherapy-at-home-in-dubai" element={<ServicePage serviceId="physiotherapy" />} />
         <Route path="/physiotherapy-at-home-in-dubai/" element={<ServicePage serviceId="physiotherapy" />} />
+        <Route path="/home-nursing" element={<ServicePage serviceId="home-nursing" />} />
+        <Route path="/home-nursing/" element={<ServicePage serviceId="home-nursing" />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<BlogDetails />} />
         <Route path="/blog/details" element={<BlogDetails />} />

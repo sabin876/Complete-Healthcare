@@ -64,7 +64,7 @@ const Header = () => {
     },
     { 
       name: 'Home Nursing', 
-      path: '/nursing', 
+      path: '/home-nursing', 
       icon: HeartPulse,
       subtitle: 'Post-op & Specialized Care',
       accent: '#f43f5e',

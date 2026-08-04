@@ -105,7 +105,7 @@ const Footer = () => {
               {[
                 { name: 'Physiotherapy', path: '/physiotherapy-at-home-in-dubai/' },
                 { name: 'IV Therapy at Home', path: '/iv-therapy' },
-                { name: 'Home Nursing', path: '/nursing' },
+                { name: 'Home Nursing', path: '/home-nursing' },
                 { name: 'Doctor On Call', path: '/doctor-on-call' },
                 { name: 'Elderly Home Care', path: '/elderly-care' },
                 { name: 'Lab Test At Home', path: '/lab-test-at-home' }
