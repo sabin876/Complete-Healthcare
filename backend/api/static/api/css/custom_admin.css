@@ -249,3 +249,27 @@ input[type="text"]:focus, select:focus, textarea:focus {
   color: #ffffff !important;
   border: none !important;
 }
+
+/* Completely Hide Recent Actions Module from Django Admin */
+#content-related,
+#recent-actions-module,
+.recent-actions-module,
+.timeline,
+div.card:has(#recent-actions-module),
+div.card:has(.timeline),
+div.col-md-3:has(#recent-actions-module),
+div.col-md-3:has(.timeline),
+div[class*="recent-actions"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Expand main admin dashboard content grid to full 100% width */
+.col-lg-9.col-12:has(+ .col-lg-3),
+div.col-md-9:has(+ div.col-md-3) {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+}
