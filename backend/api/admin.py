@@ -1463,8 +1463,7 @@ class SubServiceInline(admin.TabularInline):
     extra = 1
     verbose_name = "Nested Sub-Service"
     verbose_name_plural = "➕ Nested Sub-Services (Add & Edit Sub-Services under this Parent Service)"
-    fields = ('title', 'slug', 'tagline', 'icon', 'theme_color')
-    prepopulated_fields = {"slug": ("title",)}
+    fields = ('title', 'tagline')
     show_change_link = True
 
 
@@ -1472,7 +1471,7 @@ class SubServiceInline(admin.TabularInline):
 class ServiceAdmin(admin.ModelAdmin):
     form = ServiceAdminForm
     inlines = [SubServiceInline]
-    list_display = ('title', 'service_hierarchy', 'slug', 'icon', 'theme_color', 'sub_services_count')
+    list_display = ('title', 'service_hierarchy', 'sub_services_count', 'view_public_button', 'edit_button', 'delete_button')
     search_fields = ('title', 'slug', 'tagline', 'description')
     list_filter = ('parent', 'created_at', 'updated_at')
     prepopulated_fields = {"slug": ("title",)}
@@ -1491,6 +1490,18 @@ class ServiceAdmin(admin.ModelAdmin):
             return mark_safe(f'<span style="font-weight: 800; color: #08709d; background: #f0f9ff; padding: 3px 10px; border-radius: 10px; border: 1px solid #e0f2fe;">{count} Sub-Services</span>')
         return mark_safe('<span style="color: #94a3b8; font-style: italic;">—</span>')
     sub_services_count.short_description = "Sub-Services"
+
+    def edit_button(self, obj):
+        return mark_safe(f'<a href="/admin/api/service/{obj.pk}/change/" style="background: #0284c7; color: white; padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">✏️ Edit</a>')
+    edit_button.short_description = "Edit"
+
+    def delete_button(self, obj):
+        return mark_safe(f'<a href="/admin/api/service/{obj.pk}/delete/" style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">🗑️ Delete</a>')
+    delete_button.short_description = "Delete"
+
+    def view_public_button(self, obj):
+        return mark_safe(f'<a href="/services/{obj.slug}" target="_blank" style="background: #10b981; color: white; padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">🌐 View</a>')
+    view_public_button.short_description = "View Live"
 
     @admin.action(description="📋 Duplicate selected service(s) using Lab-Services template structure")
     def duplicate_as_lab_template(self, request, queryset):
