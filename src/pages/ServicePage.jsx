@@ -1500,7 +1500,7 @@ function WhyChooseCorxBloodTest({ reasonsList = [], serviceData, isEditMode, slu
 
 export default function ServicePage({ serviceId }) {
   const params = useParams();
-  const rawSlug = serviceId || params?.serviceSlug || 'lab-services';
+  const rawSlug = serviceId || params?.serviceSlug || params?.subSlug || params?.['*'] || 'lab-services';
   const activeSlug = rawSlug.toLowerCase();
   return <LabServicesLanding slug={activeSlug} />;
 }

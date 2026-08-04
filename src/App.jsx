@@ -66,7 +66,15 @@ const AnimatedRoutes = () => {
         <Route path="/book-an-appointment/" element={<Contact />} />
         <Route path="/team" element={<Team />} />
 
-        {/* Dynamic Flat Service Route */}
+        {/* Dynamic Service & Sub-Service Routes */}
+        <Route path="/services/:parentSlug/:serviceSlug" element={<ServicePage />} />
+        <Route path="/services/:parentSlug/:serviceSlug/" element={<ServicePage />} />
+        <Route path="/physiotherapy-at-home-in-dubai/:serviceSlug" element={<ServicePage />} />
+        <Route path="/physiotherapy-at-home-in-dubai/:serviceSlug/" element={<ServicePage />} />
+        <Route path="/physiotherapy/:serviceSlug" element={<ServicePage />} />
+        <Route path="/physiotherapy/:serviceSlug/" element={<ServicePage />} />
+        <Route path="/:parentSlug/:serviceSlug" element={<ServicePage />} />
+        <Route path="/:parentSlug/:serviceSlug/" element={<ServicePage />} />
         <Route path="/:serviceSlug" element={<ServicePage />} />
       </Routes>
     </AnimatePresence>
