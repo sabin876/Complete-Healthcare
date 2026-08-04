@@ -489,19 +489,42 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   useEffect(() => {
     if (!cleanSlug) return;
-    fetch(`${API_BASE_URL}/api/services/${cleanSlug}/`)
-      .then(res => {
-        if (!res.ok) return null;
-        return res.json();
-      })
-      .then(data => {
-        if (data && typeof data === 'object' && !Array.isArray(data)) {
-          setServiceData(data);
+
+    const candidateSlugs = [
+      cleanSlug,
+      cleanSlug.replace('doctor', 'docotor'),
+      cleanSlug === 'doctor-on-call' ? 'docotor-on-call' : null,
+      cleanSlug === 'lab-services' ? 'lab-test-at-home' : (cleanSlug === 'lab-test-at-home' ? 'lab-services' : null),
+      cleanSlug === 'elderly-care' ? 'elderly-home-care' : (cleanSlug === 'elderly-home-care' ? 'elderly-care' : null),
+      cleanSlug === 'iv-therapy' ? 'iv-therapy-iv-drip' : (cleanSlug === 'iv-therapy-iv-drip' ? 'iv-therapy' : null),
+      cleanSlug.includes('physio') ? 'Physiotherapy-Services' : null,
+      cleanSlug.includes('physio') ? 'physiotherapy' : null,
+    ].filter((val, idx, arr) => Boolean(val) && arr.indexOf(val) === idx);
+
+    let isMounted = true;
+
+    const tryFetchService = async () => {
+      for (const s of candidateSlugs) {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/services/${s}/`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && typeof data === 'object' && !Array.isArray(data) && isMounted) {
+              setServiceData(data);
+              return;
+            }
+          }
+        } catch (e) {
+          // Continue trying next candidate
         }
-      })
-      .catch((err) => {
-        console.warn("Could not fetch service data from API, using default layout:", err);
-      });
+      }
+    };
+
+    tryFetchService();
+
+    return () => {
+      isMounted = false;
+    };
   }, [cleanSlug]);
 
   // Dynamic SEO Meta Tags & Head Title Update

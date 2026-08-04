@@ -60,12 +60,20 @@ const AnimatedRoutes = () => {
         {/* Core Flat Pages */}
         <Route path="/about-us" element={<About />} />
         <Route path="/about-us/" element={<About />} />
-        <Route path="/lab-test-at-home" element={<ServicePage serviceId="lab-services" />} />
-        <Route path="/lab-test-at-home/" element={<ServicePage serviceId="lab-services" />} />
-        <Route path="/physiotherapy-at-home-in-dubai" element={<ServicePage serviceId="physiotherapy" />} />
-        <Route path="/physiotherapy-at-home-in-dubai/" element={<ServicePage serviceId="physiotherapy" />} />
+        <Route path="/lab-test-at-home" element={<ServicePage serviceId="lab-test-at-home" />} />
+        <Route path="/lab-test-at-home/" element={<ServicePage serviceId="lab-test-at-home" />} />
+        <Route path="/physiotherapy-at-home-in-dubai" element={<ServicePage serviceId="physiotherapy-at-home-in-dubai" />} />
+        <Route path="/physiotherapy-at-home-in-dubai/" element={<ServicePage serviceId="physiotherapy-at-home-in-dubai" />} />
         <Route path="/home-nursing" element={<ServicePage serviceId="home-nursing" />} />
         <Route path="/home-nursing/" element={<ServicePage serviceId="home-nursing" />} />
+        <Route path="/elderly-home-care" element={<ServicePage serviceId="elderly-home-care" />} />
+        <Route path="/elderly-home-care/" element={<ServicePage serviceId="elderly-home-care" />} />
+        <Route path="/elderly-care" element={<Navigate to="/elderly-home-care" replace />} />
+        <Route path="/elderly-care/" element={<Navigate to="/elderly-home-care" replace />} />
+        <Route path="/iv-therapy" element={<ServicePage serviceId="iv-therapy" />} />
+        <Route path="/iv-therapy/" element={<ServicePage serviceId="iv-therapy" />} />
+        <Route path="/doctor-on-call" element={<ServicePage serviceId="doctor-on-call" />} />
+        <Route path="/doctor-on-call/" element={<ServicePage serviceId="doctor-on-call" />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<BlogDetails />} />
         <Route path="/blog/details" element={<BlogDetails />} />
