@@ -11,7 +11,7 @@ const services = [
     title: "Home Physiotherapy",
     description: "Experience Exceptional Home Physiotherapy in Dubai with Just One Phone Call Away",
     accent: "#B8D8E8",
-    path: "/physiotherapy",
+    path: "/physiotherapy-at-home-in-dubai/",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />

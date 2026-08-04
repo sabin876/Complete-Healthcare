@@ -48,7 +48,7 @@ const Header = () => {
   const defaultServices = [
     { 
       name: 'Physiotherapy', 
-      path: '/physiotherapy', 
+      path: '/physiotherapy-at-home-in-dubai/',
       icon: Activity,
       subtitle: 'Rehabilitation & Pain Relief',
       badge: 'Popular',

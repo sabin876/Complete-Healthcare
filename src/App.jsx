@@ -33,16 +33,30 @@ const AnimatedRoutes = () => {
         {/* Redirects to enforce Flat URL Structure */}
         <Route path="/services" element={<Navigate to="/lab-test-at-home" replace />} />
         <Route path="/services/lab-services" element={<Navigate to="/lab-test-at-home" replace />} />
+        <Route path="/services/physiotherapy" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
+        <Route path="/services/physiotherapy/" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
+        <Route path="/services/physiotherapy-services" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
+        <Route path="/services/physiotherapy-services/" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
+        <Route path="/services/Physiotherapy-Services" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
+        <Route path="/services/Physiotherapy-Services/" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
         <Route path="/services/:serviceSlug" element={<ServiceRedirect />} />
         <Route path="/lab-services" element={<Navigate to="/lab-test-at-home" replace />} />
         <Route path="/lab-test-at-home-dubai" element={<Navigate to="/lab-test-at-home" replace />} />
         <Route path="/lab-test-at-home-dubai/" element={<Navigate to="/lab-test-at-home" replace />} />
+        <Route path="/Physiotherapy-Services" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
+        <Route path="/Physiotherapy-Services/" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
+        <Route path="/physiotherapy-services" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
+        <Route path="/physiotherapy-services/" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
+        <Route path="/physiotherapy" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
+        <Route path="/physiotherapy/" element={<Navigate to="/physiotherapy-at-home-in-dubai/" replace />} />
         
         {/* Core Flat Pages */}
         <Route path="/about-us" element={<About />} />
         <Route path="/about-us/" element={<About />} />
         <Route path="/lab-test-at-home" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/lab-test-at-home/" element={<ServicePage serviceId="lab-services" />} />
+        <Route path="/physiotherapy-at-home-in-dubai" element={<ServicePage serviceId="physiotherapy" />} />
+        <Route path="/physiotherapy-at-home-in-dubai/" element={<ServicePage serviceId="physiotherapy" />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<BlogDetails />} />
         <Route path="/blog/details" element={<BlogDetails />} />

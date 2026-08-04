@@ -593,8 +593,11 @@ export const servicesData = {
 servicesData['docotor-on-call'] = servicesData['doctor-on-call'];
 servicesData['home-nursing'] = servicesData['nursing'];
 servicesData['elderly-home-care'] = servicesData['elderly-care'];
+servicesData['lab-test-at-home-dubai'] = servicesData['lab-services'];
 servicesData['lab-test-at-home'] = servicesData['lab-services'];
 servicesData['iv-therapy-iv-drip'] = servicesData['iv-therapy'];
 servicesData['physiotherapy-services'] = servicesData['physiotherapy'];
+servicesData['Physiotherapy-Services'] = servicesData['physiotherapy'];
+servicesData['physiotherapy-at-home-in-dubai'] = servicesData['physiotherapy'];
 servicesData['physiotherapy'] = servicesData['physiotherapy'];
 
