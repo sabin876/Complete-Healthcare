@@ -457,10 +457,23 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  const cleanSlug = (slug || '').toLowerCase().replace(/^(services\/)/, '').replace(/\/+$/, '');
+  const rawParts = (slug || '').toLowerCase().split('/').filter(Boolean);
+  const targetSlug = rawParts.length > 0 ? rawParts[rawParts.length - 1] : 'lab-services';
+  const cleanSlug = targetSlug.replace(/^(services\/)/, '');
   const altSlug = cleanSlug.replace(/docotor/g, 'doctor');
   const altSlug2 = cleanSlug.replace(/doctor/g, 'docotor');
-  const staticFallback = staticServicesData[cleanSlug] || staticServicesData[altSlug] || staticServicesData[altSlug2] || staticServicesData[cleanSlug.replace(/-/g, '')] || staticServicesData['lab-services'] || {};
+  
+  const staticFallback = staticServicesData[cleanSlug] || 
+                         staticServicesData[altSlug] || 
+                         staticServicesData[altSlug2] || 
+                         staticServicesData[cleanSlug.replace(/-/g, '')] || 
+                         (cleanSlug.includes('physio') ? staticServicesData['physiotherapy'] : null) ||
+                         (cleanSlug.includes('nurs') ? staticServicesData['nursing'] : null) ||
+                         (cleanSlug.includes('iv') ? staticServicesData['iv-therapy'] : null) ||
+                         (cleanSlug.includes('doctor') ? staticServicesData['doctor-on-call'] : null) ||
+                         (cleanSlug.includes('elder') ? staticServicesData['elderly-care'] : null) ||
+                         staticServicesData['lab-services'] || {};
+
   const validServiceData = (serviceData && typeof serviceData === 'object' && !Array.isArray(serviceData)) ? serviceData : null;
   const mergedData = validServiceData ? {
     ...staticFallback,
@@ -470,14 +483,13 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     reasons: (Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0) ? validServiceData.reasons : (staticFallback.reasons || []),
     steps: (Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0) ? validServiceData.steps : (staticFallback.steps || []),
     faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0) ? validServiceData.faqs : (staticFallback.faqs || []),
-    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : [],
+    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : (staticFallback.benefits || []),
     lab_columns: (Array.isArray(validServiceData.lab_columns) && validServiceData.lab_columns.length > 0) ? validServiceData.lab_columns : (staticFallback.lab_columns || []),
   } : staticFallback;
 
   useEffect(() => {
-    if (!slug) return;
-    const lowerSlug = slug.toLowerCase();
-    fetch(`${API_BASE_URL}/api/services/${lowerSlug}/`)
+    if (!cleanSlug) return;
+    fetch(`${API_BASE_URL}/api/services/${cleanSlug}/`)
       .then(res => {
         if (!res.ok) return null;
         return res.json();
@@ -490,7 +502,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       .catch((err) => {
         console.warn("Could not fetch service data from API, using default layout:", err);
       });
-  }, [slug]);
+  }, [cleanSlug]);
 
   // Dynamic SEO Meta Tags & Head Title Update
   useEffect(() => {
