@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Plus, CheckCircle2, Activity, Droplets, HeartPulse, 
-  Stethoscope, HeartHandshake, TestTube, Sparkles, Clock, 
+  Plus, CheckCircle2, Activity,
   ShieldCheck, Layers, Trash2, ExternalLink, RefreshCw,
-  LayoutDashboard, CornerDownRight, Edit3, Save, X, ArrowRight,
+  LayoutDashboard, CornerDownRight, Edit3, X, ArrowRight,
   ListChecks, Image as ImageIcon, BookOpen, ArrowUp, ArrowDown, 
-  Search, Copy, Check, Eye, EyeOff, Zap, Sliders, AlertCircle,
-  TrendingUp, ArrowUpRight, Database, Server, Globe, Filter, ChevronRight, FileText
+  Search, Eye, EyeOff, Zap, Sliders, AlertCircle,
+  TrendingUp, ArrowUpRight, Server, Globe, Filter, ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
@@ -19,13 +18,12 @@ export default function Dashboard() {
   const [parentServices, setParentServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [copiedSlug, setCopiedSlug] = useState(null);
   const [showLivePreview, setShowLivePreview] = useState(true);
   const [lastSyncedTime, setLastSyncedTime] = useState(null);
   const [selectedParentFilter, setSelectedParentFilter] = useState('all');
 
   // Toast Notification System State
-  const [toast, setToast] = useState(null); // { type: 'success' | 'error', title: string, message: string }
+  const [toast, setToast] = useState(null);
 
   const showToast = (type, title, message) => {
     setToast({ type, title, message });
@@ -258,7 +256,7 @@ export default function Dashboard() {
 
       if (!res.ok) throw new Error('Failed to save benefits section.');
       
-      showToast('success', 'Saved Benefits', `Updated benefits for "${selectedBenefitsServiceSlug}"!`);
+      showToast('success', 'Saved Benefits', `Updated benefits section successfully!`);
       setBenefitsImageFile(null);
       loadServices();
     } catch (err) {
@@ -304,7 +302,7 @@ export default function Dashboard() {
 
       if (!res.ok) throw new Error('Failed to save understanding section.');
       
-      showToast('success', 'Saved Section', `Updated understanding section for "${selectedUnderstandingServiceSlug}"!`);
+      showToast('success', 'Saved Section', `Updated understanding section successfully!`);
       setUnderstandingImageFile(null);
       loadServices();
     } catch (err) {
@@ -483,12 +481,6 @@ export default function Dashboard() {
     }
   };
 
-  const handleCopySlug = (slug) => {
-    navigator.clipboard.writeText(slug);
-    setCopiedSlug(slug);
-    setTimeout(() => setCopiedSlug(null), 2000);
-  };
-
   const safeServicesData = Array.isArray(servicesData) ? servicesData : [];
   const safeParentServices = Array.isArray(parentServices) ? parentServices : [];
   const selectedParentObj = safeParentServices.find(p => p && p.id && p.id.toString() === selectedParentId);
@@ -498,7 +490,7 @@ export default function Dashboard() {
   const filteredSubServices = allSubServicesList.filter((s) => {
     const matchesSearch = !searchTerm || (
       (s.title && s.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (s.slug && s.slug.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (s.name && s.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (s.tagline && s.tagline.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
@@ -514,7 +506,7 @@ export default function Dashboard() {
       <div className="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
       <div className="fixed top-1/3 right-10 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
 
-      {/* Floating Toast Notification Engine */}
+      {/* Floating Animated Toast Notification Engine */}
       <AnimatePresence>
         {toast && (
           <motion.div
@@ -801,8 +793,7 @@ export default function Dashboard() {
                 <div className="lg:col-span-8 bg-[#0a1224]/90 border border-slate-800 p-6 sm:p-8 rounded-3xl">
                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
                     <h3 className="text-lg font-black text-white uppercase tracking-tight font-montserrat flex items-center gap-2">
-                      <Sparkles size={18} className="text-cyan-400" />
-                      <span>Registered Sub-Services Quick List</span>
+                      <span>Registered Services Overview</span>
                     </h3>
                     <button
                       onClick={() => setActiveTab('subservices')}
@@ -820,11 +811,21 @@ export default function Dashboard() {
                         <div key={sub.id} className="p-4 rounded-2xl bg-[#0e172e] border border-slate-800/80 flex items-center justify-between gap-4 hover:border-cyan-500/40 transition-all">
                           <div>
                             <span className="font-extrabold text-white text-sm block">{sub.title || sub.name}</span>
-                            <span className="text-xs text-slate-400 font-mono font-medium">/{sub.slug}</span>
+                            {sub.tagline && <span className="text-xs text-slate-400 font-medium block mt-0.5 line-clamp-1">{sub.tagline}</span>}
                           </div>
-                          <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold">
-                            {parentObj ? (parentObj.name || parentObj.title) : 'Parent Category'}
-                          </span>
+                          <div className="flex items-center gap-3 shrink-0">
+                            <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold">
+                              {parentObj ? (parentObj.name || parentObj.title) : 'Parent Category'}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditModal(sub)}
+                              className="px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                            >
+                              <Edit3 size={14} />
+                              <span>Edit</span>
+                            </button>
+                          </div>
                         </div>
                       );
                     })}
@@ -915,7 +916,7 @@ export default function Dashboard() {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Night Care Nurse, Post-Op Care"
+                      placeholder="e.g. Night Care Nurse, Doctor on Call"
                       value={subTitle}
                       onChange={(e) => setSubTitle(e.target.value)}
                       className="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-white text-xs font-bold focus:outline-none focus:border-cyan-500"
@@ -945,7 +946,7 @@ export default function Dashboard() {
                 </form>
               </div>
 
-              {/* DIRECTORY TABLE */}
+              {/* DIRECTORY TABLE - REMOVED SLUG & ICON Theme Color, ADDED PROMINENT EDIT, DELETE & VIEW PAGE BUTTONS */}
               <div className="lg:col-span-7 space-y-6">
                 <div className="bg-[#0a1224]/90 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800 flex-wrap gap-4">
@@ -981,21 +982,19 @@ export default function Dashboard() {
                       type="text"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      placeholder="Instant search by title or slug..."
+                      placeholder="Search services by title or description..."
                       className="w-full pl-10 pr-10 py-3 rounded-2xl border border-slate-700 bg-[#060b17] text-xs font-bold text-white focus:outline-none focus:border-cyan-500"
                     />
                   </div>
 
-                  {/* Table */}
+                  {/* Streamlined Data Table */}
                   <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-[#060b17]">
                     <table className="w-full text-left border-collapse">
                       <thead>
                         <tr className="bg-[#0e172e] text-white text-xs font-black uppercase tracking-wider border-b border-slate-800">
-                          <th className="py-4 px-4 font-montserrat">Service Title & Slug</th>
-                          <th className="py-4 px-4 font-montserrat">Parent Category</th>
-                          <th className="py-4 px-4 text-center font-montserrat w-16">Link</th>
-                          <th className="py-4 px-4 text-center font-montserrat w-16">Edit</th>
-                          <th className="py-4 px-4 text-center font-montserrat w-16">Delete</th>
+                          <th className="py-4 px-4 font-montserrat">Service Name & Description</th>
+                          <th className="py-4 px-4 font-montserrat">Category</th>
+                          <th className="py-4 px-4 text-center font-montserrat">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-800 text-xs font-medium">
@@ -1004,54 +1003,65 @@ export default function Dashboard() {
                           return (
                             <tr key={sub.id} className="hover:bg-[#0e172e] transition-colors group">
                               <td className="py-4 px-4">
-                                <div className="font-extrabold text-white text-sm group-hover:text-cyan-300 transition-colors flex items-center gap-2">
-                                  <span>{sub.title || sub.name}</span>
-                                  <button
-                                    onClick={() => handleCopySlug(sub.slug)}
-                                    className="p-1 text-slate-400 hover:text-cyan-400 transition-all cursor-pointer"
-                                  >
-                                    {copiedSlug === sub.slug ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
-                                  </button>
+                                <div className="font-extrabold text-white text-sm group-hover:text-cyan-300 transition-colors">
+                                  {sub.title || sub.name}
                                 </div>
-                                <div className="text-slate-500 text-[11px] font-mono mt-0.5">/{sub.slug}</div>
+                                {sub.tagline && (
+                                  <div className="text-slate-400 text-xs mt-0.5 line-clamp-1 font-sans">
+                                    {sub.tagline}
+                                  </div>
+                                )}
                               </td>
                               <td className="py-4 px-4">
-                                <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[11px] font-bold">
+                                <span className="inline-flex items-center px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 text-xs font-bold">
                                   {parentObj ? (parentObj.name || parentObj.title) : 'Standalone'}
                                 </span>
                               </td>
+                              {/* Prominent Action Buttons */}
                               <td className="py-4 px-4 text-center">
-                                <Link
-                                  to={`/services/${sub.slug}`}
-                                  target="_blank"
-                                  className="p-2 text-emerald-400 hover:bg-emerald-500/20 rounded-lg inline-flex items-center justify-center transition-all"
-                                >
-                                  <ExternalLink size={16} />
-                                </Link>
-                              </td>
-                              <td className="py-4 px-4 text-center">
-                                <button
-                                  type="button"
-                                  onClick={() => handleOpenEditModal(sub)}
-                                  className="p-2 text-cyan-400 hover:bg-cyan-500/20 rounded-lg inline-flex items-center justify-center transition-all cursor-pointer"
-                                >
-                                  <Edit3 size={16} />
-                                </button>
-                              </td>
-                              <td className="py-4 px-4 text-center">
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteService(sub.slug, sub.title || sub.name)}
-                                  className="p-2 text-rose-400 hover:bg-rose-500/20 rounded-lg inline-flex items-center justify-center transition-all cursor-pointer"
-                                >
-                                  <Trash2 size={16} />
-                                </button>
+                                <div className="flex items-center justify-center gap-2">
+                                  <Link
+                                    to={`/services/${sub.slug}`}
+                                    target="_blank"
+                                    className="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/30 text-xs font-bold transition-all inline-flex items-center gap-1"
+                                    title="View Live Page"
+                                  >
+                                    <ExternalLink size={14} />
+                                    <span>View</span>
+                                  </Link>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenEditModal(sub)}
+                                    className="px-3.5 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                                    title="Edit Service"
+                                  >
+                                    <Edit3 size={14} />
+                                    <span>Edit</span>
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteService(sub.slug, sub.title || sub.name)}
+                                    className="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/30 text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                                    title="Delete Service"
+                                  >
+                                    <Trash2 size={14} />
+                                    <span>Delete</span>
+                                  </button>
+                                </div>
                               </td>
                             </tr>
                           );
                         })}
                       </tbody>
                     </table>
+
+                    {filteredSubServices.length === 0 && (
+                      <div className="py-12 text-center text-slate-500 font-medium text-xs">
+                        No services found matching your search.
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1121,7 +1131,7 @@ export default function Dashboard() {
                       >
                         {servicesData.map((s) => (
                           <option key={s.id} value={s.slug}>
-                            {s.title || s.name} ({s.slug})
+                            {s.title || s.name}
                           </option>
                         ))}
                       </select>
@@ -1219,7 +1229,7 @@ export default function Dashboard() {
                 </div>
 
                 {showLivePreview && (
-                  <div className="lg:col-span-5 bg-[#060b17] border border-slate-800 p-6 rounded-3xl shadow-2xl text-slate-800 bg-white sticky top-6">
+                  <div className="lg:col-span-5 border border-slate-800 p-6 rounded-3xl shadow-2xl text-slate-800 bg-white sticky top-6">
                     <h2 className="text-xl font-extrabold text-slate-900 tracking-tight font-montserrat mb-2">
                       {understandingTitleText || 'Understanding Section Heading'}
                     </h2>
@@ -1278,7 +1288,7 @@ export default function Dashboard() {
                   >
                     {servicesData.map((s) => (
                       <option key={s.id} value={s.slug}>
-                        {s.title || s.name} ({s.slug})
+                        {s.title || s.name}
                       </option>
                     ))}
                   </select>
@@ -1411,6 +1421,7 @@ export default function Dashboard() {
                 </form>
               </div>
 
+              {/* PARENT TABLE - PROMINENT EDIT & DELETE BUTTONS */}
               <div className="lg:col-span-7 space-y-4">
                 <div className="bg-[#0a1224]/90 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
                   <h3 className="text-lg font-black text-white uppercase tracking-tight font-montserrat mb-6 pb-4 border-b border-slate-800">
@@ -1421,10 +1432,9 @@ export default function Dashboard() {
                     <table className="w-full text-left border-collapse">
                       <thead>
                         <tr className="bg-[#0e172e] text-white text-xs font-black uppercase tracking-wider border-b border-slate-800">
-                          <th className="py-4 px-4 font-montserrat">Category Title</th>
+                          <th className="py-4 px-4 font-montserrat">Category Title & Description</th>
                           <th className="py-4 px-4 text-center font-montserrat">Sub-Services</th>
-                          <th className="py-4 px-4 text-center font-montserrat w-20">Edit</th>
-                          <th className="py-4 px-4 text-center font-montserrat w-20">Delete</th>
+                          <th className="py-4 px-4 text-center font-montserrat">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-800 text-xs font-medium">
@@ -1432,20 +1442,42 @@ export default function Dashboard() {
                           const subCount = servicesData.filter(s => s.parent === p.id).length;
                           return (
                             <tr key={p.id} className="hover:bg-[#0e172e] transition-colors">
-                              <td className="py-4 px-4 font-bold text-white">
-                                {p.title || p.name}
-                                <div className="text-slate-500 text-[11px] font-mono">/{p.slug}</div>
+                              <td className="py-4 px-4">
+                                <div className="font-extrabold text-white text-sm">
+                                  {p.title || p.name}
+                                </div>
+                                {(p.tagline || p.subtitle) && (
+                                  <div className="text-slate-400 text-xs mt-0.5 line-clamp-1 font-sans">
+                                    {p.tagline || p.subtitle}
+                                  </div>
+                                )}
                               </td>
                               <td className="py-4 px-4 text-center">
-                                <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-bold">
+                                <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold">
                                   {subCount} Items
                                 </span>
                               </td>
                               <td className="py-4 px-4 text-center">
-                                <button type="button" onClick={() => handleOpenEditModal(p)} className="p-2 text-cyan-400 hover:bg-cyan-500/20 rounded-lg"><Edit3 size={16} /></button>
-                              </td>
-                              <td className="py-4 px-4 text-center">
-                                <button type="button" onClick={() => handleDeleteService(p.slug, p.title || p.name)} className="p-2 text-rose-400 hover:bg-rose-500/20 rounded-lg"><Trash2 size={16} /></button>
+                                <div className="flex items-center justify-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenEditModal(p)}
+                                    className="px-3.5 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                                    title="Edit Parent Category"
+                                  >
+                                    <Edit3 size={14} />
+                                    <span>Edit</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteService(p.slug, p.title || p.name)}
+                                    className="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/30 text-xs font-bold transition-all inline-flex items-center gap-1 cursor-pointer"
+                                    title="Delete Parent Category"
+                                  >
+                                    <Trash2 size={14} />
+                                    <span>Delete</span>
+                                  </button>
+                                </div>
                               </td>
                             </tr>
                           );
@@ -1561,7 +1593,7 @@ export default function Dashboard() {
 
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800 mt-6">
                 <button type="button" onClick={() => setEditingService(null)} className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-400 font-bold text-xs hover:bg-slate-800">Cancel</button>
-                <button type="submit" disabled={savingEdit} className="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-cyan-400">
+                <button type="submit" disabled={savingEdit} className="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-cyan-400 cursor-pointer">
                   {savingEdit ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
