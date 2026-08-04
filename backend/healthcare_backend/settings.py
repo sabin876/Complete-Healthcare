@@ -161,16 +161,20 @@ raw_cors = os.getenv('CORS_ALLOWED_ORIGINS', 'https://sabinsiwakoti.com.np,https
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in raw_cors.split(',') if origin.strip()]
 
 JAZZMIN_SETTINGS = {
-    "site_title": "CORx Healthcare Admin Portal",
-    "site_header": "CORx Healthcare",
+    "site_title": "CORx Healthcare Operations & Admin",
+    "site_header": "CORx Healthcare Admin",
     "site_brand": "CORx Healthcare",
-    "welcome_sign": "Welcome to CORx Healthcare Operations & Service Admin",
+    "welcome_sign": "Welcome to CORx Healthcare Executive Operations & Services Hub",
     "copyright": "CORx Healthcare Dubai",
     "user_avatar": None,
+    "custom_css": "api/css/custom_admin.css",
     "topmenu_links": [
-        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "React Dashboard", "url": "/dashboard", "new_window": True},
-        {"name": "Live Site", "url": "/", "new_window": True},
+        {"name": "Home Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Services Manager", "url": "/admin/api/service/", "permissions": ["api.view_service"]},
+        {"name": "Staff Directory", "url": "/admin/api/staffprofile/", "permissions": ["api.view_staffprofile"]},
+        {"name": "Blog Posts", "url": "/admin/api/blogpost/", "permissions": ["api.view_blogpost"]},
+        {"name": "React Frontend Dashboard", "url": "/dashboard", "new_window": True},
+        {"name": "Live Web App", "url": "/", "new_window": True},
     ],
     "show_sidebar": True,
     "navigation_expanded": True,
