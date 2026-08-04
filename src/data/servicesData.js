@@ -10,12 +10,6 @@ export const servicesData = {
       title: "Home, hotel, or office visits",
       desc: "Professional physiotherapy tailored to your schedule and condition."
     },
-    benefits: [
-      { title: "DHA-Licensed", desc: "licensed physiotherapists for home visits across Dubai" },
-      { title: "Flexible Locations", desc: "Physiotherapy at home, hotel, or office with flexible scheduling" },
-      { title: "Customized Programs", desc: "Personalized treatment plans for faster and safe recovery" },
-      { title: "Transparent Pricing", desc: "Transparent pricing structure with no hidden costs" }
-    ],
     faqs: [
       {
         q: "How long does a home physiotherapy session last?",

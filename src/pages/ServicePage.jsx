@@ -470,7 +470,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     reasons: (Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0) ? validServiceData.reasons : (staticFallback.reasons || []),
     steps: (Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0) ? validServiceData.steps : (staticFallback.steps || []),
     faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0) ? validServiceData.faqs : (staticFallback.faqs || []),
-    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : (staticFallback.benefits || []),
+    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : [],
     lab_columns: (Array.isArray(validServiceData.lab_columns) && validServiceData.lab_columns.length > 0) ? validServiceData.lab_columns : (staticFallback.lab_columns || []),
   } : staticFallback;
 

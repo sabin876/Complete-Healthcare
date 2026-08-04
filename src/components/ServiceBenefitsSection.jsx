@@ -40,8 +40,8 @@ export default function ServiceBenefitsSection({
     return null;
   }
 
-  const displayBenefits = hasCustomBenefits ? benefitsList : defaultBenefitsData;
-  const defaultTitleText = benefitsTitle || (serviceTitle ? `Benefits of Our ${serviceTitle} Service at Corx Healthcare` : "Benefits of Our Home Healthcare Service at Corx Healthcare");
+  const cleanServiceTitle = (serviceTitle || '').replace(/\s*services?\s*$/i, '');
+  const defaultTitleText = benefitsTitle || (cleanServiceTitle ? `Benefits of Our ${cleanServiceTitle} Service at CORx Healthcare` : "Benefits of Our Home Healthcare Service at CORx Healthcare");
   
   // Default high quality medical care image
   const defaultImg = "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80";
