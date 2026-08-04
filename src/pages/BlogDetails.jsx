@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { API_BASE_URL } from "../config/api";
 
+import { slugifyTitle } from "./Blog";
+
 const blogDatabase = [
   {
     id: 1,
+    slug: "advantages-of-stem-cells-regenerative-medicine",
     category: "Home Healthcare",
     title: "Advantages of Stem Cells: Regenerative Medicine Supports Healing and Recovery",
     author: "Corx",
@@ -46,6 +49,7 @@ const blogDatabase = [
   },
   {
     id: 2,
+    slug: "what-is-physiotherapy-comprehensive-guide",
     category: "Home Physiotherapy",
     title: "WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE",
     author: "Corx",
@@ -61,6 +65,7 @@ const blogDatabase = [
   },
   {
     id: 3,
+    slug: "burnout-in-working-professionals-signs-solutions",
     category: "Home Healthcare",
     title: "Burnout in Working Professionals: Signs & Solutions",
     author: "Corx",
@@ -74,6 +79,7 @@ const blogDatabase = [
   },
   {
     id: 4,
+    slug: "doctor-at-home-vs-hospital-visit",
     category: "Doctor on Call",
     title: "Doctor at Home vs Hospital Visit: What's Better in 2026?",
     author: "Corx",
@@ -87,6 +93,7 @@ const blogDatabase = [
   },
   {
     id: 5,
+    slug: "managing-chronic-conditions-with-home-healthcare",
     category: "Home Nursing",
     title: "Managing Chronic Conditions With Home Healthcare Support",
     author: "Corx",
@@ -101,17 +108,20 @@ const blogDatabase = [
 ];
 
 export default function BlogDetails() {
-  const { id } = useParams();
+  const { id, slug } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const articleId = parseInt(id) || 1;
-  const initialPost = blogDatabase.find((p) => p.id === articleId) || blogDatabase[0];
+  const targetParam = (slug || id || '').toString().toLowerCase();
+  const initialPost = blogDatabase.find(
+    (p) => p.slug === targetParam || p.id.toString() === targetParam || slugifyTitle(p.title) === targetParam
+  ) || blogDatabase[0];
   const [post, setPost] = useState(initialPost);
+  const articleId = post ? post.id : 1;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (id) {
-      fetch(`${API_BASE_URL}/api/blogs/${id}/`)
+    if (targetParam) {
+      fetch(`${API_BASE_URL}/api/blogs/${targetParam}/`)
         .then(res => {
           if (!res.ok) return null;
           return res.json();
@@ -120,6 +130,7 @@ export default function BlogDetails() {
           if (data && data.title) {
             setPost({
               id: data.id,
+              slug: data.slug || slugifyTitle(data.title),
               category: data.category || 'Home Healthcare',
               title: data.title,
               author: data.author || 'Corx',
@@ -133,7 +144,7 @@ export default function BlogDetails() {
         })
         .catch(err => console.log('Django API offline, using static details:', err));
     }
-  }, [id]);
+  }, [targetParam]);
 
   const prevPost = blogDatabase.find((p) => p.id === articleId - 1) || blogDatabase[blogDatabase.length - 1];
   const nextPost = blogDatabase.find((p) => p.id === articleId + 1) || blogDatabase[0];
@@ -467,67 +478,68 @@ export default function BlogDetails() {
           <Link to="/">Home</Link> / <Link to="/blog">Blog</Link> / <Link to="/blog">{post.category}</Link> / {post.title}
         </div>
 
-        {/* Main Article Card */}
         <article className="article-card">
-          <h1 className="article-title">{post.title}</h1>
-          <p className="article-meta">By <Link to="/blog">{post.author}</Link> / {post.date}</p>
+          <h1>{post.title}</h1>
+          <div className="meta-bar">
+            <span>By <strong>{post.author}</strong></span>
+            <span>•</span>
+            <span>{post.date}</span>
+            <span>•</span>
+            <span>{post.category}</span>
+          </div>
 
-          <img className="article-hero" src={post.heroImage} alt={post.title} />
+          <img src={post.heroImage} alt={post.title} className="hero-img" />
 
-          <div className="article-body" dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div 
+            className="post-body" 
+            dangerouslySetInnerHTML={{ __html: post.content }} 
+          />
 
-          {/* Tags */}
-          <div className="tags">
-            <span className="label">Tags:</span>
-            {post.tags.map((t, idx) => (
-              <Link key={idx} to="/blog" className="tag">{t}</Link>
+          <div className="tags-row">
+            {post.tags.map((tag, i) => (
+              <span key={i} className="tag-pill">#{tag}</span>
             ))}
           </div>
 
-          {/* Share */}
-          <div className="share">
-            <span className="label">Share:</span>
+          <div className="share-row">
+            <span>Share:</span>
             <a href="#" aria-label="Share on Facebook">f</a>
             <a href="#" aria-label="Share on X">x</a>
             <a href="#" aria-label="Share via email">@</a>
             <a href="#" aria-label="Copy link">🔗</a>
           </div>
 
-          {/* Author Box */}
           <div className="author-box">
-            <div className="author-avatar">{post.author.charAt(0) || "C"}</div>
+            <div className="author-avatar">{(post.author && post.author.charAt(0)) || "C"}</div>
             <div>
               <h4>Written by {post.author}</h4>
               <p>{post.authorBio}</p>
             </div>
           </div>
 
-          {/* Prev / Next Nav */}
           <div className="post-nav">
-            <Link to={`/blog/${prevPost.id}`} className="prev">
+            <Link to={`/blog/${prevPost.slug || slugifyTitle(prevPost.title) || prevPost.id}`} className="prev">
               <span className="dir">← Previous</span>
               <span className="title">{prevPost.title}</span>
             </Link>
-            <Link to={`/blog/${nextPost.id}`} className="next">
+            <Link to={`/blog/${nextPost.slug || slugifyTitle(nextPost.title) || nextPost.id}`} className="next">
               <span className="dir">Next →</span>
               <span className="title">{nextPost.title}</span>
             </Link>
           </div>
         </article>
 
-        {/* Sidebar */}
         <aside className="sidebar">
           <div className="widget">
             <h3>Search</h3>
             <form className="search-form" role="search" onSubmit={(e) => e.preventDefault()}>
               <input 
                 type="text" 
-                placeholder="Search" 
-                aria-label="Search"
+                placeholder="Search..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button type="submit">Search</button>
+              <button type="submit">Go</button>
             </form>
           </div>
 
@@ -537,7 +549,7 @@ export default function BlogDetails() {
               {blogDatabase.map((item) => (
                 <li key={item.id}>
                   <Link 
-                    to={`/blog/${item.id}`}
+                    to={`/blog/${item.slug || slugifyTitle(item.title) || item.id}`}
                     className={item.id === post.id ? "current" : ""}
                   >
                     {item.title}

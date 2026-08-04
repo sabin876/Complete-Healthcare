@@ -94,6 +94,7 @@ class DutyApplication(models.Model):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=250)
+    slug = models.CharField(max_length=250, blank=True, default='', help_text="Clean URL slug for this blog post")
     category = models.CharField(max_length=100)
     date = models.CharField(max_length=50)  # Keep string date for frontend compatibility
     author = models.CharField(max_length=100, default='Corx')

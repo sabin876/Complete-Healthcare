@@ -8,9 +8,20 @@ import { API_BASE_URL } from "../config/api";
 const DUMMY_IMAGE =
   "https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop";
 
+export const slugifyTitle = (title) => {
+  if (!title) return '';
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
 const articles = [
   {
     id: 1,
+    slug: "alignment-concept-total-knee-replacement",
     tag: "KNEE-REPLACEMENT",
     title: "Alignment concept: Total Knee Replacement",
     excerpt: "alignment-concept-total-knee-replacement",
@@ -20,6 +31,7 @@ const articles = [
   },
   {
     id: 2,
+    slug: "evolution-of-tkr-implants",
     tag: "TKR IMPLANTS",
     title: "The Evolution of TKR Implants",
     excerpt:
@@ -30,6 +42,7 @@ const articles = [
   },
   {
     id: 3,
+    slug: "steps-in-total-knee-replacement",
     tag: "TOTAL KNEE REPLACEMENT (TKR)",
     title: "Steps in Total Knee Replacement",
     excerpt:
@@ -40,6 +53,7 @@ const articles = [
   },
   {
     id: 4,
+    slug: "post-surgical-kinematic-alignment-in-tkr",
     tag: "KNEE-REPLACEMENT",
     title: "Post-Surgical Kinematic Alignment in TKR",
     excerpt:
@@ -50,6 +64,7 @@ const articles = [
   },
   {
     id: 5,
+    slug: "patient-specific-implants-3d-precision",
     tag: "TKR IMPLANTS",
     title: "Patient-Specific Implants & 3D Precision",
     excerpt:
@@ -60,6 +75,7 @@ const articles = [
   },
   {
     id: 6,
+    slug: "recovery-timeline-rehabilitation-milestones",
     tag: "TOTAL KNEE REPLACEMENT (TKR)",
     title: "Recovery Timeline & Rehabilitation Milestones",
     excerpt:
@@ -74,10 +90,11 @@ const categories = ["ALL", "KNEE-REPLACEMENT", "TKR IMPLANTS", "TOTAL KNEE REPLA
 
 function ArticleCard({ article }) {
   const [isHovered, setIsHovered] = useState(false);
+  const targetSlug = article.slug || slugifyTitle(article.title) || article.id;
 
   return (
     <Link
-      to={`/blog/${article.id}`}
+      to={`/blog/${targetSlug}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{

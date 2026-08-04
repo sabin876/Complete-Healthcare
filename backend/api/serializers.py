@@ -64,13 +64,19 @@ class DutyApplicationSerializer(serializers.ModelSerializer):
 
 class BlogPostSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
+    slug = serializers.SerializerMethodField()
 
     class Meta:
         model = BlogPost
         fields = [
-            'id', 'title', 'category', 'date', 'author', 'image', 'image_file',
+            'id', 'title', 'slug', 'category', 'date', 'author', 'image', 'image_file',
             'excerpt', 'read_time', 'content', 'created_at', 'updated_at'
         ]
+
+    def get_slug(self, obj):
+        if getattr(obj, 'slug', None) and obj.slug.strip():
+            return obj.slug.strip()
+        return slugify(obj.title or f'post-{obj.id}')
 
     def get_image(self, obj):
         if obj.image_file:
