@@ -3,7 +3,7 @@ import {
   Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, 
   Printer, ArrowRight, Linkedin, User, ChevronRight, Activity, Droplets, 
   HeartPulse, Stethoscope, HeartHandshake, TestTube, Globe, Sparkles, CheckCircle2,
-  Clock, Plus, MessageSquare, Home, Users, FileText, Calendar
+  Clock, Plus, MessageSquare, Home, Users, FileText, Calendar, Shield
 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
@@ -23,7 +23,8 @@ const ICON_MAP = {
   Globe,
   Sparkles,
   CheckCircle2,
-  Clock
+  Clock,
+  Shield
 };
 
 const Header = () => {
