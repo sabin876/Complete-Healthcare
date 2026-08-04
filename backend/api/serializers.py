@@ -142,6 +142,24 @@ class ServiceSerializer(serializers.ModelSerializer):
             'title': {'required': True},
         }
 
+    def to_internal_value(self, data):
+        import json
+        mutable_data = data.copy() if hasattr(data, 'copy') else dict(data)
+        json_fields = [
+            'floating_badge', 'benefits', 'understanding_items', 'faqs', 
+            'locations', 'features', 'indications', 'lab_columns', 'reasons', 'steps'
+        ]
+        for field in json_fields:
+            val = mutable_data.get(field)
+            if isinstance(val, str):
+                val_str = val.strip()
+                if (val_str.startswith('{') and val_str.endswith('}')) or (val_str.startswith('[') and val_str.endswith(']')):
+                    try:
+                        mutable_data[field] = json.loads(val_str)
+                    except Exception:
+                        pass
+        return super().to_internal_value(mutable_data)
+
     def get_path(self, obj):
         if getattr(obj, 'custom_url_path', None):
             return obj.custom_url_path

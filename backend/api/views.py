@@ -52,7 +52,7 @@ def login_view(request):
         )
 
 class StaffProfileViewSet(viewsets.ModelViewSet):
-    queryset = StaffProfile.objects.all().order_index('-created_at') if hasattr(StaffProfile.objects, 'order_index') else StaffProfile.objects.all().order_by('-created_at')
+    queryset = StaffProfile.objects.all().order_by('-created_at')
     serializer_class = StaffProfileSerializer
     lookup_field = 'staff_id'
 
@@ -305,8 +305,8 @@ class ServiceViewSet(viewsets.ModelViewSet):
                 self.check_object_permissions(self.request, obj)
                 return obj
 
-        # 2. Exact slug match
-        obj = queryset.filter(slug__iexact=slug_val).first()
+        # 2. Exact slug or custom_url_path match
+        obj = queryset.filter(slug__iexact=slug_val).first() or queryset.filter(custom_url_path__iexact=slug_val).first() or queryset.filter(custom_url_path__iexact=f'/{slug_val}').first()
         if obj:
             self.check_object_permissions(self.request, obj)
             return obj
@@ -325,7 +325,11 @@ class ServiceViewSet(viewsets.ModelViewSet):
                             self.check_object_permissions(self.request, item)
                             return item
 
-        return super().get_object()
+        try:
+            return super().get_object()
+        except Exception:
+            from django.http import Http404
+            raise Http404("Service not found")
 
     @action(detail=False, methods=['get'], url_path='template')
     def get_template(self, request):
