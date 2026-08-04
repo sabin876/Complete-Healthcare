@@ -674,6 +674,73 @@ servicesData['back-pain-treatment'] = {
   ]
 };
 
+servicesData['frozen-shoulder-physiotherapy'] = {
+  ...servicesData['physiotherapy'],
+  title: "Frozen Shoulder Physiotherapy",
+  eyebrow: "Adhesive Capsulitis Therapy & Shoulder Mobility in Dubai",
+  tagline: "Relieve shoulder stiffness, restore range of motion, and reduce pain.",
+  description: "Struggling with adhesive capsulitis or frozen shoulder stiffness? Our DHA-licensed physiotherapists use joint mobilization, passive stretching, and targeted exercises at home to safely restore shoulder range of motion.",
+  about_section_title: "About Frozen Shoulder Physiotherapy Treatment",
+  indications_title: "Who Needs Frozen Shoulder Physiotherapy?",
+  indications: [
+    "Severe shoulder pain and restriction when lifting the arm",
+    "Adhesive capsulitis stage 1 (freezing), stage 2 (frozen), or stage 3 (thawing)",
+    "Post-shoulder surgery or post-immobilization stiffness",
+    "Rotator cuff tenderness and sleeping difficulty due to shoulder pain",
+    "Diabetic patients with increased risk of shoulder joint stiffness"
+  ]
+};
+
+servicesData['pediatric-physiotherapy'] = {
+  ...servicesData['physiotherapy'],
+  title: "Pediatric Physiotherapy",
+  eyebrow: "Specialized Physical Therapy for Children in Dubai",
+  tagline: "Empowering children to reach key motor milestones and movement confidence.",
+  description: "Our pediatric physiotherapists work with infants, toddlers, and children to treat developmental delays, muscular conditions, cerebral palsy, and posture imbalances through engaging, child-friendly therapy at home.",
+  about_section_title: "About Pediatric Physiotherapy Services",
+  indications_title: "Who Needs Pediatric Physiotherapy?",
+  indications: [
+    "Developmental motor delays (crawling, standing, walking)",
+    "Pediatric cerebral palsy, spasticity, and muscle tone support",
+    "Torticollis, plagiocephaly, and infant neck muscle stiffness",
+    "Childhood gait abnormalities (toe-walking, flat feet)",
+    "Post-fracture or sports injury recovery in young athletes"
+  ]
+};
+
+servicesData['joint-pain-treatment'] = {
+  ...servicesData['physiotherapy'],
+  title: "Joint Pain Treatment & Rehabilitation",
+  eyebrow: "Targeted Joint Relief & Arthritis Management in Dubai",
+  tagline: "Comprehensive joint therapy for knee, hip, shoulder, and wrist pain.",
+  description: "Suffer from osteoarthritis, rheumatoid joint pain, or persistent joint swelling? Our physiotherapists provide non-invasive joint mobilization, hydro-collator therapy, and muscle strengthening to improve joint health.",
+  about_section_title: "About Joint Pain Treatment at Home",
+  indications_title: "Who Needs Joint Pain Treatment?",
+  indications: [
+    "Knee joint osteoarthritis and cartilage wear pain",
+    "Hip pain, stiffness, and difficulty walking",
+    "Shoulder, elbow, and wrist joint inflammation",
+    "Post-joint replacement (TKR/THR) rehabilitation",
+    "Chronic swelling and morning joint stiffness"
+  ]
+};
+
+servicesData['manual-therapy'] = {
+  ...servicesData['physiotherapy'],
+  title: "Manual Therapy Services",
+  eyebrow: "Hands-On Clinical Soft Tissue & Joint Mobilization in Dubai",
+  tagline: "Skilled hands-on techniques to release muscle knots and restore alignment.",
+  description: "Manual therapy uses specialized hands-on techniques, myofascial release, joint manipulation, and soft tissue mobilization to reduce pain, release muscle tightness, and improve movement mechanics.",
+  about_section_title: "About Manual Therapy at Home",
+  indications_title: "Who Needs Manual Therapy?",
+  indications: [
+    "Chronic muscle knots, trigger points, and myofascial pain",
+    "Spinal joint restriction and neck/back alignment issues",
+    "Post-injury soft tissue tightness and scar tissue management",
+    "Tension headaches caused by upper back and neck tightness"
+  ]
+};
+
 // Aliases for API database slugs
 servicesData['docotor-on-call'] = servicesData['doctor-on-call'];
 servicesData['home-nursing'] = servicesData['nursing'];
