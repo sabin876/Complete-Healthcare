@@ -29,14 +29,14 @@ export default function ServiceUnderstandingSection({
   slug = 'default',
   imageUrl = null
 }) {
-  const hasCustomUnderstanding = (understandingItems && understandingItems.length > 0) || Boolean(understandingTitle && understandingTitle.trim() !== '');
+  const hasCustomUnderstanding = Array.isArray(understandingItems) && understandingItems.length > 0;
 
-  // Only render on service pages where understanding content has been explicitly configured
+  // Only render on service pages where understanding items have been explicitly configured
   if (!hasCustomUnderstanding && !isEditMode) {
     return null;
   }
 
-  const displayItems = (understandingItems && understandingItems.length > 0) ? understandingItems : defaultUnderstandingData;
+  const displayItems = hasCustomUnderstanding ? understandingItems : defaultUnderstandingData;
   const defaultMainTitle = understandingTitle || (serviceTitle ? `Understanding ${serviceTitle}` : "Understanding Your Condition");
   const defaultIntroText = understandingIntro || `Comprehensive clinical insights into ${serviceTitle || "your health condition"}, its stages, and effective treatment options.`;
   

@@ -33,14 +33,14 @@ export default function ServiceBenefitsSection({
   slug = 'default',
   imageUrl = null
 }) {
-  const hasCustomBenefits = (benefitsList && benefitsList.length > 0) || Boolean(benefitsTitle && benefitsTitle.trim() !== '');
+  const hasCustomBenefits = Array.isArray(benefitsList) && benefitsList.length > 0;
 
-  // Only show benefits section on services where benefits have been explicitly added/configured
+  // Only show benefits section on services where benefits items have been explicitly added/configured
   if (!hasCustomBenefits && !isEditMode) {
     return null;
   }
 
-  const displayBenefits = (benefitsList && benefitsList.length > 0) ? benefitsList : defaultBenefitsData;
+  const displayBenefits = hasCustomBenefits ? benefitsList : defaultBenefitsData;
   const defaultTitleText = benefitsTitle || (serviceTitle ? `Benefits of Our ${serviceTitle} Service at Corx Healthcare` : "Benefits of Our Home Healthcare Service at Corx Healthcare");
   
   // Default high quality medical care image

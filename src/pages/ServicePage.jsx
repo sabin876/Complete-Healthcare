@@ -835,8 +835,8 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       {/* ── HIGHLIGHTS BANNER (Staff, 24/7 Service, Dubai 30 Mins) ── */}
       <ServiceHighlightsBar />
 
-      {/* ── BENEFITS SECTION (Only rendered if benefits exist for this service) ── */}
-      {((benefitsList && benefitsList.length > 0) || (benefitsTitle && benefitsTitle.trim() !== '') || isEditMode) && (
+      {/* ── BENEFITS SECTION (Only rendered if benefits items exist for this service) ── */}
+      {(Array.isArray(benefitsList) && benefitsList.length > 0) && (
         <ServiceBenefitsSection 
           benefitsList={benefitsList} 
           benefitsTitle={benefitsTitle} 
@@ -847,8 +847,8 @@ function LabServicesLanding({ slug = 'lab-services' }) {
         />
       )}
 
-      {/* ── UNDERSTANDING / CONDITION STAGES SECTION (Matching User Screenshot Layout) ── */}
-      {((understandingItems && understandingItems.length > 0) || (understandingTitle && understandingTitle.trim() !== '') || isEditMode) && (
+      {/* ── UNDERSTANDING / CONDITION STAGES SECTION (Only rendered if understanding items exist for this service) ── */}
+      {(Array.isArray(understandingItems) && understandingItems.length > 0) && (
         <ServiceUnderstandingSection
           understandingTitle={understandingTitle}
           understandingIntro={understandingIntro}
