@@ -645,17 +645,23 @@ const Home = () => {
     <main>
       {/* Hero Slider */}
       <section className="relative min-h-[95vh] flex items-center py-20 md:py-28 overflow-hidden bg-black">
-        {/* Exclusive Pure Background Video (Hero.mp4) - No overlays */}
+        {/* Exclusive Background Video (Hero.mp4) with Restored Overlay */}
         <div className="absolute inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none">
           <video
             autoPlay
             loop
             muted
             playsInline
-            className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover opacity-100"
+            className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover opacity-80"
           >
             <source src={heroVideo} type="video/mp4" />
           </video>
+
+          {/* Restored Deep Blue Overlay matching the reference design */}
+          <div className="absolute inset-0 z-[2] bg-gradient-to-br from-[#0c2e56]/90 via-[#0b2848]/80 to-[#071f3b]/90 mix-blend-multiply pointer-events-none"></div>
+          {/* Soft dark vignettes */}
+          <div className="absolute inset-0 z-[2] bg-gradient-to-r from-black/50 via-transparent to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 z-[2] bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
         </div>
         
         <div className="container relative z-10 text-white">
