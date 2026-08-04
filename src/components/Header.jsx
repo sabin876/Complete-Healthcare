@@ -3,7 +3,7 @@ import {
   Phone, Mail, MapPin, Menu, X, ChevronDown, Facebook, Instagram, Twitter, 
   Printer, ArrowRight, Linkedin, User, ChevronRight, Activity, Droplets, 
   HeartPulse, Stethoscope, HeartHandshake, TestTube, Globe, Sparkles, CheckCircle2,
-  Clock, Plus, MessageSquare
+  Clock, Plus, MessageSquare, Home, Users, FileText, Calendar
 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
@@ -163,21 +163,25 @@ const Header = () => {
   const locations = Array(10).fill("Trusted Home healthcare services in Dubai");
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About us', path: '/about' },
-    { name: 'Our Team', path: '/team' },
-    { name: 'Blog', path: '/blog' },
+    { name: 'Home', path: '/', icon: Home, accent: '#08709d' },
+    { name: 'About us', path: '/about', icon: Users, accent: '#63b158' },
+    { name: 'Our Team', path: '/team', icon: Stethoscope, accent: '#38bdf8' },
+    { name: 'Blog', path: '/blog', icon: FileText, accent: '#a78bfa' },
     { 
       name: 'Services', 
       path: '/services',
+      icon: Activity,
+      accent: '#2ebd6e',
       dropdown: servicesDropdown
     },
-    { name: 'Book Appointment', path: '/contact' },
-    { name: 'Contact us', path: '/contact' },
+    { name: 'Book Appointment', path: '/contact', icon: Calendar, accent: '#f59e0b' },
+    { name: 'Contact us', path: '/contact', icon: Phone, accent: '#08709d' },
 
     { 
       name: 'Language', 
       path: '#',
+      icon: Globe,
+      accent: '#63b158',
       dropdown: [
         { name: 'English', path: '#', code: 'EN', flag: '🇬🇧' },
         { name: 'Arabic', path: '#', code: 'AR', flag: '🇦🇪' },
@@ -519,94 +523,165 @@ const Header = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      <div className={`fixed inset-0 bg-white z-[60] transition-transform duration-300 transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} lg:hidden`}>
-        <div className="flex flex-col h-full overflow-y-auto">
-          <div className="flex justify-between items-center p-5 sm:p-6 border-b border-gray-100 bg-white">
-            <img src={logo} alt="CORx Healthcare Navigation Logo" className="h-14 sm:h-16 w-auto object-contain" />
-            <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <X size={28} className="text-secondary-color" />
-            </button>
-          </div>
-          <div className="p-6 sm:p-8 flex flex-col gap-2">
-            {navLinks.map((link) => (
-              <div key={link.name} className="py-1 border-b border-gray-50 flex flex-col">
-                <div className="flex justify-between items-center py-3 group">
-                  <Link 
-                    to={link.path} 
-                    className="text-[16px] sm:text-[17px] font-extrabold text-secondary-color uppercase tracking-wide group-hover:text-primary-color transition-colors flex-grow"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                  {link.dropdown && (
-                    <button 
-                      onClick={() => setOpenDropdown(openDropdown === link.name ? null : link.name)}
-                      className="p-2 text-gray-400"
+      {/* Redesigned Premium Mobile Menu Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop Blur overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-[#050b14]/75 backdrop-blur-md z-[120] lg:hidden"
+            />
+
+            {/* Sliding Mobile Drawer */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+              className="fixed top-0 right-0 bottom-0 w-[88%] max-w-sm bg-white z-[130] lg:hidden shadow-2xl flex flex-col justify-between overflow-hidden"
+            >
+              {/* Header Bar */}
+              <div className="flex justify-between items-center px-6 py-4 border-b border-slate-100 bg-white/95 backdrop-blur-md sticky top-0 z-20 shadow-xs">
+                <img src={logo} alt="CORx Healthcare Navigation Logo" className="h-12 w-auto object-contain" />
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  className="p-2.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all cursor-pointer"
+                  aria-label="Close Mobile Menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Scrollable Navigation Items */}
+              <div className="flex-1 overflow-y-auto p-5 space-y-2.5">
+                {navLinks.map((link) => {
+                  const LinkIcon = link.icon;
+                  const isOpen = openDropdown === link.name;
+                  return (
+                    <div 
+                      key={link.name} 
+                      className={`rounded-2xl border transition-all overflow-hidden ${
+                        isOpen ? 'border-[#08709d]/30 bg-slate-50/90 shadow-sm' : 'border-slate-100 bg-slate-50/40 hover:bg-slate-50'
+                      }`}
                     >
-                      <ChevronDown size={20} className={`transition-transform duration-300 ${openDropdown === link.name ? 'rotate-180' : ''}`} />
-                    </button>
-                  )}
-                </div>
-                {link.dropdown && openDropdown === link.name && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="overflow-hidden bg-gray-50/70 rounded-2xl p-2 mb-4 flex flex-col gap-1">
-                    {link.dropdown.map((sub) => {
-                      return (
-                        <div key={sub.name} className="flex flex-col">
-                          <Link 
-                            to={sub.path}
-                            className="flex items-center gap-3 px-4 py-3 text-[13.5px] font-bold text-gray-700 hover:text-primary-color rounded-xl hover:bg-white transition-all"
-                            onClick={() => setIsMobileMenuOpen(false)}
+                      <div className="flex justify-between items-center p-3 sm:p-3.5">
+                        <Link 
+                          to={link.path} 
+                          className="flex items-center gap-3 text-xs sm:text-sm font-extrabold text-slate-800 uppercase tracking-wider hover:text-[#08709d] transition-colors flex-grow"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <div 
+                            className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border shadow-xs"
+                            style={{
+                              backgroundColor: `${link.accent}15`,
+                              borderColor: `${link.accent}30`,
+                              color: link.accent
+                            }}
                           >
-                            {renderIcon(sub.icon, 16, "text-[#63b158]")}
-                            <span>{sub.name}</span>
-                          </Link>
-                          {sub.subItems && (
-                            <div className="pl-9 pr-2 py-1 flex flex-col gap-1">
-                              {sub.subItems.map((c) => (
-                                <Link
-                                  key={c.name}
-                                  to={c.path}
-                                  className="text-[12.5px] font-medium text-gray-500 hover:text-primary-color py-1 px-2 rounded hover:bg-gray-100/60"
+                            <LinkIcon size={18} />
+                          </div>
+                          <span>{link.name}</span>
+                        </Link>
+                        {link.dropdown && (
+                          <button 
+                            onClick={() => setOpenDropdown(isOpen ? null : link.name)}
+                            className="p-2 text-slate-400 hover:text-slate-700 rounded-xl transition-colors cursor-pointer"
+                            aria-label={`Toggle ${link.name} Submenu`}
+                          >
+                            <ChevronDown size={18} className={`transition-transform duration-300 ${isOpen ? 'rotate-180 text-[#08709d]' : ''}`} />
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Expanded Submenu Cards */}
+                      {link.dropdown && isOpen && (
+                        <motion.div 
+                          initial={{ height: 0, opacity: 0 }} 
+                          animate={{ height: 'auto', opacity: 1 }} 
+                          exit={{ height: 0, opacity: 0 }}
+                          className="bg-white border-t border-slate-100 p-3 space-y-2"
+                        >
+                          {link.dropdown.map((sub) => {
+                            return (
+                              <div key={sub.name} className="space-y-1">
+                                <Link 
+                                  to={sub.path}
+                                  className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold text-slate-700 hover:text-[#08709d] hover:bg-slate-50 transition-all"
                                   onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                  • {c.name}
+                                  <div className="flex items-center gap-2.5">
+                                    {sub.flag ? (
+                                      <span className="text-base">{sub.flag}</span>
+                                    ) : (
+                                      renderIcon(sub.icon, 16, "text-[#63b158]")
+                                    )}
+                                    <span>{sub.name}</span>
+                                  </div>
+                                  {sub.badge && (
+                                    <span className="px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-600 border border-cyan-200 text-[10px] font-mono font-bold uppercase">
+                                      {sub.badge}
+                                    </span>
+                                  )}
+                                  {sub.code && (
+                                    <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-bold uppercase">
+                                      {sub.code}
+                                    </span>
+                                  )}
                                 </Link>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </motion.div>
-                )}
-              </div>
-            ))}
 
-            {/* Quick Action CTAs inside Mobile Drawer */}
-            <div className="mt-6 pt-5 border-t border-gray-100 flex flex-col gap-3">
-              <a 
-                href="tel:8002679" 
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#63b158] text-white text-sm font-bold shadow-md"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Phone size={16} fill="currentColor" />
-                <span>Call 24/7 Toll Free: 800 2679</span>
-              </a>
-              <a 
-                href="https://wa.me/971547033311" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#08709d] text-white text-sm font-bold shadow-md"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <MessageSquare size={16} />
-                <span>WhatsApp Us: +971 54 703 3311</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+                                {sub.subItems && (
+                                  <div className="pl-8 pr-2 py-1 space-y-1 border-l-2 border-slate-100 ml-4">
+                                    {sub.subItems.map((c) => (
+                                      <Link
+                                        key={c.name}
+                                        to={c.path}
+                                        className="text-[12px] font-semibold text-slate-500 hover:text-[#08709d] block py-1 px-2 rounded-lg hover:bg-slate-50 transition-colors"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                      >
+                                        • {c.name}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </motion.div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Bottom Quick Action CTAs inside Drawer */}
+              <div className="p-5 bg-white border-t border-slate-100 space-y-2.5 sticky bottom-0 z-20 shadow-[0_-10px_25px_rgba(0,0,0,0.05)]">
+                <a 
+                  href="tel:8002679" 
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#63b158] to-[#4fa044] text-white text-xs font-black uppercase tracking-wider shadow-md shadow-emerald-500/20 active:scale-[0.98] transition-all"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Phone size={15} fill="currentColor" />
+                  <span>Call 24/7 Toll Free: 800 2679</span>
+                </a>
+                <a 
+                  href="https://wa.me/971547033311" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#08709d] to-[#065679] text-white text-xs font-black uppercase tracking-wider shadow-md shadow-cyan-500/20 active:scale-[0.98] transition-all"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <MessageSquare size={15} />
+                  <span>WhatsApp: +971 54 703 3311</span>
+                </a>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
