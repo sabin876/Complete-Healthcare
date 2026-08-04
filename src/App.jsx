@@ -27,6 +27,8 @@ const AnimatedRoutes = () => {
         <Route path="/services" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/services/lab-services" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/services/:serviceSlug" element={<ServicePage />} />
+        <Route path="/lab-test-at-home" element={<ServicePage serviceId="lab-test-at-home" />} />
+        <Route path="/lab-test-at-home/" element={<ServicePage serviceId="lab-test-at-home" />} />
         <Route path="/lab-test-at-home-dubai" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/lab-test-at-home-dubai/" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/blog" element={<Blog />} />
