@@ -458,8 +458,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
   }, [slug]);
 
   const rawParts = (slug || '').toLowerCase().split('/').filter(Boolean);
-  const targetSlug = rawParts.length > 0 ? rawParts[rawParts.length - 1] : 'lab-services';
-  const cleanSlug = targetSlug.replace(/^(services\/)/, '');
+  const validParts = rawParts.filter(p => p !== 'services');
+  const targetSlug = validParts.length > 0 ? validParts[validParts.length - 1] : 'lab-test-at-home';
+  const cleanSlug = targetSlug;
   const altSlug = cleanSlug.replace(/docotor/g, 'doctor');
   const altSlug2 = cleanSlug.replace(/doctor/g, 'docotor');
   
@@ -1535,7 +1536,18 @@ function WhyChooseCorxBloodTest({ reasonsList = [], serviceData, isEditMode, slu
 
 export default function ServicePage({ serviceId }) {
   const params = useParams();
-  const rawSlug = serviceId || params?.serviceSlug || params?.subSlug || params?.['*'] || 'lab-services';
+  const location = useLocation();
+  const pathParts = (location?.pathname || '').split('/').filter(Boolean).filter(p => p !== 'services');
+  const lastPathPart = pathParts.length > 0 ? pathParts[pathParts.length - 1] : null;
+
+  const rawSlug = serviceId || 
+                  params?.serviceSlug || 
+                  params?.subSlug || 
+                  (params?.parentSlug && params?.parentSlug !== 'services' ? params.parentSlug : null) || 
+                  params?.['*'] || 
+                  lastPathPart || 
+                  'lab-test-at-home';
+
   const activeSlug = rawSlug.toLowerCase();
   return <LabServicesLanding slug={activeSlug} />;
 }
