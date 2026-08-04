@@ -59,11 +59,6 @@ const Header = () => {
         { name: 'Pediatric Physiotherapy', path: '/pediatric-physiotherapy', desc: 'Childhood motor milestone & movement therapy', icon: Users },
         { name: 'Joint Pain Treatment', path: '/joint-pain-treatment', desc: 'Non-invasive arthritis & joint pain relief', icon: HeartPulse },
         { name: 'Manual Therapy', path: '/manual-therapy', desc: 'Hands-on soft tissue & joint mobilization', icon: Sparkles },
-        { name: 'Geriatric Physiotherapy', path: '/geriatric-physiotherapy', desc: 'Senior mobility, balance & fall prevention', icon: Users },
-        { name: 'Chest Physiotherapy', path: '/chest-physiotherapy', desc: 'Cardiorespiratory & breathing rehab', icon: Activity },
-        { name: 'Neurological Rehab', path: '/neurological-rehab', desc: 'Post-stroke & Parkinson\'s recovery', icon: Sparkles },
-        { name: 'Sports Injury Rehab', path: '/sports-injury-rehab', desc: 'Athletic injury recovery & joint mobility', icon: Shield },
-        { name: 'Back Pain Treatment', path: '/back-pain-treatment', desc: 'Spine, neck & posture pain relief', icon: HeartPulse },
       ]
     },
     { 

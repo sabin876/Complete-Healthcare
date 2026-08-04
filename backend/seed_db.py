@@ -511,88 +511,72 @@ def seed():
             "theme_color": "#fbbf24",
             "parent_slug": "doctor-on-call",
             "floating_badge": {
-                "title": "Tourist Medical Care",
-                "desc": "Peace of mind for tourists and business travelers in Dubai."
+                "title": "Hotel Room Care", 
+                "desc": "Doctors arriving directly at your hotel room in 30-45 minutes"
             },
             "benefits": [
-                {"title": "Hotel Room Care", "desc": "Doctors arriving directly at your hotel room in 30-45 minutes"},
                 {"title": "Insurance Friendly", "desc": "Official medical reports for travel insurance reimbursement"},
                 {"title": "On-call Assistance", "desc": "24/7 treatment for travel fatigue, dehydration, food poisoning, or minor injuries"}
             ]
         },
         {
-            "slug": "geriatric-physiotherapy",
-            "title": "Geriatric Physiotherapy at Home",
-            "eyebrow": "Specialized Senior Mobility & Fall Prevention in Dubai",
-            "tagline": "Helping seniors maintain independence, balance, and pain-free movement at home.",
-            "description": "Aging can impact joint flexibility, muscle strength, and balance. Our DHA-licensed geriatric physiotherapists visit senior patients at home to deliver safe, low-impact exercises, gait training, and fall-prevention routines tailored for senior comfort.",
-            "icon": "Users",
-            "theme_color": "#63b158",
-            "parent_slug": "physiotherapy",
-            "benefits": [
-                {"title": "Senior Balance", "desc": "Fall prevention routines and gait training for elderly patients"},
-                {"title": "Joint Pain Relief", "desc": "Low-impact joint mobilization for arthritis and knee stiffness"},
-                {"title": "At-Home Comfort", "desc": "No clinic travel needed; therapists visit your senior's home directly"}
-            ]
-        },
-        {
-            "slug": "chest-physiotherapy",
-            "title": "Chest & Respiratory Physiotherapy",
-            "eyebrow": "At-Home Cardiorespiratory Rehabilitation in Dubai",
-            "tagline": "Improve breathing, clear lung secretions, and boost lung capacity at home.",
-            "description": "Recovering from pneumonia, COPD, bronchitis, or chest surgery? Our specialized respiratory physical therapists provide chest percussion, postural drainage, breathing exercises, and lung expansion therapy in the comfort of your residence.",
+            "slug": "frozen-shoulder-physiotherapy",
+            "title": "Frozen Shoulder Physiotherapy",
+            "eyebrow": "Adhesive Capsulitis Therapy & Shoulder Mobility in Dubai",
+            "tagline": "Frozen Shoulder Physiotherapy Treatment in Dubai",
+            "description": "Struggling with adhesive capsulitis or frozen shoulder stiffness? Our DHA-licensed physiotherapists use joint mobilization, passive stretching, and targeted exercises at home to safely restore shoulder range of motion.",
             "icon": "Activity",
-            "theme_color": "#63b158",
+            "theme_color": "#08709d",
             "parent_slug": "physiotherapy",
             "benefits": [
-                {"title": "Secretion Clearance", "desc": "Postural drainage and chest percussion for airway clearance"},
-                {"title": "Lung Capacity", "desc": "Breathing re-education and lung expansion exercises"},
-                {"title": "Post-Op Care", "desc": "Post-cardiac and abdominal surgery respiratory rehab"}
+                {"title": "Pain Relief", "desc": "Targeted passive stretching and pain management"},
+                {"title": "Restored Mobility", "desc": "Progressive joint mobilization to recover shoulder range of motion"},
+                {"title": "DHA Licensed", "desc": "Senior physical therapists specializing in shoulder rehabilitation"}
             ]
         },
         {
-            "slug": "neurological-rehab",
-            "title": "Neurological Rehabilitation at Home",
-            "eyebrow": "Stroke, Parkinson's & Neurological Care in Dubai",
-            "tagline": "Restoring neuromuscular function, motor skills, and physical independence.",
-            "description": "Our DHA-certified neuro-physiotherapists specialize in rehabilitation for stroke recovery, Parkinson's disease, multiple sclerosis, and spinal cord injuries. We provide structured, task-oriented physical therapy to retrain brain and body pathways.",
-            "icon": "Sparkles",
-            "theme_color": "#63b158",
+            "slug": "pediatric-physiotherapy",
+            "title": "Pediatric Physiotherapy",
+            "eyebrow": "Specialized Physical Therapy for Children in Dubai",
+            "tagline": "Pediatric Physiotherapy Services Dubai",
+            "description": "Our pediatric physiotherapists work with infants, toddlers, and children to treat developmental delays, muscular conditions, cerebral palsy, and posture imbalances through engaging, child-friendly therapy at home.",
+            "icon": "Users",
+            "theme_color": "#08709d",
             "parent_slug": "physiotherapy",
             "benefits": [
-                {"title": "Stroke Recovery", "desc": "Neuromuscular re-education and hemiplegia movement retraining"},
-                {"title": "Parkinson's Support", "desc": "Gait training, tremor control, and balance stabilization"},
-                {"title": "Motor Retraining", "desc": "Targeted task-oriented therapy to rebuild neural pathways"}
+                {"title": "Motor Milestones", "desc": "Support for crawling, standing, walking, and motor coordination"},
+                {"title": "Infant & Child Care", "desc": "Gentle, child-friendly therapy for torticollis, spasticity, and tone"},
+                {"title": "At-Home Comfort", "desc": "Treatment delivered in your child's familiar, play-friendly home environment"}
             ]
         },
         {
-            "slug": "sports-injury-rehab",
-            "title": "Sports Injury Rehabilitation at Home",
-            "eyebrow": "Advanced Athletic Recovery & Joint Mobilization in Dubai",
-            "tagline": "Fast-track your athletic recovery and return to peak performance safely.",
-            "description": "Sustained a ligament tear, ankle sprain, tendonitis, or muscle strain? Our experienced sports physiotherapists bring targeted manual therapy, joint mobilization, and sport-specific conditioning directly to your home or hotel room.",
-            "icon": "Shield",
-            "theme_color": "#63b158",
-            "parent_slug": "physiotherapy",
-            "benefits": [
-                {"title": "Ligament & Sprain Care", "desc": "Targeted ACL, knee, ankle, and hamstring rehabilitation"},
-                {"title": "Manual Therapy", "desc": "Deep tissue release, joint mobilization, and alignment"},
-                {"title": "Peak Return", "desc": "Safe return-to-sport conditioning and injury prevention"}
-            ]
-        },
-        {
-            "slug": "back-pain-treatment",
-            "title": "Back & Neck Pain Physiotherapy",
-            "eyebrow": "Spine Realignment & Chronic Pain Relief in Dubai",
-            "tagline": "Targeted spinal therapy, posture correction, and lasting pain relief.",
-            "description": "Suffering from sciatica, herniated discs, lower back stiffness, or neck tension? Our spine rehabilitation specialists provide targeted manual therapy, core stabilization, and ergonomic guidance to eliminate back pain safely at your home.",
+            "slug": "joint-pain-treatment",
+            "title": "Joint Pain Treatment",
+            "eyebrow": "Targeted Joint Relief & Arthritis Management in Dubai",
+            "tagline": "Joint Pain Treatment in Dubai",
+            "description": "Suffer from osteoarthritis, rheumatoid joint pain, or persistent joint swelling? Our physiotherapists provide non-invasive joint mobilization, hydro-collator therapy, and muscle strengthening to improve joint health.",
             "icon": "HeartPulse",
-            "theme_color": "#63b158",
+            "theme_color": "#08709d",
             "parent_slug": "physiotherapy",
             "benefits": [
-                {"title": "Sciatica Relief", "desc": "Targeted nerve decompression and lumbar spine realignment"},
-                {"title": "Disc & Neck Care", "desc": "Therapy for herniated discs, cervical tension, and stiffness"},
-                {"title": "Posture Correction", "desc": "Ergonomic advice and core strengthening for long-term relief"}
+                {"title": "Knee & Hip Relief", "desc": "Targeted mobilization for arthritis, cartilage wear, and stiffness"},
+                {"title": "Swelling Reduction", "desc": "Clinical modalities and soft tissue massage for joint inflammation"},
+                {"title": "Non-Invasive", "desc": "Effective pain management to reduce reliance on oral pain medications"}
+            ]
+        },
+        {
+            "slug": "manual-therapy",
+            "title": "Manual Therapy",
+            "eyebrow": "Hands-On Clinical Soft Tissue & Joint Mobilization in Dubai",
+            "tagline": "Professional Manual Therapy in Dubai",
+            "description": "Manual therapy uses specialized hands-on techniques, myofascial release, joint manipulation, and soft tissue mobilization to reduce pain, release muscle tightness, and improve movement mechanics.",
+            "icon": "Sparkles",
+            "theme_color": "#08709d",
+            "parent_slug": "physiotherapy",
+            "benefits": [
+                {"title": "Myofascial Release", "desc": "Skilled hands-on techniques to release deep muscle knots and trigger points"},
+                {"title": "Spinal Realignment", "desc": "Joint manipulation to relieve neck, shoulder, and back tension"},
+                {"title": "Immediate Relief", "desc": "Noticeable improvement in flexibility and pain levels following sessions"}
             ]
         }
     ]
