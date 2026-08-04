@@ -758,10 +758,9 @@ export default function Dashboard() {
                               href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`}
                               target="_blank"
                               rel="noreferrer"
-                              className="px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                              className="p-2 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                             >
-                              <Edit3 size={14} />
-                              <span>Edit</span>
+                              <Edit3 size={15} className="text-[#00a2ff]" />
                             </a>
                           </div>
                         </div>
@@ -887,10 +886,10 @@ export default function Dashboard() {
                 </form>
               </div>
 
-              {/* DIRECTORY TABLE: ALL ACTION BUTTONS DIRECTLY OPEN DJANGO ADMIN CHANGE/DELETE URLS AS REQUESTED */}
+              {/* DIRECTORY TABLE MATCHING SCREENSHOT EXACT SPECIFICATION */}
               <div className="lg:col-span-7 space-y-6">
-                <div className="bg-[#0b1329] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden text-white">
-                  <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800 flex-wrap gap-4">
+                <div className="bg-[#090e1a] border border-[#1b2742] p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden text-white">
+                  <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#1b2742] flex-wrap gap-4">
                     <div>
                       <h3 className="text-lg font-extrabold text-white uppercase tracking-tight font-montserrat flex items-center gap-2">
                         <span>Sub-Services Directory</span>
@@ -924,27 +923,27 @@ export default function Dashboard() {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="Search services by title or description..."
-                      className="w-full pl-11 pr-10 py-3.5 rounded-2xl border border-slate-700/80 bg-[#060c19] text-xs font-bold text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
+                      className="w-full pl-11 pr-10 py-3.5 rounded-2xl border border-[#1b2742] bg-[#060c19] text-xs font-bold text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
                     />
                   </div>
 
-                  {/* Data Table with Direct Links to https://sabinsiwakoti.com.np/admin/api/service/{id}/change/ */}
-                  <div className="overflow-x-auto rounded-2xl border border-slate-800/90 bg-[#0e172a]">
+                  {/* Data Table Matching Screenshot Header & Minimal Icons Exactly */}
+                  <div className="overflow-x-auto rounded-2xl border border-[#1b2742] bg-[#090e1a]">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="bg-[#141e36] text-white text-sm font-extrabold border-b border-slate-800">
+                        <tr className="bg-[#0a1122] text-white text-sm font-extrabold border-b border-[#1b2742]">
                           <th className="py-4 px-4 font-montserrat">Service Title</th>
                           <th className="py-4 px-4 font-montserrat">Parent Category</th>
                           <th className="py-4 px-4 text-center font-montserrat w-16">View</th>
-                          <th className="py-4 px-4 text-center font-montserrat w-20">Edit</th>
-                          <th className="py-4 px-4 text-center font-montserrat w-20">Delete</th>
+                          <th className="py-4 px-4 text-center font-montserrat font-bold text-white text-sm w-24">Edit</th>
+                          <th className="py-4 px-4 text-center font-montserrat font-bold text-white text-sm w-24">Delete</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60 text-xs font-medium">
+                      <tbody className="divide-y divide-[#1b2742] text-xs font-medium">
                         {filteredSubServices.map((sub) => {
                           const parentObj = parentServices.find(p => p.id === sub.parent);
                           return (
-                            <tr key={sub.id} className="hover:bg-[#182442] transition-colors group">
+                            <tr key={sub.id} className="hover:bg-[#0f172a] transition-colors group">
                               <td className="py-4 px-4">
                                 <a 
                                   href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`} 
@@ -965,40 +964,40 @@ export default function Dashboard() {
                                   {parentObj ? (parentObj.name || parentObj.title) : 'Standalone'}
                                 </span>
                               </td>
-                              {/* View Link Icon */}
+                              {/* View Icon Link */}
                               <td className="py-4 px-4 text-center">
                                 <a
                                   href={`/services/${sub.slug}`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="p-2 rounded-lg hover:bg-emerald-500/20 text-emerald-400 transition-all inline-flex items-center justify-center"
+                                  className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-emerald-500/20 text-emerald-400 transition-colors"
                                   title="View Public Page"
                                 >
-                                  <ExternalLink size={18} className="stroke-[2.5]" />
+                                  <ExternalLink size={18} className="stroke-[2.2]" />
                                 </a>
                               </td>
-                              {/* Edit Pencil Icon -> OPENS https://sabinsiwakoti.com.np/admin/api/service/{id}/change/ */}
+                              {/* Edit Icon -> EXACT MATCH TO SCREENSHOT (Cyan outline pencil icon) */}
                               <td className="py-4 px-4 text-center">
                                 <a
                                   href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="p-2.5 rounded-xl hover:bg-sky-500/20 text-[#00a2ff] hover:text-sky-300 transition-all cursor-pointer inline-flex items-center justify-center"
+                                  className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#00a2ff]/10 transition-colors"
                                   title={`Edit Service #${sub.id} in Django Admin`}
                                 >
-                                  <Edit3 size={19} className="stroke-[2.5]" />
+                                  <Edit3 size={18} className="text-[#00a2ff] stroke-[2.2] hover:scale-110 transition-transform" />
                                 </a>
                               </td>
-                              {/* Delete Trash Icon -> OPENS https://sabinsiwakoti.com.np/admin/api/service/{id}/delete/ */}
+                              {/* Delete Icon -> EXACT MATCH TO SCREENSHOT (Red outline trash can icon) */}
                               <td className="py-4 px-4 text-center">
                                 <a
                                   href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/delete/`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="p-2.5 rounded-xl hover:bg-rose-500/20 text-[#ff3b3b] hover:text-rose-400 transition-all cursor-pointer inline-flex items-center justify-center"
+                                  className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#ff3b3b]/10 transition-colors"
                                   title={`Delete Service #${sub.id} in Django Admin`}
                                 >
-                                  <Trash2 size={19} className="stroke-[2.5]" />
+                                  <Trash2 size={18} className="text-[#ff3b3b] stroke-[2.2] hover:scale-110 transition-transform" />
                                 </a>
                               </td>
                             </tr>
@@ -1385,31 +1384,31 @@ export default function Dashboard() {
                 </form>
               </div>
 
-              {/* PARENT TABLE */}
+              {/* PARENT TABLE MATCHING SCREENSHOT EXACT DESIGN */}
               <div className="lg:col-span-7 space-y-4">
-                <div className="bg-[#0b1329] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden text-white">
-                  <h3 className="text-lg font-extrabold text-white uppercase tracking-tight font-montserrat mb-6 pb-4 border-b border-slate-800 flex items-center justify-between">
+                <div className="bg-[#090e1a] border border-[#1b2742] p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden text-white">
+                  <h3 className="text-lg font-extrabold text-white uppercase tracking-tight font-montserrat mb-6 pb-4 border-b border-[#1b2742] flex items-center justify-between">
                     <span>Top Navbar Parent Categories</span>
                     <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
                       {parentServices.length} Total
                     </span>
                   </h3>
 
-                  <div className="overflow-x-auto rounded-2xl border border-slate-800/90 bg-[#0e172a]">
+                  <div className="overflow-x-auto rounded-2xl border border-[#1b2742] bg-[#090e1a]">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="bg-[#141e36] text-white text-sm font-extrabold border-b border-slate-800">
+                        <tr className="bg-[#0a1122] text-white text-sm font-extrabold border-b border-[#1b2742]">
                           <th className="py-4 px-4 font-montserrat">Category Title</th>
                           <th className="py-4 px-4 text-center font-montserrat">Sub-Services</th>
-                          <th className="py-4 px-4 text-center font-montserrat w-20">Edit</th>
-                          <th className="py-4 px-4 text-center font-montserrat w-20">Delete</th>
+                          <th className="py-4 px-4 text-center font-montserrat font-bold text-white text-sm w-24">Edit</th>
+                          <th className="py-4 px-4 text-center font-montserrat font-bold text-white text-sm w-24">Delete</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60 text-xs font-medium">
+                      <tbody className="divide-y divide-[#1b2742] text-xs font-medium">
                         {parentServices.map((p) => {
                           const subCount = servicesData.filter(s => s.parent === p.id).length;
                           return (
-                            <tr key={p.id} className="hover:bg-[#182442] transition-colors group">
+                            <tr key={p.id} className="hover:bg-[#0f172a] transition-colors group">
                               <td className="py-4 px-4">
                                 <a 
                                   href={`https://sabinsiwakoti.com.np/admin/api/service/${p.id}/change/`} 
@@ -1430,28 +1429,28 @@ export default function Dashboard() {
                                   {subCount} Items
                                 </span>
                               </td>
-                              {/* Edit Pencil Icon -> OPENS https://sabinsiwakoti.com.np/admin/api/service/{id}/change/ */}
+                              {/* Edit Icon -> EXACT MATCH TO SCREENSHOT */}
                               <td className="py-4 px-4 text-center">
                                 <a
                                   href={`https://sabinsiwakoti.com.np/admin/api/service/${p.id}/change/`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="p-2.5 rounded-xl hover:bg-sky-500/20 text-[#00a2ff] hover:text-sky-300 transition-all cursor-pointer inline-flex items-center justify-center"
+                                  className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#00a2ff]/10 transition-colors"
                                   title={`Edit Category #${p.id} in Django Admin`}
                                 >
-                                  <Edit3 size={19} className="stroke-[2.5]" />
+                                  <Edit3 size={18} className="text-[#00a2ff] stroke-[2.2] hover:scale-110 transition-transform" />
                                 </a>
                               </td>
-                              {/* Delete Trash Icon -> OPENS https://sabinsiwakoti.com.np/admin/api/service/{id}/delete/ */}
+                              {/* Delete Icon -> EXACT MATCH TO SCREENSHOT */}
                               <td className="py-4 px-4 text-center">
                                 <a
                                   href={`https://sabinsiwakoti.com.np/admin/api/service/${p.id}/delete/`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="p-2.5 rounded-xl hover:bg-rose-500/20 text-[#ff3b3b] hover:text-rose-400 transition-all cursor-pointer inline-flex items-center justify-center"
+                                  className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#ff3b3b]/10 transition-colors"
                                   title={`Delete Category #${p.id} in Django Admin`}
                                 >
-                                  <Trash2 size={19} className="stroke-[2.5]" />
+                                  <Trash2 size={18} className="text-[#ff3b3b] stroke-[2.2] hover:scale-110 transition-transform" />
                                 </a>
                               </td>
                             </tr>
@@ -1491,7 +1490,7 @@ export default function Dashboard() {
                           href={`https://sabinsiwakoti.com.np/admin/api/service/${parent.id}/change/`}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-2 text-cyan-400 hover:bg-cyan-500/20 rounded-lg transition-all"
+                          className="p-2 text-[#00a2ff] hover:bg-[#00a2ff]/10 rounded-lg transition-all"
                           title="Edit in Django Admin"
                         >
                           <Edit3 size={15} />
@@ -1513,7 +1512,7 @@ export default function Dashboard() {
                                   href={`https://sabinsiwakoti.com.np/admin/api/service/${s.id}/change/`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="text-slate-400 hover:text-cyan-400"
+                                  className="text-[#00a2ff] hover:text-cyan-300"
                                   title="Edit in Django Admin"
                                 >
                                   <Edit3 size={14} />
