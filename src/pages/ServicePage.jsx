@@ -471,6 +471,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     steps: (Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0) ? validServiceData.steps : (staticFallback.steps || []),
     faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0) ? validServiceData.faqs : (staticFallback.faqs || []),
     benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : (staticFallback.benefits || []),
+    lab_columns: (Array.isArray(validServiceData.lab_columns) && validServiceData.lab_columns.length > 0) ? validServiceData.lab_columns : (staticFallback.lab_columns || []),
   } : staticFallback;
 
   useEffect(() => {
@@ -864,7 +865,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       <WhoMayNeedBloodTestSection indicationsList={indicationsList} serviceData={mergedData} isEditMode={isEditMode} slug={slug} />
 
       {/* ── CONDITIONS / LAB COLUMNS SECTION (Hidden for Doctor On Call services) ── */}
-      {(!cleanSlug.includes('doctor') && (mergedData?.lab_columns && mergedData.lab_columns.length > 0)) && (
+      {(!cleanSlug.includes('doctor') && ((mergedData?.lab_columns && mergedData.lab_columns.length > 0) || Boolean(mergedData?.lab_columns_title) || Boolean(mergedData?.lab_columns_description))) && (
       <Section variant="warm">
         <Container className="flex flex-col items-center">
           <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
