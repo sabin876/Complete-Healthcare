@@ -475,7 +475,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                          (cleanSlug.includes('doctor') ? staticServicesData['doctor-on-call'] : null) ||
                          (cleanSlug.includes('elder') ? staticServicesData['elderly-care'] : null) ||
                          (cleanSlug.includes('lab') ? staticServicesData['lab-services'] : null) ||
-                         staticServicesData['lab-services'] || {};
+                         {};
 
   const validServiceData = (serviceData && typeof serviceData === 'object' && !Array.isArray(serviceData)) ? serviceData : null;
   const mergedData = validServiceData ? {
@@ -741,14 +741,15 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const featuresList = getFallbackFeatures(slug, mergedData);
   const indicationsList = getFallbackIndications(slug, mergedData);
-  const labColumns = (mergedData?.lab_columns && mergedData.lab_columns.length > 0) 
+  const isLabPage = cleanSlug.includes('lab');
+  const labColumns = (mergedData?.lab_columns && Array.isArray(mergedData.lab_columns) && mergedData.lab_columns.length > 0) 
     ? mergedData.lab_columns.map((col, idx) => ({
         ...col,
         icon: col.icon || defaultLabColumns[idx % defaultLabColumns.length]?.icon,
         iconBg: col.iconBg || defaultLabColumns[idx % defaultLabColumns.length]?.iconBg,
         delay: 0.05 + idx * 0.07
       })) 
-    : defaultLabColumns;
+    : (isLabPage ? defaultLabColumns : []);
   const reasonsList = getFallbackReasons(cleanSlug, mergedData);
   const stepsList = getFallbackSteps(cleanSlug, mergedData);
   const faqList = getFallbackFaqs(cleanSlug, mergedData);
@@ -903,75 +904,77 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       <WhoMayNeedBloodTestSection indicationsList={indicationsList} serviceData={mergedData} isEditMode={isEditMode} slug={slug} />
 
       {/* ── CONDITIONS / LAB COLUMNS SECTION ── */}
-      <Section variant="warm">
-        <Container className="flex flex-col items-center">
-          <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08709d]/10 text-[#08709d] text-xs font-bold uppercase tracking-wider mb-3">
-              ⊙ Covered Packages & Categories
-            </span>
-            <h2 className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#1a294a] tracking-tight leading-snug font-montserrat mb-3">
-              <EditableText
-                slug={slug}
-                fieldKey="lab_columns_title"
-                defaultText={mergedData?.lab_columns_title || mergedData?.comprehensive_section_title || (mergedData?.title ? `${mergedData.title} Packages & Coverage` : "Comprehensive Service Packages Covered")}
-                isEditMode={isEditMode}
-                tagName="span"
-              />
-            </h2>
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-medium">
-              <EditableText
-                slug={slug}
-                fieldKey="lab_columns_description"
-                defaultText={mergedData?.lab_columns_description || (mergedData?.title ? `Structured ${mergedData.title.toLowerCase()} packages performed by DHA-certified clinical specialists right at your home.` : "High-precision healthcare service packages performed by certified clinical specialists right at your home.")}
-                isEditMode={isEditMode}
-                tagName="span"
-                multiline={true}
-              />
-            </p>
-          </div>
+      {labColumns && labColumns.length > 0 && (
+        <Section variant="warm">
+          <Container className="flex flex-col items-center">
+            <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08709d]/10 text-[#08709d] text-xs font-bold uppercase tracking-wider mb-3">
+                ⊙ Covered Packages & Categories
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#1a294a] tracking-tight leading-snug font-montserrat mb-3">
+                <EditableText
+                  slug={slug}
+                  fieldKey="lab_columns_title"
+                  defaultText={mergedData?.lab_columns_title || mergedData?.comprehensive_section_title || (mergedData?.title ? `${mergedData.title} Packages & Coverage` : "Comprehensive Service Packages Covered")}
+                  isEditMode={isEditMode}
+                  tagName="span"
+                />
+              </h2>
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-medium">
+                <EditableText
+                  slug={slug}
+                  fieldKey="lab_columns_description"
+                  defaultText={mergedData?.lab_columns_description || (mergedData?.title ? `Structured ${mergedData.title.toLowerCase()} packages performed by DHA-certified clinical specialists right at your home.` : "High-precision healthcare service packages performed by certified clinical specialists right at your home.")}
+                  isEditMode={isEditMode}
+                  tagName="span"
+                  multiline={true}
+                />
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full">
-            {labColumns.map((col, idx) => (
-              <motion.div
-                key={idx}
-                className="h-full"
-                initial={{ opacity: 0, y: 10 }}
-                animate={condVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                transition={{ duration: 0.4, ease: "easeOut", delay: col.delay || 0.05 }}
-              >
-                <Card className="h-full flex flex-col justify-between p-6 sm:p-7 border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300">
-                  <div>
-                    <div className="grid grid-cols-1 gap-2.5">
-                      {col.tests && col.tests.map((test, testIdx) => (
-                        <div 
-                          key={testIdx} 
-                          className="flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl bg-[#08709d] text-white hover:bg-[#065679] hover:shadow-md transition-all duration-200 cursor-pointer group"
-                        >
-                          <span className="text-sm font-bold text-white tracking-wide">{test}</span>
-                          <Check size={16} className="text-white/90 group-hover:text-white group-hover:scale-110 transition-all shrink-0" strokeWidth={2.5} />
-                        </div>
-                      ))}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full">
+              {labColumns.map((col, idx) => (
+                <motion.div
+                  key={idx}
+                  className="h-full"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={condVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                  transition={{ duration: 0.4, ease: "easeOut", delay: col.delay || 0.05 }}
+                >
+                  <Card className="h-full flex flex-col justify-between p-6 sm:p-7 border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300">
+                    <div>
+                      <div className="grid grid-cols-1 gap-2.5">
+                        {col.tests && col.tests.map((test, testIdx) => (
+                          <div 
+                            key={testIdx} 
+                            className="flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl bg-[#08709d] text-white hover:bg-[#065679] hover:shadow-md transition-all duration-200 cursor-pointer group"
+                          >
+                            <span className="text-sm font-bold text-white tracking-wide">{test}</span>
+                            <Check size={16} className="text-white/90 group-hover:text-white group-hover:scale-110 transition-all shrink-0" strokeWidth={2.5} />
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
 
-          <div className="flex items-start gap-4 rounded-2xl border border-[#08709d]/20 bg-gradient-to-r from-[#08709d] to-[#065679] text-white p-6 sm:p-7 shadow-lg shadow-[#08709d]/15 mt-10 w-full">
-            <span className="shrink-0 text-white bg-white/10 p-2.5 rounded-xl flex items-center justify-center">
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 16v-4"/>
-                <path d="M12 8h.01"/>
-              </svg>
-            </span>
-            <p className="text-base leading-7 text-white m-0 font-medium">
-              <strong className="font-extrabold uppercase tracking-wider mr-1">Note:</strong> All {mergedData?.title ? mergedData.title.toLowerCase() : "health services"} at home at CORx are coordinated based on your medical requirements and doctor's advice, where applicable.
-            </p>
-          </div>
-        </Container>
-      </Section>
+            <div className="flex items-start gap-4 rounded-2xl border border-[#08709d]/20 bg-gradient-to-r from-[#08709d] to-[#065679] text-white p-6 sm:p-7 shadow-lg shadow-[#08709d]/15 mt-10 w-full">
+              <span className="shrink-0 text-white bg-white/10 p-2.5 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 16v-4"/>
+                  <path d="M12 8h.01"/>
+                </svg>
+              </span>
+              <p className="text-base leading-7 text-white m-0 font-medium">
+                <strong className="font-extrabold uppercase tracking-wider mr-1">Note:</strong> All {mergedData?.title ? mergedData.title.toLowerCase() : "health services"} at home at CORx are coordinated based on your medical requirements and doctor's advice, where applicable.
+              </p>
+            </div>
+          </Container>
+        </Section>
+      )}
 
       {/* ── THREE STEPS PROCESS SECTION ── */}
       <ThreeStepsLabProcessSection stepsList={stepsList} serviceData={mergedData} isEditMode={isEditMode} slug={slug} />
