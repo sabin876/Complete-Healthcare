@@ -111,6 +111,29 @@ export default function Contact() {
   ]);
 
   useEffect(() => {
+    const titleText = "Book an Appointment | Home Nursing | Home Physiotherapy Dubai";
+    const descText = "Book an appointment with Corx Home Healthcare in Dubai for personalized home care services — schedule doctor visits, nursing, lab tests";
+
+    document.title = titleText;
+
+    const setMetaTag = (attrName, attrVal, contentVal) => {
+      let metaElem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
+      if (!metaElem) {
+        metaElem = document.createElement('meta');
+        metaElem.setAttribute(attrName, attrVal);
+        document.head.appendChild(metaElem);
+      }
+      metaElem.setAttribute('content', contentVal);
+    };
+
+    setMetaTag('name', 'description', descText);
+    setMetaTag('property', 'og:title', titleText);
+    setMetaTag('property', 'og:description', descText);
+    setMetaTag('property', 'twitter:title', titleText);
+    setMetaTag('property', 'twitter:description', descText);
+  }, []);
+
+  useEffect(() => {
     fetch(`${API_BASE_URL}/api/services/`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
