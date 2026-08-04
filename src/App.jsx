@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useParams, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -16,6 +16,11 @@ import Team from './pages/Team';
 import ServicePage from './pages/ServicePage';
 import Dashboard from './pages/Dashboard';
 
+const ServiceRedirect = () => {
+  const { serviceSlug } = useParams();
+  return <Navigate to={`/${serviceSlug || 'lab-test-at-home'}`} replace />;
+};
+
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
@@ -24,19 +29,26 @@ const AnimatedRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/services" element={<ServicePage serviceId="lab-services" />} />
-        <Route path="/services/lab-services" element={<ServicePage serviceId="lab-services" />} />
-        <Route path="/services/:serviceSlug" element={<ServicePage />} />
-        <Route path="/lab-test-at-home" element={<ServicePage serviceId="lab-test-at-home" />} />
-        <Route path="/lab-test-at-home/" element={<ServicePage serviceId="lab-test-at-home" />} />
-        <Route path="/lab-test-at-home-dubai" element={<ServicePage serviceId="lab-services" />} />
-        <Route path="/lab-test-at-home-dubai/" element={<ServicePage serviceId="lab-services" />} />
+        
+        {/* Redirects to enforce Flat URL Structure */}
+        <Route path="/services" element={<Navigate to="/lab-test-at-home" replace />} />
+        <Route path="/services/lab-services" element={<Navigate to="/lab-test-at-home" replace />} />
+        <Route path="/services/:serviceSlug" element={<ServiceRedirect />} />
+        <Route path="/lab-services" element={<Navigate to="/lab-test-at-home" replace />} />
+        <Route path="/lab-test-at-home-dubai" element={<Navigate to="/lab-test-at-home" replace />} />
+        <Route path="/lab-test-at-home-dubai/" element={<Navigate to="/lab-test-at-home" replace />} />
+        
+        {/* Core Flat Pages */}
+        <Route path="/lab-test-at-home" element={<ServicePage serviceId="lab-services" />} />
+        <Route path="/lab-test-at-home/" element={<ServicePage serviceId="lab-services" />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<BlogDetails />} />
         <Route path="/blog/details" element={<BlogDetails />} />
         <Route path="/locations" element={<Locations />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/team" element={<Team />} />
+
+        {/* Dynamic Flat Service Route */}
         <Route path="/:serviceSlug" element={<ServicePage />} />
       </Routes>
     </AnimatePresence>
@@ -87,7 +99,7 @@ class GlobalErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
-          <div className="bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-xl max-w-md w-full">
+          <div className="bg-[#ffffff] p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-xl max-w-md w-full">
             <div className="w-16 h-16 rounded-2xl bg-sky-50 text-[#08709d] flex items-center justify-center mx-auto mb-6">
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
