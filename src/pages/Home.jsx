@@ -645,57 +645,17 @@ const Home = () => {
     <main>
       {/* Hero Slider */}
       <section className="relative min-h-[95vh] flex items-center py-20 md:py-28 overflow-hidden bg-black">
-        {/* Dynamic Background Slide Image & Video */}
-        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden bg-black">
-          <AnimatePresence mode="popLayout">
-            <motion.div
-              key={`image-${currentSlide}`}
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 0.55, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.85, ease: "easeInOut" }}
-              className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-[0]"
-              style={{
-                backgroundImage: `url(${slides[currentSlide].image})`,
-                filter: 'brightness(0.5) contrast(1.05)'
-              }}
-            />
-          </AnimatePresence>
-
-          {/* Background Video Layer (Facebook Reel / iFrame / Video File) */}
-          <AnimatePresence mode="wait">
-            {slides[currentSlide].videoUrl && (
-              <motion.div
-                key={`video-${currentSlide}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.65 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.8 }}
-                className="absolute inset-0 z-[1] w-full h-full overflow-hidden pointer-events-none"
-              >
-                {slides[currentSlide].videoUrl.endsWith('.mp4') || slides[currentSlide].videoUrl.endsWith('.webm') ? (
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover"
-                  >
-                    <source src={slides[currentSlide].videoUrl} type="video/mp4" />
-                  </video>
-                ) : (
-                  <iframe
-                    src={getEmbedVideoUrl(slides[currentSlide].videoUrl)}
-                    title="Background Video"
-                    className="absolute top-1/2 left-1/2 w-[300vw] h-[300vh] min-w-[150%] min-h-[150%] -translate-x-1/2 -translate-y-1/2 border-0 pointer-events-none scale-125 md:scale-110"
-                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                    allowFullScreen
-                    style={{ pointerEvents: 'none' }}
-                  />
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+        {/* Exclusive Background Video (Hero.mp4) */}
+        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover opacity-75"
+          >
+            <source src={heroVideo} type="video/mp4" />
+          </video>
 
           {/* Deep Blue Overlay matching the reference design */}
           <div className="absolute inset-0 z-[2] bg-gradient-to-br from-[#0c2e56]/90 via-[#0b2848]/80 to-[#071f3b]/90 mix-blend-multiply pointer-events-none"></div>
