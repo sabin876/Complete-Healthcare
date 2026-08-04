@@ -571,8 +571,8 @@ const Home = () => {
   const [diffImageIndex, setDiffImageIndex] = useState(0);
 
   useEffect(() => {
-    const titleText = "Corx Healthcare: Home Healthcare Services in Dubai, UAE - Corx Healthcare";
-    const descText = "24/7 Home Healthcare Services in Dubai | DHA-Certified Doctors & Nurses at Your Doorstep. Your health, our priority — Professional, reliable, and on-demand medical care at your doorstep across Dubai. Corx Healthcare brings professional medical care to your doorstep with visiting doctors and nurses. Experience the highest standard of healthcare from skilled experts, all in the comfort of your own home.";
+    const titleText = "CORX Healthcare: Home Health Care Services in Dubai *24/7";
+    const descText = "Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.";
 
     document.title = titleText;
 
