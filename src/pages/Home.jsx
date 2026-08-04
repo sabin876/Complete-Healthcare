@@ -20,6 +20,7 @@ import FAQ from '../components/FAQ';
 
 import hero2 from '../assets/hero/hero2.png';
 import hero3 from '../assets/hero/hero3.png';
+import heroVideo from '../assets/Hero.mp4';
 import dhaLogo from '../assets/Dubai_Health_Authority_log.png';
 import logo from '../assets/logo.webp';
 import kajalPhoto from '../assets/kajal.png';
@@ -523,7 +524,7 @@ const Home = () => {
       titlePost: "",
       subtitle: "Looking for trusted home health care services in Dubai, Corx Healthcare is available 24×7 to meet your medical needs anytime. Our team of highly skilled professionals delivers personalized, high-quality care tailored to your unique health requirements, all in the comfort of your home.",
       image: hero1,
-      videoUrl: "https://www.facebook.com/plugins/video.php?height=373&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1667889694549028%2F&show_text=false&width=560&t=0",
+      videoUrl: heroVideo,
       cta1: "Book Appointment",
       cta2: "Our Services"
     },
@@ -541,6 +542,7 @@ const Home = () => {
       titlePost: "",
       subtitle: "DHA licensed healthcare provider in Dubai. Full-service home nursing, doctor-on-call, and expert therapy at your convenience.",
       image: hero2,
+      videoUrl: heroVideo,
       cta1: "Book Appointment",
       cta2: "Our Services"
     },
@@ -558,6 +560,7 @@ const Home = () => {
       titlePost: "",
       subtitle: "Our team of dedicated doctors, nursing professionals, and physiotherapists are committed to your health 24/7.",
       image: hero3,
+      videoUrl: heroVideo,
       cta1: "Book Appointment",
       cta2: "Our Services"
     }
