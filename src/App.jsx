@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -59,7 +59,9 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
   }, [pathname]);
 
   return null;
@@ -95,7 +97,7 @@ class GlobalErrorBoundary extends React.Component {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => typeof window !== 'undefined' && window.location.reload()}
                 className="px-6 py-3 rounded-xl bg-[#08709d] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#065679] transition-all cursor-pointer"
               >
                 Reload Page
@@ -119,12 +121,10 @@ class GlobalErrorBoundary extends React.Component {
 function App() {
   return (
     <GlobalErrorBoundary>
-      <Router>
-        <ScrollToTop />
-        <MainLayout>
-          <AnimatedRoutes />
-        </MainLayout>
-      </Router>
+      <ScrollToTop />
+      <MainLayout>
+        <AnimatedRoutes />
+      </MainLayout>
     </GlobalErrorBoundary>
   );
 }

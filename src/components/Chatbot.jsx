@@ -14,7 +14,7 @@ const Chatbot = () => {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [hoveredBtn, setHoveredBtn] = useState(null);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
   // Booking Flow State (for Coordinator or general bookings)
   const [bookingState, setBookingState] = useState({

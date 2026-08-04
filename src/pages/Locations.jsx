@@ -106,7 +106,7 @@ const Locations = () => {
             borderRadius: "32px",
             backdropFilter: "blur(10px)",
             display: "flex",
-            flexDirection: window.innerWidth < 768 ? "column" : "row",
+            flexDirection: typeof window !== 'undefined' && window.innerWidth < 768 ? "column" : "row",
             alignItems: "center",
             gap: 32,
             marginBottom: 100
