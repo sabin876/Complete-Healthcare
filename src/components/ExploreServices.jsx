@@ -11,7 +11,7 @@ const services = [
     title: "Home Physiotherapy",
     description: "Experience Exceptional Home Physiotherapy in Dubai with Just One Phone Call Away",
     accent: "#B8D8E8",
-    path: "/services/physiotherapy",
+    path: "/physiotherapy",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -28,7 +28,7 @@ const services = [
     title: "IV Therapy",
     description: "Discover Convenient 24/7 IV Therapy Services Right at Your Doorstep with Us.",
     accent: "#F5DEB3",
-    path: "/services/iv-therapy",
+    path: "/iv-therapy",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -44,7 +44,7 @@ const services = [
     title: "Home Nursing",
     description: "Offering expert nursing care within the UAE and right at your doorstep.",
     accent: "#D8B4D8",
-    path: "/services/nursing",
+    path: "/nursing",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
@@ -58,7 +58,7 @@ const services = [
     title: "Doctor On Call",
     description: "Access 24/7 Doctor On Call Services in Dubai. Experience the Premier At-Home Medical Care in the City.",
     accent: "#F4C2C2",
-    path: "/services/doctor-on-call",
+    path: "/doctor-on-call",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -72,7 +72,7 @@ const services = [
     title: "Elderly Care Givers",
     description: "Experience Dedicated Caregivers at Your Home in Dubai. Personalized Medical Care Right at Your Doorstep!",
     accent: "#B4E1D0",
-    path: "/services/elderly-care",
+    path: "/elderly-care",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
@@ -86,7 +86,7 @@ const services = [
     title: "Lab Services",
     description: "Corx Healthcare Offers Convenient 24/7 Lab Testing Right at Your Doorstep in Dubai.",
     accent: "#E2D1F9",
-    path: "/services/lab-services",
+    path: "/lab-test-at-home",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
@@ -257,7 +257,7 @@ export default function ExploreServices() {
               title: item.title || defaultItem.title,
               description: item.tagline || item.description || defaultItem.description,
               accent: item.theme_color || defaultItem.accent,
-              path: `/services/${item.slug}`,
+              path: `/${item.slug}`,
               icon: defaultItem.icon,
               image: item.image || defaultItem.image,
               video: defaultItem.video

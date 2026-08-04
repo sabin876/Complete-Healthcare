@@ -48,7 +48,7 @@ const Header = () => {
   const defaultServices = [
     { 
       name: 'Physiotherapy', 
-      path: '/services/physiotherapy', 
+      path: '/physiotherapy', 
       icon: Activity,
       subtitle: 'Rehabilitation & Pain Relief',
       badge: 'Popular',
@@ -56,7 +56,7 @@ const Header = () => {
     },
     { 
       name: 'IV Therapy | IV Drip', 
-      path: '/services/iv-therapy', 
+      path: '/iv-therapy', 
       icon: Droplets,
       subtitle: 'Vitamin Boost & Fast Hydration',
       badge: 'Fast Acting',
@@ -64,40 +64,40 @@ const Header = () => {
     },
     { 
       name: 'Home Nursing', 
-      path: '/services/nursing', 
+      path: '/nursing', 
       icon: HeartPulse,
       subtitle: 'Post-op & Specialized Care',
       accent: '#f43f5e',
       subItems: [
-        { name: 'Palliative Care', path: '/services/palliative-care', desc: 'Compassionate long-term medical support', icon: HeartPulse },
-        { name: 'Night Care Nurse', path: '/services/night-care-nurse', desc: '24/7 Dedicated overnight monitoring', icon: Clock },
-        { name: 'Nurse for Injection', path: '/services/injection-at-home', desc: 'Safe at-home IV & medication care', icon: CheckCircle2 },
-        { name: 'Wound Care Services', path: '/services/wound-care', desc: 'Clinical dressing & wound management', icon: Activity },
-        { name: 'Oxygen Therapy', path: '/services/oxygen-therapy', desc: 'Respiratory care & equipment at home', icon: Droplets },
+        { name: 'Palliative Care', path: '/palliative-care', desc: 'Compassionate long-term medical support', icon: HeartPulse },
+        { name: 'Night Care Nurse', path: '/night-care-nurse', desc: '24/7 Dedicated overnight monitoring', icon: Clock },
+        { name: 'Nurse for Injection', path: '/injection-at-home', desc: 'Safe at-home IV & medication care', icon: CheckCircle2 },
+        { name: 'Wound Care Services', path: '/wound-care', desc: 'Clinical dressing & wound management', icon: Activity },
+        { name: 'Oxygen Therapy', path: '/oxygen-therapy', desc: 'Respiratory care & equipment at home', icon: Droplets },
       ]
     },
     { 
       name: 'Doctor On Call', 
-      path: '/services/doctor-on-call', 
+      path: '/doctor-on-call', 
       icon: Stethoscope,
       subtitle: '24/7 Medical Home & Hotel Visits',
       accent: '#fbbf24',
       subItems: [
-        { name: 'Doctor at Home', path: '/services/doctor-at-home', desc: 'Urgent home visits within 30-45 mins', icon: Stethoscope },
-        { name: 'Doctor at Office', path: '/services/doctor-at-office', desc: 'Workplace consultations & checkups', icon: Activity },
-        { name: 'Doctor at Hotel', path: '/services/doctor-at-hotel', desc: 'Hotel room medical visits for guests', icon: Sparkles },
+        { name: 'Doctor at Home', path: '/doctor-at-home', desc: 'Urgent home visits within 30-45 mins', icon: Stethoscope },
+        { name: 'Doctor at Office', path: '/doctor-at-office', desc: 'Workplace consultations & checkups', icon: Activity },
+        { name: 'Doctor at Hotel', path: '/doctor-at-hotel', desc: 'Hotel room medical visits for guests', icon: Sparkles },
       ]
     },
     { 
       name: 'Elderly Home Care', 
-      path: '/services/elderly-care', 
+      path: '/elderly-care', 
       icon: HeartHandshake,
       subtitle: 'Assisted Senior Living at Home',
       accent: '#a78bfa'
     },
     { 
       name: 'Lab Test at Home', 
-      path: '/services/lab-services', 
+      path: '/lab-test-at-home', 
       icon: TestTube,
       subtitle: 'Quick In-Home Sample Collection',
       accent: '#34d399'
@@ -118,7 +118,7 @@ const Header = () => {
           const mapped = parents.map(s => ({
             id: s.id,
             name: s.name || s.title,
-            path: s.path || `/services/${s.slug}`,
+            path: s.path || `/${s.slug}`,
             icon: ICON_MAP[s.icon] || Activity,
             subtitle: s.subtitle || s.tagline || '',
             badge: s.floating_badge && s.floating_badge.title ? s.floating_badge.title : '',
@@ -126,7 +126,7 @@ const Header = () => {
             subItems: (s.sub_services || []).map(sub => ({
               id: sub.id,
               name: sub.name,
-              path: sub.path || `/services/${sub.slug}`,
+              path: sub.path || `/${sub.slug}`,
               icon: ICON_MAP[sub.icon] || CheckCircle2,
               desc: sub.desc || ''
             }))

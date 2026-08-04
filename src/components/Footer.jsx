@@ -103,12 +103,12 @@ const Footer = () => {
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }} className="flex flex-col gap-3.5">
               {[
-                { name: 'Physiotherapy', path: '/services/physiotherapy' },
-                { name: 'IV Therapy at Home', path: '/services/iv-therapy' },
-                { name: 'Home Nursing', path: '/services/nursing' },
-                { name: 'Doctor On Call', path: '/services/doctor-on-call' },
-                { name: 'Elderly Home Care', path: '/services/elderly-care' },
-                { name: 'Lab Test At Home', path: '/services/lab-services' }
+                { name: 'Physiotherapy', path: '/physiotherapy' },
+                { name: 'IV Therapy at Home', path: '/iv-therapy' },
+                { name: 'Home Nursing', path: '/nursing' },
+                { name: 'Doctor On Call', path: '/doctor-on-call' },
+                { name: 'Elderly Home Care', path: '/elderly-care' },
+                { name: 'Lab Test At Home', path: '/lab-test-at-home' }
               ].map((link, index) => (
                 <li key={index} style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
                   <Link 
