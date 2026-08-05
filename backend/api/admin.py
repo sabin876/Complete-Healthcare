@@ -1109,9 +1109,18 @@ class RichTextEditorWidget(forms.Widget):
 
             let isCodeView = false;
 
-            // Initial load
-            const val = (textarea.value || '').trim();
-            editor.innerHTML = val ? textarea.value : '';
+            // Initial load — textarea holds HTML-entity-escaped content; decode before setting editor
+            const rawVal = textarea.value || '';
+            if (rawVal.trim()) {{
+                // Use a temporary div to decode HTML entities back to raw HTML
+                const decoder = document.createElement('div');
+                decoder.innerHTML = rawVal;
+                // If it looks like it was double-escaped (contains &lt; literally), decode once more
+                const decoded = decoder.innerHTML.includes('&lt;') ? decoder.textContent : decoder.innerHTML;
+                editor.innerHTML = decoded;
+                // Also sync back the decoded value into the textarea so submit gets correct content
+                textarea.value = editor.innerHTML;
+            }}
             updateStats();
 
             function sync() {{
@@ -1296,10 +1305,26 @@ class RichTextEditorWidget(forms.Widget):
                 sync();
             }});
 
+            // ── CRITICAL: Force sync into hidden textarea before any form submit ──
+            // Without this, clicking Save without blurring the editor = empty content saved
+            const parentForm = textarea.form || editor.closest('form');
+            if (parentForm) {{
+                parentForm.addEventListener('submit', function(e) {{
+                    sync();
+                }}, true); // capture phase = runs before other handlers
+            }}
+
             // Listeners
             editor.addEventListener('input', sync);
             editor.addEventListener('blur', sync);
             codeInput.addEventListener('input', sync);
+
+            // Also sync on any keydown with Ctrl+S / Cmd+S (manual save shortcut)
+            document.addEventListener('keydown', function(e) {{
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {{
+                    sync();
+                }}
+            }});
         }})();
         </script>
         """
