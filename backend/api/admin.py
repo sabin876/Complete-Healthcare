@@ -883,6 +883,109 @@ class FAQJsonWidget(forms.Widget):
 
 
 # ----------------------------------------------------------------------
+# 6.5. Admin Tab Switcher Widget (Renders inline at form top)
+# ----------------------------------------------------------------------
+class AdminTabSwitcherWidget(forms.TextInput):
+    def render(self, name, value, attrs=None, renderer=None):
+        base_html = super().render(name, value, attrs, renderer)
+        script_html = """
+        <script>
+        (function() {
+            function initAdminTabFix() {
+                const navBars = document.querySelectorAll('.nav-tabs, .nav-pills, ul.nav');
+                navBars.forEach(function(nav) {
+                    const links = Array.from(nav.querySelectorAll('.nav-link, a.nav-item, a[data-toggle]'));
+                    if (links.length === 0) return;
+
+                    let tabContent = document.querySelector('.tab-content');
+                    if (!tabContent && nav.parentElement) {
+                        tabContent = nav.parentElement.querySelector('.tab-content');
+                    }
+                    if (!tabContent) return;
+
+                    const panes = Array.from(tabContent.querySelectorAll('.tab-pane, fieldset.tab-pane, div.tab-pane'));
+                    if (panes.length === 0) return;
+
+                    links.forEach(function(link, index) {
+                        link.style.cursor = 'pointer';
+                        link.style.pointerEvents = 'auto';
+
+                        link.onclick = function(e) {
+                            if (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }
+
+                            links.forEach(function(l) {
+                                l.classList.remove('active');
+                                l.setAttribute('aria-selected', 'false');
+                                l.style.backgroundColor = '';
+                                l.style.color = '';
+                            });
+
+                            link.classList.add('active');
+                            link.setAttribute('aria-selected', 'true');
+                            link.style.backgroundColor = '#08709d';
+                            link.style.color = '#ffffff';
+
+                            panes.forEach(function(p) {
+                                p.classList.remove('active', 'show');
+                                p.style.setProperty('display', 'none', 'important');
+                            });
+
+                            let targetPane = panes[index];
+                            let href = link.getAttribute('href') || link.getAttribute('data-target') || '';
+                            let targetId = href.replace('#', '').trim();
+                            if (targetId.endsWith('-tab')) targetId = targetId.slice(0, -4);
+                            
+                            if (targetId) {
+                                let matchedPane = document.getElementById(targetId) || tabContent.querySelector('#' + targetId);
+                                if (matchedPane) targetPane = matchedPane;
+                            }
+
+                            if (targetPane) {
+                                targetPane.classList.add('active', 'show');
+                                targetPane.style.setProperty('display', 'block', 'important');
+                                targetPane.style.setProperty('opacity', '1', 'important');
+                                targetPane.style.setProperty('visibility', 'visible', 'important');
+                                targetPane.style.setProperty('height', 'auto', 'important');
+                            }
+                            return false;
+                        };
+                    });
+                });
+            }
+
+            setInterval(initAdminTabFix, 250);
+            initAdminTabFix();
+
+            function handleHashChange() {
+                if (!window.location.hash) return;
+                const hash = window.location.hash.replace('#', '').trim();
+                const cleanHash = hash.endsWith('-tab') ? hash.slice(0, -4) : hash;
+                
+                const links = document.querySelectorAll('.nav-tabs .nav-link, .nav-pills .nav-link');
+                links.forEach(function(link) {
+                    const href = (link.getAttribute('href') || '').replace('#', '').trim();
+                    const id = (link.id || '').trim();
+                    if (href === cleanHash || href === hash || id === hash || id === cleanHash + '-tab') {
+                        if (typeof link.onclick === 'function') {
+                            link.onclick();
+                        }
+                    }
+                });
+            }
+
+            window.addEventListener('hashchange', handleHashChange);
+            setTimeout(handleHashChange, 350);
+            setTimeout(handleHashChange, 900);
+        })();
+        </script>
+        """
+        return mark_safe(base_html + script_html)
+
+
+# ----------------------------------------------------------------------
 # 7. Rich Text Content Editor Widget for Blog Posts
 # ----------------------------------------------------------------------
 class RichTextEditorWidget(forms.Widget):
@@ -1275,7 +1378,7 @@ class RichTextEditorWidget(forms.Widget):
 # ----------------------------------------------------------------------
 class ServiceAdminForm(forms.ModelForm):
     title = forms.CharField(
-        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 16px; font-weight: 600; padding: 10px 14px; border-radius: 6px;'}),
+        widget=AdminTabSwitcherWidget(attrs={'style': 'width: 100%; max-width: 950px; font-size: 16px; font-weight: 600; padding: 10px 14px; border-radius: 6px;'}),
         help_text="Name of the service (e.g. Lab Services | Blood Test at Home)"
     )
     slug = forms.CharField(
@@ -1548,7 +1651,7 @@ class ServiceAdminForm(forms.ModelForm):
 
 class BlogPostAdminForm(forms.ModelForm):
     title = forms.CharField(
-        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 16px; font-weight: 600; padding: 10px 14px; border-radius: 6px;'}),
+        widget=AdminTabSwitcherWidget(attrs={'style': 'width: 100%; max-width: 950px; font-size: 16px; font-weight: 600; padding: 10px 14px; border-radius: 6px;'}),
     )
     category = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 700px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
