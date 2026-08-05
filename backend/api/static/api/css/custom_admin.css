@@ -250,6 +250,31 @@ input[type="text"]:focus, select:focus, textarea:focus {
   border: none !important;
 }
 
+/* Ensure Jazzmin Tab Content and Collapsible Fieldsets Open and Display Properly */
+.tab-content > .tab-pane {
+  display: none !important;
+  opacity: 0;
+  transition: opacity 0.15s linear;
+}
+
+.tab-content > .tab-pane.active,
+.tab-content > .tab-pane.active.show {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  height: auto !important;
+}
+
+.tab-content > .tab-pane.collapse {
+  display: none;
+}
+
+.tab-content > .tab-pane.collapse.show,
+.tab-content > .tab-pane.collapse.active {
+  display: block !important;
+  height: auto !important;
+}
+
 /* Completely Hide Recent Actions Module from Django Admin */
 #content-related,
 #recent-actions-module,

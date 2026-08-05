@@ -1543,36 +1543,34 @@ class ServiceAdmin(admin.ModelAdmin):
         self.message_user(request, f"Successfully created {count} service duplicate(s) with lab-services template layout.")
     
     fieldsets = (
-        ('📌 General Information', {
+        ('General Information', {
             'fields': ('title', 'slug', 'custom_url_path', 'parent', 'theme_color', 'icon', 'image_file')
         }),
-        ('🔍 SEO & OpenGraph Meta Tags', {
+        ('SEO and OpenGraph Meta Tags', {
             'fields': ('meta_title', 'meta_description'),
             'description': 'Custom SEO Title and Meta Description for search engines and social media sharing previews.',
         }),
-        ('✨ Hero Section Content', {
+        ('Hero Section Content', {
             'fields': ('eyebrow', 'tagline', 'description', 'floating_badge', 'features')
         }),
-        ('✏️ Section Custom Content & Titles', {
+        ('Section Custom Content and Titles', {
             'fields': ('about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title'),
             'description': 'Specify or override custom description text and titles for sections on the service page.',
-            'classes': ('collapse',),
         }),
-        ('📋 Diagnostic Test Suites & Indications', {
+        ('Diagnostic Test Suites and Indications', {
             'fields': ('indications_title', 'indications_description', 'indications', 'lab_columns_title', 'lab_columns_description', 'lab_columns')
         }),
-        ('⭐ Process & Benefits Section', {
+        ('Process and Benefits Section', {
             'fields': ('why_choose_title', 'why_choose_desc', 'reasons', 'steps', 'benefits_title', 'benefits', 'benefits_image_file')
         }),
-        ('💡 Understanding & Condition Stages Section', {
+        ('Understanding and Condition Stages Section', {
             'fields': ('understanding_title', 'understanding_intro', 'understanding_items', 'understanding_image_file')
         }),
-        ('❓ FAQs', {
+        ('FAQs', {
             'fields': ('faqs',)
         }),
-        ('🕒 Metadata', {
+        ('Metadata', {
             'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',),
         }),
     )
 
@@ -1580,23 +1578,28 @@ class ServiceAdmin(admin.ModelAdmin):
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
     form = BlogPostAdminForm
-    list_display = ('title',)
-    list_filter = ('category',)
-    search_fields = ('title', 'content', 'category', 'author')
+    list_display = ('title', 'category', 'author', 'date')
+    list_filter = ('category', 'created_at')
+    search_fields = ('title', 'content', 'category', 'author', 'slug')
+    prepopulated_fields = {"slug": ("title",)}
+    readonly_fields = ('created_at', 'updated_at')
 
     fieldsets = (
-        ('📰 Article Header & Info', {
+        ('Article Header and Info', {
             'fields': ('title', 'slug', 'category', 'author', 'date', 'read_time')
         }),
-        ('🔍 SEO & OpenGraph Meta Tags', {
+        ('SEO and OpenGraph Meta Tags', {
             'fields': ('meta_title', 'meta_description'),
-            'description': 'Custom SEO Title and Meta Description for search engines, Google indexing, and social media sharing.',
+            'description': 'Custom SEO Title and Meta Description for search engine ranking and social media sharing previews.',
         }),
-        ('🖼️ Featured Media & Excerpt', {
+        ('Featured Media and Excerpt', {
             'fields': ('image_file', 'image', 'excerpt')
         }),
-        ('✍️ Main Article Content (Rich Visual Editor)', {
+        ('Main Article Content', {
             'fields': ('content',)
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
         }),
     )
 
