@@ -2028,12 +2028,6 @@ export default function Dashboard() {
                     )}
                   </div>
 
-                  {/* Info Card */}
-                  <div className="p-5 rounded-2xl bg-purple-500/5 border border-purple-500/20 text-xs text-purple-300 space-y-2">
-                    <p className="font-black uppercase tracking-wide text-purple-400 flex items-center gap-2"><BookOpen size={14} /> Backend API Endpoint</p>
-                    <p className="font-mono text-slate-400 bg-[#060c19] px-3 py-2 rounded-xl border border-slate-800">{API_BASE_URL}/api/blogs/</p>
-                    <p className="text-slate-500 leading-relaxed">Blog posts are saved to your Django backend. Make sure a <code className="bg-[#060c19] px-1 rounded">Blog</code> model and REST API endpoint exists at the path above.</p>
-                  </div>
                 </div>
 
               </div>
