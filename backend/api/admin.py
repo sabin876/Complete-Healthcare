@@ -1141,6 +1141,81 @@ class RichTextEditorWidget(forms.Widget):
             editor.addEventListener('input', sync);
             editor.addEventListener('blur', sync);
             codeInput.addEventListener('input', sync);
+
+            // Universal Inline Tab Switcher for Jazzmin Admin
+            (function() {{
+                function fixAllAdminTabs() {{
+                    const links = document.querySelectorAll('.nav-tabs .nav-link, .nav-pills .nav-link, [data-toggle="tab"], [data-toggle="pill"]');
+                    links.forEach(function(link) {{
+                        if (link.getAttribute('data-tab-fixed') === 'true') return;
+                        link.setAttribute('data-tab-fixed', 'true');
+                        link.style.cursor = 'pointer';
+
+                        link.addEventListener('click', function(e) {{
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            let rawHref = link.getAttribute('href') || link.getAttribute('data-target') || '';
+                            let targetId = rawHref.replace('#', '').trim();
+                            
+                            if (!targetId && link.id) {{
+                                targetId = link.id.replace('-tab', '').trim();
+                            }}
+
+                            if (!targetId) return false;
+
+                            // Deactivate sibling tabs in the tab bar
+                            const parentUl = link.closest('.nav-tabs, .nav-pills, .nav');
+                            if (parentUl) {{
+                                parentUl.querySelectorAll('.nav-link').forEach(function(l) {{
+                                    l.classList.remove('active');
+                                    l.setAttribute('aria-selected', 'false');
+                                }});
+                            }}
+                            link.classList.add('active');
+                            link.setAttribute('aria-selected', 'true');
+
+                            // Find target pane
+                            let targetPane = document.getElementById(targetId);
+                            if (!targetPane && !targetId.endsWith('-tab')) {{
+                                targetPane = document.getElementById(targetId + '-tab');
+                            }}
+                            if (!targetPane && targetId.endsWith('-tab')) {{
+                                targetPane = document.getElementById(targetId.slice(0, -4));
+                            }}
+
+                            if (!targetPane) {{
+                                const allPanes = document.querySelectorAll('.tab-pane, fieldset.tab-pane, div.tab-pane');
+                                allPanes.forEach(function(p) {{
+                                    if (p.id && (p.id === targetId || p.id === targetId + '-tab' || p.id.replace('-tab', '') === targetId)) {{
+                                        targetPane = p;
+                                    }}
+                                }});
+                            }}
+
+                            if (targetPane) {{
+                                const parentContainer = targetPane.closest('.tab-content') || targetPane.parentElement;
+                                if (parentContainer) {{
+                                    const siblings = parentContainer.querySelectorAll('.tab-pane, fieldset.tab-pane, div.tab-pane');
+                                    siblings.forEach(function(p) {{
+                                        p.classList.remove('active', 'show');
+                                        p.style.setProperty('display', 'none', 'important');
+                                    }});
+                                }}
+                                targetPane.classList.add('active', 'show');
+                                targetPane.style.setProperty('display', 'block', 'important');
+                                targetPane.style.setProperty('opacity', '1', 'important');
+                                targetPane.style.setProperty('visibility', 'visible', 'important');
+                                targetPane.style.setProperty('height', 'auto', 'important');
+                            }}
+                            return false;
+                        }}, true);
+                    }});
+                }}
+
+                setInterval(fixAllAdminTabs, 300);
+                fixAllAdminTabs();
+            }})();
         }})();
         </script>
         """
