@@ -244,6 +244,9 @@ input[type="text"]:focus, select:focus, textarea:focus {
   color: #64748b !important;
   cursor: pointer !important;
   user-select: none !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 10 !important;
 }
 
 .nav-tabs .nav-link.active {
