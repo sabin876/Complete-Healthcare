@@ -1,4 +1,4 @@
-/* Fail-Proof Delegated Tab Switcher for Django Jazzmin Admin */
+/* Non-Interfering Delegated Tab Switcher for Django Jazzmin Admin */
 (function() {
     function initTabSystem() {
         const $ = window.jQuery || window.$;
@@ -7,59 +7,46 @@
             return;
         }
 
-        function activateTab(link) {
-            if (!link) return;
-            const $link = $(link);
+        // Delegate click events strictly on changeform fieldset tab links
+        $(document).off('click.customAdminTabs').on('click.customAdminTabs', '.card-header .nav-tabs .nav-link, .change-form .nav-tabs .nav-link, form .nav-tabs .nav-link', function(e) {
+            const href = $(this).attr('href') || $(this).attr('data-target') || '';
+            
+            // Allow real navigation links (starting with / or http) to navigate normally
+            if (href.startsWith('/') || href.startsWith('http://') || href.startsWith('https://')) {
+                return true;
+            }
 
-            // 1. Try native Bootstrap 4 tab show method
-            if (typeof $link.tab === 'function') {
+            e.preventDefault();
+
+            // Try Bootstrap tab show if available
+            if (typeof $(this).tab === 'function') {
                 try {
-                    $link.tab('show');
-                } catch (e) {
-                    console.log('Bootstrap tab error:', e);
-                }
+                    $(this).tab('show');
+                } catch (err) {}
             }
 
-            // 2. Direct DOM manipulation fallback for 100% reliability
-            let href = $link.attr('href') || $link.attr('data-target') || '';
-            let targetSelector = href;
+            // Direct DOM pane activation
+            const $nav = $(this).closest('.nav-tabs');
+            const $tabContent = $nav.next('.tab-content').length ? $nav.next('.tab-content') : $nav.parent().find('.tab-content');
 
-            if (!targetSelector || targetSelector === '#') {
-                const linkId = $link.attr('id') || '';
-                if (linkId.endsWith('-tab')) {
-                    targetSelector = '#' + linkId.slice(0, -4);
-                }
-            }
+            if ($nav.length && $tabContent.length) {
+                const index = $nav.find('.nav-link').index(this);
+                $nav.find('.nav-link').removeClass('active').attr('aria-selected', 'false');
+                $(this).addClass('active').attr('aria-selected', 'true');
 
-            if (targetSelector && targetSelector.startsWith('#') && targetSelector.length > 1) {
-                let $targetPane = $(targetSelector);
+                const $panes = $tabContent.find('.tab-pane');
+                $panes.removeClass('active show').css('display', 'none');
 
-                // If not found, try adding or removing '-tab' suffix
-                if (!$targetPane.length) {
-                    if (targetSelector.endsWith('-tab')) {
-                        $targetPane = $(targetSelector.slice(0, -4));
-                    } else {
-                        $targetPane = $(targetSelector + '-tab');
-                    }
+                let targetId = href.replace('#', '').trim();
+                if (targetId.endsWith('-tab')) targetId = targetId.slice(0, -4);
+
+                let $target = targetId ? $tabContent.find('#' + targetId) : $();
+                if (!$target.length && index >= 0 && index < $panes.length) {
+                    $target = $panes.eq(index);
                 }
 
-                if ($targetPane.length) {
-                    // Highlight active tab header
-                    const $nav = $link.closest('.nav, .nav-tabs, .nav-pills');
-                    if ($nav.length) {
-                        $nav.find('.nav-link').removeClass('active').attr('aria-selected', 'false');
-                    }
-                    $link.addClass('active').attr('aria-selected', 'true');
-
-                    // Show target tab pane & hide siblings
-                    const $tabContent = $targetPane.closest('.tab-content');
-                    if ($tabContent.length) {
-                        $tabContent.find('.tab-pane').each(function() {
-                            $(this).removeClass('active show').css('display', 'none');
-                        });
-                    }
-
-                    $targetPane.addClass('active show').css({
+                if ($target.length) {
+                    $target.addClass('active show').css({
                         'display': 'block',
                         'opacity': '1',
                         'visibility': 'visible',
@@ -67,25 +54,28 @@
                     });
                 }
             }
-        }
-
-        // Delegate click events globally on document
-        $(document).off('click.customAdminTabs').on('click.customAdminTabs', '.nav-tabs .nav-link, [data-toggle="tab"], [data-toggle="pill"], .nav-pills .nav-link', function(e) {
-            e.preventDefault();
-            activateTab(this);
+            return false;
         });
 
-        // Auto-activate tab based on URL hash if present
+        // Hash change navigation
+        function handleHash() {
+            if (!window.location.hash) return;
+            const hash = window.location.hash.replace('#', '').trim();
+            const cleanHash = hash.endsWith('-tab') ? hash.slice(0, -4) : hash;
+
+            $('.card-header .nav-tabs .nav-link, .change-form .nav-tabs .nav-link, form .nav-tabs .nav-link').each(function() {
+                const href = ($(this).attr('href') || '').replace('#', '').trim();
+                const id = ($(this).attr('id') || '').trim();
+                if (href === cleanHash || href === hash || id === hash || id === cleanHash + '-tab') {
+                    $(this).trigger('click');
+                }
+            });
+        }
+
+        $(window).on('hashchange', handleHash);
         if (window.location.hash) {
-            const hash = window.location.hash;
-            let $link = $(`a[href="${hash}"], a[data-target="${hash}"], ${hash}`);
-            if (!$link.length && hash.endsWith('-tab')) {
-                const cleanHash = hash.slice(0, -4);
-                $link = $(`a[href="${cleanHash}"], a[data-target="${cleanHash}"]`);
-            }
-            if ($link.length) {
-                activateTab($link[0]);
-            }
+            setTimeout(handleHash, 300);
+            setTimeout(handleHash, 750);
         }
     }
 

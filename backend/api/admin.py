@@ -892,14 +892,20 @@ class AdminTabSwitcherWidget(forms.TextInput):
         <script>
         (function() {
             function initAdminTabFix() {
-                const navBars = document.querySelectorAll('.nav-tabs, .nav-pills, ul.nav');
-                navBars.forEach(function(nav) {
-                    const links = Array.from(nav.querySelectorAll('.nav-link, a.nav-item, a[data-toggle]'));
+                // Strictly target ChangeForm tab headers (card-header nav-tabs, change-form nav-tabs, form nav-tabs)
+                // DO NOT target main navbar, sidebar, breadcrumbs, action buttons, or external links
+                const tabNavs = document.querySelectorAll('.card-header .nav-tabs, .change-form .nav-tabs, div[id*="changeform"] .nav-tabs, form .nav-tabs');
+                
+                tabNavs.forEach(function(nav) {
+                    const links = Array.from(nav.querySelectorAll('.nav-link'));
                     if (links.length === 0) return;
 
-                    let tabContent = document.querySelector('.tab-content');
-                    if (!tabContent && nav.parentElement) {
-                        tabContent = nav.parentElement.querySelector('.tab-content');
+                    let tabContent = nav.nextElementSibling && nav.nextElementSibling.classList.contains('tab-content')
+                        ? nav.nextElementSibling
+                        : (nav.parentElement ? nav.parentElement.querySelector('.tab-content') : null);
+                        
+                    if (!tabContent) {
+                        tabContent = document.querySelector('.change-form .tab-content, form .tab-content');
                     }
                     if (!tabContent) return;
 
@@ -907,6 +913,13 @@ class AdminTabSwitcherWidget(forms.TextInput):
                     if (panes.length === 0) return;
 
                     links.forEach(function(link, index) {
+                        const href = link.getAttribute('href') || link.getAttribute('data-target') || '';
+                        
+                        // If it's a real HTTP navigation URL (starts with / or http), DO NOT intercept!
+                        if (href.startsWith('/') || href.startsWith('http://') || href.startsWith('https://')) {
+                            return;
+                        }
+
                         link.style.cursor = 'pointer';
                         link.style.pointerEvents = 'auto';
 
@@ -934,7 +947,6 @@ class AdminTabSwitcherWidget(forms.TextInput):
                             });
 
                             let targetPane = panes[index];
-                            let href = link.getAttribute('href') || link.getAttribute('data-target') || '';
                             let targetId = href.replace('#', '').trim();
                             if (targetId.endsWith('-tab')) targetId = targetId.slice(0, -4);
                             
@@ -964,15 +976,18 @@ class AdminTabSwitcherWidget(forms.TextInput):
                 const hash = window.location.hash.replace('#', '').trim();
                 const cleanHash = hash.endsWith('-tab') ? hash.slice(0, -4) : hash;
                 
-                const links = document.querySelectorAll('.nav-tabs .nav-link, .nav-pills .nav-link');
-                links.forEach(function(link) {
-                    const href = (link.getAttribute('href') || '').replace('#', '').trim();
-                    const id = (link.id || '').trim();
-                    if (href === cleanHash || href === hash || id === hash || id === cleanHash + '-tab') {
-                        if (typeof link.onclick === 'function') {
-                            link.onclick();
+                const changeformNavs = document.querySelectorAll('.card-header .nav-tabs, .change-form .nav-tabs, form .nav-tabs');
+                changeformNavs.forEach(function(nav) {
+                    const links = nav.querySelectorAll('.nav-link');
+                    links.forEach(function(link) {
+                        const href = (link.getAttribute('href') || '').replace('#', '').trim();
+                        const id = (link.id || '').trim();
+                        if (href === cleanHash || href === hash || id === hash || id === cleanHash + '-tab') {
+                            if (typeof link.onclick === 'function') {
+                                link.onclick();
+                            }
                         }
-                    }
+                    });
                 });
             }
 
