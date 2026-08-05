@@ -1708,10 +1708,6 @@ class BlogPostAdmin(admin.ModelAdmin):
         ('Article Header and Info', {
             'fields': ('title', 'slug', 'category', 'author', 'date', 'read_time')
         }),
-        ('SEO and OpenGraph Meta Tags', {
-            'fields': ('meta_title', 'meta_description'),
-            'description': 'Custom SEO Title and Meta Description for search engine ranking and social media sharing previews.',
-        }),
         ('Featured Media and Excerpt', {
             'fields': ('image_file', 'image', 'excerpt')
         }),
