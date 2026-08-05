@@ -1131,19 +1131,19 @@ class RichTextEditorWidget(forms.Widget):
             }}
 
             function updateStats() {{
-                const text = editor.innerText || editor.textContent || '';
-                const cleanText = text.trim();
-                const words = cleanText ? cleanText.split(/\\s+/).length : 0;
-                const chars = cleanText.length;
-                const readMin = Math.max(1, Math.ceil(words / 200));
-                stats.textContent = `${{words}} words | ${{chars}} characters | ~${{readMin}} min read`;
+                var text = editor.innerText || editor.textContent || '';
+                var cleanText = text.trim();
+                var words = cleanText ? cleanText.split(/\s+/).length : 0;
+                var chars = cleanText.length;
+                var readMin = Math.max(1, Math.ceil(words / 200));
+                stats.textContent = words + ' words | ' + chars + ' characters | ~' + readMin + ' min read';
             }}
 
             // Exec command helper
-            const toolbarBtns = document.querySelectorAll('#{container_id} .rte-btn');
-            toolbarBtns.forEach(btn => {{
-                btn.addEventListener('click', () => {{
-                    const cmd = btn.getAttribute('data-cmd');
+            var toolbarBtns = document.querySelectorAll('#{container_id} .rte-btn');
+            toolbarBtns.forEach(function(btn) {{
+                btn.addEventListener('click', function() {{
+                    var cmd = btn.getAttribute('data-cmd');
                     if (cmd) {{
                         document.execCommand(cmd, false, null);
                         sync();
@@ -1152,28 +1152,28 @@ class RichTextEditorWidget(forms.Widget):
             }});
 
             // Format block selector
-            formatSelect.addEventListener('change', (e) => {{
-                const val = e.target.value;
+            formatSelect.addEventListener('change', function(e) {{
+                var val = e.target.value;
                 if (val === 'pullquote') {{
                     document.execCommand('formatBlock', false, '<div>');
-                    const selection = window.getSelection();
+                    var selection = window.getSelection();
                     if (selection.rangeCount) {{
-                        let node = selection.getRangeAt(0).commonAncestorContainer;
+                        var node = selection.getRangeAt(0).commonAncestorContainer;
                         if (node.nodeType === 3) node = node.parentNode;
                         if (node && node !== editor) {{
                             node.className = 'pull-note';
                         }}
                     }}
                 }} else {{
-                    document.execCommand('formatBlock', false, `<${{val}}>`);
+                    document.execCommand('formatBlock', false, '<' + val + '>');
                 }}
                 formatSelect.value = 'p';
                 sync();
             }});
 
             // Insert Link
-            linkBtn.addEventListener('click', () => {{
-                const url = prompt('Enter link URL (e.g. https://example.com):');
+            linkBtn.addEventListener('click', function() {{
+                var url = prompt('Enter link URL (e.g. https://example.com):');
                 if (url) {{
                     document.execCommand('createLink', false, url);
                     sync();
@@ -1181,75 +1181,71 @@ class RichTextEditorWidget(forms.Widget):
             }});
 
             // Insert Image from local computer
-            const fileInput = document.createElement('input');
+            var fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = 'image/*';
             
-            imgBtn.addEventListener('click', () => {{
+            imgBtn.addEventListener('click', function() {{
                 fileInput.click();
             }});
 
-            fileInput.addEventListener('change', () => {{
+            fileInput.addEventListener('change', function() {{
                 if (fileInput.files.length === 0) return;
-                const file = fileInput.files[0];
+                var file = fileInput.files[0];
                 
                 // Show loading state on button
-                const originalText = imgBtn.innerHTML;
+                var originalText = imgBtn.innerHTML;
                 imgBtn.innerHTML = 'Uploading...';
                 imgBtn.disabled = true;
 
                 const formData = new FormData();
                 formData.append('image', file);
 
-                // Dynamically resolve API prefix if Django is hosted in a subdirectory (e.g. /backend/)
-                const adminIndex = window.location.pathname.indexOf('/admin/');
-                const uploadPath = (adminIndex !== -1 ? window.location.pathname.slice(0, adminIndex) : '') + '/api/upload_blog_image/';
+                // Dynamically resolve API prefix if Django is hosted in a subdirectory
+                var adminIndex = window.location.pathname.indexOf('/admin/');
+                var uploadPath = (adminIndex !== -1 ? window.location.pathname.slice(0, adminIndex) : '') + '/api/upload_blog_image/';
 
                 fetch(uploadPath, {{
                     method: 'POST',
                     body: formData
                 }})
-                .then(res => {{
-                    if (!res.ok) {{
-                        throw new Error('Upload failed with status ' + res.status);
-                    }}
+                .then(function(res) {{
+                    if (!res.ok) throw new Error('Upload failed with status ' + res.status);
                     return res.json();
                 }})
-                .then(data => {{
+                .then(function(data) {{
                     if (data.url) {{
-                        // Focus on editor area
                         editor.focus();
-                        // Insert uploaded image
                         document.execCommand('insertImage', false, data.url);
                         sync();
                     }} else if (data.error) {{
                         alert('Upload failed: ' + data.error);
                     }}
                 }})
-                .catch(err => {{
+                .catch(function(err) {{
                     console.error('Error uploading image:', err);
-                    alert('Error uploading image from local system. Please check your connection and login status.');
+                    alert('Error uploading image. Please check your connection and login status.');
                 }})
-                .finally(() => {{
+                .finally(function() {{
                     imgBtn.innerHTML = originalText;
                     imgBtn.disabled = false;
-                    fileInput.value = ''; // Reset file uploader input
+                    fileInput.value = '';
                 }});
             }});
 
 
             // Insert Quote
-            quoteBtn.addEventListener('click', () => {{
-                const text = prompt('Enter Pull Quote text:', 'Stem cell research gives the body better tools to heal.');
+            quoteBtn.addEventListener('click', function() {{
+                var text = prompt('Enter Pull Quote text:', 'Stem cell research gives the body better tools to heal.');
                 if (text) {{
-                    const quoteHtml = `<div class="pull-note">"${{text}}"</div><p></p>`;
+                    var quoteHtml = '<div class="pull-note">"' + text + '"</div><p></p>';
                     document.execCommand('insertHTML', false, quoteHtml);
                     sync();
                 }}
             }});
 
             // Toggle Code Mode
-            codeBtn.addEventListener('click', () => {{
+            codeBtn.addEventListener('click', function() {{
                 isCodeView = !isCodeView;
                 if (isCodeView) {{
                     codeInput.value = editor.innerHTML;
@@ -1269,51 +1265,69 @@ class RichTextEditorWidget(forms.Widget):
                 }}
             }});
 
-            // Paste handler — strip Word/Office junk formatting, keep plain text + basic HTML
-            editor.addEventListener('paste', (e) => {{
+            // Paste handler — strip Word/Office junk formatting
+            editor.addEventListener('paste', function(e) {{
                 e.preventDefault();
-                let text = '';
+                var text = '';
                 if (e.clipboardData) {{
-                    // Prefer plain text paste to avoid Word/Office junk tags causing DB errors
-                    const htmlPaste = e.clipboardData.getData('text/html');
-                    const plainPaste = e.clipboardData.getData('text/plain');
+                    var htmlPaste = e.clipboardData.getData('text/html');
+                    var plainPaste = e.clipboardData.getData('text/plain');
                     if (htmlPaste) {{
-                        // Strip Word conditional comments, mso- styles, XML/VML tags, NULL bytes
                         text = htmlPaste
-                            .replace(/<!--[\s\S]*?-->/g, '')        // HTML comments
-                            .replace(/<\?xml[\s\S]*?\?>/g, '')      // XML declarations
-                            .replace(/<o:[\s\S]*?<\/o:[^>]*>/gi, '') // Word o: tags
-                            .replace(/<w:[\s\S]*?<\/w:[^>]*>/gi, '') // Word w: tags
-                            .replace(/<m:[\s\S]*?<\/m:[^>]*>/gi, '') // Word m: tags
-                            .replace(/ style="[^"]*mso-[^"]*"/gi, '') // mso- inline styles
-                            .replace(/ class="Mso[^"]*"/gi, '')     // Word Mso classes
-                            .replace(/\x00/g, '');                  // NULL bytes
+                            .replace(/<!--[\s\S]*?-->/g, '')
+                            .replace(/<\?xml[\s\S]*?\?>/g, '')
+                            .replace(/<o:[\s\S]*?<\/o:[^>]*>/gi, '')
+                            .replace(/<w:[\s\S]*?<\/w:[^>]*>/gi, '')
+                            .replace(/<m:[\s\S]*?<\/m:[^>]*>/gi, '')
+                            .replace(/ style="[^"]*mso-[^"]*"/gi, '')
+                            .replace(/ class="Mso[^"]*"/gi, '')
+                            .replace(/\x00/g, '');
                     }} else {{
-                        // Plain text: wrap paragraphs in <p> tags
-                        text = plainPaste
-                            .replace(/\x00/g, '')
-                            .split(/\n\n+/)
-                            .map(p => p.trim() ? `<p>${{p.replace(/\n/g, '<br>')}}</p>` : '')
-                            .join('');
-                        if (!text) text = `<p>${{plainPaste.replace(/\x00/g, '').replace(/\n/g, '<br>')}}</p>`;
+                        var lines = plainPaste.replace(/\x00/g, '').split(/\n\n+/);
+                        text = lines.map(function(p) {{ return p.trim() ? '<p>' + p.replace(/\n/g, '<br>') + '</p>' : ''; }}).join('');
+                        if (!text) text = '<p>' + plainPaste.replace(/\x00/g, '').replace(/\n/g, '<br>') + '</p>';
                     }}
                 }}
                 document.execCommand('insertHTML', false, text);
                 sync();
             }});
 
-            // ── CRITICAL: Force sync on ANY form submit in the page ──
-            // Use window-level capture so this always fires even if textarea.form is null
-            window.addEventListener('submit', function(e) {{
-                sync();
-            }}, true); // capture phase = runs before Django's own handlers
-
-            // Listeners
+            // ── SYNC LISTENERS: keep textarea ALWAYS current ──
             editor.addEventListener('input', sync);
             editor.addEventListener('blur', sync);
+            editor.addEventListener('keyup', sync);
             codeInput.addEventListener('input', sync);
 
-            // Also sync on any keydown with Ctrl+S / Cmd+S (manual save shortcut)
+            // ── SAVE BUTTON INTERCEPTION: fire sync on every save button click ──
+            function attachSaveListeners() {{
+                var saveBtns = document.querySelectorAll(
+                    'input[type="submit"], button[type="submit"], '
+                    + '.submit-row input, .submit-row button, '
+                    + '[name="_save"], [name="_addanother"], [name="_continue"]'
+                );
+                saveBtns.forEach(function(btn) {{
+                    btn.addEventListener('click', sync, true);
+                }});
+
+                // Also find parent form and attach submit listener
+                var form = (typeof textarea.closest === 'function' ? textarea.closest('form') : null)
+                        || (typeof editor.closest === 'function' ? editor.closest('form') : null)
+                        || document.querySelector('#content-main form')
+                        || document.querySelector('form.change-form')
+                        || document.querySelector('form');
+                if (form && !form._rteSyncAttached) {{
+                    form.addEventListener('submit', sync, true);
+                    form._rteSyncAttached = true;
+                }}
+                // window-level fallback
+                window.addEventListener('submit', sync, true);
+            }}
+
+            // Run immediately and after short delay (for async-rendered admin pages)
+            attachSaveListeners();
+            setTimeout(attachSaveListeners, 600);
+
+            // Ctrl+S / Cmd+S save shortcut
             document.addEventListener('keydown', function(e) {{
                 if ((e.ctrlKey || e.metaKey) && e.key === 's') {{
                     sync();
