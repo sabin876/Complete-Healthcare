@@ -1058,7 +1058,7 @@ class RichTextEditorWidget(forms.Widget):
             </div>
 
             <!-- Editable Editor Area -->
-            <div id="{container_id}-editor" contenteditable="true" style="min-height: 400px; max-height: 750px; overflow-y: auto; padding: 22px 26px; outline: none; background: #ffffff; color: #1e293b; font-size: 16px; line-height: 1.7; font-family: Georgia, 'Times New Roman', serif;"></div>
+            <div id="{container_id}-editor" contenteditable="true" placeholder="Click here to start writing your article content or paste your text..." style="min-height: 400px; max-height: 750px; overflow-y: auto; padding: 22px 26px; outline: none; background: #ffffff; color: #1e293b; font-size: 16px; line-height: 1.7; font-family: Georgia, 'Times New Roman', serif;"></div>
 
             <!-- Code Editor Mode (Initially hidden) -->
             <textarea id="{container_id}-codemode" style="display: none; width: 100%; min-height: 400px; max-height: 750px; padding: 22px 26px; box-sizing: border-box; font-family: 'Fira Code', Consolas, Monaco, monospace; font-size: 14px; background: #0f172a; color: #f8fafc; border: none; outline: none; line-height: 1.6; resize: vertical;"></textarea>
@@ -1071,6 +1071,7 @@ class RichTextEditorWidget(forms.Widget):
         </div>
 
         <style>
+            #{container_id}-editor:empty:before {{ content: attr(placeholder); color: #94a3b8; font-style: italic; pointer-events: none; }}
             #{container_id}-editor p {{ margin: 0 0 18px 0; font-size: 16px; color: #334155; line-height: 1.7; }}
             #{container_id}-editor h2 {{ color: #1f5f9e; font-size: 24px; font-weight: 700; margin: 30px 0 14px 0; font-family: Georgia, serif; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }}
             #{container_id}-editor h3 {{ color: #1f5f9e; font-size: 20px; font-weight: 700; margin: 24px 0 12px 0; font-family: Georgia, serif; }}
@@ -1098,7 +1099,8 @@ class RichTextEditorWidget(forms.Widget):
             let isCodeView = false;
 
             // Initial load
-            editor.innerHTML = textarea.value || '';
+            const val = (textarea.value || '').trim();
+            editor.innerHTML = val ? textarea.value : '';
             updateStats();
 
             function sync() {{
