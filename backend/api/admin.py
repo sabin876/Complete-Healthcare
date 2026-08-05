@@ -1013,13 +1013,16 @@ class RichTextEditorWidget(forms.Widget):
     def render(self, name, value, attrs=None, renderer=None):
         if value is None:
             value = ""
-        escaped_value = value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+        # Use json.dumps to safely embed the HTML content as a JS string literal
+        # This avoids all HTML-entity double-escaping issues
+        import json as _json
+        js_initial_value = _json.dumps(value)  # produces a safe JS string like "<p>...</p>"
         container_id = f"rte-widget-{name}"
 
         html = f"""
         <div id="{container_id}" class="custom-rte-wrapper" style="max-width: 950px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; overflow: hidden; font-family: system-ui, -apple-system, sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-            <!-- Hidden textarea for Django Form post data -->
-            <textarea name="{name}" id="id_{name}_textarea" style="display: none;">{escaped_value}</textarea>
+            <!-- Hidden textarea for Django Form post data — MUST have name so Django reads it -->
+            <textarea name="{name}" id="id_{name}_textarea" style="display: none;"></textarea>
 
             <!-- Toolbar Header -->
             <div class="rte-toolbar" style="background: #f8fafc; border-bottom: 1.5px solid #e2e8f0; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; user-select: none;">
@@ -1109,17 +1112,11 @@ class RichTextEditorWidget(forms.Widget):
 
             let isCodeView = false;
 
-            // Initial load — textarea holds HTML-entity-escaped content; decode before setting editor
-            const rawVal = textarea.value || '';
-            if (rawVal.trim()) {{
-                // Use a temporary div to decode HTML entities back to raw HTML
-                const decoder = document.createElement('div');
-                decoder.innerHTML = rawVal;
-                // If it looks like it was double-escaped (contains &lt; literally), decode once more
-                const decoded = decoder.innerHTML.includes('&lt;') ? decoder.textContent : decoder.innerHTML;
-                editor.innerHTML = decoded;
-                // Also sync back the decoded value into the textarea so submit gets correct content
-                textarea.value = editor.innerHTML;
+            // ── Load initial content safely via JSON (avoids all HTML-entity escaping bugs) ──
+            const initialContent = {js_initial_value};
+            if (initialContent && initialContent.trim()) {{
+                editor.innerHTML = initialContent;
+                textarea.value = initialContent;
             }}
             updateStats();
 
@@ -1305,14 +1302,11 @@ class RichTextEditorWidget(forms.Widget):
                 sync();
             }});
 
-            // ── CRITICAL: Force sync into hidden textarea before any form submit ──
-            // Without this, clicking Save without blurring the editor = empty content saved
-            const parentForm = textarea.form || editor.closest('form');
-            if (parentForm) {{
-                parentForm.addEventListener('submit', function(e) {{
-                    sync();
-                }}, true); // capture phase = runs before other handlers
-            }}
+            // ── CRITICAL: Force sync on ANY form submit in the page ──
+            // Use window-level capture so this always fires even if textarea.form is null
+            window.addEventListener('submit', function(e) {{
+                sync();
+            }}, true); // capture phase = runs before Django's own handlers
 
             // Listeners
             editor.addEventListener('input', sync);
@@ -1634,11 +1628,6 @@ class BlogPostAdminForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 14.5px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
         required=False,
         help_text="Brief summary snippet displayed on article cards"
-    )
-    content = forms.CharField(
-        widget=RichTextEditorWidget(),
-        required=False,
-        help_text="Main article content in HTML format. Use visual editor tools or Code view."
     )
     meta_title = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
