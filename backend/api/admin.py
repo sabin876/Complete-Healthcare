@@ -1142,78 +1142,90 @@ class RichTextEditorWidget(forms.Widget):
             editor.addEventListener('blur', sync);
             codeInput.addEventListener('input', sync);
 
-            // Universal Inline Tab Switcher for Jazzmin Admin
+            // Fail-Proof Index-Paired Admin Tab Switcher for Jazzmin Admin
             (function() {{
                 function fixAllAdminTabs() {{
-                    const links = document.querySelectorAll('.nav-tabs .nav-link, .nav-pills .nav-link, [data-toggle="tab"], [data-toggle="pill"]');
-                    links.forEach(function(link) {{
-                        if (link.getAttribute('data-tab-fixed') === 'true') return;
-                        link.setAttribute('data-tab-fixed', 'true');
-                        link.style.cursor = 'pointer';
+                    const navBars = document.querySelectorAll('.nav-tabs, .nav-pills');
+                    navBars.forEach(function(nav) {{
+                        const links = Array.from(nav.querySelectorAll('.nav-link'));
+                        
+                        // Find tab content pane container
+                        let tabContent = null;
+                        if (nav.nextElementSibling && nav.nextElementSibling.classList.contains('tab-content')) {{
+                            tabContent = nav.nextElementSibling;
+                        }} else if (nav.parentElement) {{
+                            tabContent = nav.parentElement.querySelector('.tab-content');
+                        }}
+                        if (!tabContent) {{
+                            tabContent = document.querySelector('.tab-content');
+                        }}
+                        if (!tabContent) return;
 
-                        link.addEventListener('click', function(e) {{
-                            e.preventDefault();
-                            e.stopPropagation();
+                        const panes = Array.from(tabContent.querySelectorAll('.tab-pane, fieldset.tab-pane, div.tab-pane'));
+                        if (panes.length === 0) return;
 
-                            let rawHref = link.getAttribute('href') || link.getAttribute('data-target') || '';
-                            let targetId = rawHref.replace('#', '').trim();
-                            
-                            if (!targetId && link.id) {{
-                                targetId = link.id.replace('-tab', '').trim();
-                            }}
+                        links.forEach(function(link, index) {{
+                            if (link.getAttribute('data-tab-indexed') === 'true') return;
+                            link.setAttribute('data-tab-indexed', 'true');
+                            link.style.cursor = 'pointer';
 
-                            if (!targetId) return false;
+                            link.addEventListener('click', function(e) {{
+                                e.preventDefault();
+                                e.stopPropagation();
 
-                            // Deactivate sibling tabs in the tab bar
-                            const parentUl = link.closest('.nav-tabs, .nav-pills, .nav');
-                            if (parentUl) {{
-                                parentUl.querySelectorAll('.nav-link').forEach(function(l) {{
+                                // 1. Deactivate all tab link headers in this nav bar
+                                links.forEach(function(l) {{
                                     l.classList.remove('active');
                                     l.setAttribute('aria-selected', 'false');
+                                    l.style.backgroundColor = '';
+                                    l.style.color = '';
                                 }});
-                            }}
-                            link.classList.add('active');
-                            link.setAttribute('aria-selected', 'true');
 
-                            // Find target pane
-                            let targetPane = document.getElementById(targetId);
-                            if (!targetPane && !targetId.endsWith('-tab')) {{
-                                targetPane = document.getElementById(targetId + '-tab');
-                            }}
-                            if (!targetPane && targetId.endsWith('-tab')) {{
-                                targetPane = document.getElementById(targetId.slice(0, -4));
-                            }}
+                                // 2. Activate clicked tab header
+                                link.classList.add('active');
+                                link.setAttribute('aria-selected', 'true');
+                                link.style.backgroundColor = '#08709d';
+                                link.style.color = '#ffffff';
 
-                            if (!targetPane) {{
-                                const allPanes = document.querySelectorAll('.tab-pane, fieldset.tab-pane, div.tab-pane');
-                                allPanes.forEach(function(p) {{
-                                    if (p.id && (p.id === targetId || p.id === targetId + '-tab' || p.id.replace('-tab', '') === targetId)) {{
-                                        targetPane = p;
-                                    }}
+                                // 3. Deactivate all tab panes in tabContent
+                                panes.forEach(function(p) {{
+                                    p.classList.remove('active', 'show');
+                                    p.style.setProperty('display', 'none', 'important');
                                 }});
-                            }}
 
-                            if (targetPane) {{
-                                const parentContainer = targetPane.closest('.tab-content') || targetPane.parentElement;
-                                if (parentContainer) {{
-                                    const siblings = parentContainer.querySelectorAll('.tab-pane, fieldset.tab-pane, div.tab-pane');
-                                    siblings.forEach(function(p) {{
-                                        p.classList.remove('active', 'show');
-                                        p.style.setProperty('display', 'none', 'important');
-                                    }});
+                                // 4. Target pane lookup (by ID or fallback to index matching)
+                                let targetPane = null;
+                                let rawHref = link.getAttribute('href') || link.getAttribute('data-target') || '';
+                                let targetId = rawHref.replace('#', '').trim();
+                                if (targetId.endsWith('-tab')) targetId = targetId.slice(0, -4);
+
+                                if (targetId) {{
+                                    targetPane = tabContent.querySelector('#' + targetId) || 
+                                                 tabContent.querySelector('#' + targetId + '-tab') ||
+                                                 document.getElementById(targetId) ||
+                                                 document.getElementById(targetId + '-tab');
                                 }}
-                                targetPane.classList.add('active', 'show');
-                                targetPane.style.setProperty('display', 'block', 'important');
-                                targetPane.style.setProperty('opacity', '1', 'important');
-                                targetPane.style.setProperty('visibility', 'visible', 'important');
-                                targetPane.style.setProperty('height', 'auto', 'important');
-                            }}
-                            return false;
-                        }}, true);
+
+                                // Fallback: index pairing (link #N maps directly to pane #N)
+                                if (!targetPane && panes[index]) {{
+                                    targetPane = panes[index];
+                                }}
+
+                                // 5. Display target pane
+                                if (targetPane) {{
+                                    targetPane.classList.add('active', 'show');
+                                    targetPane.style.setProperty('display', 'block', 'important');
+                                    targetPane.style.setProperty('opacity', '1', 'important');
+                                    targetPane.style.setProperty('visibility', 'visible', 'important');
+                                    targetPane.style.setProperty('height', 'auto', 'important');
+                                }}
+                                return false;
+                            }}, true);
+                        }});
                     }});
                 }}
 
-                setInterval(fixAllAdminTabs, 300);
+                setInterval(fixAllAdminTabs, 250);
                 fixAllAdminTabs();
             }})();
         }})();
