@@ -131,16 +131,14 @@ export default function BlogDetails() {
             setPost({
               id: data.id,
               slug: data.slug || slugifyTitle(data.title),
-              category: data.category || 'Home Healthcare',
+              category: data.tag || data.category || 'Home Healthcare',
               title: data.title,
               author: data.author || 'Corx',
               authorBio: 'Corx writes on regenerative medicine, home healthcare, and recovery-focused treatment options.',
               date: data.date || 'May 22, 2026',
               heroImage: data.image && !data.image.includes('placeholder') ? data.image : 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80',
-              tags: [data.category || 'Healthcare', 'Recovery'],
+              tags: [data.tag || data.category || 'Healthcare'],
               content: data.content || `<p>${data.excerpt}</p>`,
-              meta_title: data.meta_title || undefined,
-              meta_description: data.meta_description || undefined,
               excerpt: data.excerpt || undefined
             });
           }

@@ -266,14 +266,12 @@ export default function OrthopedicArticlesPage() {
         if (Array.isArray(data) && data.length > 0) {
           const formatted = data.map(item => ({
             id: item.id,
-            tag: item.category || 'HEALTHCARE',
+            tag: item.tag || item.category || 'HEALTHCARE',
             title: item.title,
             excerpt: item.excerpt || item.title,
             author: item.author || 'Dr. Ulhas Sonar',
             date: item.date || '2026-05-30',
             image: item.image && !item.image.includes('placeholder') ? item.image : DUMMY_IMAGE,
-            meta_title: item.meta_title,
-            meta_description: item.meta_description,
           }));
           setBlogPostsList(formatted);
         }

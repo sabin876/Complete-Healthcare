@@ -278,6 +278,36 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     queryset = BlogPost.objects.all().order_by('-id')
     serializer_class = BlogPostSerializer
 
+    def get_object(self):
+        """Support lookup by numeric ID or by slug."""
+        from django.utils.text import slugify as django_slugify
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup = self.kwargs.get(self.lookup_field, '')
+        lookup_str = str(lookup).strip()
+
+        # Numeric ID lookup
+        if lookup_str.isdigit():
+            obj = queryset.filter(id=int(lookup_str)).first()
+            if obj:
+                self.check_object_permissions(self.request, obj)
+                return obj
+
+        # Slug-based lookup — match stored slug or auto-generated slug from title
+        obj = queryset.filter(slug=lookup_str).first()
+        if not obj:
+            for item in queryset:
+                generated = django_slugify(item.title or f'post-{item.id}')
+                if generated == lookup_str:
+                    obj = item
+                    break
+
+        if obj:
+            self.check_object_permissions(self.request, obj)
+            return obj
+
+        from django.http import Http404
+        raise Http404(f"Blog post '{lookup_str}' not found.")
+
 
 from rest_framework.decorators import api_view, action
 
