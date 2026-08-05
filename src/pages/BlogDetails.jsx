@@ -517,30 +517,27 @@ export default function BlogDetails() {
         </div>
 
         <article className="article-card">
-          <h1>{post.title}</h1>
-          <div className="meta-bar">
-            <span>By <strong>{post.author}</strong></span>
-            <span>•</span>
-            <span>{post.date}</span>
-            <span>•</span>
-            <span>{post.category}</span>
+          <h1 className="article-title">{post.title}</h1>
+          <div className="article-meta">
+            By <strong>{post.author}</strong> • {post.date} • {post.category}
           </div>
 
-          <img src={post.heroImage} alt={post.title} className="hero-img" />
+          <img src={post.heroImage} alt={post.title} className="article-hero" />
 
           <div 
-            className="post-body" 
+            className="article-body" 
             dangerouslySetInnerHTML={{ __html: post.content }} 
           />
 
-          <div className="tags-row">
-            {post.tags.map((tag, i) => (
-              <span key={i} className="tag-pill">#{tag}</span>
+          <div className="tags">
+            <span className="label">TAGS:</span>
+            {post.tags && post.tags.map((tag, i) => (
+              <span key={i} className="tag">#{tag}</span>
             ))}
           </div>
 
-          <div className="share-row">
-            <span>Share:</span>
+          <div className="share">
+            <span className="label">SHARE:</span>
             <a href="#" aria-label="Share on Facebook">f</a>
             <a href="#" aria-label="Share on X">x</a>
             <a href="#" aria-label="Share via email">@</a>

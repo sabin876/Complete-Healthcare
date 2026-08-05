@@ -1635,6 +1635,21 @@ class BlogPostAdminForm(forms.ModelForm):
         required=False,
         help_text="Brief summary snippet displayed on article cards"
     )
+    content = forms.CharField(
+        widget=RichTextEditorWidget(),
+        required=False,
+        help_text="Main article content in HTML format. Use visual editor tools or Code view."
+    )
+    meta_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+        required=False,
+        help_text="Custom HTML <title> tag for search engines & social previews (leave blank to auto-use article title)"
+    )
+    meta_description = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 14.5px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
+        required=False,
+        help_text="Custom meta description tag for search engines & social previews (leave blank to auto-use article excerpt)"
+    )
 
     class Meta:
         model = BlogPost
