@@ -198,11 +198,8 @@ JAZZMIN_SETTINGS = {
         "api.teammember": "fas fa-user-nurse",
     },
     "default_icon_parents": "fas fa-folder",
-    "changeform_format": "single",
-    "changeform_format_overrides": {
-        "api.blogpost": "single",
-        "api.service": "collapsible",
-    },
+    "default_icon_children": "fas fa-file-medical",
+    "changeform_format": "horizontal_tabs",
 }
 
 JAZZMIN_UI_TWEAKS = {
