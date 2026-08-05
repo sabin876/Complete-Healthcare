@@ -234,4 +234,7 @@ JAZZMIN_UI_TWEAKS = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-
+# Allow large blog article content to be saved without 500 errors
+# Default is 2.5 MB which is too small for rich HTML article content
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50 MB
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000    # Increase max POST fields limit

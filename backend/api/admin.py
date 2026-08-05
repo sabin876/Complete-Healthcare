@@ -999,6 +999,17 @@ class AdminTabSwitcherWidget(forms.TextInput):
 # 7. Rich Text Content Editor Widget for Blog Posts
 # ----------------------------------------------------------------------
 class RichTextEditorWidget(forms.Widget):
+    def value_from_datadict(self, data, files, name):
+        """Read the submitted value from POST data and strip any NULL bytes that cause DB errors."""
+        val = data.get(name, '')
+        if val:
+            # Strip NULL bytes — they cause 500 errors on MySQL
+            val = val.replace('\x00', '')
+        return val
+
+    def use_required_attribute(self, initial_value):
+        return False
+
     def render(self, name, value, attrs=None, renderer=None):
         if value is None:
             value = ""
@@ -1250,6 +1261,39 @@ class RichTextEditorWidget(forms.Widget):
                     codeBtn.textContent = '</> Code View';
                     sync();
                 }}
+            }});
+
+            // Paste handler — strip Word/Office junk formatting, keep plain text + basic HTML
+            editor.addEventListener('paste', (e) => {{
+                e.preventDefault();
+                let text = '';
+                if (e.clipboardData) {{
+                    // Prefer plain text paste to avoid Word/Office junk tags causing DB errors
+                    const htmlPaste = e.clipboardData.getData('text/html');
+                    const plainPaste = e.clipboardData.getData('text/plain');
+                    if (htmlPaste) {{
+                        // Strip Word conditional comments, mso- styles, XML/VML tags, NULL bytes
+                        text = htmlPaste
+                            .replace(/<!--[\s\S]*?-->/g, '')        // HTML comments
+                            .replace(/<\?xml[\s\S]*?\?>/g, '')      // XML declarations
+                            .replace(/<o:[\s\S]*?<\/o:[^>]*>/gi, '') // Word o: tags
+                            .replace(/<w:[\s\S]*?<\/w:[^>]*>/gi, '') // Word w: tags
+                            .replace(/<m:[\s\S]*?<\/m:[^>]*>/gi, '') // Word m: tags
+                            .replace(/ style="[^"]*mso-[^"]*"/gi, '') // mso- inline styles
+                            .replace(/ class="Mso[^"]*"/gi, '')     // Word Mso classes
+                            .replace(/\x00/g, '');                  // NULL bytes
+                    }} else {{
+                        // Plain text: wrap paragraphs in <p> tags
+                        text = plainPaste
+                            .replace(/\x00/g, '')
+                            .split(/\n\n+/)
+                            .map(p => p.trim() ? `<p>${{p.replace(/\n/g, '<br>')}}</p>` : '')
+                            .join('');
+                        if (!text) text = `<p>${{plainPaste.replace(/\x00/g, '').replace(/\n/g, '<br>')}}</p>`;
+                    }}
+                }}
+                document.execCommand('insertHTML', false, text);
+                sync();
             }});
 
             // Listeners
