@@ -242,6 +242,8 @@ input[type="text"]:focus, select:focus, textarea:focus {
   font-weight: 700 !important;
   font-size: 13px !important;
   color: #64748b !important;
+  cursor: pointer !important;
+  user-select: none !important;
 }
 
 .nav-tabs .nav-link.active {
@@ -250,28 +252,16 @@ input[type="text"]:focus, select:focus, textarea:focus {
   border: none !important;
 }
 
-/* Ensure Jazzmin Tab Content and Collapsible Fieldsets Open and Display Properly */
+/* Ensure Jazzmin Tab Content Opens Smoothly */
 .tab-content > .tab-pane {
-  display: none !important;
-  opacity: 0;
-  transition: opacity 0.15s linear;
-}
-
-.tab-content > .tab-pane.active,
-.tab-content > .tab-pane.active.show {
-  display: block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  height: auto !important;
-}
-
-.tab-content > .tab-pane.collapse {
   display: none;
 }
 
-.tab-content > .tab-pane.collapse.show,
-.tab-content > .tab-pane.collapse.active {
+.tab-content > .tab-pane.active,
+.tab-content > .tab-pane.show {
   display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   height: auto !important;
 }
 

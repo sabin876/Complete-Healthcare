@@ -170,6 +170,7 @@ JAZZMIN_SETTINGS = {
     "copyright": "CORx Healthcare Dubai",
     "user_avatar": None,
     "custom_css": "api/css/custom_admin.css",
+    "custom_js": "api/js/custom_admin_tabs.js",
     "topmenu_links": [
         {"name": "Home Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
         {"name": "Services Manager", "url": "/admin/api/service/", "permissions": ["api.view_service"]},
