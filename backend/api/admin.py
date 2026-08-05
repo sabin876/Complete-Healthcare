@@ -1715,7 +1715,8 @@ class BlogPostAdmin(admin.ModelAdmin):
             'fields': ('content',)
         }),
         ('Metadata', {
-            'fields': ('created_at', 'updated_at'),
+            'fields': ('meta_title', 'meta_description', 'created_at', 'updated_at'),
+            'description': 'SEO Meta Title and Meta Description tags for search engine indexing and social sharing.',
         }),
     )
 
