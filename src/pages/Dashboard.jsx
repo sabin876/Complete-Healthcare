@@ -6,7 +6,8 @@ import {
   LayoutDashboard, CornerDownRight, Edit3, X, ArrowRight,
   ListChecks, Image as ImageIcon, BookOpen, ArrowUp, ArrowDown, 
   Search, Eye, EyeOff, Zap, Sliders, AlertCircle,
-  TrendingUp, ArrowUpRight, Server, Globe, Filter, ChevronRight, FileText
+  TrendingUp, ArrowUpRight, Server, Globe, Filter, ChevronRight, FileText,
+  PenLine, Tag, Clock, User, Hash, AlignLeft, Link2, Save
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.webp';
@@ -14,7 +15,7 @@ import { API_BASE_URL } from '../config/api';
 import { Container } from '../components/ui';
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'subservices' | 'understanding' | 'benefits' | 'parents' | 'hierarchy'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'subservices' | 'understanding' | 'benefits' | 'parents' | 'hierarchy' | 'blogs'
   const [servicesData, setServicesData] = useState([]);
   const [parentServices, setParentServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,6 +67,139 @@ export default function Dashboard() {
   ]);
 
   const [submitting, setSubmitting] = useState(false);
+
+  // ── Blog Management State ──────────────────────────────────────────────────
+  const [blogsData, setBlogsData] = useState([]);
+  const [blogsLoading, setBlogsLoading] = useState(false);
+  const [blogSearchTerm, setBlogSearchTerm] = useState('');
+  const [blogSubmitting, setBlogSubmitting] = useState(false);
+  const [editingBlog, setEditingBlog] = useState(null); // null = create mode, object = edit mode
+  const [blogDeleteConfirm, setBlogDeleteConfirm] = useState(null); // id of blog pending delete
+
+  // Blog Form Fields
+  const [blogTitle, setBlogTitle]       = useState('');
+  const [blogSlug, setBlogSlug]         = useState('');
+  const [blogAuthor, setBlogAuthor]     = useState('');
+  const [blogDate, setBlogDate]         = useState(new Date().toISOString().split('T')[0]);
+  const [blogTag, setBlogTag]           = useState('');
+  const [blogExcerpt, setBlogExcerpt]   = useState('');
+  const [blogImageUrl, setBlogImageUrl] = useState('');
+  const [blogContent, setBlogContent]   = useState('');
+
+  const resetBlogForm = () => {
+    setEditingBlog(null);
+    setBlogTitle('');
+    setBlogSlug('');
+    setBlogAuthor('');
+    setBlogDate(new Date().toISOString().split('T')[0]);
+    setBlogTag('');
+    setBlogExcerpt('');
+    setBlogImageUrl('');
+    setBlogContent('');
+  };
+
+  const populateBlogForm = (blog) => {
+    setEditingBlog(blog);
+    setBlogTitle(blog.title || '');
+    setBlogSlug(blog.slug || '');
+    setBlogAuthor(blog.author || '');
+    setBlogDate(blog.date || new Date().toISOString().split('T')[0]);
+    setBlogTag(blog.tag || '');
+    setBlogExcerpt(blog.excerpt || '');
+    setBlogImageUrl(blog.image || '');
+    setBlogContent(blog.content || '');
+  };
+
+  // Auto-generate slug from title
+  const handleBlogTitleChange = (val) => {
+    setBlogTitle(val);
+    if (!editingBlog) {
+      setBlogSlug(
+        val.toLowerCase().trim()
+          .replace(/[^\w\s-]/g, '')
+          .replace(/[\s_-]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+      );
+    }
+  };
+
+  const loadBlogs = async () => {
+    setBlogsLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/blogs/`);
+      if (!res.ok) throw new Error('Failed to fetch blogs');
+      const data = await res.json();
+      setBlogsData(Array.isArray(data) ? data : (data.results || []));
+    } catch (err) {
+      console.error('Error fetching blogs:', err);
+      showToast('error', 'Fetch Failed', 'Could not load blogs from backend.');
+    } finally {
+      setBlogsLoading(false);
+    }
+  };
+
+  const handleSaveBlog = async (e) => {
+    e.preventDefault();
+    if (!blogTitle.trim()) {
+      showToast('error', 'Validation Error', 'Blog title is required.');
+      return;
+    }
+    setBlogSubmitting(true);
+    const payload = {
+      title:   blogTitle.trim(),
+      slug:    blogSlug.trim() || blogTitle.toLowerCase().replace(/\s+/g, '-'),
+      author:  blogAuthor.trim(),
+      date:    blogDate,
+      tag:     blogTag.trim(),
+      excerpt: blogExcerpt.trim(),
+      image:   blogImageUrl.trim(),
+      content: blogContent.trim(),
+    };
+    try {
+      let res;
+      if (editingBlog) {
+        res = await fetch(`${API_BASE_URL}/api/blogs/${editingBlog.id}/`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        res = await fetch(`${API_BASE_URL}/api/blogs/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || JSON.stringify(errData) || 'Failed to save blog');
+      }
+      showToast('success', editingBlog ? 'Blog Updated' : 'Blog Published', `"${blogTitle}" saved successfully!`);
+      resetBlogForm();
+      loadBlogs();
+    } catch (err) {
+      console.error(err);
+      showToast('error', 'Save Failed', err.message || 'Could not save blog.');
+    } finally {
+      setBlogSubmitting(false);
+    }
+  };
+
+  const handleDeleteBlog = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/blogs/${id}/`, { method: 'DELETE' });
+      if (!res.ok && res.status !== 204) throw new Error('Delete failed');
+      showToast('success', 'Blog Deleted', 'Blog post removed from backend.');
+      setBlogDeleteConfirm(null);
+      loadBlogs();
+    } catch (err) {
+      showToast('error', 'Delete Failed', err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'blogs') loadBlogs();
+  }, [activeTab]);
 
   // Fetch all services from Django API
   const loadServices = async () => {
@@ -573,6 +707,27 @@ export default function Dashboard() {
                 <Activity size={18} className={activeTab === 'hierarchy' ? 'text-cyan-400' : ''} />
                 <span>Hierarchy Tree</span>
               </button>
+
+              {/* Blog Management */}
+              <div className="pt-3 mt-1 border-t border-slate-800/80">
+                <p className="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-600 px-2 mb-2">Content</p>
+                <button
+                  onClick={() => setActiveTab('blogs')}
+                  className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-xs transition-all duration-200 cursor-pointer ${
+                    activeTab === 'blogs'
+                      ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/10 text-purple-300 border border-purple-500/40 shadow-lg shadow-purple-500/10'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <PenLine size={18} className={activeTab === 'blogs' ? 'text-purple-400' : ''} />
+                    <span>Blog Manager</span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-mono font-bold">
+                    {blogsData.length}
+                  </span>
+                </button>
+              </div>
             </nav>
           </div>
 
@@ -634,16 +789,18 @@ export default function Dashboard() {
               { id: 'understanding', label: 'Understanding', icon: BookOpen },
               { id: 'benefits', label: 'Benefits', icon: ListChecks },
               { id: 'parents', label: 'Parents', icon: Layers },
-              { id: 'hierarchy', label: 'Hierarchy', icon: Activity }
+              { id: 'hierarchy', label: 'Hierarchy', icon: Activity },
+              { id: 'blogs', label: 'Blogs', icon: PenLine }
             ].map(tab => {
               const Icon = tab.icon;
+              const isBlog = tab.id === 'blogs';
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all ${
                     activeTab === tab.id
-                      ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                      ? isBlog ? 'bg-purple-500 text-white shadow-md shadow-purple-500/20' : 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
                       : 'bg-slate-900 text-slate-400 border border-slate-800'
                   }`}
                 >
@@ -1507,6 +1664,378 @@ export default function Dashboard() {
                     </div>
                   );
                 })}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: BLOG MANAGER */}
+          {activeTab === 'blogs' && (
+            <div className="space-y-8">
+
+              {/* Delete Confirmation Modal */}
+              <AnimatePresence>
+                {blogDeleteConfirm && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-[300] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+                  >
+                    <motion.div
+                      initial={{ scale: 0.85, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.85, opacity: 0 }}
+                      className="bg-[#0c1527] border border-rose-500/40 rounded-3xl p-8 max-w-sm w-full shadow-2xl shadow-rose-500/10"
+                    >
+                      <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center mb-4">
+                        <Trash2 size={22} />
+                      </div>
+                      <h3 className="text-lg font-black text-white uppercase tracking-tight font-montserrat mb-2">Delete Blog Post?</h3>
+                      <p className="text-xs text-slate-400 mb-6 leading-relaxed">This action is permanent and cannot be undone. The blog post will be removed from the backend database.</p>
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => handleDeleteBlog(blogDeleteConfirm)}
+                          className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black text-xs uppercase tracking-wider cursor-pointer hover:opacity-90 transition-all"
+                        >
+                          Yes, Delete
+                        </button>
+                        <button
+                          onClick={() => setBlogDeleteConfirm(null)}
+                          className="flex-1 py-3 rounded-2xl bg-slate-800 text-slate-300 font-black text-xs uppercase tracking-wider cursor-pointer hover:bg-slate-700 transition-all"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                {/* ── LEFT: CREATE / EDIT BLOG FORM ─────────────────── */}
+                <div className="lg:col-span-5 bg-[#0a1224]/90 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl sticky top-6">
+                  <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-11 h-11 rounded-2xl flex items-center justify-center font-bold border ${
+                        editingBlog
+                          ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                          : 'bg-purple-500/20 text-purple-400 border-purple-500/30'
+                      }`}>
+                        {editingBlog ? <Edit3 size={22} /> : <PenLine size={22} />}
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-black text-white uppercase tracking-tight font-montserrat">
+                          {editingBlog ? 'Edit Blog Post' : 'New Blog Post'}
+                        </h3>
+                        <p className="text-xs text-slate-400 font-medium">
+                          {editingBlog ? `Editing: "${editingBlog.title?.slice(0, 28)}..."` : 'Publish a new article to the site'}
+                        </p>
+                      </div>
+                    </div>
+                    {editingBlog && (
+                      <button
+                        onClick={resetBlogForm}
+                        className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all cursor-pointer"
+                        title="Cancel editing"
+                      >
+                        <X size={16} />
+                      </button>
+                    )}
+                  </div>
+
+                  <form onSubmit={handleSaveBlog} className="space-y-4">
+
+                    {/* Title */}
+                    <div>
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-purple-400 mb-1.5 flex items-center gap-2">
+                        <FileText size={13} /><span>Title</span><span className="text-rose-400">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={blogTitle}
+                        onChange={(e) => handleBlogTitleChange(e.target.value)}
+                        placeholder="e.g. Understanding Total Knee Replacement"
+                        className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 shadow-inner transition-all placeholder-slate-500"
+                      />
+                    </div>
+
+                    {/* Slug */}
+                    <div>
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-2">
+                        <Hash size={13} /><span>URL Slug</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={blogSlug}
+                        onChange={(e) => setBlogSlug(e.target.value)}
+                        placeholder="auto-generated-from-title"
+                        className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-slate-300 text-xs font-mono focus:outline-none focus:border-purple-400 shadow-inner transition-all placeholder-slate-600"
+                      />
+                    </div>
+
+                    {/* Author + Date */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
+                          <User size={12} /><span>Author</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={blogAuthor}
+                          onChange={(e) => setBlogAuthor(e.target.value)}
+                          placeholder="Dr. Ulhas Sonar"
+                          className="w-full px-3 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-purple-400 shadow-inner transition-all placeholder-slate-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
+                          <Clock size={12} /><span>Date</span>
+                        </label>
+                        <input
+                          type="date"
+                          value={blogDate}
+                          onChange={(e) => setBlogDate(e.target.value)}
+                          className="w-full px-3 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-purple-400 shadow-inner transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Tag */}
+                    <div>
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-2">
+                        <Tag size={13} /><span>Category Tag</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={blogTag}
+                        onChange={(e) => setBlogTag(e.target.value)}
+                        placeholder="e.g. KNEE-REPLACEMENT"
+                        className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-purple-400 shadow-inner transition-all placeholder-slate-500"
+                      />
+                    </div>
+
+                    {/* Image URL */}
+                    <div>
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-2">
+                        <Link2 size={13} /><span>Cover Image URL</span>
+                      </label>
+                      <input
+                        type="url"
+                        value={blogImageUrl}
+                        onChange={(e) => setBlogImageUrl(e.target.value)}
+                        placeholder="https://images.unsplash.com/..."
+                        className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-mono focus:outline-none focus:border-purple-400 shadow-inner transition-all placeholder-slate-600"
+                      />
+                      {blogImageUrl && (
+                        <div className="mt-2 w-full h-24 rounded-xl overflow-hidden border border-slate-700">
+                          <img src={blogImageUrl} alt="Cover preview" className="w-full h-full object-cover" onError={(e) => e.target.style.display='none'} />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Excerpt */}
+                    <div>
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-2">
+                        <AlignLeft size={13} /><span>Excerpt / Summary</span>
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={blogExcerpt}
+                        onChange={(e) => setBlogExcerpt(e.target.value)}
+                        placeholder="A brief 1–2 sentence summary shown on the blog listing page..."
+                        className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs leading-relaxed focus:outline-none focus:border-purple-400 shadow-inner transition-all placeholder-slate-500"
+                      />
+                    </div>
+
+                    {/* Full Content */}
+                    <div>
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-2">
+                        <BookOpen size={13} /><span>Full Content (HTML / Markdown)</span>
+                      </label>
+                      <textarea
+                        rows={8}
+                        value={blogContent}
+                        onChange={(e) => setBlogContent(e.target.value)}
+                        placeholder="Write the full blog post content here. You can use HTML or Markdown..."
+                        className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs leading-relaxed font-mono focus:outline-none focus:border-purple-400 shadow-inner transition-all placeholder-slate-500 resize-y"
+                      />
+                    </div>
+
+                    {/* Submit */}
+                    <button
+                      type="submit"
+                      disabled={blogSubmitting}
+                      className={`w-full py-4 rounded-2xl font-black text-xs uppercase tracking-wider shadow-lg cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 transition-all ${
+                        editingBlog
+                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-amber-500/20'
+                          : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white shadow-purple-500/20'
+                      }`}
+                    >
+                      <Save size={16} />
+                      {blogSubmitting ? 'Saving...' : editingBlog ? 'Update Blog Post' : 'Publish Blog Post'}
+                    </button>
+
+                    {editingBlog && (
+                      <button
+                        type="button"
+                        onClick={resetBlogForm}
+                        className="w-full py-3 rounded-2xl bg-slate-800 text-slate-300 font-black text-xs uppercase tracking-wider cursor-pointer hover:bg-slate-700 transition-all"
+                      >
+                        Cancel — Create New Instead
+                      </button>
+                    )}
+                  </form>
+                </div>
+
+                {/* ── RIGHT: BLOG LIST TABLE ────────────────────────── */}
+                <div className="lg:col-span-7 space-y-6">
+                  <div className="bg-[#090e1a] border border-[#1b2742] p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden">
+
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#1b2742] flex-wrap gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-2xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center">
+                          <PenLine size={20} />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-extrabold text-white uppercase tracking-tight font-montserrat flex items-center gap-2">
+                            Blog Posts
+                            <span className="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-xs font-mono font-bold">
+                              {blogsData.length} Total
+                            </span>
+                          </h3>
+                          <p className="text-xs text-slate-500 mt-0.5">All published articles from backend</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={loadBlogs}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-purple-400 border border-purple-500/30 text-xs font-bold transition-all cursor-pointer"
+                      >
+                        <RefreshCw size={14} className={blogsLoading ? 'animate-spin' : ''} />
+                        Refresh
+                      </button>
+                    </div>
+
+                    {/* Search */}
+                    <div className="relative mb-5">
+                      <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        type="text"
+                        value={blogSearchTerm}
+                        onChange={(e) => setBlogSearchTerm(e.target.value)}
+                        placeholder="Search by title, author, or tag..."
+                        className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#1b2742] bg-[#060c19] text-xs font-bold text-white focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 shadow-inner"
+                      />
+                    </div>
+
+                    {/* Table */}
+                    {blogsLoading ? (
+                      <div className="py-16 text-center">
+                        <RefreshCw size={28} className="animate-spin text-purple-400 mx-auto mb-3" />
+                        <p className="text-slate-400 text-xs font-bold">Loading blog posts...</p>
+                      </div>
+                    ) : (
+                      <div className="overflow-x-auto rounded-2xl border border-[#1b2742]">
+                        <table className="w-full text-left border-collapse">
+                          <thead>
+                            <tr className="bg-[#0a1122] text-white text-xs font-extrabold border-b border-[#1b2742]">
+                              <th className="py-3.5 px-4 font-montserrat">Title</th>
+                              <th className="py-3.5 px-4 font-montserrat hidden sm:table-cell">Author</th>
+                              <th className="py-3.5 px-4 font-montserrat hidden md:table-cell">Tag</th>
+                              <th className="py-3.5 px-4 font-montserrat hidden lg:table-cell">Date</th>
+                              <th className="py-3.5 px-4 text-center font-montserrat w-20">Edit</th>
+                              <th className="py-3.5 px-4 text-center font-montserrat w-20">Delete</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-[#1b2742] text-xs font-medium">
+                            {blogsData
+                              .filter(b => {
+                                const q = blogSearchTerm.toLowerCase();
+                                return !q ||
+                                  (b.title || '').toLowerCase().includes(q) ||
+                                  (b.author || '').toLowerCase().includes(q) ||
+                                  (b.tag || '').toLowerCase().includes(q);
+                              })
+                              .map((blog) => (
+                                <tr key={blog.id} className="hover:bg-[#0f172a] transition-colors group">
+                                  <td className="py-4 px-4">
+                                    <a
+                                      href={`/blog/${blog.slug || blog.id}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="font-extrabold text-white text-sm hover:text-purple-300 transition-colors block line-clamp-1"
+                                    >
+                                      {blog.title}
+                                    </a>
+                                    {blog.excerpt && (
+                                      <div className="text-slate-500 text-[11px] mt-0.5 line-clamp-1">{blog.excerpt}</div>
+                                    )}
+                                  </td>
+                                  <td className="py-4 px-4 hidden sm:table-cell">
+                                    <span className="text-slate-300 font-medium">{blog.author || '—'}</span>
+                                  </td>
+                                  <td className="py-4 px-4 hidden md:table-cell">
+                                    {blog.tag && (
+                                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[11px] font-bold whitespace-nowrap">
+                                        {blog.tag}
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td className="py-4 px-4 hidden lg:table-cell">
+                                    <span className="text-slate-400 font-mono text-[11px]">{blog.date || '—'}</span>
+                                  </td>
+                                  {/* Edit */}
+                                  <td className="py-4 px-4 text-center">
+                                    <button
+                                      onClick={() => { populateBlogForm(blog); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                                      className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#00a2ff]/10 transition-colors cursor-pointer"
+                                      title="Edit this blog post"
+                                    >
+                                      <Edit3 size={17} className="text-[#00a2ff] stroke-[2.2] hover:scale-110 transition-transform" />
+                                    </button>
+                                  </td>
+                                  {/* Delete */}
+                                  <td className="py-4 px-4 text-center">
+                                    <button
+                                      onClick={() => setBlogDeleteConfirm(blog.id)}
+                                      className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#ff3b3b]/10 transition-colors cursor-pointer"
+                                      title="Delete this blog post"
+                                    >
+                                      <Trash2 size={17} className="text-[#ff3b3b] stroke-[2.2] hover:scale-110 transition-transform" />
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))
+                            }
+                          </tbody>
+                        </table>
+
+                        {blogsData.filter(b => {
+                          const q = blogSearchTerm.toLowerCase();
+                          return !q || (b.title||'').toLowerCase().includes(q) || (b.author||'').toLowerCase().includes(q) || (b.tag||'').toLowerCase().includes(q);
+                        }).length === 0 && (
+                          <div className="py-14 text-center">
+                            <PenLine size={32} className="text-slate-700 mx-auto mb-3" />
+                            <p className="text-slate-500 font-bold text-xs">
+                              {blogsData.length === 0
+                                ? 'No blog posts found. Create your first post using the form on the left.'
+                                : 'No results match your search.'}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info Card */}
+                  <div className="p-5 rounded-2xl bg-purple-500/5 border border-purple-500/20 text-xs text-purple-300 space-y-2">
+                    <p className="font-black uppercase tracking-wide text-purple-400 flex items-center gap-2"><BookOpen size={14} /> Backend API Endpoint</p>
+                    <p className="font-mono text-slate-400 bg-[#060c19] px-3 py-2 rounded-xl border border-slate-800">{API_BASE_URL}/api/blogs/</p>
+                    <p className="text-slate-500 leading-relaxed">Blog posts are saved to your Django backend. Make sure a <code className="bg-[#060c19] px-1 rounded">Blog</code> model and REST API endpoint exists at the path above.</p>
+                  </div>
+                </div>
+
               </div>
             </div>
           )}
