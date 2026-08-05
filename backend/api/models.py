@@ -95,8 +95,8 @@ class DutyApplication(models.Model):
 class BlogPost(models.Model):
     title = models.CharField(max_length=250)
     slug = models.CharField(max_length=250, blank=True, default='', help_text="Clean URL slug for this blog post")
-    category = models.CharField(max_length=100)
-    date = models.CharField(max_length=50)  # Keep string date for frontend compatibility
+    category = models.CharField(max_length=100, blank=True, default='')
+    date = models.CharField(max_length=50, blank=True, default='')  # Keep string date for frontend compatibility
     author = models.CharField(max_length=100, default='Corx')
     image = models.CharField(max_length=500, blank=True, default='')
     image_file = models.FileField(upload_to='blog_images/', null=True, blank=True, help_text="Upload a local image file from your computer")

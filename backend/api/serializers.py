@@ -63,28 +63,45 @@ class DutyApplicationSerializer(serializers.ModelSerializer):
 
 
 class BlogPostSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-    slug = serializers.SerializerMethodField()
+    # Writable fields
+    slug = serializers.CharField(required=False, allow_blank=True, default='')
+    image = serializers.CharField(required=False, allow_blank=True, default='')
+
+    # `tag` is what the frontend Dashboard sends — maps to `category` on the model
+    tag = serializers.CharField(source='category', required=False, allow_blank=True, default='')
 
     class Meta:
         model = BlogPost
         fields = [
-            'id', 'title', 'slug', 'category', 'date', 'author', 'image', 'image_file',
-            'excerpt', 'read_time', 'content', 'meta_title', 'meta_description', 'created_at', 'updated_at'
+            'id', 'title', 'slug', 'tag', 'date', 'author', 'image', 'image_file',
+            'excerpt', 'read_time', 'content', 'created_at', 'updated_at'
         ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
 
-    def get_slug(self, obj):
-        if getattr(obj, 'slug', None) and obj.slug.strip():
-            return obj.slug.strip()
-        return slugify(obj.title or f'post-{obj.id}')
-
-    def get_image(self, obj):
+    def get_image_url(self, obj):
         if obj.image_file:
             request = self.context.get('request')
             if request:
                 return request.build_absolute_uri(obj.image_file.url)
             return obj.image_file.url
         return obj.image or 'https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop'
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        # Always expose `tag` as the category value for frontend compatibility
+        ret['tag'] = instance.category or ''
+        # Return computed image URL on reads
+        ret['image'] = self.get_image_url(instance)
+        # Auto-generate slug if blank
+        if not ret.get('slug'):
+            ret['slug'] = slugify(instance.title or f'post-{instance.id}')
+        return ret
+
+    def validate_slug(self, value):
+        if not value:
+            title = self.initial_data.get('title', '')
+            return slugify(title) if title else ''
+        return value
 
 
 class SubServiceSerializer(serializers.ModelSerializer):
