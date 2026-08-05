@@ -200,6 +200,9 @@ JAZZMIN_SETTINGS = {
     "default_icon_parents": "fas fa-folder",
     "default_icon_children": "fas fa-file-medical",
     "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "api.blogpost": "single",
+    },
 }
 
 JAZZMIN_UI_TWEAKS = {
