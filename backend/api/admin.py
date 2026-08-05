@@ -1165,68 +1165,104 @@ class RichTextEditorWidget(forms.Widget):
                         if (panes.length === 0) return;
 
                         links.forEach(function(link, index) {{
-                            if (link.getAttribute('data-tab-indexed') === 'true') return;
-                            link.setAttribute('data-tab-indexed', 'true');
-                            link.style.cursor = 'pointer';
+                            if (!link.getAttribute('data-tab-indexed')) {{
+                                link.setAttribute('data-tab-indexed', 'true');
+                                link.style.cursor = 'pointer';
 
-                            link.addEventListener('click', function(e) {{
-                                e.preventDefault();
-                                e.stopPropagation();
+                                link.addEventListener('click', function(e) {{
+                                    e.preventDefault();
+                                    e.stopPropagation();
 
-                                // 1. Deactivate all tab link headers in this nav bar
-                                links.forEach(function(l) {{
-                                    l.classList.remove('active');
-                                    l.setAttribute('aria-selected', 'false');
-                                    l.style.backgroundColor = '';
-                                    l.style.color = '';
-                                }});
+                                    // 1. Deactivate all tab link headers in this nav bar
+                                    links.forEach(function(l) {{
+                                        l.classList.remove('active');
+                                        l.setAttribute('aria-selected', 'false');
+                                        l.style.backgroundColor = '';
+                                        l.style.color = '';
+                                    }});
 
-                                // 2. Activate clicked tab header
-                                link.classList.add('active');
-                                link.setAttribute('aria-selected', 'true');
-                                link.style.backgroundColor = '#08709d';
-                                link.style.color = '#ffffff';
+                                    // 2. Activate clicked tab header
+                                    link.classList.add('active');
+                                    link.setAttribute('aria-selected', 'true');
+                                    link.style.backgroundColor = '#08709d';
+                                    link.style.color = '#ffffff';
 
-                                // 3. Deactivate all tab panes in tabContent
-                                panes.forEach(function(p) {{
-                                    p.classList.remove('active', 'show');
-                                    p.style.setProperty('display', 'none', 'important');
-                                }});
+                                    // 3. Deactivate all tab panes in tabContent
+                                    panes.forEach(function(p) {{
+                                        p.classList.remove('active', 'show');
+                                        p.style.setProperty('display', 'none', 'important');
+                                    }});
 
-                                // 4. Target pane lookup (by ID or fallback to index matching)
-                                let targetPane = null;
-                                let rawHref = link.getAttribute('href') || link.getAttribute('data-target') || '';
-                                let targetId = rawHref.replace('#', '').trim();
-                                if (targetId.endsWith('-tab')) targetId = targetId.slice(0, -4);
+                                    // 4. Target pane lookup (by ID or fallback to index matching)
+                                    let targetPane = null;
+                                    let rawHref = link.getAttribute('href') || link.getAttribute('data-target') || '';
+                                    let targetId = rawHref.replace('#', '').trim();
+                                    if (targetId.endsWith('-tab')) targetId = targetId.slice(0, -4);
 
-                                if (targetId) {{
-                                    targetPane = tabContent.querySelector('#' + targetId) || 
-                                                 tabContent.querySelector('#' + targetId + '-tab') ||
-                                                 document.getElementById(targetId) ||
-                                                 document.getElementById(targetId + '-tab');
-                                }}
+                                    if (targetId) {{
+                                        targetPane = tabContent.querySelector('#' + targetId) || 
+                                                     tabContent.querySelector('#' + targetId + '-tab') ||
+                                                     document.getElementById(targetId) ||
+                                                     document.getElementById(targetId + '-tab');
+                                    }}
 
-                                // Fallback: index pairing (link #N maps directly to pane #N)
-                                if (!targetPane && panes[index]) {{
-                                    targetPane = panes[index];
-                                }}
+                                    // Fallback: index pairing (link #N maps directly to pane #N)
+                                    if (!targetPane && panes[index]) {{
+                                        targetPane = panes[index];
+                                    }}
 
-                                // 5. Display target pane
-                                if (targetPane) {{
-                                    targetPane.classList.add('active', 'show');
-                                    targetPane.style.setProperty('display', 'block', 'important');
-                                    targetPane.style.setProperty('opacity', '1', 'important');
-                                    targetPane.style.setProperty('visibility', 'visible', 'important');
-                                    targetPane.style.setProperty('height', 'auto', 'important');
-                                }}
-                                return false;
-                            }}, true);
+                                    // 5. Display target pane
+                                    if (targetPane) {{
+                                        targetPane.classList.add('active', 'show');
+                                        targetPane.style.setProperty('display', 'block', 'important');
+                                        targetPane.style.setProperty('opacity', '1', 'important');
+                                        targetPane.style.setProperty('visibility', 'visible', 'important');
+                                        targetPane.style.setProperty('height', 'auto', 'important');
+                                    }}
+                                    return false;
+                                }}, true);
+                            }}
                         }});
                     }});
                 }}
 
+                function openTabByHash() {{
+                    let hash = window.location.hash || '';
+                    if (!hash || hash === '#') return;
+                    
+                    hash = hash.replace('#', '').trim();
+                    const cleanHash = hash.endsWith('-tab') ? hash.slice(0, -4) : hash;
+                    const tabHash = cleanHash + '-tab';
+
+                    const targetLink = document.getElementById(tabHash) || 
+                                       document.getElementById(cleanHash) || 
+                                       document.querySelector(`.nav-tabs a[href="#${cleanHash}"], .nav-tabs a[href="#${hash}"], .nav-pills a[href="#${cleanHash}"], .nav-pills a[href="#${hash}"]`);
+
+                    if (targetLink) {{
+                        targetLink.click();
+                    }} else {{
+                        const allLinks = Array.from(document.querySelectorAll('.nav-tabs .nav-link, .nav-pills .nav-link'));
+                        const targetClean = cleanHash.replace(/[^a-z0-9]/g, '').toLowerCase();
+                        for (let l of allLinks) {{
+                            const lId = (l.id || '').toLowerCase();
+                            const lHref = (l.getAttribute('href') || '').replace('#', '').toLowerCase();
+                            const lText = (l.textContent || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+                            if (lId === tabHash.toLowerCase() || lId === cleanHash.toLowerCase() || lHref === cleanHash.toLowerCase() || (targetClean && lText.includes(targetClean))) {{
+                                l.click();
+                                break;
+                            }}
+                        }}
+                    }}
+                }}
+
                 setInterval(fixAllAdminTabs, 250);
                 fixAllAdminTabs();
+
+                if (window.location.hash) {{
+                    setTimeout(openTabByHash, 350);
+                    setTimeout(openTabByHash, 800);
+                }}
+                window.addEventListener('hashchange', openTabByHash);
             }})();
         }})();
         </script>
