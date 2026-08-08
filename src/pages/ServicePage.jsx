@@ -477,17 +477,32 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                          (cleanSlug.includes('lab') ? staticServicesData['lab-services'] : null) ||
                          {};
 
+  const isMainPhysioSlug = cleanSlug === 'physiotherapy' || 
+                          cleanSlug === 'physiotherapy-at-home-in-dubai' || 
+                          cleanSlug === 'physiotherapy-services' || 
+                          cleanSlug === 'physiotherapy-at-home';
+
   const validServiceData = (serviceData && typeof serviceData === 'object' && !Array.isArray(serviceData)) ? serviceData : null;
+  const isFetchedParentForSubservice = validServiceData && 
+    (validServiceData.slug === 'physiotherapy' || validServiceData.slug === 'physiotherapy-at-home-in-dubai') && 
+    !isMainPhysioSlug;
+
   const mergedData = validServiceData ? {
     ...staticFallback,
-    ...validServiceData,
-    features: (Array.isArray(validServiceData.features) && validServiceData.features.length > 0) ? validServiceData.features : (staticFallback.features || []),
-    indications: (Array.isArray(validServiceData.indications) && validServiceData.indications.length > 0) ? validServiceData.indications : (staticFallback.indications || []),
-    reasons: (Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0) ? validServiceData.reasons : (staticFallback.reasons || []),
-    steps: (Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0) ? validServiceData.steps : (staticFallback.steps || []),
-    faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0) ? validServiceData.faqs : (staticFallback.faqs || []),
-    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : (staticFallback.benefits || []),
-    lab_columns: (Array.isArray(validServiceData.lab_columns) && validServiceData.lab_columns.length > 0) ? validServiceData.lab_columns : (staticFallback.lab_columns || []),
+    ...(isFetchedParentForSubservice ? {} : validServiceData),
+    title: (isFetchedParentForSubservice || !validServiceData.title) ? (staticFallback.title || validServiceData.title) : validServiceData.title,
+    eyebrow: (isFetchedParentForSubservice || !validServiceData.eyebrow) ? (staticFallback.eyebrow || validServiceData.eyebrow) : validServiceData.eyebrow,
+    tagline: (isFetchedParentForSubservice || !validServiceData.tagline) ? (staticFallback.tagline || validServiceData.tagline) : validServiceData.tagline,
+    description: (isFetchedParentForSubservice || !validServiceData.description) ? (staticFallback.description || validServiceData.description) : validServiceData.description,
+    about_section_title: (isFetchedParentForSubservice || !validServiceData.about_section_title) ? (staticFallback.about_section_title || validServiceData.about_section_title) : validServiceData.about_section_title,
+    indications_title: (isFetchedParentForSubservice || !validServiceData.indications_title) ? (staticFallback.indications_title || validServiceData.indications_title) : validServiceData.indications_title,
+    features: (Array.isArray(validServiceData.features) && validServiceData.features.length > 0 && !isFetchedParentForSubservice) ? validServiceData.features : (staticFallback.features || []),
+    indications: (Array.isArray(validServiceData.indications) && validServiceData.indications.length > 0 && !isFetchedParentForSubservice) ? validServiceData.indications : (staticFallback.indications || []),
+    reasons: (Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0 && !isFetchedParentForSubservice) ? validServiceData.reasons : (staticFallback.reasons || []),
+    steps: (Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0 && !isFetchedParentForSubservice) ? validServiceData.steps : (staticFallback.steps || []),
+    faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0 && !isFetchedParentForSubservice) ? validServiceData.faqs : (staticFallback.faqs || []),
+    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0 && !isFetchedParentForSubservice) ? validServiceData.benefits : (staticFallback.benefits || []),
+    lab_columns: (Array.isArray(validServiceData.lab_columns) && validServiceData.lab_columns.length > 0 && !isFetchedParentForSubservice) ? validServiceData.lab_columns : (staticFallback.lab_columns || []),
   } : staticFallback;
 
   useEffect(() => {
@@ -500,8 +515,8 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       cleanSlug === 'lab-services' ? 'lab-test-at-home' : (cleanSlug === 'lab-test-at-home' ? 'lab-services' : null),
       cleanSlug === 'elderly-care' ? 'elderly-home-care' : (cleanSlug === 'elderly-home-care' ? 'elderly-care' : null),
       cleanSlug === 'iv-therapy' ? 'iv-therapy-iv-drip' : (cleanSlug === 'iv-therapy-iv-drip' ? 'iv-therapy' : null),
-      cleanSlug.includes('physio') ? 'Physiotherapy-Services' : null,
-      cleanSlug.includes('physio') ? 'physiotherapy' : null,
+      isMainPhysioSlug ? 'Physiotherapy-Services' : null,
+      isMainPhysioSlug ? 'physiotherapy' : null,
     ].filter((val, idx, arr) => Boolean(val) && arr.indexOf(val) === idx);
 
     let isMounted = true;
@@ -758,6 +773,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
   const understandingTitle = mergedData ? (mergedData.understanding_title || '') : '';
   const understandingIntro = mergedData ? (mergedData.understanding_intro || '') : '';
   const understandingItems = mergedData ? (mergedData.understanding_items || []) : [];
+  const subServicesList = (mergedData?.sub_services && Array.isArray(mergedData.sub_services) && mergedData.sub_services.length > 0)
+    ? mergedData.sub_services
+    : (serviceData?.sub_services || []);
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
@@ -874,6 +892,11 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
       {/* ── HIGHLIGHTS BANNER (Staff, 24/7 Service, Dubai 30 Mins) ── */}
       <ServiceHighlightsBar />
+
+      {/* ── SPECIALIZED SUBSERVICES GRID SECTION (Rendered when subservices exist) ── */}
+      {subServicesList && subServicesList.length > 0 && (
+        <SubServicesGridSection subServices={subServicesList} serviceTitle={mergedData?.title} isEditMode={isEditMode} slug={slug} />
+      )}
 
       {/* ── BENEFITS SECTION (Only rendered if benefits items exist for this service) ── */}
       {(Array.isArray(benefitsList) && benefitsList.length > 0) && (
@@ -1531,6 +1554,81 @@ function WhyChooseCorxBloodTest({ reasonsList = [], serviceData, isEditMode, slu
                   </Paragraph>
                 </div>
               </Card>
+            </motion.div>
+          ))}
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
+function SubServicesGridSection({ subServices = [], serviceTitle = '', isEditMode, slug }) {
+  if (!subServices || subServices.length === 0) return null;
+
+  return (
+    <Section variant="slate" className="py-16 md:py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-y border-slate-200/80">
+      <Container className="max-w-[1440px]">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <span className="inline-flex items-center gap-2 bg-[#08709d]/10 text-[#08709d] text-xs sm:text-sm font-bold uppercase tracking-widest px-4 py-2 rounded-full border border-[#08709d]/20 mb-4">
+            <Sparkles size={16} />
+            <span>Specialized Sub-Services & Treatments</span>
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#1a294a] tracking-tight font-montserrat leading-tight mb-4">
+            Specialized {serviceTitle || "Physiotherapy"} Sub-Services
+          </h2>
+          <p className="text-slate-600 text-base sm:text-lg font-normal leading-relaxed max-w-2xl mx-auto">
+            Choose from our comprehensive range of specialized treatment programs tailored to your precise medical condition, delivered at home by DHA-licensed experts across Dubai.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+          {subServices.map((sub, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.08 }}
+              className="h-full"
+            >
+              <div className="bg-white rounded-3xl p-7 sm:p-8 border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-[#08709d]/40 transition-all duration-300 flex flex-col justify-between h-full group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#08709d]/5 rounded-bl-full pointer-events-none group-hover:bg-[#08709d]/10 transition-colors" />
+
+                <div>
+                  <div className="flex items-center justify-between gap-3 mb-5">
+                    <div className="w-12 h-12 rounded-2xl bg-[#08709d]/10 text-[#08709d] flex items-center justify-center font-bold text-xl group-hover:bg-[#08709d] group-hover:text-white transition-colors duration-300">
+                      <Activity size={24} />
+                    </div>
+                    {sub.badge && (
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#08709d] bg-sky-50 px-3 py-1 rounded-full border border-sky-200/60">
+                        {sub.badge}
+                      </span>
+                    )}
+                  </div>
+
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#08709d] block mb-2">
+                    {sub.eyebrow || 'Specialized Rehab'}
+                  </span>
+
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#1a294a] group-hover:text-[#08709d] transition-colors mb-3 font-montserrat leading-snug">
+                    {sub.title || sub.name}
+                  </h3>
+
+                  <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6 font-sans">
+                    {sub.desc || sub.description || 'Professional home physical therapy treatment customized to your health goals.'}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <Link
+                    to={sub.path || (sub.slug ? `/${sub.slug}` : '#')}
+                    className="inline-flex items-center gap-2 text-[#08709d] font-bold text-sm uppercase tracking-wide group-hover:translate-x-1.5 transition-transform"
+                  >
+                    <span>View Treatment</span>
+                    <ArrowRight size={18} />
+                  </Link>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>

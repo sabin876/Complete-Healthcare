@@ -10,6 +10,89 @@ export const servicesData = {
       title: "Home, hotel, or office visits",
       desc: "Professional physiotherapy tailored to your schedule and condition."
     },
+    sub_services: [
+      {
+        slug: 'frozen-shoulder-physiotherapy',
+        path: '/frozen-shoulder-physiotherapy',
+        title: 'Frozen Shoulder Therapy',
+        eyebrow: 'Adhesive Capsulitis Rehab',
+        desc: 'Specialized joint mobilization, passive stretching, and shoulder range of motion rehabilitation.',
+        icon: 'Activity',
+        badge: 'Popular'
+      },
+      {
+        slug: 'pediatric-physiotherapy',
+        path: '/pediatric-physiotherapy',
+        title: 'Pediatric Physiotherapy',
+        eyebrow: 'Child Movement & Milestones',
+        desc: 'Child-friendly physical therapy for motor delays, cerebral palsy, torticollis, and posture balance.',
+        icon: 'Users',
+        badge: 'Pediatric'
+      },
+      {
+        slug: 'joint-pain-treatment',
+        path: '/joint-pain-treatment',
+        title: 'Joint Pain Treatment',
+        eyebrow: 'Arthritis & Joint Relief',
+        desc: 'Non-invasive knee, hip, shoulder, and wrist mobilization, pain relief, and joint strengthening.',
+        icon: 'Heart',
+        badge: 'Joint Care'
+      },
+      {
+        slug: 'manual-therapy',
+        path: '/manual-therapy',
+        title: 'Manual Therapy',
+        eyebrow: 'Hands-On Soft Tissue Therapy',
+        desc: 'Skilled hands-on myofascial release, joint manipulation, and muscle knot release.',
+        icon: 'Sparkles',
+        badge: 'Hands-On'
+      },
+      {
+        slug: 'geriatric-physiotherapy',
+        path: '/geriatric-physiotherapy',
+        title: 'Geriatric Physiotherapy at Home',
+        eyebrow: 'Senior Mobility & Fall Prevention',
+        desc: 'Gentle low-impact exercises, balance retraining, and fall-prevention routines for senior citizens.',
+        icon: 'Users',
+        badge: 'Senior Care'
+      },
+      {
+        slug: 'chest-physiotherapy',
+        path: '/chest-physiotherapy',
+        title: 'Chest & Respiratory Physiotherapy',
+        eyebrow: 'Cardiorespiratory Rehab',
+        desc: 'Chest percussion, postural drainage, and lung capacity restoration for COPD, asthma & post-op recovery.',
+        icon: 'Activity',
+        badge: 'Respiratory'
+      },
+      {
+        slug: 'neurological-rehab',
+        path: '/neurological-rehab',
+        title: 'Neurological Rehabilitation',
+        eyebrow: 'Stroke & Neuro Recovery',
+        desc: 'Task-oriented physical therapy for stroke recovery, Parkinson’s, MS, and spinal cord injuries.',
+        icon: 'Activity',
+        badge: 'Neuro Rehab'
+      },
+      {
+        slug: 'sports-injury-rehab',
+        path: '/sports-injury-rehab',
+        title: 'Sports Injury Rehabilitation',
+        eyebrow: 'Athletic Recovery',
+        desc: 'Fast-track athletic recovery for ligament tears (ACL/MCL), sprains, tendonitis, and muscle strains.',
+        icon: 'Activity',
+        badge: 'Sports'
+      },
+      {
+        slug: 'back-pain-treatment',
+        path: '/back-pain-treatment',
+        title: 'Back & Neck Pain Physiotherapy',
+        eyebrow: 'Spine & Sciatica Relief',
+        desc: 'Spine realignment, core stabilization, and ergonomic therapy for herniated discs, neck pain & sciatica.',
+        icon: 'Activity',
+        badge: 'Spine Care'
+      }
+    ],
     faqs: [
       {
         q: "How long does a home physiotherapy session last?",

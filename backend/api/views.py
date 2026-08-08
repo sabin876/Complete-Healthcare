@@ -396,10 +396,13 @@ class ServiceViewSet(viewsets.ModelViewSet):
                 if item.slug and isinstance(item.slug, str):
                     item_slug = item.slug.strip().lower()
                     if item_slug:
-                        if item_slug in slug_val or slug_val in item_slug:
+                        if item_slug == slug_val or item_slug.strip('/') == slug_val:
                             self.check_object_permissions(self.request, item)
                             return item
-                        if slug_words and all(w in item_slug for w in slug_words):
+                        if slug_val in item_slug:
+                            self.check_object_permissions(self.request, item)
+                            return item
+                        if slug_words and len(slug_words) > 1 and all(w in item_slug for w in slug_words):
                             self.check_object_permissions(self.request, item)
                             return item
 
