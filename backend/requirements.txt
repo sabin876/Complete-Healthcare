@@ -1,7 +1,6 @@
 django>=5.0
 djangorestframework
 django-cors-headers
-mysqlclient
 pymysql
 python-dotenv
 whitenoise
