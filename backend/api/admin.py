@@ -7,6 +7,8 @@ from .models import (
     SalaryApplication, NoticeApplication, DutyApplication,
     BlogPost, Service, TeamMember
 )
+from django.utils.html import conditional_escape
+from django.utils.safestring import mark_safe
 
 # ----------------------------------------------------------------------
 # Helper functions for UI widgets
@@ -883,151 +885,74 @@ class FAQJsonWidget(forms.Widget):
 
 
 # ----------------------------------------------------------------------
-# 6.5. Admin Tab Switcher Widget (Renders inline at form top)
-# ----------------------------------------------------------------------
-class AdminTabSwitcherWidget(forms.TextInput):
-    def render(self, name, value, attrs=None, renderer=None):
-        base_html = super().render(name, value, attrs, renderer)
-        script_html = """
-        <script>
-        (function() {
-            function fixChangeformTabs() {
-                const tabNavs = document.querySelectorAll('.card-header .nav-tabs, .change-form .nav-tabs, div[id*="changeform"] .nav-tabs, form .nav-tabs');
-                tabNavs.forEach(function(nav) {
-                    const links = Array.from(nav.querySelectorAll('.nav-link'));
-                    if (links.length === 0) return;
-
-                    let tabContent = nav.nextElementSibling && nav.nextElementSibling.classList.contains('tab-content')
-                        ? nav.nextElementSibling
-                        : (nav.parentElement ? nav.parentElement.querySelector('.tab-content') : null);
-                        
-                    if (!tabContent) {
-                        tabContent = document.querySelector('.change-form .tab-content, form .tab-content');
-                    }
-                    if (!tabContent) return;
-
-                    const panes = Array.from(tabContent.querySelectorAll('.tab-pane, fieldset.tab-pane, div.tab-pane'));
-                    if (panes.length === 0) return;
-
-                    links.forEach(function(link, index) {
-                        const href = link.getAttribute('href') || link.getAttribute('data-target') || '';
-                        if (href.startsWith('/') || href.startsWith('http://') || href.startsWith('https://')) {
-                            return;
-                        }
-
-                        link.style.cursor = 'pointer';
-                        link.style.pointerEvents = 'auto';
-
-                        link.onclick = function(e) {
-                            if (e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }
-
-                            links.forEach(function(l) {
-                                l.classList.remove('active');
-                                l.setAttribute('aria-selected', 'false');
-                                l.style.backgroundColor = '';
-                                l.style.color = '';
-                            });
-
-                            link.classList.add('active');
-                            link.setAttribute('aria-selected', 'true');
-                            link.style.backgroundColor = '#08709d';
-                            link.style.color = '#ffffff';
-
-                            panes.forEach(function(p) {
-                                p.classList.remove('active', 'show');
-                                p.style.setProperty('display', 'none', 'important');
-                            });
-
-                            let targetPane = panes[index];
-                            let targetId = href.replace('#', '').trim();
-                            if (targetId.endsWith('-tab')) targetId = targetId.slice(0, -4);
-                            
-                            if (targetId) {
-                                let matchedPane = document.getElementById(targetId) || tabContent.querySelector('#' + targetId);
-                                if (matchedPane) targetPane = matchedPane;
-                            }
-
-                            if (targetPane) {
-                                targetPane.classList.add('active', 'show');
-                                targetPane.style.setProperty('display', 'block', 'important');
-                                targetPane.style.setProperty('opacity', '1', 'important');
-                                targetPane.style.setProperty('visibility', 'visible', 'important');
-                                targetPane.style.setProperty('height', 'auto', 'important');
-                            }
-                            return false;
-                        };
-                    });
-                });
-            }
-
-            setInterval(fixChangeformTabs, 250);
-            fixChangeformTabs();
-
-            function handleHashChange() {
-                if (!window.location.hash) return;
-                const hash = window.location.hash.replace('#', '').trim();
-                const cleanHash = hash.endsWith('-tab') ? hash.slice(0, -4) : hash;
-                
-                const changeformNavs = document.querySelectorAll('.card-header .nav-tabs, .change-form .nav-tabs, form .nav-tabs');
-                changeformNavs.forEach(function(nav) {
-                    const links = nav.querySelectorAll('.nav-link');
-                    links.forEach(function(link) {
-                        const href = (link.getAttribute('href') || '').replace('#', '').trim();
-                        const id = (link.id || '').trim();
-                        if (href === cleanHash || href === hash || id === hash || id === cleanHash + '-tab') {
-                            if (typeof link.onclick === 'function') {
-                                link.onclick();
-                            }
-                        }
-                    });
-                });
-            }
-
-            window.addEventListener('hashchange', handleHashChange);
-            setTimeout(handleHashChange, 350);
-            setTimeout(handleHashChange, 900);
-        })();
-        </script>
-        """
-        return mark_safe(base_html + script_html)
-
-
-# ----------------------------------------------------------------------
 # 7. Rich Text Content Editor Widget for Blog Posts
 # ----------------------------------------------------------------------
 class RichTextEditorWidget(forms.Widget):
-    def value_from_datadict(self, data, files, name):
-        """Read the submitted value from POST data and strip any NULL bytes that cause DB errors."""
-        val = data.get(name, '')
-        if val:
-            # Strip NULL bytes — they cause 500 errors on MySQL
-            val = val.replace('\x00', '')
-        return val
-
-    def use_required_attribute(self, initial_value):
-        return False
 
     def render(self, name, value, attrs=None, renderer=None):
+
         if value is None:
             value = ""
-        # Use json.dumps to safely embed the HTML content as a JS string literal
-        # This avoids all HTML-entity double-escaping issues
-        import json as _json
-        js_initial_value = _json.dumps(value)  # produces a safe JS string like "<p>...</p>"
+
+        # Safely escape the value before putting it inside textarea
+        escaped_value = conditional_escape(str(value))
+
         container_id = f"rte-widget-{name}"
 
         html = f"""
-        <div id="{container_id}" class="custom-rte-wrapper" style="max-width: 950px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; overflow: hidden; font-family: system-ui, -apple-system, sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-            <!-- Hidden textarea for Django Form post data — MUST have name so Django reads it -->
-            <textarea name="{name}" id="id_{name}_textarea" style="display: none;"></textarea>
+        <div id="{container_id}"
+             class="custom-rte-wrapper"
+             style="
+                max-width: 950px;
+                background: #ffffff;
+                border: 1.5px solid #cbd5e1;
+                border-radius: 12px;
+                overflow: hidden;
+                font-family: system-ui, -apple-system, sans-serif;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+             ">
 
-            <!-- Toolbar Header -->
-            <div class="rte-toolbar" style="background: #f8fafc; border-bottom: 1.5px solid #e2e8f0; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; user-select: none;">
-                <!-- Format block selector -->
-                <select id="{container_id}-format" style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: white; cursor: pointer; color: #334155; font-weight: 600; outline: none;">
+            <!--
+                IMPORTANT:
+                This textarea is the actual Django form field.
+                The contenteditable editor is only the visual editor.
+            -->
+            <textarea
+                name="{name}"
+                id="id_{name}"
+                style="display:none;"
+            >{escaped_value}</textarea>
+
+
+            <!-- TOOLBAR -->
+            <div
+                class="rte-toolbar"
+                style="
+                    background:#f8fafc;
+                    border-bottom:1.5px solid #e2e8f0;
+                    padding:10px 14px;
+                    display:flex;
+                    flex-wrap:wrap;
+                    gap:6px;
+                    align-items:center;
+                    user-select:none;
+                "
+            >
+
+                <!-- Format -->
+                <select
+                    id="{container_id}-format"
+                    style="
+                        padding:6px 10px;
+                        border:1px solid #cbd5e1;
+                        border-radius:6px;
+                        font-size:13px;
+                        background:white;
+                        cursor:pointer;
+                        color:#334155;
+                        font-weight:600;
+                    "
+                >
                     <option value="p">Normal Paragraph</option>
                     <option value="h2">Heading 2 (H2)</option>
                     <option value="h3">Heading 3 (H3)</option>
@@ -1035,57 +960,202 @@ class RichTextEditorWidget(forms.Widget):
                     <option value="pullquote">Pull Quote Box</option>
                 </select>
 
-                <div style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px;"></div>
 
-                <!-- Text Style Buttons -->
-                <button type="button" class="rte-btn" data-cmd="bold" title="Bold (Ctrl+B)" style="padding: 6px 11px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 13px; color: #0f172a;">B</button>
-                <button type="button" class="rte-btn" data-cmd="italic" title="Italic (Ctrl+I)" style="padding: 6px 11px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-style: italic; font-weight: 700; cursor: pointer; font-size: 13px; color: #0f172a;">I</button>
-                <button type="button" class="rte-btn" data-cmd="underline" title="Underline (Ctrl+U)" style="padding: 6px 11px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; text-decoration: underline; font-weight: 700; cursor: pointer; font-size: 13px; color: #0f172a;">U</button>
-                <button type="button" class="rte-btn" data-cmd="strikeThrough" title="Strikethrough" style="padding: 6px 11px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; text-decoration: line-through; font-weight: 700; cursor: pointer; font-size: 13px; color: #0f172a;">S</button>
+                <div style="
+                    width:1px;
+                    height:22px;
+                    background:#cbd5e1;
+                    margin:0 4px;
+                "></div>
 
-                <div style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px;"></div>
+
+                <!-- Text formatting -->
+
+                <button
+                    type="button"
+                    class="rte-btn"
+                    data-cmd="bold"
+                    title="Bold (Ctrl+B)"
+                >B</button>
+
+                <button
+                    type="button"
+                    class="rte-btn"
+                    data-cmd="italic"
+                    title="Italic (Ctrl+I)"
+                >I</button>
+
+                <button
+                    type="button"
+                    class="rte-btn"
+                    data-cmd="underline"
+                    title="Underline (Ctrl+U)"
+                >U</button>
+
+                <button
+                    type="button"
+                    class="rte-btn"
+                    data-cmd="strikeThrough"
+                    title="Strikethrough"
+                >S</button>
+
+
+                <div style="
+                    width:1px;
+                    height:22px;
+                    background:#cbd5e1;
+                    margin:0 4px;
+                "></div>
+
 
                 <!-- Lists -->
-                <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Bullet List" style="padding: 6px 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px; color: #334155;">• List</button>
-                <button type="button" class="rte-btn" data-cmd="insertOrderedList" title="Numbered List" style="padding: 6px 10px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px; color: #334155;">1. List</button>
 
-                <div style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px;"></div>
+                <button
+                    type="button"
+                    class="rte-btn"
+                    data-cmd="insertUnorderedList"
+                >• List</button>
+
+                <button
+                    type="button"
+                    class="rte-btn"
+                    data-cmd="insertOrderedList"
+                >1. List</button>
+
+
+                <div style="
+                    width:1px;
+                    height:22px;
+                    background:#cbd5e1;
+                    margin:0 4px;
+                "></div>
+
 
                 <!-- Alignment -->
-                <button type="button" class="rte-btn" data-cmd="justifyLeft" title="Align Left" style="padding: 6px 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 12px; color: #334155;">⬅ Left</button>
-                <button type="button" class="rte-btn" data-cmd="justifyCenter" title="Align Center" style="padding: 6px 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 12px; color: #334155;">↔ Center</button>
-                <button type="button" class="rte-btn" data-cmd="justifyRight" title="Align Right" style="padding: 6px 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 12px; color: #334155;">➡ Right</button>
 
-                <div style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px;"></div>
+                <button
+                    type="button"
+                    class="rte-btn"
+                    data-cmd="justifyLeft"
+                >⬅ Left</button>
 
-                <!-- Inserts -->
-                <button type="button" id="{container_id}-link-btn" title="Insert Link" style="padding: 6px 10px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px;">🔗 Link</button>
-                <button type="button" id="{container_id}-img-btn" title="Insert Image" style="padding: 6px 10px; background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px;">🖼️ Image</button>
-                <button type="button" id="{container_id}-quote-btn" title="Insert Pull Quote" style="padding: 6px 10px; background: #fefce8; color: #854d0e; border: 1px solid #fef08a; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px;">💬 Quote</button>
-                <button type="button" class="rte-btn" data-cmd="insertHorizontalRule" title="Horizontal Line" style="padding: 6px 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 12px; color: #334155;">― Divider</button>
+                <button
+                    type="button"
+                    class="rte-btn"
+                    data-cmd="justifyCenter"
+                >↔ Center</button>
 
-                <div style="width: 1px; height: 22px; background: #cbd5e1; margin: 0 4px;"></div>
+                <button
+                    type="button"
+                    class="rte-btn"
+                    data-cmd="justifyRight"
+                >➡ Right</button>
+
+
+                <div style="
+                    width:1px;
+                    height:22px;
+                    background:#cbd5e1;
+                    margin:0 4px;
+                "></div>
+
+
+                <!-- Insert -->
+
+                <button
+                    type="button"
+                    id="{container_id}-link-btn"
+                >🔗 Link</button>
+
+                <button
+                    type="button"
+                    id="{container_id}-img-btn"
+                >🖼️ Image</button>
+
+                <button
+                    type="button"
+                    id="{container_id}-quote-btn"
+                >💬 Quote</button>
+
+                <button
+                    type="button"
+                    class="rte-btn"
+                    data-cmd="insertHorizontalRule"
+                >― Divider</button>
+
+
+                <div style="
+                    width:1px;
+                    height:22px;
+                    background:#cbd5e1;
+                    margin:0 4px;
+                "></div>
+
 
                 <!-- Tools -->
+                <button type="button" id="{container_id}-md-btn" title="Convert raw Markdown links [Text](URL) & Headings to HTML" style="padding: 6px 10px; background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">⚡ Convert Markdown Links</button>
                 <button type="button" class="rte-btn" data-cmd="removeFormat" title="Clear Formatting" style="padding: 6px 9px; background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">🧹 Clear</button>
                 <button type="button" id="{container_id}-code-btn" title="Toggle Code Mode" style="padding: 6px 10px; background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 12.5px;">&lt;/&gt; Code</button>
             </div>
 
             <!-- Editable Editor Area -->
-            <div id="{container_id}-editor" contenteditable="true" placeholder="Click here to start writing your article content or paste your text..." style="min-height: 400px; max-height: 750px; overflow-y: auto; padding: 22px 26px; outline: none; background: #ffffff; color: #1e293b; font-size: 16px; line-height: 1.7; font-family: Georgia, 'Times New Roman', serif;"></div>
+            <div id="{container_id}-editor" contenteditable="true" style="min-height: 400px; max-height: 750px; overflow-y: auto; padding: 22px 26px; outline: none; background: #ffffff; color: #1e293b; font-size: 16px; line-height: 1.7; font-family: Georgia, 'Times New Roman', serif;"></div>
 
-            <!-- Code Editor Mode (Initially hidden) -->
-            <textarea id="{container_id}-codemode" style="display: none; width: 100%; min-height: 400px; max-height: 750px; padding: 22px 26px; box-sizing: border-box; font-family: 'Fira Code', Consolas, Monaco, monospace; font-size: 14px; background: #0f172a; color: #f8fafc; border: none; outline: none; line-height: 1.6; resize: vertical;"></textarea>
+            <!-- CODE EDITOR -->
 
-            <!-- Status Footer -->
-            <div style="background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #64748b;">
-                <span id="{container_id}-stats" style="font-weight: 600;">0 words | 0 characters</span>
-                <span style="font-weight: 700; color: #08709d;">✨ Rich Visual Content Editor</span>
+            <textarea
+                id="{container_id}-codemode"
+                style="
+                    display:none;
+                    width:100%;
+                    min-height:400px;
+                    max-height:750px;
+                    padding:22px 26px;
+                    box-sizing:border-box;
+                    font-family:Consolas, Monaco, monospace;
+                    font-size:14px;
+                    background:#0f172a;
+                    color:#f8fafc;
+                    border:none;
+                    outline:none;
+                    line-height:1.6;
+                    resize:vertical;
+                "
+            ></textarea>
+
+
+            <!-- STATUS -->
+
+            <div
+                style="
+                    background:#f8fafc;
+                    border-top:1px solid #e2e8f0;
+                    padding:8px 16px;
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    font-size:12.5px;
+                    color:#64748b;
+                "
+            >
+                <span
+                    id="{container_id}-stats"
+                    style="font-weight:600;"
+                >
+                    0 words | 0 characters
+                </span>
+
+                <span
+                    style="font-weight:700;color:#08709d;"
+                >
+                    ✨ Rich Visual Content Editor
+                </span>
             </div>
+
         </div>
 
+
         <style>
-            #{container_id}-editor:empty:before {{ content: attr(placeholder); color: #94a3b8; font-style: italic; pointer-events: none; }}
             #{container_id}-editor p {{ margin: 0 0 18px 0; font-size: 16px; color: #334155; line-height: 1.7; }}
             #{container_id}-editor h2 {{ color: #1f5f9e; font-size: 24px; font-weight: 700; margin: 30px 0 14px 0; font-family: Georgia, serif; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }}
             #{container_id}-editor h3 {{ color: #1f5f9e; font-size: 20px; font-weight: 700; margin: 24px 0 12px 0; font-family: Georgia, serif; }}
@@ -1098,26 +1168,33 @@ class RichTextEditorWidget(forms.Widget):
             #{container_id}-editor hr {{ border: none; border-top: 2px dashed #cbd5e1; margin: 28px 0; }}
         </style>
 
+
         <script>
         (function() {{
-            const textarea = document.getElementById('id_{name}_textarea');
+            // FIX: was 'id_{name}_textarea' (an ID that does not exist anywhere in the DOM).
+            // The real Django field rendered above is <textarea name="{name}" id="id_{name}">.
+            // The old ID caused getElementById() to return null, which threw a TypeError on the
+            // very next line (editor.innerHTML = textarea.value) and killed the entire IIFE before
+            // the submit-sync listener, input listener, or any toolbar button listener could attach.
+            // That's why typed content never made it back into the real form field and was lost on save.
+            const textarea = document.getElementById('id_{name}');
             const editor = document.getElementById('{container_id}-editor');
             const codeInput = document.getElementById('{container_id}-codemode');
             const formatSelect = document.getElementById('{container_id}-format');
             const stats = document.getElementById('{container_id}-stats');
+
             const codeBtn = document.getElementById('{container_id}-code-btn');
+            const mdBtn = document.getElementById('{container_id}-md-btn');
             const linkBtn = document.getElementById('{container_id}-link-btn');
             const imgBtn = document.getElementById('{container_id}-img-btn');
             const quoteBtn = document.getElementById('{container_id}-quote-btn');
 
+            if (!editor || !textarea) return;
+
             let isCodeView = false;
 
-            // ── Load initial content safely via JSON (avoids all HTML-entity escaping bugs) ──
-            const initialContent = {js_initial_value};
-            if (initialContent && initialContent.trim()) {{
-                editor.innerHTML = initialContent;
-                textarea.value = initialContent;
-            }}
+            // Initial load
+            editor.innerHTML = textarea.value || '';
             updateStats();
 
             function sync() {{
@@ -1127,23 +1204,73 @@ class RichTextEditorWidget(forms.Widget):
                 }} else {{
                     textarea.value = editor.innerHTML;
                 }}
+
                 updateStats();
             }}
 
-            function updateStats() {{
-                var text = editor.innerText || editor.textContent || '';
-                var cleanText = text.trim();
-                var words = cleanText ? cleanText.split(/\s+/).length : 0;
-                var chars = cleanText.length;
-                var readMin = Math.max(1, Math.ceil(words / 200));
-                stats.textContent = words + ' words | ' + chars + ' characters | ~' + readMin + ' min read';
+
+            // =====================================================
+            // FORM SUBMIT
+            // This guarantees Django receives the latest content.
+            // =====================================================
+
+            const form = textarea.closest('form');
+
+            if (form) {{
+
+                form.addEventListener('submit', function() {{
+
+                    if (isCodeView) {{
+                        textarea.value = codeInput.value;
+                    }} else {{
+                        textarea.value = editor.innerHTML;
+                    }}
+
+                }});
+
             }}
 
-            // Exec command helper
-            var toolbarBtns = document.querySelectorAll('#{container_id} .rte-btn');
+
+            // =====================================================
+            // STATS
+            // =====================================================
+
+            function updateStats() {{
+                const text = editor.innerText || editor.textContent || '';
+                const cleanText = text.trim();
+
+                const words = cleanText
+                    ? cleanText.split(/\\s+/).length
+                    : 0;
+
+                const chars = cleanText.length;
+
+                const readMin = Math.max(
+                    1,
+                    Math.ceil(words / 200)
+                );
+
+                stats.textContent =
+                    `${{words}} words | ${{chars}} characters | ~${{readMin}} min read`;
+
+            }}
+
+            // =====================================================
+            // TOOLBAR COMMANDS
+            // =====================================================
+
+            const toolbarBtns =
+                document.querySelectorAll(
+                    '#{container_id} .rte-btn'
+                );
+
             toolbarBtns.forEach(function(btn) {{
+
                 btn.addEventListener('click', function() {{
-                    var cmd = btn.getAttribute('data-cmd');
+
+                    const cmd =
+                        btn.getAttribute('data-cmd');
+
                     if (cmd) {{
                         document.execCommand(cmd, false, null);
                         sync();
@@ -1152,100 +1279,55 @@ class RichTextEditorWidget(forms.Widget):
             }});
 
             // Format block selector
-            formatSelect.addEventListener('change', function(e) {{
-                var val = e.target.value;
+            formatSelect.addEventListener('change', (e) => {{
+                const val = e.target.value;
                 if (val === 'pullquote') {{
                     document.execCommand('formatBlock', false, '<div>');
-                    var selection = window.getSelection();
+                    const selection = window.getSelection();
                     if (selection.rangeCount) {{
-                        var node = selection.getRangeAt(0).commonAncestorContainer;
+                        let node = selection.getRangeAt(0).commonAncestorContainer;
                         if (node.nodeType === 3) node = node.parentNode;
                         if (node && node !== editor) {{
                             node.className = 'pull-note';
                         }}
                     }}
                 }} else {{
-                    document.execCommand('formatBlock', false, '<' + val + '>');
+                    document.execCommand('formatBlock', false, `<${{val}}>`);
                 }}
                 formatSelect.value = 'p';
                 sync();
             }});
 
             // Insert Link
-            linkBtn.addEventListener('click', function() {{
-                var url = prompt('Enter link URL (e.g. https://example.com):');
+            linkBtn.addEventListener('click', () => {{
+                const url = prompt('Enter link URL (e.g. https://example.com):');
                 if (url) {{
                     document.execCommand('createLink', false, url);
                     sync();
                 }}
             }});
 
-            // Insert Image from local computer
-            var fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = 'image/*';
-            
-            imgBtn.addEventListener('click', function() {{
-                fileInput.click();
+            // Insert Image
+            imgBtn.addEventListener('click', () => {{
+                const url = prompt('Enter Image URL (e.g. https://images.unsplash.com/... or /media/blog_images/...):');
+                if (url) {{
+                    document.execCommand('insertImage', false, url);
+                    sync();
+                }}
             }});
-
-            fileInput.addEventListener('change', function() {{
-                if (fileInput.files.length === 0) return;
-                var file = fileInput.files[0];
-                
-                // Show loading state on button
-                var originalText = imgBtn.innerHTML;
-                imgBtn.innerHTML = 'Uploading...';
-                imgBtn.disabled = true;
-
-                const formData = new FormData();
-                formData.append('image', file);
-
-                // Dynamically resolve API prefix if Django is hosted in a subdirectory
-                var adminIndex = window.location.pathname.indexOf('/admin/');
-                var uploadPath = (adminIndex !== -1 ? window.location.pathname.slice(0, adminIndex) : '') + '/api/upload_blog_image/';
-
-                fetch(uploadPath, {{
-                    method: 'POST',
-                    body: formData
-                }})
-                .then(function(res) {{
-                    if (!res.ok) throw new Error('Upload failed with status ' + res.status);
-                    return res.json();
-                }})
-                .then(function(data) {{
-                    if (data.url) {{
-                        editor.focus();
-                        document.execCommand('insertImage', false, data.url);
-                        sync();
-                    }} else if (data.error) {{
-                        alert('Upload failed: ' + data.error);
-                    }}
-                }})
-                .catch(function(err) {{
-                    console.error('Error uploading image:', err);
-                    alert('Error uploading image. Please check your connection and login status.');
-                }})
-                .finally(function() {{
-                    imgBtn.innerHTML = originalText;
-                    imgBtn.disabled = false;
-                    fileInput.value = '';
-                }});
-            }});
-
 
             // Insert Quote
-            quoteBtn.addEventListener('click', function() {{
-                var text = prompt('Enter Pull Quote text:', 'Stem cell research gives the body better tools to heal.');
+            quoteBtn.addEventListener('click', () => {{
+                const text = prompt('Enter Pull Quote text:', 'Stem cell research gives the body better tools to heal.');
                 if (text) {{
-                    var quoteHtml = '<div class="pull-note">"' + text + '"</div><p></p>';
+                    const quoteHtml = `<div class="pull-note">"${{text}}"</div><p></p>`;
                     document.execCommand('insertHTML', false, quoteHtml);
                     sync();
                 }}
             }});
 
             // Toggle Code Mode
-            codeBtn.addEventListener('click', function() {{
+            codeBtn.addEventListener('click', () => {{
                 isCodeView = !isCodeView;
                 if (isCodeView) {{
                     codeInput.value = editor.innerHTML;
@@ -1265,83 +1347,16 @@ class RichTextEditorWidget(forms.Widget):
                 }}
             }});
 
-            // Paste handler — strip Word/Office junk formatting
-            editor.addEventListener('paste', function(e) {{
-                e.preventDefault();
-                var text = '';
-                if (e.clipboardData) {{
-                    var htmlPaste = e.clipboardData.getData('text/html');
-                    var plainPaste = e.clipboardData.getData('text/plain');
-                    if (htmlPaste) {{
-                        text = htmlPaste
-                            .replace(/<!--[\s\S]*?-->/g, '')
-                            .replace(/<\?xml[\s\S]*?\?>/g, '')
-                            .replace(/<o:[\s\S]*?<\/o:[^>]*>/gi, '')
-                            .replace(/<w:[\s\S]*?<\/w:[^>]*>/gi, '')
-                            .replace(/<m:[\s\S]*?<\/m:[^>]*>/gi, '')
-                            .replace(/ style="[^"]*mso-[^"]*"/gi, '')
-                            .replace(/ class="Mso[^"]*"/gi, '')
-                            .replace(/\x00/g, '');
-                    }} else {{
-                        var lines = plainPaste.replace(/\x00/g, '').split(/\n\n+/);
-                        text = lines.map(function(p) {{ return p.trim() ? '<p>' + p.replace(/\n/g, '<br>') + '</p>' : ''; }}).join('');
-                        if (!text) text = '<p>' + plainPaste.replace(/\x00/g, '').replace(/\n/g, '<br>') + '</p>';
-                    }}
-                }}
-                document.execCommand('insertHTML', false, text);
-                sync();
-            }});
-
-            // ── SYNC LISTENERS: keep textarea ALWAYS current ──
+            // Listeners
             editor.addEventListener('input', sync);
             editor.addEventListener('blur', sync);
-            editor.addEventListener('keyup', sync);
             codeInput.addEventListener('input', sync);
-
-            // ── SAVE BUTTON INTERCEPTION: fire sync on every save button click ──
-            function attachSaveListeners() {{
-                var saveBtns = document.querySelectorAll(
-                    'input[type="submit"], button[type="submit"], '
-                    + '.submit-row input, .submit-row button, '
-                    + '[name="_save"], [name="_addanother"], [name="_continue"]'
-                );
-                saveBtns.forEach(function(btn) {{
-                    btn.addEventListener('click', sync, true);
-                }});
-
-                // Also find parent form and attach submit listener
-                var form = (typeof textarea.closest === 'function' ? textarea.closest('form') : null)
-                        || (typeof editor.closest === 'function' ? editor.closest('form') : null)
-                        || document.querySelector('#content-main form')
-                        || document.querySelector('form.change-form')
-                        || document.querySelector('form');
-                if (form && !form._rteSyncAttached) {{
-                    form.addEventListener('submit', sync, true);
-                    form._rteSyncAttached = true;
-                }}
-                // window-level fallback
-                window.addEventListener('submit', sync, true);
-            }}
-
-            // Run immediately and after short delay (for async-rendered admin pages)
-            attachSaveListeners();
-            setTimeout(attachSaveListeners, 600);
-
-            // Ctrl+S / Cmd+S save shortcut
-            document.addEventListener('keydown', function(e) {{
-                if ((e.ctrlKey || e.metaKey) && e.key === 's') {{
-                    sync();
-                }}
-            }});
         }})();
         </script>
         """
+
         return mark_safe(html)
 
-
-# ----------------------------------------------------------------------
-# Admin Forms & Classes
-# ----------------------------------------------------------------------
 class ServiceAdminForm(forms.ModelForm):
     title = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 16px; font-weight: 600; padding: 10px 14px; border-radius: 6px;'}),
@@ -1617,21 +1632,25 @@ class ServiceAdminForm(forms.ModelForm):
 
 class BlogPostAdminForm(forms.ModelForm):
     title = forms.CharField(
-        widget=AdminTabSwitcherWidget(attrs={'style': 'width: 100%; max-width: 950px; font-size: 16px; font-weight: 600; padding: 10px 14px; border-radius: 6px;'}),
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 16px; font-weight: 600; padding: 10px 14px; border-radius: 6px;'}),
     )
-    content = forms.CharField(
-        widget=RichTextEditorWidget(),
+    slug = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 450px; font-size: 14px; padding: 8px 12px; border-radius: 6px;'}),
         required=False,
-        help_text="Full rich text content for the article with formatting, image upload & code view"
+        help_text="URL slug for this blog post (auto-generated if left blank)"
     )
     category = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 700px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+        required=False,
     )
     date = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 400px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+        required=False,
     )
     author = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 700px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+        required=False,
+        initial='Corx',
     )
     read_time = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 400px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
@@ -1643,15 +1662,10 @@ class BlogPostAdminForm(forms.ModelForm):
         required=False,
         help_text="Brief summary snippet displayed on article cards"
     )
-    meta_title = forms.CharField(
-        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 9px 12px; border-radius: 6px;'}),
+    content = forms.CharField(
+        widget=RichTextEditorWidget(),
         required=False,
-        help_text="Custom HTML <title> tag for search engines & social previews (leave blank to auto-use article title)"
-    )
-    meta_description = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 14.5px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
-        required=False,
-        help_text="Custom meta description tag for search engines & social previews (leave blank to auto-use article excerpt)"
+        help_text="Full article body content: Use formatting toolbar for Headings, Bold, Lists, Pull Quotes, Links & Images."
     )
 
     class Meta:
@@ -1702,8 +1716,7 @@ class ServiceAdmin(admin.ModelAdmin):
     delete_button.short_description = "Delete"
 
     def view_public_button(self, obj):
-        target_path = obj.custom_url_path if getattr(obj, 'custom_url_path', None) else f'/{obj.slug}'
-        return mark_safe(f'<a href="{target_path}" target="_blank" style="background: #10b981; color: white; padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">🌐 View</a>')
+        return mark_safe(f'<a href="/services/{obj.slug}" target="_blank" style="background: #10b981; color: white; padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">🌐 View</a>')
     view_public_button.short_description = "View Live"
 
     @admin.action(description="📋 Duplicate selected service(s) using Lab-Services template structure")
@@ -1718,7 +1731,6 @@ class ServiceAdmin(admin.ModelAdmin):
             
             Service.objects.create(
                 slug=new_slug,
-                custom_url_path=service.custom_url_path,
                 title=f"{service.title} (Copy)",
                 parent=service.parent,
                 eyebrow=service.eyebrow,
@@ -1740,34 +1752,36 @@ class ServiceAdmin(admin.ModelAdmin):
         self.message_user(request, f"Successfully created {count} service duplicate(s) with lab-services template layout.")
     
     fieldsets = (
-        ('General Information', {
-            'fields': ('title', 'slug', 'custom_url_path', 'parent', 'theme_color', 'icon', 'image_file')
+        ('📌 General Information', {
+            'fields': ('title', 'slug', 'parent', 'theme_color', 'icon', 'image_file')
         }),
-        ('SEO and OpenGraph Meta Tags', {
+        ('🔍 SEO & OpenGraph Meta Tags', {
             'fields': ('meta_title', 'meta_description'),
             'description': 'Custom SEO Title and Meta Description for search engines and social media sharing previews.',
         }),
-        ('Hero Section Content', {
+        ('✨ Hero Section Content', {
             'fields': ('eyebrow', 'tagline', 'description', 'floating_badge', 'features')
         }),
-        ('Section Custom Content and Titles', {
+        ('✏️ Section Custom Content & Titles', {
             'fields': ('about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title'),
             'description': 'Specify or override custom description text and titles for sections on the service page.',
+            'classes': ('collapse',),
         }),
-        ('Diagnostic Test Suites and Indications', {
+        ('📋 Diagnostic Test Suites & Indications', {
             'fields': ('indications_title', 'indications_description', 'indications', 'lab_columns_title', 'lab_columns_description', 'lab_columns')
         }),
-        ('Process and Benefits Section', {
+        ('⭐ Process & Benefits Section', {
             'fields': ('why_choose_title', 'why_choose_desc', 'reasons', 'steps', 'benefits_title', 'benefits', 'benefits_image_file')
         }),
-        ('Understanding and Condition Stages Section', {
+        ('💡 Understanding & Condition Stages Section', {
             'fields': ('understanding_title', 'understanding_intro', 'understanding_items', 'understanding_image_file')
         }),
-        ('FAQs', {
+        ('❓ FAQs', {
             'fields': ('faqs',)
         }),
-        ('Metadata', {
+        ('🕒 Metadata', {
             'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
         }),
     )
 
@@ -1782,13 +1796,13 @@ class BlogPostAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'updated_at')
 
     fieldsets = (
-        ('Article Header and Info', {
+        ('📰 Article Header & Info', {
             'fields': ('title', 'slug', 'category', 'author', 'date', 'read_time')
         }),
-        ('Featured Media and Excerpt', {
+        ('🖼️ Featured Media & Excerpt', {
             'fields': ('image_file', 'image', 'excerpt')
         }),
-        ('Main Article Content', {
+        ('✍️ Main Article Content (Rich Visual Editor)', {
             'fields': ('content',)
         }),
     )
