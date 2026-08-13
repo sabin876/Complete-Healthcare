@@ -29,4 +29,7 @@ diff_utf8.txt
 db.json
 *.sqlite3
 backend/db.sqlite3
+.env
+backend/.env
+
 
