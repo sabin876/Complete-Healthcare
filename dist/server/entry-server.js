@@ -1,12 +1,12 @@
 import { jsxs, jsx, Fragment } from "react/jsx-runtime";
 import React, { useState, useEffect, useRef } from "react";
 import { renderToString } from "react-dom/server";
-import { Link, useNavigate, useParams, useLocation, Routes, Route, Navigate, StaticRouter } from "react-router-dom";
+import { Link, useNavigate, useParams, useLocation, Routes, Route, Navigate, StaticRouter } from "react-router";
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from "framer-motion";
 import { Activity, Users, HeartPulse, Sparkles, Droplets, Clock, CheckCircle2, Stethoscope, HeartHandshake, TestTube, ArrowRight, Phone, Mail, X, Menu, Home as Home$1, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, Shield, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save } from "lucide-react";
 const logo = "/assets/logo-u28QMOuL.webp";
 const tollfree = "/assets/tollfree-3acubKEx.png";
-const rawBaseUrl = "https://sabinsiwakoti.com.np";
+const rawBaseUrl = "https://api.corx.ae";
 const API_BASE_URL = rawBaseUrl.replace(/\/+$/, "");
 const Facebook$1 = ({ size = 20, className = "", style = {} }) => /* @__PURE__ */ jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className, style, children: /* @__PURE__ */ jsx("path", { d: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" }) });
 const Instagram$1 = ({ size = 20, className = "", style = {} }) => /* @__PURE__ */ jsxs("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className, style, children: [
@@ -9900,7 +9900,7 @@ function Dashboard() {
                     /* @__PURE__ */ jsx(
                       "a",
                       {
-                        href: `https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`,
+                        href: `${API_BASE_URL}/admin/api/service/${sub.id}/change/`,
                         target: "_blank",
                         rel: "noreferrer",
                         className: "p-2 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-bold flex items-center gap-1.5 cursor-pointer",
@@ -10092,7 +10092,7 @@ function Dashboard() {
                       /* @__PURE__ */ jsx(
                         "a",
                         {
-                          href: `https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`,
+                          href: `${API_BASE_URL}/admin/api/service/${sub.id}/change/`,
                           target: "_blank",
                           rel: "noreferrer",
                           className: "font-extrabold text-white text-sm hover:text-cyan-300 transition-colors block",
@@ -10105,7 +10105,7 @@ function Dashboard() {
                     /* @__PURE__ */ jsx("td", { className: "py-4 px-4 text-center", children: /* @__PURE__ */ jsx(
                       "a",
                       {
-                        href: `https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`,
+                        href: `${API_BASE_URL}/admin/api/service/${sub.id}/change/`,
                         target: "_blank",
                         rel: "noreferrer",
                         className: "inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#00a2ff]/10 transition-colors",
@@ -10116,7 +10116,7 @@ function Dashboard() {
                     /* @__PURE__ */ jsx("td", { className: "py-4 px-4 text-center", children: /* @__PURE__ */ jsx(
                       "a",
                       {
-                        href: `https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/delete/`,
+                        href: `${API_BASE_URL}/admin/api/service/${sub.id}/delete/`,
                         target: "_blank",
                         rel: "noreferrer",
                         className: "inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#ff3b3b]/10 transition-colors",
@@ -10509,7 +10509,7 @@ function Dashboard() {
                     /* @__PURE__ */ jsx(
                       "a",
                       {
-                        href: `https://sabinsiwakoti.com.np/admin/api/service/${p.id}/change/`,
+                        href: `${API_BASE_URL}/admin/api/service/${p.id}/change/`,
                         target: "_blank",
                         rel: "noreferrer",
                         className: "font-extrabold text-white text-sm group-hover:text-emerald-300 transition-colors block",
@@ -10525,7 +10525,7 @@ function Dashboard() {
                   /* @__PURE__ */ jsx("td", { className: "py-4 px-4 text-center", children: /* @__PURE__ */ jsx(
                     "a",
                     {
-                      href: `https://sabinsiwakoti.com.np/admin/api/service/${p.id}/change/`,
+                      href: `${API_BASE_URL}/admin/api/service/${p.id}/change/`,
                       target: "_blank",
                       rel: "noreferrer",
                       className: "inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#00a2ff]/10 transition-colors",
@@ -10536,7 +10536,7 @@ function Dashboard() {
                   /* @__PURE__ */ jsx("td", { className: "py-4 px-4 text-center", children: /* @__PURE__ */ jsx(
                     "a",
                     {
-                      href: `https://sabinsiwakoti.com.np/admin/api/service/${p.id}/delete/`,
+                      href: `${API_BASE_URL}/admin/api/service/${p.id}/delete/`,
                       target: "_blank",
                       rel: "noreferrer",
                       className: "inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#ff3b3b]/10 transition-colors",
@@ -10565,7 +10565,7 @@ function Dashboard() {
                 /* @__PURE__ */ jsx(
                   "a",
                   {
-                    href: `https://sabinsiwakoti.com.np/admin/api/service/${parent.id}/change/`,
+                    href: `${API_BASE_URL}/admin/api/service/${parent.id}/change/`,
                     target: "_blank",
                     rel: "noreferrer",
                     className: "p-2 text-[#00a2ff] hover:bg-[#00a2ff]/10 rounded-lg transition-all",
@@ -10582,7 +10582,7 @@ function Dashboard() {
                 /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2", children: /* @__PURE__ */ jsx(
                   "a",
                   {
-                    href: `https://sabinsiwakoti.com.np/admin/api/service/${s.id}/change/`,
+                    href: `${API_BASE_URL}/admin/api/service/${s.id}/change/`,
                     target: "_blank",
                     rel: "noreferrer",
                     className: "text-[#00a2ff] hover:text-cyan-300",

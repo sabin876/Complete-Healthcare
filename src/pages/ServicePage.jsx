@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation, Navigate, Link } from 'react-router-dom';
+import { useParams, useLocation, Navigate, Link } from 'react-router';
 import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../config/api';
 import { Container, Section, Button, Card, HeroTitle, SectionTitle, CardTitle, Paragraph, SmallText } from '../components/ui';

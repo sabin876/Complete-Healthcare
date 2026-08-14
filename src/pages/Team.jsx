@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Calendar, GraduationCap, IdCard, MapPin, Award, Clock } from 'lucide-react';
 import kajalPhoto from '../assets/kajal.png';
 import teamHero from '../assets/team_hero.png';

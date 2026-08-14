@@ -1,6 +1,6 @@
 import React from 'react';
 import { Phone, Mail, MapPin, Send, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { motion } from 'framer-motion';
 import logo from '../assets/logo.webp';
 

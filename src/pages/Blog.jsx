@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { User, Calendar, ArrowRight, Tag, BookOpen } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { API_BASE_URL } from "../config/api";
 
 

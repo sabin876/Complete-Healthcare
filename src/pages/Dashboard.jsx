@@ -9,7 +9,7 @@ import {
   TrendingUp, ArrowUpRight, Server, Globe, Filter, ChevronRight, FileText,
   PenLine, Tag, Clock, User, Hash, AlignLeft, Link2, Save
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import logo from '../assets/logo.webp';
 import { API_BASE_URL } from '../config/api';
 import { Container } from '../components/ui';
@@ -904,7 +904,7 @@ export default function Dashboard() {
                               {parentObj ? (parentObj.name || parentObj.title) : 'Parent Category'}
                             </span>
                             <a
-                              href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`}
+                              href={`${API_BASE_URL}/admin/api/service/${sub.id}/change/`}
                               target="_blank"
                               rel="noreferrer"
                               className="p-2 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
@@ -1095,7 +1095,7 @@ export default function Dashboard() {
                             <tr key={sub.id} className="hover:bg-[#0f172a] transition-colors group">
                               <td className="py-4 px-4">
                                 <a 
-                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`} 
+                                  href={`${API_BASE_URL}/admin/api/service/${sub.id}/change/`} 
                                   target="_blank" 
                                   rel="noreferrer"
                                   className="font-extrabold text-white text-sm hover:text-cyan-300 transition-colors block"
@@ -1117,7 +1117,7 @@ export default function Dashboard() {
                               {/* Edit Icon -> EXACT MATCH TO SCREENSHOT (Cyan outline pencil icon) */}
                               <td className="py-4 px-4 text-center">
                                 <a
-                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/change/`}
+                                  href={`${API_BASE_URL}/admin/api/service/${sub.id}/change/`}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#00a2ff]/10 transition-colors"
@@ -1129,7 +1129,7 @@ export default function Dashboard() {
                               {/* Delete Icon -> EXACT MATCH TO SCREENSHOT (Red outline trash can icon) */}
                               <td className="py-4 px-4 text-center">
                                 <a
-                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${sub.id}/delete/`}
+                                  href={`${API_BASE_URL}/admin/api/service/${sub.id}/delete/`}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#ff3b3b]/10 transition-colors"
@@ -1549,7 +1549,7 @@ export default function Dashboard() {
                             <tr key={p.id} className="hover:bg-[#0f172a] transition-colors group">
                               <td className="py-4 px-4">
                                 <a 
-                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${p.id}/change/`} 
+                                  href={`${API_BASE_URL}/admin/api/service/${p.id}/change/`} 
                                   target="_blank" 
                                   rel="noreferrer"
                                   className="font-extrabold text-white text-sm group-hover:text-emerald-300 transition-colors block"
@@ -1570,7 +1570,7 @@ export default function Dashboard() {
                               {/* Edit Icon -> EXACT MATCH TO SCREENSHOT */}
                               <td className="py-4 px-4 text-center">
                                 <a
-                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${p.id}/change/`}
+                                  href={`${API_BASE_URL}/admin/api/service/${p.id}/change/`}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#00a2ff]/10 transition-colors"
@@ -1582,7 +1582,7 @@ export default function Dashboard() {
                               {/* Delete Icon -> EXACT MATCH TO SCREENSHOT */}
                               <td className="py-4 px-4 text-center">
                                 <a
-                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${p.id}/delete/`}
+                                  href={`${API_BASE_URL}/admin/api/service/${p.id}/delete/`}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-[#ff3b3b]/10 transition-colors"
@@ -1625,7 +1625,7 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <a
-                          href={`https://sabinsiwakoti.com.np/admin/api/service/${parent.id}/change/`}
+                          href={`${API_BASE_URL}/admin/api/service/${parent.id}/change/`}
                           target="_blank"
                           rel="noreferrer"
                           className="p-2 text-[#00a2ff] hover:bg-[#00a2ff]/10 rounded-lg transition-all"
@@ -1647,7 +1647,7 @@ export default function Dashboard() {
                               </span>
                               <div className="flex items-center gap-2">
                                 <a
-                                  href={`https://sabinsiwakoti.com.np/admin/api/service/${s.id}/change/`}
+                                  href={`${API_BASE_URL}/admin/api/service/${s.id}/change/`}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="text-[#00a2ff] hover:text-cyan-300"

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Clock, ExternalLink, Globe, ArrowRight, ShieldCheck, Navigation } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const Locations = () => {
   const regions = [

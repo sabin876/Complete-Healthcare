@@ -35,7 +35,7 @@ const Linkedin = ({ size = 20, className = '', style = {} }) => (
 );
 
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.webp';
 import tollfree from '../assets/tollfree.png';
