@@ -537,7 +537,7 @@ def seed():
             ]
         },
         {
-            "slug": "pediatric-physiotherapy",
+            "slug": "pediatric-physiotherapy-services-dubai",
             "title": "Pediatric Physiotherapy",
             "eyebrow": "Specialized Physical Therapy for Children in Dubai",
             "tagline": "Pediatric Physiotherapy Services Dubai",

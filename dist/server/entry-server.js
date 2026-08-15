@@ -58,7 +58,7 @@ const Header = () => {
       accent: "#63e8a0",
       subItems: [
         { name: "Frozen Shoulder Therapy", path: "/frozen-shoulder-physiotherapy", desc: "Adhesive capsulitis & shoulder joint rehab", icon: Activity },
-        { name: "Pediatric Physiotherapy", path: "/pediatric-physiotherapy", desc: "Childhood motor milestone & movement therapy", icon: Users },
+        { name: "Pediatric Physiotherapy", path: "/pediatric-physiotherapy-services-dubai", desc: "Childhood motor milestone & movement therapy", icon: Users },
         { name: "Joint Pain Treatment", path: "/joint-pain-treatment", desc: "Non-invasive arthritis & joint pain relief", icon: HeartPulse },
         { name: "Manual Therapy", path: "/manual-therapy", desc: "Hands-on soft tissue & joint mobilization", icon: Sparkles }
       ]
@@ -6996,8 +6996,8 @@ const servicesData = {
         badge: "Popular"
       },
       {
-        slug: "pediatric-physiotherapy",
-        path: "/pediatric-physiotherapy",
+        slug: "pediatric-physiotherapy-services-dubai",
+        path: "/pediatric-physiotherapy-services-dubai",
         title: "Pediatric Physiotherapy",
         eyebrow: "Child Movement & Milestones",
         desc: "Child-friendly physical therapy for motor delays, cerebral palsy, torticollis, and posture balance.",
@@ -7741,7 +7741,7 @@ servicesData["frozen-shoulder-physiotherapy"] = {
     "Diabetic patients with increased risk of shoulder joint stiffness"
   ]
 };
-servicesData["pediatric-physiotherapy"] = {
+servicesData["pediatric-physiotherapy-services-dubai"] = {
   ...servicesData["physiotherapy"],
   title: "Pediatric Physiotherapy",
   eyebrow: "Specialized Physical Therapy for Children in Dubai",

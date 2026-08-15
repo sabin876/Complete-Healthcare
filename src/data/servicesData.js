@@ -21,8 +21,8 @@ export const servicesData = {
         badge: 'Popular'
       },
       {
-        slug: 'pediatric-physiotherapy',
-        path: '/pediatric-physiotherapy',
+        slug: 'pediatric-physiotherapy-services-dubai',
+        path: '/pediatric-physiotherapy-services-dubai',
         title: 'Pediatric Physiotherapy',
         eyebrow: 'Child Movement & Milestones',
         desc: 'Child-friendly physical therapy for motor delays, cerebral palsy, torticollis, and posture balance.',
@@ -774,7 +774,7 @@ servicesData['frozen-shoulder-physiotherapy'] = {
   ]
 };
 
-servicesData['pediatric-physiotherapy'] = {
+servicesData['pediatric-physiotherapy-services-dubai'] = {
   ...servicesData['physiotherapy'],
   title: "Pediatric Physiotherapy",
   eyebrow: "Specialized Physical Therapy for Children in Dubai",
