@@ -281,6 +281,7 @@ export default function OrthopedicArticlesPage() {
         if (Array.isArray(data) && data.length > 0) {
           const formatted = data.map(item => ({
             id: item.id,
+            slug: item.slug || slugifyTitle(item.title),
             tag: item.tag || item.category || 'HEALTHCARE',
             title: item.title,
             excerpt: item.excerpt || item.title,

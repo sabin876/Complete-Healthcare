@@ -5378,6 +5378,7 @@ function OrthopedicArticlesPage() {
       if (Array.isArray(data) && data.length > 0) {
         const formatted = data.map((item) => ({
           id: item.id,
+          slug: item.slug || slugifyTitle(item.title),
           tag: item.tag || item.category || "HEALTHCARE",
           title: item.title,
           excerpt: item.excerpt || item.title,
@@ -11031,7 +11032,7 @@ const AnimatedRoutes = () => {
     /* @__PURE__ */ jsx(Route, { path: "/doctor-on-call", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "doctor-on-call" }) }),
     /* @__PURE__ */ jsx(Route, { path: "/doctor-on-call/", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "doctor-on-call" }) }),
     /* @__PURE__ */ jsx(Route, { path: "/blog", element: /* @__PURE__ */ jsx(OrthopedicArticlesPage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/blog/:id", element: /* @__PURE__ */ jsx(BlogDetails, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/blog/:slug", element: /* @__PURE__ */ jsx(BlogDetails, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/blog/details", element: /* @__PURE__ */ jsx(BlogDetails, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/locations", element: /* @__PURE__ */ jsx(Locations, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/contact", element: /* @__PURE__ */ jsx(Navigate, { to: "/book-an-appointment", replace: true }) }),
