@@ -181,7 +181,13 @@ export default function BlogDetails() {
       canonicalLink.setAttribute('rel', 'canonical');
       document.head.appendChild(canonicalLink);
     }
-    canonicalLink.setAttribute('href', window.location.href);
+    const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
+      ? window.location.pathname.slice(0, -1)
+      : window.location.pathname;
+    const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+      ? window.location.origin
+      : 'https://corx.ae';
+    canonicalLink.setAttribute('href', `${origin}${cleanPath}`);
   }, [post]);
 
   const prevPost = blogDatabase.find((p) => p.id === articleId - 1) || blogDatabase[blogDatabase.length - 1];

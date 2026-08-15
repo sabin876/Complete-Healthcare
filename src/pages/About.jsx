@@ -9,6 +9,25 @@ import aboutUsBg from '../assets/About us .jpg';
 import aboutServicesCollage from '../assets/about_services_collage.png';
 
 const About = () => {
+  React.useEffect(() => {
+    document.title = "About Us | CORx Healthcare Dubai";
+    if (typeof window !== 'undefined') {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement('link');
+        canonicalLink.setAttribute('rel', 'canonical');
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
+        ? window.location.pathname.slice(0, -1)
+        : window.location.pathname;
+      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+        ? window.location.origin
+        : 'https://corx.ae';
+      canonicalLink.setAttribute('href', `${origin}${cleanPath}`);
+    }
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}

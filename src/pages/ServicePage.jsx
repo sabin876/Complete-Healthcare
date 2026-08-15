@@ -565,6 +565,23 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     setMetaTag('name', 'description', pageDesc);
     setMetaTag('property', 'og:title', pageTitle);
     setMetaTag('property', 'og:description', pageDesc);
+
+    // Set dynamic canonical link tag for SEO
+    if (typeof window !== 'undefined') {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement('link');
+        canonicalLink.setAttribute('rel', 'canonical');
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
+        ? window.location.pathname.slice(0, -1)
+        : window.location.pathname;
+      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+        ? window.location.origin
+        : 'https://corx.ae';
+      canonicalLink.setAttribute('href', `${origin}${cleanPath}`);
+    }
   }, [mergedData, slug]);
 
   const formatSlugToTitle = (slug, dataObj) => {
