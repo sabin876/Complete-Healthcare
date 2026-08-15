@@ -1,13 +1,6 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "redirects": [
-    {
-      "source": "/frozen-shoulder-physiotherapy",
-      "destination": "/frozen-shoulder-physiotherapy-treatment",
-      "permanent": true
-    }
-  ],
+  "outputDirectory": "dist/client",
   "rewrites": [
     {
       "source": "/(.*)",

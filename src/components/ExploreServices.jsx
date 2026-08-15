@@ -251,18 +251,13 @@ export default function ExploreServices() {
           const mainParents = data.filter(item => item.parent === null || !item.parent);
           const listToDisplay = mainParents.length > 0 ? mainParents : data;
           setServiceList(listToDisplay.map((item, index) => {
-            const itemSlug = (item.slug || '').toLowerCase();
-            const defaultItem = services.find(s => {
-              const sPath = (s.path || '').toLowerCase();
-              const sLastPart = sPath.split('/').filter(Boolean).pop() || '';
-              return (itemSlug && sPath.includes(itemSlug)) || (itemSlug && itemSlug.includes(sLastPart));
-            }) || services[index % services.length];
+            const defaultItem = services.find(s => s.path.includes(item.slug) || item.slug.includes(s.path.split('/').pop())) || services[index % services.length];
             return {
               id: item.id || index + 1,
               title: item.title || defaultItem.title,
               description: item.tagline || item.description || defaultItem.description,
               accent: item.theme_color || defaultItem.accent,
-              path: item.slug ? `/${item.slug}` : defaultItem.path,
+              path: `/${item.slug}`,
               icon: defaultItem.icon,
               image: item.image || defaultItem.image,
               video: defaultItem.video

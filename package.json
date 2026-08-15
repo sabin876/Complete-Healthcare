@@ -4,11 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build --outDir dist",
+    "dev": "node server.js",
+    "build": "npm run build:client && npm run build:server && node scripts/copy-index.js",
+    "build:client": "vite build --outDir dist/client",
+    "build:server": "vite build --ssr src/entry-server.jsx --outDir dist/server",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "vite preview"
+    "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.22.2",
@@ -19,7 +21,7 @@
     "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.0.0",
+    "@eslint/js": "^10.0.1",
     "@tailwindcss/postcss": "^4.2.4",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.14",

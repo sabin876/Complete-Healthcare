@@ -522,7 +522,7 @@ def seed():
             ]
         },
         {
-            "slug": "frozen-shoulder-physiotherapy-treatment",
+            "slug": "frozen-shoulder-physiotherapy",
             "title": "Frozen Shoulder Physiotherapy",
             "eyebrow": "Adhesive Capsulitis Therapy & Shoulder Mobility in Dubai",
             "tagline": "Frozen Shoulder Physiotherapy Treatment in Dubai",

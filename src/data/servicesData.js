@@ -12,8 +12,8 @@ export const servicesData = {
     },
     sub_services: [
       {
-        slug: 'frozen-shoulder-physiotherapy-treatment',
-        path: '/frozen-shoulder-physiotherapy-treatment',
+        slug: 'frozen-shoulder-physiotherapy',
+        path: '/frozen-shoulder-physiotherapy',
         title: 'Frozen Shoulder Therapy',
         eyebrow: 'Adhesive Capsulitis Rehab',
         desc: 'Specialized joint mobilization, passive stretching, and shoulder range of motion rehabilitation.',
@@ -757,7 +757,7 @@ servicesData['back-pain-treatment'] = {
   ]
 };
 
-servicesData['frozen-shoulder-physiotherapy-treatment'] = {
+servicesData['frozen-shoulder-physiotherapy'] = {
   ...servicesData['physiotherapy'],
   title: "Frozen Shoulder Physiotherapy",
   eyebrow: "Adhesive Capsulitis Therapy & Shoulder Mobility in Dubai",
