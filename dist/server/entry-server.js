@@ -5708,9 +5708,8 @@ function BlogDetails() {
       canonicalLink.setAttribute("rel", "canonical");
       document.head.appendChild(canonicalLink);
     }
-    const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
     const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
-    canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    canonicalLink.setAttribute("href", `${origin}/blog/${post.slug || articleId}`);
   }, [post]);
   const prevPost = blogDatabase.find((p) => p.id === articleId - 1) || blogDatabase[blogDatabase.length - 1];
   const nextPost = blogDatabase.find((p) => p.id === articleId + 1) || blogDatabase[0];
@@ -8243,9 +8242,8 @@ function LabServicesLanding({ slug = "lab-services" }) {
         canonicalLink.setAttribute("rel", "canonical");
         document.head.appendChild(canonicalLink);
       }
-      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
       const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
-      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+      canonicalLink.setAttribute("href", `${origin}/${slug}`);
     }
   }, [mergedData, slug]);
   const formatSlugToTitle = (slug2, dataObj) => {
