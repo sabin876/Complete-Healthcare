@@ -3263,6 +3263,17 @@ const Home = () => {
     setMetaTag("name", "description", descText);
     setMetaTag("property", "og:title", titleText);
     setMetaTag("property", "og:description", descText);
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    }
   }, []);
   useEffect(() => {
     const timer = setInterval(() => {
@@ -3823,6 +3834,20 @@ const Home = () => {
 };
 const aboutServicesCollage = "/assets/about_services_collage-C2zuua3T.png";
 const About = () => {
+  React.useEffect(() => {
+    document.title = "About Us | CORx Healthcare Dubai";
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    }
+  }, []);
   return /* @__PURE__ */ jsxs(
     motion.div,
     {
@@ -4187,6 +4212,20 @@ const About = () => {
   );
 };
 const Locations = () => {
+  React.useEffect(() => {
+    document.title = "Our Locations & Service Areas in Dubai | CORx Healthcare";
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    }
+  }, []);
   const regions = [
     {
       name: "Dubai Headquarters",
@@ -4515,6 +4554,17 @@ function Contact() {
     setMetaTag("property", "og:description", descText);
     setMetaTag("property", "twitter:title", titleText);
     setMetaTag("property", "twitter:description", descText);
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    }
   }, []);
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/services/`).then((res) => res.ok ? res.json() : null).then((data) => {
@@ -5312,6 +5362,17 @@ function OrthopedicArticlesPage() {
     setMetaTag("property", "og:description", descText);
     setMetaTag("property", "twitter:title", titleText);
     setMetaTag("property", "twitter:description", descText);
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    }
   }, []);
   React.useEffect(() => {
     fetch(`${API_BASE_URL}/api/blogs/`).then((res) => {
@@ -5651,7 +5712,9 @@ function BlogDetails() {
       canonicalLink.setAttribute("rel", "canonical");
       document.head.appendChild(canonicalLink);
     }
-    canonicalLink.setAttribute("href", window.location.href);
+    const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+    const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+    canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
   }, [post]);
   const prevPost = blogDatabase.find((p) => p.id === articleId - 1) || blogDatabase[blogDatabase.length - 1];
   const nextPost = blogDatabase.find((p) => p.id === articleId + 1) || blogDatabase[0];
@@ -6323,6 +6386,18 @@ const Team = () => {
   const [selectedDept, setSelectedDept] = useState("All");
   const [dbTeam, setDbTeam] = useState([]);
   useEffect(() => {
+    document.title = "Our Medical Team | CORx Healthcare Dubai";
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    }
   }, []);
   const mappedDbTeam = dbTeam.map((member) => {
     let dept = "Nursing";
@@ -8165,6 +8240,17 @@ function LabServicesLanding({ slug = "lab-services" }) {
     setMetaTag("name", "description", pageDesc);
     setMetaTag("property", "og:title", pageTitle);
     setMetaTag("property", "og:description", pageDesc);
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    }
   }, [mergedData, slug]);
   const formatSlugToTitle = (slug2, dataObj) => {
     if (dataObj == null ? void 0 : dataObj.title) return dataObj.title;
