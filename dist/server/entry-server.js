@@ -122,10 +122,8 @@ const Header = () => {
         const parents = data.filter((s) => s.parent === null);
         const mapped = parents.map((s) => {
           const rawSlug = (s.slug || "").toLowerCase();
-          const isPhysio = rawSlug.includes("physio");
-          const cPath = s.custom_url_path && s.custom_url_path.trim() ? s.custom_url_path.trim() : "";
-          const formattedCPath = cPath ? cPath.startsWith("/") ? cPath : `/${cPath}` : "";
-          const targetPath = formattedCPath || (isPhysio ? "/physiotherapy-at-home-in-dubai/" : s.path || `/${s.slug}`);
+          rawSlug.includes("physio");
+          const targetPath = `/${s.slug}`;
           return {
             id: s.id,
             name: s.name || s.title,
@@ -135,12 +133,10 @@ const Header = () => {
             badge: s.floating_badge && s.floating_badge.title ? s.floating_badge.title : "",
             accent: s.accent || s.theme_color || "#08709d",
             subItems: (s.sub_services || []).map((sub) => {
-              const subCPath = sub.custom_url_path && sub.custom_url_path.trim() ? sub.custom_url_path.trim() : "";
-              const formattedSubPath = subCPath ? subCPath.startsWith("/") ? subCPath : `/${subCPath}` : sub.path || `/${sub.slug}`;
               return {
                 id: sub.id,
                 name: sub.name,
-                path: formattedSubPath.startsWith("/") ? formattedSubPath : `/${formattedSubPath}`,
+                path: `/${sub.slug}`,
                 icon: ICON_MAP[sub.icon] || CheckCircle2,
                 desc: sub.desc || ""
               };
@@ -9202,7 +9198,7 @@ function SubServicesGridSection({ subServices = [], serviceTitle = "", isEditMod
           /* @__PURE__ */ jsx("div", { className: "pt-4 border-t border-slate-100 flex items-center justify-between", children: /* @__PURE__ */ jsxs(
             Link,
             {
-              to: sub.path || (sub.slug ? `/${sub.slug}` : "#"),
+              to: sub.slug ? `/${sub.slug}` : "#",
               className: "inline-flex items-center gap-2 text-[#08709d] font-bold text-sm uppercase tracking-wide group-hover:translate-x-1.5 transition-transform",
               children: [
                 /* @__PURE__ */ jsx("span", { children: "View Treatment" }),

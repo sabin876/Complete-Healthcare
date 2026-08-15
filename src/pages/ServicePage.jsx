@@ -1638,7 +1638,7 @@ function SubServicesGridSection({ subServices = [], serviceTitle = '', isEditMod
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                   <Link
-                    to={sub.path || (sub.slug ? `/${sub.slug}` : '#')}
+                    to={sub.slug ? `/${sub.slug}` : '#'}
                     className="inline-flex items-center gap-2 text-[#08709d] font-bold text-sm uppercase tracking-wide group-hover:translate-x-1.5 transition-transform"
                   >
                     <span>View Treatment</span>
