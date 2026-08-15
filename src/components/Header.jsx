@@ -84,7 +84,7 @@ const Header = () => {
       badge: 'Popular',
       accent: '#63e8a0',
       subItems: [
-        { name: 'Frozen Shoulder Therapy', path: '/frozen-shoulder-physiotherapy', desc: 'Adhesive capsulitis & shoulder joint rehab', icon: Activity },
+        { name: 'Frozen Shoulder Therapy', path: '/frozen-shoulder-physiotherapy-treatment', desc: 'Adhesive capsulitis & shoulder joint rehab', icon: Activity },
         { name: 'Pediatric Physiotherapy', path: '/pediatric-physiotherapy', desc: 'Childhood motor milestone & movement therapy', icon: Users },
         { name: 'Joint Pain Treatment', path: '/joint-pain-treatment', desc: 'Non-invasive arthritis & joint pain relief', icon: HeartPulse },
         { name: 'Manual Therapy', path: '/manual-therapy', desc: 'Hands-on soft tissue & joint mobilization', icon: Sparkles },

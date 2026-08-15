@@ -515,6 +515,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       cleanSlug === 'lab-services' ? 'lab-test-at-home' : (cleanSlug === 'lab-test-at-home' ? 'lab-services' : null),
       cleanSlug === 'elderly-care' ? 'elderly-home-care' : (cleanSlug === 'elderly-home-care' ? 'elderly-care' : null),
       cleanSlug === 'iv-therapy' ? 'iv-therapy-iv-drip' : (cleanSlug === 'iv-therapy-iv-drip' ? 'iv-therapy' : null),
+      cleanSlug === 'home-nursing' ? 'nursing' : (cleanSlug === 'nursing' ? 'home-nursing' : null),
       isMainPhysioSlug ? 'Physiotherapy-Services' : null,
       isMainPhysioSlug ? 'physiotherapy' : null,
     ].filter((val, idx, arr) => Boolean(val) && arr.indexOf(val) === idx);
