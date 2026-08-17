@@ -583,6 +583,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const formatSlugToTitle = (slug, dataObj) => {
     if (dataObj?.title) return dataObj.title;
+    if (validServiceData && Object.keys(staticFallback).length === 0) {
+      return validServiceData.title || '';
+    }
     if (!slug) return 'Blood Test in Dubai';
     const clean = slug.toLowerCase().replace(/^(services\/)/, '');
     if (clean === 'doctor-on-call' || clean === 'doctor-at-home') return 'Doctor On Call in Dubai';
@@ -600,6 +603,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const getFallbackEyebrow = (slug, dataObj) => {
     if (dataObj?.eyebrow) return dataObj.eyebrow;
+    if (validServiceData && Object.keys(staticFallback).length === 0) {
+      return '';
+    }
     const clean = (slug ? slug.replace(/^(services\/)/, '') : '').toLowerCase();
     if (clean.includes('doctor')) return '24/7 DHA-Licensed Doctor Home & Hotel Visits Across Dubai';
     if (clean.includes('iv') || clean.includes('drip')) return 'DHA-Certified Vitamin Drips & Hydration at Home';
@@ -610,6 +616,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const getFallbackTagline = (slug, dataObj) => {
     if (dataObj?.tagline) return dataObj.tagline;
+    if (validServiceData && Object.keys(staticFallback).length === 0) {
+      return '';
+    }
     const clean = (slug ? slug.replace(/^(services\/)/, '') : '').toLowerCase();
     if (clean.includes('doctor')) return 'Qualified Medical Doctors at Your Doorstep Day or Night';
     if (clean.includes('iv') || clean.includes('drip')) return 'Instant Energy, Immunity Boost & Fast Hydration';
@@ -620,6 +629,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const getFallbackDescription = (slug, dataObj) => {
     if (dataObj?.description) return dataObj.description;
+    if (validServiceData && Object.keys(staticFallback).length === 0) {
+      return '';
+    }
     const clean = (slug ? slug.replace(/^(services\/)/, '') : '').toLowerCase();
     if (clean.includes('doctor')) return 'Experience prompt, professional medical care without visiting a clinic or hospital. Our DHA-certified doctors arrive at your home, hotel, or office within 30–45 minutes for diagnosis, treatment, and prescription issuance.';
     if (clean.includes('iv') || clean.includes('drip')) return 'Revitalize your body with personalized IV drip therapy delivered at your home, hotel, or office by DHA-certified healthcare professionals at an affordable price.';
@@ -630,6 +642,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const getFallbackFeatures = (slug, dataObj) => {
     if (dataObj?.features && dataObj.features.length > 0) return dataObj.features;
+    if (validServiceData && Object.keys(staticFallback).length === 0) {
+      return [];
+    }
     const clean = (slug ? slug.replace(/^(services\/)/, '') : '').toLowerCase();
     if (clean.includes('doctor')) return [
       { title: "24/7 Doctor home & hotel visits" },
@@ -664,6 +679,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const getFallbackIndications = (slug, dataObj) => {
     if (dataObj?.indications && dataObj.indications.length > 0) return dataObj.indications;
+    if (validServiceData && Object.keys(staticFallback).length === 0) {
+      return [];
+    }
     const clean = (slug ? slug.replace(/^(services\/)/, '') : '').toLowerCase();
     if (clean.includes('doctor')) return [
       "High fever, severe flu & respiratory symptoms",
@@ -702,6 +720,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const getFallbackSteps = (clean, dataObj) => {
     if (dataObj?.steps && dataObj.steps.length > 0) return dataObj.steps;
+    if (validServiceData && Object.keys(staticFallback).length === 0) {
+      return [];
+    }
     if (clean.includes('doctor')) return [
       {
         icon: <PhoneCall size={36} className="text-[#08709d]" strokeWidth={1.75} />,
@@ -724,6 +745,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const getFallbackFaqs = (clean, dataObj) => {
     if (dataObj?.faqs && dataObj.faqs.length > 0) return dataObj.faqs;
+    if (validServiceData && Object.keys(staticFallback).length === 0) {
+      return [];
+    }
     if (clean.includes('doctor')) return [
       {
         q: "How quickly can a doctor reach my home or hotel in Dubai?",
@@ -747,6 +771,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const getFallbackReasons = (clean, dataObj) => {
     if (dataObj?.reasons && dataObj.reasons.length > 0) return dataObj.reasons;
+    if (validServiceData && Object.keys(staticFallback).length === 0) {
+      return [];
+    }
     if (clean.includes('doctor')) return [
       {
         title: "Rapid 30–45 Mins Arrival",
