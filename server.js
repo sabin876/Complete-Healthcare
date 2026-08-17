@@ -21,7 +21,7 @@ async function createServer() {
     });
     app.use(vite.middlewares);
   } else {
-    app.use(express.static(path.resolve(__dirname, 'dist/client'), { index: false }));
+    app.use(express.static(path.resolve(__dirname, 'dist'), { index: false }));
   }
 
   app.use('*', async (req, res, next) => {
@@ -36,8 +36,8 @@ async function createServer() {
         template = await vite.transformIndexHtml(url, template);
         render = (await vite.ssrLoadModule('/src/entry-server.jsx')).render;
       } else {
-        template = await fs.readFile(path.resolve(__dirname, 'dist/client/index.html'), 'utf-8');
-        render = (await import('./dist/server/entry-server.js')).render;
+        template = await fs.readFile(path.resolve(__dirname, 'dist/index.html'), 'utf-8');
+        render = (await import('./dist/entry-server.js')).render;
       }
 
       const rendered = await render(url);
