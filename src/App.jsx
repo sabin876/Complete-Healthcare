@@ -43,8 +43,6 @@ const AnimatedRoutes = () => {
         <Route path="/about-us/" element={<About />} />
         <Route path="/lab-test-at-home" element={<ServicePage serviceId="lab-test-at-home" />} />
         <Route path="/lab-test-at-home/" element={<ServicePage serviceId="lab-test-at-home" />} />
-        <Route path="/physiotherapy-at-home-in-dubai" element={<ServicePage serviceId="physiotherapy-at-home-in-dubai" />} />
-        <Route path="/physiotherapy-at-home-in-dubai/" element={<ServicePage serviceId="physiotherapy-at-home-in-dubai" />} />
         <Route path="/home-nursing" element={<ServicePage serviceId="home-nursing" />} />
         <Route path="/home-nursing/" element={<ServicePage serviceId="home-nursing" />} />
         <Route path="/elderly-home-care" element={<ServicePage serviceId="elderly-home-care" />} />
@@ -67,10 +65,6 @@ const AnimatedRoutes = () => {
         {/* Dynamic Service & Sub-Service Routes */}
         <Route path="/services/:parentSlug/:serviceSlug" element={<ServicePage />} />
         <Route path="/services/:parentSlug/:serviceSlug/" element={<ServicePage />} />
-        <Route path="/physiotherapy-at-home-in-dubai/:serviceSlug" element={<ServicePage />} />
-        <Route path="/physiotherapy-at-home-in-dubai/:serviceSlug/" element={<ServicePage />} />
-        <Route path="/physiotherapy/:serviceSlug" element={<ServicePage />} />
-        <Route path="/physiotherapy/:serviceSlug/" element={<ServicePage />} />
         <Route path="/:parentSlug/:serviceSlug" element={<ServicePage />} />
         <Route path="/:parentSlug/:serviceSlug/" element={<ServicePage />} />
         <Route path="/:serviceSlug" element={<ServicePage />} />

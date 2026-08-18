@@ -124,7 +124,6 @@ const Footer = () => {
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }} className="flex flex-col gap-3.5">
               {[
-                { name: 'Physiotherapy', path: '/physiotherapy-at-home-in-dubai/' },
                 { name: 'IV Therapy at Home', path: '/iv-therapy' },
                 { name: 'Home Nursing', path: '/home-nursing' },
                 { name: 'Doctor On Call', path: '/doctor-on-call' },

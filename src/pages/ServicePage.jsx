@@ -469,7 +469,6 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                          staticServicesData[altSlug] || 
                          staticServicesData[altSlug2] || 
                          staticServicesData[cleanSlug.replace(/-/g, '')] || 
-                         (cleanSlug.includes('physio') ? staticServicesData['physiotherapy'] : null) ||
                          (cleanSlug.includes('nurs') ? staticServicesData['nursing'] : null) ||
                          (cleanSlug.includes('iv') ? staticServicesData['iv-therapy'] : null) ||
                          (cleanSlug.includes('doctor') ? staticServicesData['doctor-on-call'] : null) ||
@@ -477,32 +476,24 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                          (cleanSlug.includes('lab') ? staticServicesData['lab-services'] : null) ||
                          {};
 
-  const isMainPhysioSlug = cleanSlug === 'physiotherapy' || 
-                          cleanSlug === 'physiotherapy-at-home-in-dubai' || 
-                          cleanSlug === 'physiotherapy-services' || 
-                          cleanSlug === 'physiotherapy-at-home';
-
   const validServiceData = (serviceData && typeof serviceData === 'object' && !Array.isArray(serviceData)) ? serviceData : null;
-  const isFetchedParentForSubservice = validServiceData && 
-    (validServiceData.slug === 'physiotherapy' || validServiceData.slug === 'physiotherapy-at-home-in-dubai') && 
-    !isMainPhysioSlug;
 
   const mergedData = validServiceData ? {
     ...staticFallback,
-    ...(isFetchedParentForSubservice ? {} : validServiceData),
-    title: (isFetchedParentForSubservice || !validServiceData.title) ? (staticFallback.title || validServiceData.title) : validServiceData.title,
-    eyebrow: (isFetchedParentForSubservice || !validServiceData.eyebrow) ? (staticFallback.eyebrow || validServiceData.eyebrow) : validServiceData.eyebrow,
-    tagline: (isFetchedParentForSubservice || !validServiceData.tagline) ? (staticFallback.tagline || validServiceData.tagline) : validServiceData.tagline,
-    description: (isFetchedParentForSubservice || !validServiceData.description) ? (staticFallback.description || validServiceData.description) : validServiceData.description,
-    about_section_title: (isFetchedParentForSubservice || !validServiceData.about_section_title) ? (staticFallback.about_section_title || validServiceData.about_section_title) : validServiceData.about_section_title,
-    indications_title: (isFetchedParentForSubservice || !validServiceData.indications_title) ? (staticFallback.indications_title || validServiceData.indications_title) : validServiceData.indications_title,
-    features: (Array.isArray(validServiceData.features) && validServiceData.features.length > 0 && !isFetchedParentForSubservice) ? validServiceData.features : (staticFallback.features || []),
-    indications: (Array.isArray(validServiceData.indications) && validServiceData.indications.length > 0 && !isFetchedParentForSubservice) ? validServiceData.indications : (staticFallback.indications || []),
-    reasons: (Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0 && !isFetchedParentForSubservice) ? validServiceData.reasons : (staticFallback.reasons || []),
-    steps: (Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0 && !isFetchedParentForSubservice) ? validServiceData.steps : (staticFallback.steps || []),
-    faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0 && !isFetchedParentForSubservice) ? validServiceData.faqs : (staticFallback.faqs || []),
-    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0 && !isFetchedParentForSubservice) ? validServiceData.benefits : (staticFallback.benefits || []),
-    lab_columns: (Array.isArray(validServiceData.lab_columns) && validServiceData.lab_columns.length > 0 && !isFetchedParentForSubservice) ? validServiceData.lab_columns : (staticFallback.lab_columns || []),
+    ...validServiceData,
+    title: validServiceData.title || staticFallback.title,
+    eyebrow: validServiceData.eyebrow || staticFallback.eyebrow,
+    tagline: validServiceData.tagline || staticFallback.tagline,
+    description: validServiceData.description || staticFallback.description,
+    about_section_title: validServiceData.about_section_title || staticFallback.about_section_title,
+    indications_title: validServiceData.indications_title || staticFallback.indications_title,
+    features: (Array.isArray(validServiceData.features) && validServiceData.features.length > 0) ? validServiceData.features : (staticFallback.features || []),
+    indications: (Array.isArray(validServiceData.indications) && validServiceData.indications.length > 0) ? validServiceData.indications : (staticFallback.indications || []),
+    reasons: (Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0) ? validServiceData.reasons : (staticFallback.reasons || []),
+    steps: (Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0) ? validServiceData.steps : (staticFallback.steps || []),
+    faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0) ? validServiceData.faqs : (staticFallback.faqs || []),
+    benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : (staticFallback.benefits || []),
+    lab_columns: (Array.isArray(validServiceData.lab_columns) && validServiceData.lab_columns.length > 0) ? validServiceData.lab_columns : (staticFallback.lab_columns || []),
   } : staticFallback;
 
   useEffect(() => {
@@ -515,8 +506,6 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       cleanSlug === 'lab-services' ? 'lab-test-at-home' : (cleanSlug === 'lab-test-at-home' ? 'lab-services' : null),
       cleanSlug === 'elderly-care' ? 'elderly-home-care' : (cleanSlug === 'elderly-home-care' ? 'elderly-care' : null),
       cleanSlug === 'iv-therapy' ? 'iv-therapy-iv-drip' : (cleanSlug === 'iv-therapy-iv-drip' ? 'iv-therapy' : null),
-      isMainPhysioSlug ? 'Physiotherapy-Services' : null,
-      isMainPhysioSlug ? 'physiotherapy' : null,
     ].filter((val, idx, arr) => Boolean(val) && arr.indexOf(val) === idx);
 
     let isMounted = true;

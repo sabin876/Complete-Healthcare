@@ -7,23 +7,6 @@ import labServicesImg from "../assets/lab_services_home.png";
 
 const services = [
   {
-    id: 1,
-    title: "Home Physiotherapy",
-    description: "Experience Exceptional Home Physiotherapy in Dubai with Just One Phone Call Away",
-    accent: "#B8D8E8",
-    path: "/physiotherapy-at-home-in-dubai/",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
-    image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&q=80",
-    video: "https://cdn.pixabay.com/video/2024/08/31/229069_large.mp4"
-  },
-  {
     id: 2,
     title: "IV Therapy",
     description: "Discover Convenient 24/7 IV Therapy Services Right at Your Doorstep with Us.",
