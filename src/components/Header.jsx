@@ -77,20 +77,6 @@ const Header = () => {
 
   const defaultServices = [
     { 
-      name: 'Physiotherapy', 
-      path: '/physiotherapy-at-home-in-dubai/',
-      icon: Activity,
-      subtitle: 'Rehabilitation & Pain Relief',
-      badge: 'Popular',
-      accent: '#63e8a0',
-      subItems: [
-        { name: 'Frozen Shoulder Therapy', path: '/frozen-shoulder-physiotherapy', desc: 'Adhesive capsulitis & shoulder joint rehab', icon: Activity },
-        { name: 'Pediatric Physiotherapy', path: '/pediatric-physiotherapy-services-dubai', desc: 'Childhood motor milestone & movement therapy', icon: Users },
-        { name: 'Joint Pain Treatment', path: '/joint-pain-treatment', desc: 'Non-invasive arthritis & joint pain relief', icon: HeartPulse },
-        { name: 'Manual Therapy', path: '/manual-therapy', desc: 'Hands-on soft tissue & joint mobilization', icon: Sparkles },
-      ]
-    },
-    { 
       name: 'IV Therapy | IV Drip', 
       path: '/iv-therapy', 
       icon: Droplets,
@@ -152,8 +138,6 @@ const Header = () => {
         if (Array.isArray(data) && data.length > 0) {
           const parents = data.filter(s => s.parent === null);
           const mapped = parents.map(s => {
-            const rawSlug = (s.slug || '').toLowerCase();
-            const isPhysio = rawSlug.includes('physio');
             const targetPath = `/${s.slug}`;
             return {
               id: s.id,
@@ -174,11 +158,6 @@ const Header = () => {
               })
             };
           });
-
-          const hasPhysio = mapped.some(m => (m.path && m.path.includes('physio')) || (m.name && m.name.toLowerCase().includes('physio')));
-          if (!hasPhysio) {
-            mapped.unshift(defaultServices[0]);
-          }
 
           setServicesDropdown(mapped);
         }

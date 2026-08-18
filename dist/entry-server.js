@@ -3,10 +3,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { renderToString } from "react-dom/server";
 import { Link, useNavigate, useParams, useLocation, Routes, Route, Navigate, StaticRouter } from "react-router";
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from "framer-motion";
-import { Activity, Users, HeartPulse, Sparkles, Droplets, Clock, CheckCircle2, Stethoscope, HeartHandshake, TestTube, ArrowRight, Phone, Mail, X, Menu, Home as Home$1, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, Shield, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save } from "lucide-react";
+import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, Shield, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save } from "lucide-react";
 const logo = "/assets/logo-u28QMOuL.webp";
 const tollfree = "/assets/tollfree-3acubKEx.png";
-const rawBaseUrl = "http://localhost:8000";
+const rawBaseUrl = "https://api.corx.ae";
 const API_BASE_URL = rawBaseUrl.replace(/\/+$/, "");
 const Facebook$1 = ({ size = 20, className = "", style = {} }) => /* @__PURE__ */ jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className, style, children: /* @__PURE__ */ jsx("path", { d: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" }) });
 const Instagram$1 = ({ size = 20, className = "", style = {} }) => /* @__PURE__ */ jsxs("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className, style, children: [
@@ -49,20 +49,6 @@ const Header = () => {
     return /* @__PURE__ */ jsx(CheckCircle2, { size, className });
   };
   const defaultServices = [
-    {
-      name: "Physiotherapy",
-      path: "/physiotherapy-at-home-in-dubai/",
-      icon: Activity,
-      subtitle: "Rehabilitation & Pain Relief",
-      badge: "Popular",
-      accent: "#63e8a0",
-      subItems: [
-        { name: "Frozen Shoulder Therapy", path: "/frozen-shoulder-physiotherapy", desc: "Adhesive capsulitis & shoulder joint rehab", icon: Activity },
-        { name: "Pediatric Physiotherapy", path: "/pediatric-physiotherapy-services-dubai", desc: "Childhood motor milestone & movement therapy", icon: Users },
-        { name: "Joint Pain Treatment", path: "/joint-pain-treatment", desc: "Non-invasive arthritis & joint pain relief", icon: HeartPulse },
-        { name: "Manual Therapy", path: "/manual-therapy", desc: "Hands-on soft tissue & joint mobilization", icon: Sparkles }
-      ]
-    },
     {
       name: "IV Therapy | IV Drip",
       path: "/iv-therapy",
@@ -121,8 +107,6 @@ const Header = () => {
       if (Array.isArray(data) && data.length > 0) {
         const parents = data.filter((s) => s.parent === null);
         const mapped = parents.map((s) => {
-          const rawSlug = (s.slug || "").toLowerCase();
-          rawSlug.includes("physio");
           const targetPath = `/${s.slug}`;
           return {
             id: s.id,
@@ -143,10 +127,6 @@ const Header = () => {
             })
           };
         });
-        const hasPhysio = mapped.some((m) => m.path && m.path.includes("physio") || m.name && m.name.toLowerCase().includes("physio"));
-        if (!hasPhysio) {
-          mapped.unshift(defaultServices[0]);
-        }
         setServicesDropdown(mapped);
       }
     }).catch((err) => console.log("Django API offline/error, using static default services navbar:", err));
@@ -773,7 +753,6 @@ const Footer = () => {
                 /* @__PURE__ */ jsx("span", { className: "w-1.5 h-1.5 rounded-full bg-[#2ebd6e]" })
               ] }),
               /* @__PURE__ */ jsx("ul", { style: { listStyle: "none", padding: 0, margin: 0 }, className: "flex flex-col gap-3.5", children: [
-                { name: "Physiotherapy", path: "/physiotherapy-at-home-in-dubai/" },
                 { name: "IV Therapy at Home", path: "/iv-therapy" },
                 { name: "Home Nursing", path: "/home-nursing" },
                 { name: "Doctor On Call", path: "/doctor-on-call" },
@@ -1880,21 +1859,6 @@ const hero1 = "/assets/hero1-C050G3Ss.png";
 const ivTherapyImg = "/assets/iv_therapy_home-B0XR6HtH.png";
 const labServicesImg = "/assets/lab_services_home-BeEN7IdP.png";
 const services = [
-  {
-    id: 1,
-    title: "Home Physiotherapy",
-    description: "Experience Exceptional Home Physiotherapy in Dubai with Just One Phone Call Away",
-    accent: "#B8D8E8",
-    path: "/physiotherapy-at-home-in-dubai/",
-    icon: /* @__PURE__ */ jsxs("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", width: "22", height: "22", children: [
-      /* @__PURE__ */ jsx("path", { d: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" }),
-      /* @__PURE__ */ jsx("circle", { cx: "9", cy: "7", r: "4" }),
-      /* @__PURE__ */ jsx("path", { d: "M23 21v-2a4 4 0 0 0-3-3.87" }),
-      /* @__PURE__ */ jsx("path", { d: "M16 3.13a4 4 0 0 1 0 7.75" })
-    ] }),
-    image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&q=80",
-    video: "https://cdn.pixabay.com/video/2024/08/31/229069_large.mp4"
-  },
   {
     id: 2,
     title: "IV Therapy",
@@ -6970,123 +6934,6 @@ function ServiceUnderstandingSection({
   ] }) }) });
 }
 const servicesData = {
-  "physiotherapy": {
-    title: "Physiotherapy Services",
-    eyebrow: "DHA-licensed home physiotherapy across Dubai",
-    tagline: "Regain your strength, mobility, and confidence with expert physiotherapy at home.",
-    description: "Struggling with pain, stiffness, or difficulty moving? Our physiotherapy services in Dubai are designed to help you recover safely and regain confidence in your daily activities. Whether you need treatment at home, in your hotel, or at your workplace, we provide structured and professional care tailored to your condition.",
-    icon: "Activity",
-    themeColor: "#08709d",
-    floatingBadge: {
-      title: "Home, hotel, or office visits",
-      desc: "Professional physiotherapy tailored to your schedule and condition."
-    },
-    sub_services: [
-      {
-        slug: "frozen-shoulder-physiotherapy",
-        path: "/frozen-shoulder-physiotherapy",
-        title: "Frozen Shoulder Therapy",
-        eyebrow: "Adhesive Capsulitis Rehab",
-        desc: "Specialized joint mobilization, passive stretching, and shoulder range of motion rehabilitation.",
-        icon: "Activity",
-        badge: "Popular"
-      },
-      {
-        slug: "pediatric-physiotherapy-services-dubai",
-        path: "/pediatric-physiotherapy-services-dubai",
-        title: "Pediatric Physiotherapy",
-        eyebrow: "Child Movement & Milestones",
-        desc: "Child-friendly physical therapy for motor delays, cerebral palsy, torticollis, and posture balance.",
-        icon: "Users",
-        badge: "Pediatric"
-      },
-      {
-        slug: "joint-pain-treatment",
-        path: "/joint-pain-treatment",
-        title: "Joint Pain Treatment",
-        eyebrow: "Arthritis & Joint Relief",
-        desc: "Non-invasive knee, hip, shoulder, and wrist mobilization, pain relief, and joint strengthening.",
-        icon: "Heart",
-        badge: "Joint Care"
-      },
-      {
-        slug: "manual-therapy",
-        path: "/manual-therapy",
-        title: "Manual Therapy",
-        eyebrow: "Hands-On Soft Tissue Therapy",
-        desc: "Skilled hands-on myofascial release, joint manipulation, and muscle knot release.",
-        icon: "Sparkles",
-        badge: "Hands-On"
-      },
-      {
-        slug: "geriatric-physiotherapy",
-        path: "/geriatric-physiotherapy",
-        title: "Geriatric Physiotherapy at Home",
-        eyebrow: "Senior Mobility & Fall Prevention",
-        desc: "Gentle low-impact exercises, balance retraining, and fall-prevention routines for senior citizens.",
-        icon: "Users",
-        badge: "Senior Care"
-      },
-      {
-        slug: "chest-physiotherapy",
-        path: "/chest-physiotherapy",
-        title: "Chest & Respiratory Physiotherapy",
-        eyebrow: "Cardiorespiratory Rehab",
-        desc: "Chest percussion, postural drainage, and lung capacity restoration for COPD, asthma & post-op recovery.",
-        icon: "Activity",
-        badge: "Respiratory"
-      },
-      {
-        slug: "neurological-rehab",
-        path: "/neurological-rehab",
-        title: "Neurological Rehabilitation",
-        eyebrow: "Stroke & Neuro Recovery",
-        desc: "Task-oriented physical therapy for stroke recovery, Parkinson’s, MS, and spinal cord injuries.",
-        icon: "Activity",
-        badge: "Neuro Rehab"
-      },
-      {
-        slug: "sports-injury-rehab",
-        path: "/sports-injury-rehab",
-        title: "Sports Injury Rehabilitation",
-        eyebrow: "Athletic Recovery",
-        desc: "Fast-track athletic recovery for ligament tears (ACL/MCL), sprains, tendonitis, and muscle strains.",
-        icon: "Activity",
-        badge: "Sports"
-      },
-      {
-        slug: "back-pain-treatment",
-        path: "/back-pain-treatment",
-        title: "Back & Neck Pain Physiotherapy",
-        eyebrow: "Spine & Sciatica Relief",
-        desc: "Spine realignment, core stabilization, and ergonomic therapy for herniated discs, neck pain & sciatica.",
-        icon: "Activity",
-        badge: "Spine Care"
-      }
-    ],
-    faqs: [
-      {
-        q: "How long does a home physiotherapy session last?",
-        a: "A standard home physiotherapy session typically lasts between 45 to 60 minutes, depending on the patient's condition, goals, and customized treatment plan."
-      },
-      {
-        q: "What conditions can be treated with home physiotherapy?",
-        a: "We treat a wide range of conditions including post-surgical rehabilitation (like joint replacements, ACL repairs), stroke and neurological disorders, sports injuries, chronic back, neck, or shoulder pain, arthritis, and geriatric mobility issues."
-      },
-      {
-        q: "Do I need to prepare anything before the physiotherapist arrives?",
-        a: "We suggest preparing a clean, well-lit, and comfortable space with enough room for a portable treatment table or basic exercises. We recommend wearing loose, comfortable sports clothing, and having any relevant medical reports or doctor referrals on hand."
-      },
-      {
-        q: "Are your physiotherapists licensed in Dubai?",
-        a: "Yes, all our physical therapists are fully licensed by the Dubai Health Authority (DHA), carry extensive clinical experience, and are fully vetted through rigorous background checks."
-      },
-      {
-        q: "How many sessions will I need to see results?",
-        a: "This varies significantly depending on the severity of your condition. After the initial assessment during the first visit, our therapist will outline a clear treatment plan and estimate the number of sessions required."
-      }
-    ]
-  },
   "iv-therapy": {
     title: "IV Drip Therapy",
     eyebrow: "DHA-approved premium IV drips at home",
@@ -8166,26 +8013,24 @@ function LabServicesLanding({ slug = "lab-services" }) {
   const cleanSlug = targetSlug;
   const altSlug = cleanSlug.replace(/docotor/g, "doctor");
   const altSlug2 = cleanSlug.replace(/doctor/g, "docotor");
-  const staticFallback = servicesData[cleanSlug] || servicesData[altSlug] || servicesData[altSlug2] || servicesData[cleanSlug.replace(/-/g, "")] || (cleanSlug.includes("physio") ? servicesData["physiotherapy"] : null) || (cleanSlug.includes("nurs") ? servicesData["nursing"] : null) || (cleanSlug.includes("iv") ? servicesData["iv-therapy"] : null) || (cleanSlug.includes("doctor") ? servicesData["doctor-on-call"] : null) || (cleanSlug.includes("elder") ? servicesData["elderly-care"] : null) || (cleanSlug.includes("lab") ? servicesData["lab-services"] : null) || {};
-  const isMainPhysioSlug = cleanSlug === "physiotherapy" || cleanSlug === "physiotherapy-at-home-in-dubai" || cleanSlug === "physiotherapy-services" || cleanSlug === "physiotherapy-at-home";
+  const staticFallback = servicesData[cleanSlug] || servicesData[altSlug] || servicesData[altSlug2] || servicesData[cleanSlug.replace(/-/g, "")] || (cleanSlug.includes("nurs") ? servicesData["nursing"] : null) || (cleanSlug.includes("iv") ? servicesData["iv-therapy"] : null) || (cleanSlug.includes("doctor") ? servicesData["doctor-on-call"] : null) || (cleanSlug.includes("elder") ? servicesData["elderly-care"] : null) || (cleanSlug.includes("lab") ? servicesData["lab-services"] : null) || {};
   const validServiceData = serviceData && typeof serviceData === "object" && !Array.isArray(serviceData) ? serviceData : null;
-  const isFetchedParentForSubservice = validServiceData && (validServiceData.slug === "physiotherapy" || validServiceData.slug === "physiotherapy-at-home-in-dubai") && !isMainPhysioSlug;
   const mergedData = validServiceData ? {
     ...staticFallback,
-    ...isFetchedParentForSubservice ? {} : validServiceData,
-    title: isFetchedParentForSubservice || !validServiceData.title ? staticFallback.title || validServiceData.title : validServiceData.title,
-    eyebrow: isFetchedParentForSubservice || !validServiceData.eyebrow ? staticFallback.eyebrow || validServiceData.eyebrow : validServiceData.eyebrow,
-    tagline: isFetchedParentForSubservice || !validServiceData.tagline ? staticFallback.tagline || validServiceData.tagline : validServiceData.tagline,
-    description: isFetchedParentForSubservice || !validServiceData.description ? staticFallback.description || validServiceData.description : validServiceData.description,
-    about_section_title: isFetchedParentForSubservice || !validServiceData.about_section_title ? staticFallback.about_section_title || validServiceData.about_section_title : validServiceData.about_section_title,
-    indications_title: isFetchedParentForSubservice || !validServiceData.indications_title ? staticFallback.indications_title || validServiceData.indications_title : validServiceData.indications_title,
-    features: Array.isArray(validServiceData.features) && validServiceData.features.length > 0 && !isFetchedParentForSubservice ? validServiceData.features : staticFallback.features || [],
-    indications: Array.isArray(validServiceData.indications) && validServiceData.indications.length > 0 && !isFetchedParentForSubservice ? validServiceData.indications : staticFallback.indications || [],
-    reasons: Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0 && !isFetchedParentForSubservice ? validServiceData.reasons : staticFallback.reasons || [],
-    steps: Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0 && !isFetchedParentForSubservice ? validServiceData.steps : staticFallback.steps || [],
-    faqs: Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0 && !isFetchedParentForSubservice ? validServiceData.faqs : staticFallback.faqs || [],
-    benefits: Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0 && !isFetchedParentForSubservice ? validServiceData.benefits : staticFallback.benefits || [],
-    lab_columns: Array.isArray(validServiceData.lab_columns) && validServiceData.lab_columns.length > 0 && !isFetchedParentForSubservice ? validServiceData.lab_columns : staticFallback.lab_columns || []
+    ...validServiceData,
+    title: validServiceData.title || staticFallback.title,
+    eyebrow: validServiceData.eyebrow || staticFallback.eyebrow,
+    tagline: validServiceData.tagline || staticFallback.tagline,
+    description: validServiceData.description || staticFallback.description,
+    about_section_title: validServiceData.about_section_title || staticFallback.about_section_title,
+    indications_title: validServiceData.indications_title || staticFallback.indications_title,
+    features: Array.isArray(validServiceData.features) && validServiceData.features.length > 0 ? validServiceData.features : staticFallback.features || [],
+    indications: Array.isArray(validServiceData.indications) && validServiceData.indications.length > 0 ? validServiceData.indications : staticFallback.indications || [],
+    reasons: Array.isArray(validServiceData.reasons) && validServiceData.reasons.length > 0 ? validServiceData.reasons : staticFallback.reasons || [],
+    steps: Array.isArray(validServiceData.steps) && validServiceData.steps.length > 0 ? validServiceData.steps : staticFallback.steps || [],
+    faqs: Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0 ? validServiceData.faqs : staticFallback.faqs || [],
+    benefits: Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0 ? validServiceData.benefits : staticFallback.benefits || [],
+    lab_columns: Array.isArray(validServiceData.lab_columns) && validServiceData.lab_columns.length > 0 ? validServiceData.lab_columns : staticFallback.lab_columns || []
   } : staticFallback;
   useEffect(() => {
     if (!cleanSlug) return;
@@ -8195,9 +8040,7 @@ function LabServicesLanding({ slug = "lab-services" }) {
       cleanSlug === "doctor-on-call" ? "docotor-on-call" : null,
       cleanSlug === "lab-services" ? "lab-test-at-home" : cleanSlug === "lab-test-at-home" ? "lab-services" : null,
       cleanSlug === "elderly-care" ? "elderly-home-care" : cleanSlug === "elderly-home-care" ? "elderly-care" : null,
-      cleanSlug === "iv-therapy" ? "iv-therapy-iv-drip" : cleanSlug === "iv-therapy-iv-drip" ? "iv-therapy" : null,
-      isMainPhysioSlug ? "Physiotherapy-Services" : null,
-      isMainPhysioSlug ? "physiotherapy" : null
+      cleanSlug === "iv-therapy" ? "iv-therapy-iv-drip" : cleanSlug === "iv-therapy-iv-drip" ? "iv-therapy" : null
     ].filter((val, idx, arr) => Boolean(val) && arr.indexOf(val) === idx);
     let isMounted = true;
     const tryFetchService = async () => {
@@ -11046,8 +10889,6 @@ const AnimatedRoutes = () => {
     /* @__PURE__ */ jsx(Route, { path: "/about-us/", element: /* @__PURE__ */ jsx(About, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/lab-test-at-home", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "lab-test-at-home" }) }),
     /* @__PURE__ */ jsx(Route, { path: "/lab-test-at-home/", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "lab-test-at-home" }) }),
-    /* @__PURE__ */ jsx(Route, { path: "/physiotherapy-at-home-in-dubai", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "physiotherapy-at-home-in-dubai" }) }),
-    /* @__PURE__ */ jsx(Route, { path: "/physiotherapy-at-home-in-dubai/", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "physiotherapy-at-home-in-dubai" }) }),
     /* @__PURE__ */ jsx(Route, { path: "/home-nursing", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "home-nursing" }) }),
     /* @__PURE__ */ jsx(Route, { path: "/home-nursing/", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "home-nursing" }) }),
     /* @__PURE__ */ jsx(Route, { path: "/elderly-home-care", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "elderly-home-care" }) }),
@@ -11068,10 +10909,6 @@ const AnimatedRoutes = () => {
     /* @__PURE__ */ jsx(Route, { path: "/team", element: /* @__PURE__ */ jsx(Team, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/services/:parentSlug/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/services/:parentSlug/:serviceSlug/", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/physiotherapy-at-home-in-dubai/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/physiotherapy-at-home-in-dubai/:serviceSlug/", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/physiotherapy/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/physiotherapy/:serviceSlug/", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/:parentSlug/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/:parentSlug/:serviceSlug/", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) })
