@@ -1,6 +1,11 @@
+import json
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.http import JsonResponse, HttpRequest
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import (
     StaffProfile, Task, LeaveApplication,
     OtApplication, SalaryApplication, NoticeApplication, DutyApplication,
@@ -564,7 +569,7 @@ class TeamMemberViewSet(viewsets.ModelViewSet):
     serializer_class = TeamMemberSerializer
 
 
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -587,3 +592,84 @@ def upload_blog_image(request):
 
     return JsonResponse({'error': 'Invalid request. POST request with image file expected.'}, status=400)
 
+
+# views for sending mail notifications for leave, OT, salary, notice, and duty applications
+
+def send_email(request: HttpRequest):
+    if request.method != 'POST':
+        return JsonResponse(
+            {'error': 'Only POST requests are allowed.'},
+            status=405
+        )
+
+    try:
+        data = json.loads(request.body)
+
+        # Get form data
+        full_name = data.get('full_name', '').strip()
+        email = data.get('email', '').strip()
+        city = data.get('city', '').strip()
+        phone = data.get('phone', '').strip()
+        service_type = data.get('service_type', '').strip()
+        message = data.get('message', '').strip()
+
+        # Validate required fields
+        if not full_name:
+            return JsonResponse({'error': 'Full name is required.'}, status=400)
+
+        if not email:
+            return JsonResponse({'error': 'Email address is required.'}, status=400)
+
+        if not message:
+            return JsonResponse({'error': 'Message is required.'}, status=400)
+
+        # Email subject
+        subject = f"New Contact Message from {full_name}"
+
+        # Email body
+        email_message = f"""
+You have received a new message from your website.
+
+----------------------------------------
+CONTACT DETAILS
+----------------------------------------
+
+Full Name: {full_name}
+Email: {email}
+City: {city}
+Phone: {phone}
+Service Type: {service_type}
+
+----------------------------------------
+MESSAGE
+----------------------------------------
+
+{message}
+
+----------------------------------------
+This message was sent from your website contact form.
+"""
+
+        # Send to your Gmail
+        send_mail(
+            subject=subject,
+            message=email_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.CONTACT_EMAIL],
+            fail_silently=False,
+        )
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Your message has been sent successfully.'
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'error': 'Invalid JSON data.'
+        }, status=400)
+
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e)
+        }, status=500)

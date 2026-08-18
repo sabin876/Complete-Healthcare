@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     login_view, StaffProfileViewSet, TaskViewSet, LeaveApplicationViewSet,
     OtApplicationViewSet, SalaryApplicationViewSet, NoticeApplicationViewSet, DutyApplicationViewSet,
-    BlogPostViewSet, ServiceViewSet, TeamMemberViewSet, upload_blog_image
+    BlogPostViewSet, ServiceViewSet, TeamMemberViewSet, upload_blog_image , send_email
 )
 
 router = DefaultRouter()
@@ -23,5 +23,6 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('upload_blog_image/', upload_blog_image, name='upload_blog_image'),
     path('', include(router.urls)),
+    path('send-email/', send_email, name='send_email'),
 ]
 
