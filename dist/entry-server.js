@@ -8,6 +8,7 @@ const logo = "/assets/logo-u28QMOuL.webp";
 const tollfree = "/assets/tollfree-3acubKEx.png";
 const rawBaseUrl = "http://localhost:8000";
 const API_BASE_URL = rawBaseUrl.replace(/\/+$/, "");
+const SEND_EMAIL_URL = `${API_BASE_URL}/send-email/`;
 const Facebook$1 = ({ size = 20, className = "", style = {} }) => /* @__PURE__ */ jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className, style, children: /* @__PURE__ */ jsx("path", { d: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" }) });
 const Instagram$1 = ({ size = 20, className = "", style = {} }) => /* @__PURE__ */ jsxs("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className, style, children: [
   /* @__PURE__ */ jsx("rect", { width: "20", height: "20", x: "2", y: "2", rx: "5", ry: "5" }),
@@ -4558,8 +4559,71 @@ function Contact() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const handleSubmit = () => {
-    alert("Message sent! We'll be in touch soon.");
+  const [submitting, setSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
+  const handleSubmit = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (!formData.fullName.trim()) {
+      setStatusMessage({ type: "error", text: "Please enter your full name." });
+      return;
+    }
+    if (!formData.email.trim() || !formData.email.includes("@")) {
+      setStatusMessage({ type: "error", text: "Please enter a valid email address." });
+      return;
+    }
+    if (!formData.message.trim()) {
+      setStatusMessage({ type: "error", text: "Please enter your message." });
+      return;
+    }
+    setSubmitting(true);
+    setStatusMessage(null);
+    const payload = {
+      full_name: formData.fullName.trim(),
+      email: formData.email.trim(),
+      city: formData.city.trim(),
+      phone: formData.phone.trim(),
+      service_type: formData.serviceType.trim(),
+      message: formData.message.trim()
+    };
+    const targetUrl = SEND_EMAIL_URL || "https://api.corx.ae/send-email/";
+    try {
+      const res = await fetch(targetUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && (data.success || data.message || !data.error)) {
+        setStatusMessage({
+          type: "success",
+          text: data.message || "Thank you! Your message has been sent successfully. We will get in touch with you shortly."
+        });
+        setFormData({
+          fullName: "",
+          email: "",
+          city: "",
+          phone: "",
+          serviceType: "",
+          message: ""
+        });
+      } else {
+        setStatusMessage({
+          type: "error",
+          text: data.error || data.message || "Unable to send message right now. Please try again or call us directly."
+        });
+      }
+    } catch (err) {
+      console.error("Email submission error:", err);
+      setStatusMessage({
+        type: "error",
+        text: "Network error. Please check your internet connection or call us at +971 4 332 0776 / info@corx.ae."
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
   const toggleFaq = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -4673,9 +4737,29 @@ function Contact() {
       ] }),
       /* @__PURE__ */ jsxs("div", { style: styles.formCard, children: [
         /* @__PURE__ */ jsx("h2", { style: styles.formTitle, children: "Send Us a Message" }),
+        statusMessage && /* @__PURE__ */ jsx(
+          motion.div,
+          {
+            initial: { opacity: 0, y: -8 },
+            animate: { opacity: 1, y: 0 },
+            style: {
+              padding: "14px 18px",
+              borderRadius: "14px",
+              marginBottom: "20px",
+              fontSize: "13px",
+              fontWeight: "600",
+              lineHeight: "1.45",
+              background: statusMessage.type === "success" ? "#f0fdf4" : "#fef2f2",
+              color: statusMessage.type === "success" ? "#15803d" : "#b91c1c",
+              border: `1px solid ${statusMessage.type === "success" ? "#86efac" : "#fca5a5"}`,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
+            },
+            children: statusMessage.text
+          }
+        ),
         /* @__PURE__ */ jsxs("div", { style: styles.formRow, children: [
           /* @__PURE__ */ jsxs("div", { style: styles.formGroup, children: [
-            /* @__PURE__ */ jsx("label", { style: styles.label, children: "Full Name" }),
+            /* @__PURE__ */ jsx("label", { style: styles.label, children: "Full Name *" }),
             /* @__PURE__ */ jsx(
               "input",
               {
@@ -4683,20 +4767,25 @@ function Contact() {
                 name: "fullName",
                 placeholder: "John Doe",
                 value: formData.fullName,
-                onChange: handleChange
+                onChange: handleChange,
+                disabled: submitting,
+                required: true
               }
             )
           ] }),
           /* @__PURE__ */ jsxs("div", { style: styles.formGroup, children: [
-            /* @__PURE__ */ jsx("label", { style: styles.label, children: "Email Address" }),
+            /* @__PURE__ */ jsx("label", { style: styles.label, children: "Email Address *" }),
             /* @__PURE__ */ jsx(
               "input",
               {
                 style: styles.input,
                 name: "email",
+                type: "email",
                 placeholder: "john@example.com",
                 value: formData.email,
-                onChange: handleChange
+                onChange: handleChange,
+                disabled: submitting,
+                required: true
               }
             )
           ] })
@@ -4711,7 +4800,8 @@ function Contact() {
                 name: "city",
                 placeholder: "Dubai",
                 value: formData.city,
-                onChange: handleChange
+                onChange: handleChange,
+                disabled: submitting
               }
             )
           ] }),
@@ -4724,7 +4814,8 @@ function Contact() {
                 name: "phone",
                 placeholder: "+971 55 000 0000",
                 value: formData.phone,
-                onChange: handleChange
+                onChange: handleChange,
+                disabled: submitting
               }
             )
           ] })
@@ -4738,6 +4829,7 @@ function Contact() {
               name: "serviceType",
               value: formData.serviceType,
               onChange: handleChange,
+              disabled: submitting,
               children: [
                 /* @__PURE__ */ jsx("option", { value: "", children: "Select a service" }),
                 servicesList.map((serviceName, idx) => /* @__PURE__ */ jsx("option", { value: serviceName, children: serviceName }, idx))
@@ -4746,7 +4838,7 @@ function Contact() {
           )
         ] }),
         /* @__PURE__ */ jsxs("div", { style: styles.formGroupFull, children: [
-          /* @__PURE__ */ jsx("label", { style: styles.label, children: "Message" }),
+          /* @__PURE__ */ jsx("label", { style: styles.label, children: "Message *" }),
           /* @__PURE__ */ jsx(
             "textarea",
             {
@@ -4754,20 +4846,27 @@ function Contact() {
               name: "message",
               placeholder: "How can we help you?",
               value: formData.message,
-              onChange: handleChange
+              onChange: handleChange,
+              disabled: submitting,
+              required: true
             }
           )
         ] }),
         /* @__PURE__ */ jsxs(
           motion.button,
           {
-            style: styles.submitBtn,
+            style: {
+              ...styles.submitBtn,
+              opacity: submitting ? 0.7 : 1,
+              cursor: submitting ? "not-allowed" : "pointer"
+            },
             onClick: handleSubmit,
-            whileHover: { y: -3, boxShadow: "0 10px 30px rgba(8, 112, 157, 0.35)", background: "#5eb63b" },
-            whileTap: { scale: 0.97 },
+            disabled: submitting,
+            whileHover: !submitting ? { y: -3, boxShadow: "0 10px 30px rgba(8, 112, 157, 0.35)", background: "#5eb63b" } : {},
+            whileTap: !submitting ? { scale: 0.97 } : {},
             children: [
               /* @__PURE__ */ jsx(SendIcon, {}),
-              "Send Message"
+              submitting ? "Sending Message..." : "Send Message"
             ]
           }
         )

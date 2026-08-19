@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { API_BASE_URL } from "../config/api";
+import { API_BASE_URL, SEND_EMAIL_URL } from "../config/api";
 
 const PhoneIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -177,8 +177,79 @@ export default function Contact() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
-    alert("Message sent! We'll be in touch soon.");
+  const [submitting, setSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
+
+  const handleSubmit = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+
+    if (!formData.fullName.trim()) {
+      setStatusMessage({ type: 'error', text: 'Please enter your full name.' });
+      return;
+    }
+    if (!formData.email.trim() || !formData.email.includes('@')) {
+      setStatusMessage({ type: 'error', text: 'Please enter a valid email address.' });
+      return;
+    }
+    if (!formData.message.trim()) {
+      setStatusMessage({ type: 'error', text: 'Please enter your message.' });
+      return;
+    }
+
+    setSubmitting(true);
+    setStatusMessage(null);
+
+    const payload = {
+      full_name: formData.fullName.trim(),
+      email: formData.email.trim(),
+      city: formData.city.trim(),
+      phone: formData.phone.trim(),
+      service_type: formData.serviceType.trim(),
+      message: formData.message.trim(),
+    };
+
+    const targetUrl = SEND_EMAIL_URL || 'https://api.corx.ae/send-email/';
+
+    try {
+      const res = await fetch(targetUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && (data.success || data.message || !data.error)) {
+        setStatusMessage({
+          type: 'success',
+          text: data.message || 'Thank you! Your message has been sent successfully. We will get in touch with you shortly.'
+        });
+        setFormData({
+          fullName: '',
+          email: '',
+          city: '',
+          phone: '',
+          serviceType: '',
+          message: '',
+        });
+      } else {
+        setStatusMessage({
+          type: 'error',
+          text: data.error || data.message || 'Unable to send message right now. Please try again or call us directly.'
+        });
+      }
+    } catch (err) {
+      console.error('Email submission error:', err);
+      setStatusMessage({
+        type: 'error',
+        text: 'Network error. Please check your internet connection or call us at +971 4 332 0776 / info@corx.ae.'
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const toggleFaq = (index) => {
@@ -312,25 +383,51 @@ export default function Contact() {
         <div style={styles.formCard}>
           <h2 style={styles.formTitle}>Send Us a Message</h2>
 
+          {statusMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{
+                padding: "14px 18px",
+                borderRadius: "14px",
+                marginBottom: "20px",
+                fontSize: "13px",
+                fontWeight: "600",
+                lineHeight: "1.45",
+                background: statusMessage.type === "success" ? "#f0fdf4" : "#fef2f2",
+                color: statusMessage.type === "success" ? "#15803d" : "#b91c1c",
+                border: `1px solid ${statusMessage.type === "success" ? "#86efac" : "#fca5a5"}`,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
+              }}
+            >
+              {statusMessage.text}
+            </motion.div>
+          )}
+
           <div style={styles.formRow}>
             <div style={styles.formGroup}>
-              <label style={styles.label}>Full Name</label>
+              <label style={styles.label}>Full Name *</label>
               <input
                 style={styles.input}
                 name="fullName"
                 placeholder="John Doe"
                 value={formData.fullName}
                 onChange={handleChange}
+                disabled={submitting}
+                required
               />
             </div>
             <div style={styles.formGroup}>
-              <label style={styles.label}>Email Address</label>
+              <label style={styles.label}>Email Address *</label>
               <input
                 style={styles.input}
                 name="email"
+                type="email"
                 placeholder="john@example.com"
                 value={formData.email}
                 onChange={handleChange}
+                disabled={submitting}
+                required
               />
             </div>
           </div>
@@ -344,6 +441,7 @@ export default function Contact() {
                 placeholder="Dubai"
                 value={formData.city}
                 onChange={handleChange}
+                disabled={submitting}
               />
             </div>
             <div style={styles.formGroup}>
@@ -354,6 +452,7 @@ export default function Contact() {
                 placeholder="+971 55 000 0000"
                 value={formData.phone}
                 onChange={handleChange}
+                disabled={submitting}
               />
             </div>
           </div>
@@ -365,6 +464,7 @@ export default function Contact() {
               name="serviceType"
               value={formData.serviceType}
               onChange={handleChange}
+              disabled={submitting}
             >
               <option value="">Select a service</option>
               {servicesList.map((serviceName, idx) => (
@@ -376,24 +476,31 @@ export default function Contact() {
           </div>
 
           <div style={styles.formGroupFull}>
-            <label style={styles.label}>Message</label>
+            <label style={styles.label}>Message *</label>
             <textarea
               style={{ ...styles.input, height: "110px", resize: "vertical" }}
               name="message"
               placeholder="How can we help you?"
               value={formData.message}
               onChange={handleChange}
+              disabled={submitting}
+              required
             />
           </div>
 
           <motion.button
-            style={styles.submitBtn}
+            style={{
+              ...styles.submitBtn,
+              opacity: submitting ? 0.7 : 1,
+              cursor: submitting ? "not-allowed" : "pointer"
+            }}
             onClick={handleSubmit}
-            whileHover={{ y: -3, boxShadow: "0 10px 30px rgba(8, 112, 157, 0.35)", background: "#5eb63b" }}
-            whileTap={{ scale: 0.97 }}
+            disabled={submitting}
+            whileHover={!submitting ? { y: -3, boxShadow: "0 10px 30px rgba(8, 112, 157, 0.35)", background: "#5eb63b" } : {}}
+            whileTap={!submitting ? { scale: 0.97 } : {}}
           >
             <SendIcon />
-            Send Message
+            {submitting ? "Sending Message..." : "Send Message"}
           </motion.button>
         </div>
       </div>

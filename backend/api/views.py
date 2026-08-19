@@ -4,6 +4,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse, HttpRequest
+from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import (
@@ -595,6 +596,7 @@ def upload_blog_image(request):
 
 # views for sending mail notifications for leave, OT, salary, notice, and duty applications
 
+@csrf_exempt
 def send_email(request: HttpRequest):
     if request.method != 'POST':
         return JsonResponse(
@@ -603,14 +605,17 @@ def send_email(request: HttpRequest):
         )
 
     try:
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except Exception:
+            data = request.POST.dict()
 
-        # Get form data
-        full_name = data.get('full_name', '').strip()
+        # Get form data (supporting both snake_case and camelCase)
+        full_name = (data.get('full_name') or data.get('fullName') or '').strip()
         email = data.get('email', '').strip()
         city = data.get('city', '').strip()
         phone = data.get('phone', '').strip()
-        service_type = data.get('service_type', '').strip()
+        service_type = (data.get('service_type') or data.get('serviceType') or '').strip()
         message = data.get('message', '').strip()
 
         # Validate required fields
