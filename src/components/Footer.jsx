@@ -100,6 +100,9 @@ const Footer = () => {
                 { name: 'Home', path: '/' },
                 { name: 'About Us', path: '/about-us' },
                 { name: 'Our Team', path: '/team' },
+                { name: 'Careers', path: '/career' },
+                { name: 'Privacy Policy', path: '/privacy-policy' },
+                { name: 'HTML Sitemap', path: '/sitemap' },
                 { name: 'Contact Us', path: '/book-an-appointment' },
                 { name: 'Services Dashboard', path: '/dashboard' }
               ].map((link, index) => (
@@ -186,9 +189,20 @@ const Footer = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5, duration: 0.6 }}
-          className="border-t border-white/5 pt-8 text-center text-xs font-semibold text-slate-400"
+          className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center text-xs font-semibold text-slate-400"
         >
           <p>© {currentYear} CORX Healthcare. All Rights Reserved.</p>
+          <div className="flex items-center gap-6">
+            <Link to="/career" className="hover:text-[#2ebd6e] transition-colors duration-200">
+              Careers
+            </Link>
+            <Link to="/privacy-policy" className="hover:text-[#2ebd6e] transition-colors duration-200">
+              Privacy Policy
+            </Link>
+            <Link to="/sitemap" className="hover:text-[#2ebd6e] transition-colors duration-200">
+              Sitemap
+            </Link>
+          </div>
         </motion.div>
       </div>
     </footer>

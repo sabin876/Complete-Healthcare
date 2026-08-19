@@ -3,10 +3,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { renderToString } from "react-dom/server";
 import { Link, useNavigate, useParams, useLocation, Routes, Route, Navigate, StaticRouter } from "react-router";
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from "framer-motion";
-import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, Shield, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save } from "lucide-react";
+import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, Shield, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save, Briefcase, Code, ExternalLink } from "lucide-react";
 const logo = "/assets/logo-u28QMOuL.webp";
 const tollfree = "/assets/tollfree-3acubKEx.png";
-const rawBaseUrl = "https://api.corx.ae";
+const rawBaseUrl = "http://localhost:8000";
 const API_BASE_URL = rawBaseUrl.replace(/\/+$/, "");
 const Facebook$1 = ({ size = 20, className = "", style = {} }) => /* @__PURE__ */ jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className, style, children: /* @__PURE__ */ jsx("path", { d: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" }) });
 const Instagram$1 = ({ size = 20, className = "", style = {} }) => /* @__PURE__ */ jsxs("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className, style, children: [
@@ -733,6 +733,9 @@ const Footer = () => {
                 { name: "Home", path: "/" },
                 { name: "About Us", path: "/about-us" },
                 { name: "Our Team", path: "/team" },
+                { name: "Careers", path: "/career" },
+                { name: "Privacy Policy", path: "/privacy-policy" },
+                { name: "HTML Sitemap", path: "/sitemap" },
                 { name: "Contact Us", path: "/book-an-appointment" },
                 { name: "Services Dashboard", path: "/dashboard" }
               ].map((link, index) => /* @__PURE__ */ jsx("li", { style: { listStyleType: "none", padding: 0, margin: 0 }, children: /* @__PURE__ */ jsxs(
@@ -802,19 +805,26 @@ const Footer = () => {
           ]
         }
       ),
-      /* @__PURE__ */ jsx(
+      /* @__PURE__ */ jsxs(
         motion.div,
         {
           initial: { opacity: 0 },
           whileInView: { opacity: 1 },
           viewport: { once: true },
           transition: { delay: 0.5, duration: 0.6 },
-          className: "border-t border-white/5 pt-8 text-center text-xs font-semibold text-slate-400",
-          children: /* @__PURE__ */ jsxs("p", { children: [
-            "© ",
-            currentYear,
-            " CORX Healthcare. All Rights Reserved."
-          ] })
+          className: "border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center text-xs font-semibold text-slate-400",
+          children: [
+            /* @__PURE__ */ jsxs("p", { children: [
+              "© ",
+              currentYear,
+              " CORX Healthcare. All Rights Reserved."
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-6", children: [
+              /* @__PURE__ */ jsx(Link, { to: "/career", className: "hover:text-[#2ebd6e] transition-colors duration-200", children: "Careers" }),
+              /* @__PURE__ */ jsx(Link, { to: "/privacy-policy", className: "hover:text-[#2ebd6e] transition-colors duration-200", children: "Privacy Policy" }),
+              /* @__PURE__ */ jsx(Link, { to: "/sitemap", className: "hover:text-[#2ebd6e] transition-colors duration-200", children: "Sitemap" })
+            ] })
+          ]
         }
       )
     ] })
@@ -7643,6 +7653,44 @@ servicesData["physiotherapy-at-home-in-dubai"] = servicesData["physiotherapy"];
 servicesData["nurse-at-home-for-injection"] = servicesData["injection-at-home"];
 servicesData["wound-care-service"] = servicesData["wound-care"];
 servicesData["oxygen-theraphy"] = servicesData["oxygen-therapy"];
+const NotFound = () => {
+  useEffect(() => {
+    document.title = "Page Not Found | CORx Healthcare Dubai";
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}/404`);
+    }
+  }, []);
+  return /* @__PURE__ */ jsx("div", { className: "pt-20 sm:pt-24 pb-20 bg-slate-50 min-h-[75vh] text-slate-800 font-sans flex flex-col justify-start items-center", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl mt-4 sm:mt-8", children: /* @__PURE__ */ jsxs("div", { className: "bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-slate-200/80 text-center space-y-6", children: [
+    /* @__PURE__ */ jsx("h1", { className: "text-3xl sm:text-4xl font-extrabold text-[#08709d] font-['Montserrat']", children: "Page Not Found" }),
+    /* @__PURE__ */ jsx("p", { className: "text-xl sm:text-2xl font-bold text-slate-800 font-['Montserrat']", children: "This page doesn't seem to exist." }),
+    /* @__PURE__ */ jsx("p", { className: "text-sm sm:text-base text-slate-600 leading-relaxed max-w-lg mx-auto", children: "The link you clicked may be broken, or the page may have been moved or removed. You can return to our homepage or explore our popular medical services below." }),
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row items-center justify-center gap-3 pt-4", children: [
+      /* @__PURE__ */ jsx(
+        Link,
+        {
+          to: "/",
+          className: "w-full sm:w-auto px-6 py-3 rounded-xl bg-[#08709d] hover:bg-[#065679] text-white font-bold text-xs uppercase tracking-wider transition-all",
+          children: "Back to Home"
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        Link,
+        {
+          to: "/book-an-appointment",
+          className: "w-full sm:w-auto px-6 py-3 rounded-xl bg-[#2ebd6e] hover:bg-[#259b5a] text-white font-bold text-xs uppercase tracking-wider transition-all",
+          children: "Book An Appointment"
+        }
+      )
+    ] })
+  ] }) }) });
+};
 const labFeatures = [
   { title: "24/7 blood test home service" },
   { title: "Blood test result within 4 Hours" },
@@ -7699,7 +7747,7 @@ function EditableText({
     setText(updated);
     try {
       localStorage.setItem(storageKey, updated);
-    } catch (err) {
+    } catch {
     }
   };
   const Component = tagName;
@@ -7932,6 +7980,7 @@ function LabServicesLanding({ slug = "lab-services" }) {
   const [visible, setVisible] = useState(false);
   const [condVisible, setCondVisible] = useState(false);
   const [serviceData, setServiceData] = useState(null);
+  const [apiChecked, setApiChecked] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const defaultLabColumns = [
     {
@@ -8051,11 +8100,15 @@ function LabServicesLanding({ slug = "lab-services" }) {
             const data = await res.json();
             if (data && typeof data === "object" && !Array.isArray(data) && isMounted) {
               setServiceData(data);
+              setApiChecked(true);
               return;
             }
           }
         } catch (e) {
         }
+      }
+      if (isMounted) {
+        setApiChecked(true);
       }
     };
     tryFetchService();
@@ -8312,6 +8365,12 @@ function LabServicesLanding({ slug = "lab-services" }) {
   const understandingIntro = mergedData ? mergedData.understanding_intro || "" : "";
   const understandingItems = mergedData ? mergedData.understanding_items || [] : [];
   const subServicesList = (mergedData == null ? void 0 : mergedData.sub_services) && Array.isArray(mergedData.sub_services) && mergedData.sub_services.length > 0 ? mergedData.sub_services : (serviceData == null ? void 0 : serviceData.sub_services) || [];
+  const hasStaticMatch = Boolean(
+    servicesData[cleanSlug] || servicesData[altSlug] || servicesData[altSlug2] || servicesData[cleanSlug.replace(/-/g, "")] || cleanSlug === "doctor-on-call" || cleanSlug === "doctor-at-home" || cleanSlug === "doctor-at-hotel" || cleanSlug === "doctor-at-office" || cleanSlug === "iv-therapy" || cleanSlug === "iv-drip-at-home" || cleanSlug === "home-nursing" || cleanSlug === "nursing" || cleanSlug === "elderly-care" || cleanSlug === "elderly-home-care" || cleanSlug === "lab-services" || cleanSlug === "lab-test-at-home"
+  );
+  if (apiChecked && !hasStaticMatch && !validServiceData) {
+    return /* @__PURE__ */ jsx(NotFound, {});
+  }
   return /* @__PURE__ */ jsxs("div", { className: "bg-white min-h-screen relative overflow-hidden", children: [
     /* @__PURE__ */ jsxs(Section, { variant: "white", className: "pt-20 pb-16 md:pt-28 md:pb-20 relative overflow-hidden min-h-[480px]", children: [
       /* @__PURE__ */ jsx(HeroBackgroundAnimation, {}),
@@ -10873,6 +10932,419 @@ function Dashboard() {
     ] })
   ] });
 }
+const PrivacyPolicy = () => {
+  React.useEffect(() => {
+    document.title = "Privacy Policy | CORx Healthcare Dubai";
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    }
+  }, []);
+  return /* @__PURE__ */ jsx("div", { className: "pt-28 pb-20 bg-slate-50 min-h-screen text-slate-800 font-sans", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl", children: /* @__PURE__ */ jsxs("div", { className: "bg-white rounded-3xl p-6 sm:p-10 lg:p-12 shadow-sm border border-slate-200/80", children: [
+    /* @__PURE__ */ jsx("h1", { className: "text-3xl sm:text-4xl font-extrabold text-[#08709d] mb-8 pb-4 border-b border-slate-200 font-['Montserrat']", children: "Our Privacy Policy" }),
+    /* @__PURE__ */ jsxs("div", { className: "space-y-8 text-slate-700 leading-relaxed text-sm sm:text-base", children: [
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat']", children: "Who we are" }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          /* @__PURE__ */ jsx("span", { className: "font-semibold text-slate-900", children: "Suggested text:" }),
+          " Our website address is:",
+          " ",
+          /* @__PURE__ */ jsx(
+            "a",
+            {
+              href: "https://www.corx.ae",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "text-[#08709d] hover:underline font-medium",
+              children: "https://www.corx.ae"
+            }
+          ),
+          "."
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat']", children: "Comments" }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          /* @__PURE__ */ jsx("span", { className: "font-semibold text-slate-900", children: "Suggested text:" }),
+          " When visitors leave comments on the site we collect the data shown in the comments form, and also the visitor’s IP address and browser user agent string to help spam detection."
+        ] }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          "An anonymized string created from your email address (also called a hash) may be provided to the Gravatar service to see if you are using it. The Gravatar service privacy policy is available here:",
+          " ",
+          /* @__PURE__ */ jsx(
+            "a",
+            {
+              href: "https://automattic.com/privacy/",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "text-[#08709d] hover:underline font-medium break-all",
+              children: "https://automattic.com/privacy/"
+            }
+          ),
+          ". After approval of your comment, your profile picture is visible to the public in the context of your comment."
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat']", children: "Media" }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          /* @__PURE__ */ jsx("span", { className: "font-semibold text-slate-900", children: "Suggested text:" }),
+          " If you upload images to the website, you should avoid uploading images with embedded location data (EXIF GPS) included. Visitors to the website can download and extract any location data from images on the website."
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat']", children: "Cookies" }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          /* @__PURE__ */ jsx("span", { className: "font-semibold text-slate-900", children: "Suggested text:" }),
+          " If you leave a comment on our site you may opt-in to saving your name, email address and website in cookies. These are for your convenience so that you do not have to fill in your details again when you leave another comment. These cookies will last for one year."
+        ] }),
+        /* @__PURE__ */ jsx("p", { children: "If you visit our login page, we will set a temporary cookie to determine if your browser accepts cookies. This cookie contains no personal data and is discarded when you close your browser." }),
+        /* @__PURE__ */ jsx("p", { children: 'When you log in, we will also set up several cookies to save your login information and your screen display choices. Login cookies last for two days, and screen options cookies last for a year. If you select "Remember Me", your login will persist for two weeks. If you log out of your account, the login cookies will be removed.' }),
+        /* @__PURE__ */ jsx("p", { children: "If you edit or publish an article, an additional cookie will be saved in your browser. This cookie includes no personal data and simply indicates the post ID of the article you just edited. It expires after 1 day." })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat']", children: "Embedded content from other websites" }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          /* @__PURE__ */ jsx("span", { className: "font-semibold text-slate-900", children: "Suggested text:" }),
+          " Articles on this site may include embedded content (e.g. videos, images, articles, etc.). Embedded content from other websites behaves in the exact same way as if the visitor has visited the other website."
+        ] }),
+        /* @__PURE__ */ jsx("p", { children: "These websites may collect data about you, use cookies, embed additional third-party tracking, and monitor your interaction with that embedded content, including tracking your interaction with the embedded content if you have an account and are logged in to that website." })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat']", children: "Who we share your data with" }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          /* @__PURE__ */ jsx("span", { className: "font-semibold text-slate-900", children: "Suggested text:" }),
+          " If you request a password reset, your IP address will be included in the reset email."
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat']", children: "How long we retain your data" }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          /* @__PURE__ */ jsx("span", { className: "font-semibold text-slate-900", children: "Suggested text:" }),
+          " If you leave a comment, the comment and its metadata are retained indefinitely. This is so we can recognize and approve any follow-up comments automatically instead of holding them in a moderation queue."
+        ] }),
+        /* @__PURE__ */ jsx("p", { children: "For users that register on our website (if any), we also store the personal information they provide in their user profile. All users can see, edit, or delete their personal information at any time (except they cannot change their username). Website administrators can also see and edit that information." })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat']", children: "What rights you have over your data" }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          /* @__PURE__ */ jsx("span", { className: "font-semibold text-slate-900", children: "Suggested text:" }),
+          " If you have an account on this site, or have left comments, you can request to receive an exported file of the personal data we hold about you, including any data you have provided to us. You can also request that we erase any personal data we hold about you. This does not include any data we are obliged to keep for administrative, legal, or security purposes."
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat']", children: "Where your data is sent" }),
+        /* @__PURE__ */ jsxs("p", { children: [
+          /* @__PURE__ */ jsx("span", { className: "font-semibold text-slate-900", children: "Suggested text:" }),
+          " Visitor comments may be checked through an automated spam detection service."
+        ] })
+      ] })
+    ] })
+  ] }) }) });
+};
+const Career = () => {
+  useEffect(() => {
+    document.title = "Career | CORx Healthcare Dubai";
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    }
+  }, []);
+  return /* @__PURE__ */ jsx("div", { className: "pt-28 pb-20 bg-slate-50 min-h-screen text-slate-800 font-sans", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl", children: /* @__PURE__ */ jsxs("div", { className: "bg-white rounded-3xl p-6 sm:p-10 lg:p-12 shadow-sm border border-slate-200/80 space-y-10", children: [
+    /* @__PURE__ */ jsxs("section", { className: "space-y-4", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#08709d] font-['Montserrat'] tracking-tight", children: "Why to join Us?" }),
+      /* @__PURE__ */ jsx("p", { className: "text-slate-700 leading-relaxed text-base sm:text-lg lg:text-xl", children: "At Corx Home Healthcare, we firmly believe in the integration of quality values throughout every level of our organization. Our commitment to excellence is exemplified by instilling these values through continuous encouragement, comprehensive education, and targeted training programs. By fostering a culture that prioritizes quality at its core, we ensure that our team is not only skilled but also deeply aligned with our commitment to delivering superior service in the maritime industry." })
+    ] }),
+    /* @__PURE__ */ jsxs("section", { className: "space-y-4 pt-8 border-t border-slate-200", children: [
+      /* @__PURE__ */ jsx("h2", { className: "text-xl sm:text-2xl lg:text-3xl font-bold text-[#08709d] font-['Montserrat'] tracking-tight", children: "Submit Resume Here" }),
+      /* @__PURE__ */ jsxs("p", { className: "text-slate-700 text-base sm:text-lg lg:text-xl leading-relaxed", children: [
+        "Send your updated CV/resume at",
+        " ",
+        /* @__PURE__ */ jsx(
+          "a",
+          {
+            href: "mailto:hr@corx.ae",
+            className: "text-[#08709d] font-bold underline hover:text-[#065679] transition-colors",
+            children: "hr@corx.ae"
+          }
+        ),
+        " ",
+        "or you can submit your resume by filling this resume submission"
+      ] })
+    ] })
+  ] }) }) });
+};
+const Sitemap = () => {
+  const [dynamicServices, setDynamicServices] = useState([]);
+  const [dynamicBlogs, setDynamicBlogs] = useState([]);
+  useEffect(() => {
+    document.title = "Sitemap | CORx Healthcare Dubai";
+    if (typeof window !== "undefined") {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      const cleanPath = window.location.pathname.endsWith("/") && window.location.pathname !== "/" ? window.location.pathname.slice(0, -1) : window.location.pathname;
+      const origin = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") ? window.location.origin : "https://corx.ae";
+      canonicalLink.setAttribute("href", `${origin}${cleanPath}`);
+    }
+    fetch(`${API_BASE_URL}/api/services/`).then((res) => res.ok ? res.json() : null).then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        setDynamicServices(data);
+      }
+    }).catch(() => {
+    });
+    fetch(`${API_BASE_URL}/api/blogs/`).then((res) => res.ok ? res.json() : null).then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        setDynamicBlogs(data);
+      }
+    }).catch(() => {
+    });
+  }, []);
+  const mainPages = [
+    { name: "Home", path: "/", icon: Home$1 },
+    { name: "About Us", path: "/about-us", icon: Users },
+    { name: "Our Medical Team", path: "/team", icon: Stethoscope },
+    { name: "Careers", path: "/career", icon: Briefcase },
+    { name: "Locations & Coverage", path: "/locations", icon: MapPin },
+    { name: "Book An Appointment", path: "/book-an-appointment", icon: Calendar },
+    { name: "Privacy Policy", path: "/privacy-policy", icon: ShieldCheck },
+    { name: "Staff Dashboard", path: "/dashboard", icon: Code }
+  ];
+  const defaultServices = [
+    {
+      name: "IV Therapy at Home",
+      path: "/iv-therapy",
+      icon: Droplets,
+      subs: [
+        { name: "Immunity Boost IV Drip", path: "/iv-therapy" },
+        { name: "Myers Cocktail Drip", path: "/iv-therapy" }
+      ]
+    },
+    {
+      name: "Home Nursing Services",
+      path: "/home-nursing",
+      icon: HeartPulse,
+      subs: [
+        { name: "Palliative Care", path: "/palliative-care" },
+        { name: "Night Care Nurse", path: "/night-care-nurse" },
+        { name: "Nurse for Injection", path: "/injection-at-home" },
+        { name: "Wound Care & Dressing", path: "/wound-care" },
+        { name: "Oxygen Therapy", path: "/oxygen-therapy" }
+      ]
+    },
+    {
+      name: "Doctor On Call 24/7",
+      path: "/doctor-on-call",
+      icon: Stethoscope,
+      subs: [
+        { name: "Doctor at Home", path: "/doctor-on-call" },
+        { name: "Doctor at Hotel", path: "/doctor-on-call" },
+        { name: "Doctor at Office", path: "/doctor-on-call" }
+      ]
+    },
+    {
+      name: "Lab Test At Home",
+      path: "/lab-test-at-home",
+      icon: TestTube,
+      subs: [
+        { name: "Blood Test at Home", path: "/lab-test-at-home" },
+        { name: "Full Body Checkup", path: "/lab-test-at-home" },
+        { name: "Diabetes Screening", path: "/lab-test-at-home" }
+      ]
+    },
+    {
+      name: "Elderly Home Care",
+      path: "/elderly-home-care",
+      icon: Sparkles,
+      subs: [
+        { name: "Senior Companionship", path: "/elderly-home-care" },
+        { name: "Dementia & Alzheimer Support", path: "/elderly-home-care" }
+      ]
+    }
+  ];
+  const servicesList = dynamicServices.length > 0 ? dynamicServices.filter((s) => !s.parent).map((s) => ({
+    name: s.title || s.name,
+    path: `/${s.slug}`,
+    icon: Stethoscope,
+    subs: (s.sub_services || []).map((sub) => ({
+      name: sub.title || sub.name,
+      path: `/${sub.slug}`
+    }))
+  })) : defaultServices;
+  const defaultBlogArticles = [
+    { title: "Alignment concept: Total Knee Replacement", path: "/blog/alignment-concept-total-knee-replacement" },
+    { title: "The Evolution of TKR Implants", path: "/blog/evolution-of-tkr-implants" },
+    { title: "Steps in Total Knee Replacement", path: "/blog/steps-in-total-knee-replacement" },
+    { title: "Post-Surgical Kinematic Alignment in TKR", path: "/blog/post-surgical-kinematic-alignment-in-tkr" }
+  ];
+  const blogArticles = dynamicBlogs.length > 0 ? dynamicBlogs.map((b) => ({
+    title: b.title,
+    path: b.slug ? `/blog/${b.slug}` : `/blog/${b.id}`
+  })) : defaultBlogArticles;
+  const backendLinks = [
+    {
+      name: "Django Admin Portal",
+      url: `${API_BASE_URL}/admin/`,
+      desc: "Manage services, blogs, team members, and settings"
+    },
+    {
+      name: "REST API Root Index",
+      url: `${API_BASE_URL}/api/`,
+      desc: "Live browsable API root endpoint"
+    },
+    {
+      name: "Services API Endpoint",
+      url: `${API_BASE_URL}/api/services/`,
+      desc: "JSON service catalogue data"
+    },
+    {
+      name: "Blogs API Endpoint",
+      url: `${API_BASE_URL}/api/blogs/`,
+      desc: "JSON medical blog articles"
+    },
+    {
+      name: "Team API Endpoint",
+      url: `${API_BASE_URL}/api/team/`,
+      desc: "JSON medical team and staff listings"
+    },
+    {
+      name: "Staff Management API",
+      url: `${API_BASE_URL}/api/staff/`,
+      desc: "Staff profiles, duties, and task endpoints"
+    }
+  ];
+  return /* @__PURE__ */ jsx("div", { className: "pt-28 pb-24 bg-slate-50 min-h-screen text-slate-800 font-sans", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl", children: [
+    /* @__PURE__ */ jsxs("div", { className: "mb-12 text-center sm:text-left border-b border-slate-200/80 pb-8", children: [
+      /* @__PURE__ */ jsx("h1", { className: "text-4xl sm:text-5xl font-black text-[#08709d] font-['Montserrat'] mb-3", children: "CORx Site Map" }),
+      /* @__PURE__ */ jsx("p", { className: "text-base sm:text-lg text-slate-600 font-medium leading-relaxed", children: "A complete overview of all public pages, medical services, blog posts, and backend API endpoints." })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10", children: [
+      /* @__PURE__ */ jsxs("div", { className: "bg-white rounded-3xl p-7 sm:p-8 shadow-sm border border-slate-200/80", children: [
+        /* @__PURE__ */ jsxs("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat'] mb-6 pb-3 border-b border-slate-100 flex items-center gap-2.5", children: [
+          /* @__PURE__ */ jsx(Home$1, { className: "w-5 h-5" }),
+          /* @__PURE__ */ jsx("span", { children: "Main Pages" })
+        ] }),
+        /* @__PURE__ */ jsx("ul", { className: "space-y-3.5", children: mainPages.map((page, idx) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs(
+          Link,
+          {
+            to: page.path,
+            className: "flex items-center justify-between text-base font-semibold text-slate-800 hover:text-[#08709d] transition-colors py-1.5 px-2.5 rounded-xl hover:bg-sky-50/60",
+            children: [
+              /* @__PURE__ */ jsx("span", { children: page.name }),
+              /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm text-slate-400 font-normal", children: page.path })
+            ]
+          }
+        ) }, idx)) })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "bg-white rounded-3xl p-7 sm:p-8 shadow-sm border border-slate-200/80", children: [
+        /* @__PURE__ */ jsxs("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat'] mb-6 pb-3 border-b border-slate-100 flex items-center gap-2.5", children: [
+          /* @__PURE__ */ jsx(Server, { className: "w-5 h-5 text-[#2ebd6e]" }),
+          /* @__PURE__ */ jsx("span", { children: "Backend & Admin Links" })
+        ] }),
+        /* @__PURE__ */ jsx("ul", { className: "space-y-3.5", children: backendLinks.map((item, idx) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs(
+          "a",
+          {
+            href: item.url,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            className: "flex items-center justify-between text-base font-semibold text-slate-800 hover:text-[#2ebd6e] transition-colors py-1.5 px-2.5 rounded-xl hover:bg-emerald-50/60 group",
+            children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex flex-col", children: [
+                /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-2", children: [
+                  /* @__PURE__ */ jsx("span", { children: item.name }),
+                  /* @__PURE__ */ jsx(ExternalLink, { className: "w-3.5 h-3.5 text-slate-400 group-hover:text-[#2ebd6e]" })
+                ] }),
+                /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-500 font-normal mt-0.5", children: item.desc })
+              ] }),
+              /* @__PURE__ */ jsx("span", { className: "text-xs text-[#2ebd6e] font-mono font-bold bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200/60 shrink-0 ml-3", children: "API" })
+            ]
+          }
+        ) }, idx)) })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "bg-white rounded-3xl p-7 sm:p-8 shadow-sm border border-slate-200/80", children: [
+        /* @__PURE__ */ jsxs("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat'] mb-6 pb-3 border-b border-slate-100 flex items-center gap-2.5", children: [
+          /* @__PURE__ */ jsx(HeartPulse, { className: "w-5 h-5 text-[#08709d]" }),
+          /* @__PURE__ */ jsx("span", { children: "Medical Services" })
+        ] }),
+        /* @__PURE__ */ jsx("ul", { className: "space-y-5", children: servicesList.map((service, idx) => /* @__PURE__ */ jsxs("li", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsxs(
+            Link,
+            {
+              to: service.path,
+              className: "text-base font-bold text-slate-900 hover:text-[#08709d] flex items-center justify-between py-0.5",
+              children: [
+                /* @__PURE__ */ jsx("span", { children: service.name }),
+                /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm text-slate-400 font-normal", children: service.path })
+              ]
+            }
+          ),
+          service.subs && service.subs.length > 0 && /* @__PURE__ */ jsx("ul", { className: "pl-4 border-l-2 border-slate-200 space-y-1.5 mt-1", children: service.subs.map((sub, sIdx) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs(
+            Link,
+            {
+              to: sub.path,
+              className: "text-xs sm:text-sm font-medium text-slate-600 hover:text-[#2ebd6e] transition-colors block py-0.5",
+              children: [
+                "• ",
+                sub.name
+              ]
+            }
+          ) }, sIdx)) })
+        ] }, idx)) })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "bg-white rounded-3xl p-7 sm:p-8 shadow-sm border border-slate-200/80 flex flex-col justify-between", children: [
+        /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsxs("h2", { className: "text-xl sm:text-2xl font-bold text-[#08709d] font-['Montserrat'] mb-6 pb-3 border-b border-slate-100 flex items-center gap-2.5", children: [
+            /* @__PURE__ */ jsx(FileText, { className: "w-5 h-5 text-purple-600" }),
+            /* @__PURE__ */ jsx("span", { children: "Health Blog Articles" })
+          ] }),
+          /* @__PURE__ */ jsx("ul", { className: "space-y-3", children: blogArticles.map((article, idx) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(
+            Link,
+            {
+              to: article.path,
+              className: "text-sm sm:text-base font-medium text-slate-700 hover:text-[#08709d] transition-colors block py-1 px-1.5 rounded-lg hover:bg-purple-50/40 leading-snug",
+              children: article.title
+            }
+          ) }, idx)) })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "mt-8 pt-5 border-t border-slate-100 flex items-center justify-between", children: [
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-slate-800 block", children: "Search Engine XML File:" }),
+            /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-500", children: "For Google & Bing web crawlers" })
+          ] }),
+          /* @__PURE__ */ jsxs(
+            "a",
+            {
+              href: "/sitemap.xml",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "text-xs sm:text-sm font-bold text-[#08709d] hover:underline flex items-center gap-1.5 bg-sky-50 px-3.5 py-2 rounded-xl border border-sky-100",
+              children: [
+                /* @__PURE__ */ jsx("span", { children: "/sitemap.xml" }),
+                /* @__PURE__ */ jsx(ExternalLink, { className: "w-3.5 h-3.5" })
+              ]
+            }
+          )
+        ] })
+      ] })
+    ] })
+  ] }) });
+};
 const AnimatedRoutes = () => {
   const location = useLocation();
   return /* @__PURE__ */ jsx(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxs(Routes, { location, children: [
@@ -10907,11 +11379,22 @@ const AnimatedRoutes = () => {
     /* @__PURE__ */ jsx(Route, { path: "/book-an-appointment", element: /* @__PURE__ */ jsx(Contact, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/book-an-appointment/", element: /* @__PURE__ */ jsx(Contact, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/team", element: /* @__PURE__ */ jsx(Team, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/privacy-policy", element: /* @__PURE__ */ jsx(PrivacyPolicy, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/privacy-policy/", element: /* @__PURE__ */ jsx(PrivacyPolicy, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/career", element: /* @__PURE__ */ jsx(Career, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/career/", element: /* @__PURE__ */ jsx(Career, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/careers", element: /* @__PURE__ */ jsx(Career, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/careers/", element: /* @__PURE__ */ jsx(Career, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/sitemap", element: /* @__PURE__ */ jsx(Sitemap, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/sitemap/", element: /* @__PURE__ */ jsx(Sitemap, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/services/:parentSlug/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/services/:parentSlug/:serviceSlug/", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/:parentSlug/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/:parentSlug/:serviceSlug/", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) })
+    /* @__PURE__ */ jsx(Route, { path: "/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/404", element: /* @__PURE__ */ jsx(NotFound, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/404/", element: /* @__PURE__ */ jsx(NotFound, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "*", element: /* @__PURE__ */ jsx(NotFound, {}) })
   ] }, location.pathname) });
 };
 const MainLayout = ({ children }) => {

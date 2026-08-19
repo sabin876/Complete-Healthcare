@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, useLocation, useParams, Navigate } from 'react-router';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingCTA from './components/FloatingCTA';
@@ -15,6 +15,10 @@ import BlogDetails from './pages/BlogDetails';
 import Team from './pages/Team';
 import ServicePage from './pages/ServicePage';
 import Dashboard from './pages/Dashboard';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Career from './pages/Career';
+import NotFound from './pages/NotFound';
+import Sitemap from './pages/Sitemap';
 
 const ServiceRedirect = () => {
   const { serviceSlug } = useParams();
@@ -61,6 +65,14 @@ const AnimatedRoutes = () => {
         <Route path="/book-an-appointment" element={<Contact />} />
         <Route path="/book-an-appointment/" element={<Contact />} />
         <Route path="/team" element={<Team />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/privacy-policy/" element={<PrivacyPolicy />} />
+        <Route path="/career" element={<Career />} />
+        <Route path="/career/" element={<Career />} />
+        <Route path="/careers" element={<Career />} />
+        <Route path="/careers/" element={<Career />} />
+        <Route path="/sitemap" element={<Sitemap />} />
+        <Route path="/sitemap/" element={<Sitemap />} />
 
         {/* Dynamic Service & Sub-Service Routes */}
         <Route path="/services/:parentSlug/:serviceSlug" element={<ServicePage />} />
@@ -68,6 +80,11 @@ const AnimatedRoutes = () => {
         <Route path="/:parentSlug/:serviceSlug" element={<ServicePage />} />
         <Route path="/:parentSlug/:serviceSlug/" element={<ServicePage />} />
         <Route path="/:serviceSlug" element={<ServicePage />} />
+
+        {/* 404 Error Page */}
+        <Route path="/404" element={<NotFound />} />
+        <Route path="/404/" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
   );

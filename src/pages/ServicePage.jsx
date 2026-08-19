@@ -8,6 +8,7 @@ import ServiceBenefitsSection from '../components/ServiceBenefitsSection';
 import ServiceUnderstandingSection from '../components/ServiceUnderstandingSection';
 import ExploreServices from '../components/ExploreServices';
 import { servicesData as staticServicesData } from '../data/servicesData';
+import NotFound from './NotFound';
 import { 
   Check, 
   Home, 
@@ -95,7 +96,9 @@ function EditableText({
     setText(updated);
     try {
       localStorage.setItem(storageKey, updated);
-    } catch (err) {}
+    } catch {
+      // ignore storage error
+    }
   };
 
   const Component = tagName;
@@ -365,6 +368,7 @@ function LabServicesLanding({ slug = 'lab-services' }) {
   const [visible, setVisible] = useState(false);
   const [condVisible, setCondVisible] = useState(false);
   const [serviceData, setServiceData] = useState(null);
+  const [apiChecked, setApiChecked] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
   const handleResetDefaults = () => {
@@ -518,12 +522,16 @@ function LabServicesLanding({ slug = 'lab-services' }) {
             const data = await res.json();
             if (data && typeof data === 'object' && !Array.isArray(data) && isMounted) {
               setServiceData(data);
+              setApiChecked(true);
               return;
             }
           }
         } catch (e) {
           // Continue trying next candidate
         }
+      }
+      if (isMounted) {
+        setApiChecked(true);
       }
     };
 
@@ -806,6 +814,22 @@ function LabServicesLanding({ slug = 'lab-services' }) {
   const subServicesList = (mergedData?.sub_services && Array.isArray(mergedData.sub_services) && mergedData.sub_services.length > 0)
     ? mergedData.sub_services
     : (serviceData?.sub_services || []);
+
+  const hasStaticMatch = Boolean(
+    staticServicesData[cleanSlug] || 
+    staticServicesData[altSlug] || 
+    staticServicesData[altSlug2] || 
+    staticServicesData[cleanSlug.replace(/-/g, '')] ||
+    cleanSlug === 'doctor-on-call' || cleanSlug === 'doctor-at-home' || cleanSlug === 'doctor-at-hotel' || cleanSlug === 'doctor-at-office' ||
+    cleanSlug === 'iv-therapy' || cleanSlug === 'iv-drip-at-home' ||
+    cleanSlug === 'home-nursing' || cleanSlug === 'nursing' ||
+    cleanSlug === 'elderly-care' || cleanSlug === 'elderly-home-care' ||
+    cleanSlug === 'lab-services' || cleanSlug === 'lab-test-at-home'
+  );
+
+  if (apiChecked && !hasStaticMatch && !validServiceData) {
+    return <NotFound />;
+  }
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
