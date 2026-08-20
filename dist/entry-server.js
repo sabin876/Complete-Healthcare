@@ -6,7 +6,7 @@ import { motion, AnimatePresence, useInView, useMotionValue, useTransform, anima
 import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, Shield, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save, Briefcase, Code, ExternalLink } from "lucide-react";
 const logo = "/assets/logo-u28QMOuL.webp";
 const tollfree = "/assets/tollfree-3acubKEx.png";
-const rawBaseUrl = "http://localhost:8000";
+const rawBaseUrl = "https://api.corx.ae";
 const API_BASE_URL = rawBaseUrl.replace(/\/+$/, "");
 const SEND_EMAIL_URL = `${API_BASE_URL}/send-email/`;
 const Facebook$1 = ({ size = 20, className = "", style = {} }) => /* @__PURE__ */ jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className, style, children: /* @__PURE__ */ jsx("path", { d: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" }) });
