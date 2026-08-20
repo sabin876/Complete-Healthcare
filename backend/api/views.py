@@ -598,10 +598,10 @@ def upload_blog_image(request):
 
 @csrf_exempt
 def send_email(request: HttpRequest):
-    if request.method == 'POST':
+    if request.method != 'POST':
         return JsonResponse(
             {'error': 'Only POST requests are allowed.'},
-            status=200
+            status=405
         )
 
     try:
