@@ -633,26 +633,109 @@ def send_email(request: HttpRequest):
 
         # Email body
         email_message = f"""
-You have received a new message from your website.
-
-----------------------------------------
-CONTACT DETAILS
-----------------------------------------
-
-Full Name: {full_name}
-Email: {email}
-City: {city}
-Phone: {phone}
-Service Type: {service_type}
-
-----------------------------------------
-MESSAGE
-----------------------------------------
-
-{message}
-
-----------------------------------------
-This message was sent from your website contact form.
+<html>
+<body style="margin:0; padding:0; background-color:#eef3f5; font-family: 'Segoe UI', Arial, Helvetica, sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef3f5; padding:32px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.06);">
+ 
+          <!-- Header -->
+          <tr>
+            <td style="background-color:#0e7c86; padding:28px 32px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td>
+                    <span style="font-size:22px; font-weight:700; color:#ffffff; letter-spacing:0.5px;">CORX</span>
+                    <span style="font-size:22px; font-weight:300; color:#d7f0ee;">Healthcare</span>
+                  </td>
+                  <td align="right">
+                    <span style="font-size:12px; color:#cdeceb; text-transform:uppercase; letter-spacing:1px;">New Website Inquiry</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+ 
+          <!-- Alert bar -->
+          <tr>
+            <td style="background-color:#f4a300; padding:10px 32px;">
+              <span style="font-size:13px; font-weight:600; color:#3a2a00;">📩 A new message was submitted through the corx.ae contact form</span>
+            </td>
+          </tr>
+ 
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px;">
+              <h2 style="margin:0 0 20px 0; font-size:18px; color:#0e3a3f;">Contact Details</h2>
+ 
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin-bottom:24px;">
+                <tr>
+                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; width:140px; font-size:13px; color:#6b8a8d; vertical-align:top;">Full Name</td>
+                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:14px; color:#1c2b2c; font-weight:600;">{{ full_name }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:13px; color:#6b8a8d; vertical-align:top;">Email</td>
+                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:14px; color:#1c2b2c;">
+                    <a href="mailto:{{ email }}" style="color:#0e7c86; text-decoration:none;">{{ email }}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:13px; color:#6b8a8d; vertical-align:top;">Phone</td>
+                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:14px; color:#1c2b2c;">
+                    <a href="tel:{{ phone }}" style="color:#0e7c86; text-decoration:none;">{{ phone }}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:13px; color:#6b8a8d; vertical-align:top;">City</td>
+                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:14px; color:#1c2b2c;">{{ city }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 0; font-size:13px; color:#6b8a8d; vertical-align:top;">Service Type</td>
+                  <td style="padding:10px 0; font-size:14px; color:#1c2b2c;">
+                    <span style="display:inline-block; background-color:#e6f5f4; color:#0e7c86; font-weight:600; font-size:12px; padding:4px 10px; border-radius:12px;">{{ service_type }}</span>
+                  </td>
+                </tr>
+              </table>
+ 
+              <h2 style="margin:0 0 12px 0; font-size:18px; color:#0e3a3f;">Message</h2>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="background-color:#f7fafa; border-left:3px solid #0e7c86; border-radius:4px; padding:16px 18px; font-size:14px; line-height:1.6; color:#374647;">
+                    {{ message|linebreaksbr }}
+                  </td>
+                </tr>
+              </table>
+ 
+              <!-- CTA -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:28px;">
+                <tr>
+                  <td align="center">
+                    <a href="mailto:{{ email }}?subject=Re: Your inquiry to Corx Healthcare"
+                       style="display:inline-block; background-color:#0e7c86; color:#ffffff; font-size:14px; font-weight:600; text-decoration:none; padding:12px 28px; border-radius:6px;">
+                      Reply to {{ full_name }}
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+ 
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#f7fafa; padding:18px 32px; border-top:1px solid #e6edee;">
+              <p style="margin:0; font-size:12px; color:#8fa3a5; text-align:center;">
+                This message was sent automatically from the contact form on <a href="https://corx.ae" style="color:#0e7c86; text-decoration:none;">corx.ae</a>.
+              </p>
+            </td>
+          </tr>
+ 
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
 """
 
         # Send to your Gmail
