@@ -594,8 +594,6 @@ def upload_blog_image(request):
     return JsonResponse({'error': 'Invalid request. POST request with image file expected.'}, status=400)
 
 
-# views for sending mail notifications for leave, OT, salary, notice, and duty applications
-
 @csrf_exempt
 def send_email(request: HttpRequest):
     if request.method != 'POST':
@@ -631,15 +629,42 @@ def send_email(request: HttpRequest):
         # Email subject
         subject = f"New Contact Message from {full_name}"
 
-        # Email body
-        email_message = f"""
+        # Plain-text fallback (shown by clients that don't render HTML)
+        plain_message = f"""You have received a new message from your website.
+
+----------------------------------------
+CONTACT DETAILS
+----------------------------------------
+
+Full Name: {full_name}
+Email: {email}
+City: {city}
+Phone: {phone}
+Service Type: {service_type}
+
+----------------------------------------
+MESSAGE
+----------------------------------------
+
+{message}
+
+----------------------------------------
+This message was sent from your website contact form.
+"""
+
+        # HTML email body — note: single braces {} since this is an f-string,
+        # not a Django template. Escape literal CSS/JS braces by doubling them
+        # (none needed here since there's no CSS in braces).
+        message_html_safe = message.replace(chr(10), "<br>")
+
+        html_message = f"""
 <html>
 <body style="margin:0; padding:0; background-color:#eef3f5; font-family: 'Segoe UI', Arial, Helvetica, sans-serif;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef3f5; padding:32px 0;">
     <tr>
       <td align="center">
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.06);">
- 
+
           <!-- Header -->
           <tr>
             <td style="background-color:#0e7c86; padding:28px 32px;">
@@ -656,71 +681,71 @@ def send_email(request: HttpRequest):
               </table>
             </td>
           </tr>
- 
+
           <!-- Alert bar -->
           <tr>
             <td style="background-color:#f4a300; padding:10px 32px;">
-              <span style="font-size:13px; font-weight:600; color:#3a2a00;">📩 A new message was submitted through the corx.ae contact form</span>
+              <span style="font-size:13px; font-weight:600; color:#3a2a00;">A new message was submitted through the corx.ae contact form</span>
             </td>
           </tr>
- 
+
           <!-- Body -->
           <tr>
             <td style="padding:32px;">
               <h2 style="margin:0 0 20px 0; font-size:18px; color:#0e3a3f;">Contact Details</h2>
- 
+
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; margin-bottom:24px;">
                 <tr>
                   <td style="padding:10px 0; border-bottom:1px solid #e6edee; width:140px; font-size:13px; color:#6b8a8d; vertical-align:top;">Full Name</td>
-                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:14px; color:#1c2b2c; font-weight:600;">{{ full_name }}</td>
+                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:14px; color:#1c2b2c; font-weight:600;">{full_name}</td>
                 </tr>
                 <tr>
                   <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:13px; color:#6b8a8d; vertical-align:top;">Email</td>
                   <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:14px; color:#1c2b2c;">
-                    <a href="mailto:{{ email }}" style="color:#0e7c86; text-decoration:none;">{{ email }}</a>
+                    <a href="mailto:{email}" style="color:#0e7c86; text-decoration:none;">{email}</a>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:13px; color:#6b8a8d; vertical-align:top;">Phone</td>
                   <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:14px; color:#1c2b2c;">
-                    <a href="tel:{{ phone }}" style="color:#0e7c86; text-decoration:none;">{{ phone }}</a>
+                    <a href="tel:{phone}" style="color:#0e7c86; text-decoration:none;">{phone}</a>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:13px; color:#6b8a8d; vertical-align:top;">City</td>
-                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:14px; color:#1c2b2c;">{{ city }}</td>
+                  <td style="padding:10px 0; border-bottom:1px solid #e6edee; font-size:14px; color:#1c2b2c;">{city}</td>
                 </tr>
                 <tr>
                   <td style="padding:10px 0; font-size:13px; color:#6b8a8d; vertical-align:top;">Service Type</td>
                   <td style="padding:10px 0; font-size:14px; color:#1c2b2c;">
-                    <span style="display:inline-block; background-color:#e6f5f4; color:#0e7c86; font-weight:600; font-size:12px; padding:4px 10px; border-radius:12px;">{{ service_type }}</span>
+                    <span style="display:inline-block; background-color:#e6f5f4; color:#0e7c86; font-weight:600; font-size:12px; padding:4px 10px; border-radius:12px;">{service_type}</span>
                   </td>
                 </tr>
               </table>
- 
+
               <h2 style="margin:0 0 12px 0; font-size:18px; color:#0e3a3f;">Message</h2>
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="background-color:#f7fafa; border-left:3px solid #0e7c86; border-radius:4px; padding:16px 18px; font-size:14px; line-height:1.6; color:#374647;">
-                    {{ message|linebreaksbr }}
+                    {message_html_safe}
                   </td>
                 </tr>
               </table>
- 
+
               <!-- CTA -->
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:28px;">
                 <tr>
                   <td align="center">
-                    <a href="mailto:{{ email }}?subject=Re: Your inquiry to Corx Healthcare"
+                    <a href="mailto:{email}?subject=Re: Your inquiry to Corx Healthcare"
                        style="display:inline-block; background-color:#0e7c86; color:#ffffff; font-size:14px; font-weight:600; text-decoration:none; padding:12px 28px; border-radius:6px;">
-                      Reply to {{ full_name }}
+                      Reply to {full_name}
                     </a>
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
- 
+
           <!-- Footer -->
           <tr>
             <td style="background-color:#f7fafa; padding:18px 32px; border-top:1px solid #e6edee;">
@@ -729,7 +754,7 @@ def send_email(request: HttpRequest):
               </p>
             </td>
           </tr>
- 
+
         </table>
       </td>
     </tr>
@@ -738,12 +763,14 @@ def send_email(request: HttpRequest):
 </html>
 """
 
-        # Send to your Gmail
+        # Send as HTML email (html_message renders in inbox; message is the
+        # plain-text fallback for clients that block HTML)
         send_mail(
             subject=subject,
-            message=email_message,
+            message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.CONTACT_EMAIL],
+            html_message=html_message,
             fail_silently=False,
         )
 
