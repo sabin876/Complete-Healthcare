@@ -3,20 +3,53 @@ import json
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import (
     StaffProfile, Task, LeaveApplication,
     OtApplication, SalaryApplication, NoticeApplication, DutyApplication,
-    BlogPost, Service, TeamMember
+    BlogPost, Service, TeamMember, RobotsTxt, SitemapXml
 )
 from .serializers import (
     StaffProfileSerializer, TaskSerializer, LeaveApplicationSerializer,
     OtApplicationSerializer, SalaryApplicationSerializer, NoticeApplicationSerializer, DutyApplicationSerializer,
     BlogPostSerializer, ServiceSerializer, TeamMemberSerializer
 )
+
+def robots_txt_view(request):
+    try:
+        obj = RobotsTxt.objects.first()
+        content = obj.content if obj else "User-agent: *\nDisallow: /admin/\nAllow: /"
+    except Exception:
+        content = "User-agent: *\nDisallow: /admin/\nAllow: /"
+    
+    return HttpResponse(content, content_type="text/plain")
+
+
+def sitemap_xml_view(request):
+    try:
+        obj = SitemapXml.objects.first()
+        content = obj.content if (obj and obj.content and obj.content.strip()) else """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.corx.ae/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>"""
+    except Exception:
+        content = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.corx.ae/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>"""
+    
+    return HttpResponse(content, content_type="application/xml; charset=utf-8")
 
 @api_view(['POST'])
 def login_view(request):
@@ -43,7 +76,8 @@ def login_view(request):
                     'name': profile.full_name,
                     'role': profile.role,
                     'department': profile.department,
-                    'position': profile.position
+                    'position': profile.position,
+                    'photo': request.build_absolute_uri(profile.photo.url) if profile.photo else ''
                 }
             })
         else:

@@ -61,10 +61,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rest_framework',
     'corsheaders',
     'api.apps.ApiConfig',
 ]
+
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -182,9 +186,11 @@ JAZZMIN_SETTINGS = {
     "custom_js": "api/js/custom_admin_tabs.js",
     "topmenu_links": [
         {"name": "Home Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "Services Manager", "url": "/admin/api/service/", "permissions": ["api.view_service"]},
-        {"name": "Staff Directory", "url": "/admin/api/staffprofile/", "permissions": ["api.view_staffprofile"]},
         {"name": "Blog Posts", "url": "/admin/api/blogpost/", "permissions": ["api.view_blogpost"]},
+        {"name": "Services", "url": "/admin/api/service/", "permissions": ["api.view_service"]},
+        {"name": "Robots.txt Setting", "url": "/admin/api/robotstxt/", "permissions": ["api.view_robotstxt"]},
+        {"name": "Sitemap.xml Setting", "url": "/admin/api/sitemapxml/", "permissions": ["api.view_sitemapxml"]},
+        {"name": "Staff Directory", "url": "/admin/api/staffprofile/", "permissions": ["api.view_staffprofile"]},
         {"name": "React Frontend Dashboard", "url": "/dashboard", "new_window": True},
         {"name": "Live Web App", "url": "/", "new_window": True},
     ],
@@ -205,6 +211,8 @@ JAZZMIN_SETTINGS = {
         "api.blogpost": "fas fa-newspaper",
         "api.service": "fas fa-briefcase-medical",
         "api.teammember": "fas fa-user-nurse",
+        "api.robotstxt": "fas fa-robot",
+        "api.sitemapxml": "fas fa-sitemap",
     },
     "default_icon_parents": "fas fa-folder",
     "default_icon_children": "fas fa-file-medical",

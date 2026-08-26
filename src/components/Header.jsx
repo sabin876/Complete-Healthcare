@@ -304,6 +304,14 @@ const Header = () => {
               <Phone size={13} fill="currentColor" />
               <span>800 2679</span>
             </a>
+
+            <Link
+              to="/portal"
+              className="lg:hidden flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#08709d] text-white text-[11px] font-extrabold uppercase shadow-sm tracking-wide shrink-0"
+            >
+              <Shield size={12} className="text-emerald-300" />
+              <span>Portal</span>
+            </Link>
             <div className="hidden md:flex items-center gap-4">
               <a href="https://www.facebook.com/corxhealthcare" target="_blank" rel="noopener noreferrer" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Facebook size={20} style={{ color: '#63b158' }} /></a>
               <a href="https://www.instagram.com/corx_healthcare" target="_blank" rel="noopener noreferrer" className="hover:text-accent-color transition-all hover:-translate-y-0.5"><Instagram size={20} style={{ color: '#63b158' }} /></a>
@@ -529,7 +537,7 @@ const Header = () => {
             ))}
           </ul>
 
-          <div className="flex items-center gap-8 h-16">
+          <div className="flex items-center gap-5 h-16">
             <motion.a 
               href="tel:+971547033311" 
               whileHover={{ scale: 1.08 }}
@@ -547,6 +555,16 @@ const Header = () => {
               </motion.span>
               CALL NOW
             </motion.a>
+
+            <div className="h-6 w-[1px] bg-white/20"></div>
+
+            <Link 
+              to="/portal"
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-black text-xs uppercase tracking-wider border border-white/20 backdrop-blur-md shadow-sm transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <Shield size={13} className="text-emerald-300" />
+              <span>Portal</span>
+            </Link>
           </div>
         </div>
       </nav>
@@ -687,6 +705,14 @@ const Header = () => {
 
               {/* Bottom Quick Action CTAs inside Drawer */}
               <div className="p-5 bg-white border-t border-slate-100 space-y-2.5 sticky bottom-0 z-20 shadow-[0_-10px_25px_rgba(0,0,0,0.05)]">
+                <Link 
+                  to="/portal" 
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider shadow-md shadow-slate-900/20 active:scale-[0.98] transition-all"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Shield size={15} className="text-emerald-400" />
+                  <span>Staff / Admin Portal</span>
+                </Link>
                 <a 
                   href="tel:8002679" 
                   className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#63b158] to-[#4fa044] text-white text-xs font-black uppercase tracking-wider shadow-md shadow-emerald-500/20 active:scale-[0.98] transition-all"

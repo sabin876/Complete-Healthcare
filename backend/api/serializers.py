@@ -10,7 +10,7 @@ from django.utils.text import slugify
 class StaffProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffProfile
-        fields = ['id', 'staff_id', 'full_name', 'position', 'department', 'password', 'role', 'created_at']
+        fields = ['id', 'staff_id', 'full_name', 'position', 'department', 'photo', 'password', 'role', 'created_at']
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:

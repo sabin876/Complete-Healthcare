@@ -9,7 +9,58 @@ const port = process.env.PORT || 5173;
 const base = process.env.BASE || '/';
 
 async function createServer() {
+  // Simple helper to load .env variables manually in Node
+  try {
+    const envPath = path.resolve(__dirname, '.env');
+    const content = await fs.readFile(envPath, 'utf-8');
+    for (const line of content.split('\n')) {
+      const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+      if (match) {
+        const key = match[1];
+        let value = match[2] || '';
+        if (value.startsWith('"') && value.endsWith('"')) value = value.slice(1, -1);
+        if (value.startsWith("'") && value.endsWith("'")) value = value.slice(1, -1);
+        process.env[key] = value.trim();
+      }
+    }
+  } catch (e) {
+    // ignore
+  }
+
   const app = express();
+
+  // Dynamic SEO routes fetched live from Django Backend
+  app.get('/robots.txt', async (req, res) => {
+    try {
+      const backendUrl = process.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const response = await fetch(`${backendUrl}/api/robots.txt`);
+      if (response.ok) {
+        const text = await response.text();
+        res.type('text/plain').send(text);
+      } else {
+        res.type('text/plain').send("User-agent: *\nDisallow: /admin/\nAllow: /");
+      }
+    } catch (e) {
+      console.error('Error fetching robots.txt from backend:', e);
+      res.type('text/plain').send("User-agent: *\nDisallow: /admin/\nAllow: /");
+    }
+  });
+
+  app.get('/sitemap.xml', async (req, res) => {
+    try {
+      const backendUrl = process.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const response = await fetch(`${backendUrl}/api/sitemap.xml`);
+      if (response.ok) {
+        const xml = await response.text();
+        res.type('application/xml').send(xml);
+      } else {
+        res.sendFile(path.resolve(__dirname, 'public/sitemap.xml'));
+      }
+    } catch (e) {
+      console.error('Error fetching sitemap.xml from backend:', e);
+      res.sendFile(path.resolve(__dirname, 'public/sitemap.xml'));
+    }
+  });
 
   let vite;
   if (!isProduction) {

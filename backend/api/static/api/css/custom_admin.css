@@ -291,3 +291,107 @@ div.col-md-9:has(+ div.col-md-3) {
   flex: 0 0 100% !important;
   max-width: 100% !important;
 }
+
+/* ==========================================================================
+   Modern Input Field & Staff Profile Form System
+   ========================================================================== */
+.card {
+  border-radius: 16px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+  margin-bottom: 24px !important;
+}
+
+.card-header {
+  background: #f8fafc !important;
+  border-bottom: 1.5px solid #e2e8f0 !important;
+  padding: 16px 22px !important;
+  font-weight: 700 !important;
+}
+
+.card-title {
+  font-weight: 800 !important;
+  font-size: 15px !important;
+  color: #0f172a !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Inputs, Selects, and Textareas */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="url"],
+input[type="date"],
+select,
+textarea {
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  font-size: 13.5px !important;
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  border-color: #08709d !important;
+  box-shadow: 0 0 0 3.5px rgba(8, 112, 157, 0.15) !important;
+  outline: none !important;
+  background-color: #ffffff !important;
+}
+
+.form-group label {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: #334155 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  margin-bottom: 6px !important;
+}
+
+.help-block, .form-text {
+  font-size: 12px !important;
+  color: #64748b !important;
+  margin-top: 5px !important;
+  line-height: 1.4 !important;
+}
+
+/* Save Buttons and Action Bar */
+.submit-row {
+  background: #f8fafc !important;
+  border-top: 1.5px solid #e2e8f0 !important;
+  padding: 18px 24px !important;
+  border-radius: 0 0 16px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.submit-row input[type="submit"],
+.btn-primary, .btn-success {
+  border-radius: 10px !important;
+  padding: 10px 22px !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  box-shadow: 0 4px 14px rgba(8, 112, 157, 0.25) !important;
+  transition: all 0.2s ease !important;
+}
+
+.submit-row input[type="submit"]:hover,
+.btn-primary:hover, .btn-success:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(8, 112, 157, 0.35) !important;
+}
+

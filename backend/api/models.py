@@ -1,16 +1,72 @@
 from django.db import models
 
 class StaffProfile(models.Model):
-    staff_id = models.CharField(max_length=50, unique=True, db_index=True)
-    full_name = models.CharField(max_length=150)
-    position = models.CharField(max_length=100)
-    department = models.CharField(max_length=100)
-    password = models.CharField(max_length=128) # Plain text for demo simplicity, matches seeded passwords
-    role = models.CharField(max_length=20, default='staff') # 'admin' or 'staff'
-    created_at = models.DateTimeField(auto_now_add=True)
+    ROLE_CHOICES = [
+        ('staff', 'Medical / Clinical Staff'),
+        ('admin', 'Administrator / Management'),
+    ]
+    DEPARTMENT_CHOICES = [
+        ('Home Nursing', 'Home Nursing'),
+        ('Doctor on Call', 'Doctor on Call'),
+        ('IV Therapy', 'IV Therapy'),
+        ('Physiotherapy', 'Physiotherapy & Rehabilitation'),
+        ('Lab Services', 'Diagnostic & Lab Tests'),
+        ('Administration', 'Administration & HR'),
+        ('Operations', 'Medical Operations'),
+    ]
+
+    photo = models.ImageField(
+        upload_to='staff_photos/',
+        blank=True,
+        null=True,
+        verbose_name="Passport Size Photo",
+        help_text="Upload official passport size photo of the staff member (e.g., JPG, PNG, WEBP)"
+    )
+    full_name = models.CharField(
+        max_length=150,
+        verbose_name="Full Name",
+        help_text="Full legal name of the staff member (e.g. Dr. Sarah Jenkins, RN)"
+    )
+    department = models.CharField(
+        max_length=100,
+        choices=DEPARTMENT_CHOICES,
+        default='Home Nursing',
+        verbose_name="Department",
+        help_text="Clinical or administrative department"
+    )
+    position = models.CharField(
+        max_length=100,
+        verbose_name="Position",
+        help_text="Official designation / job position (e.g. Senior DHA Registered Nurse, Consultant Physician)"
+    )
+    staff_id = models.CharField(
+        max_length=50, 
+        unique=True, 
+        db_index=True,
+        verbose_name="Username / ID (Portal Login)",
+        help_text="Username / ID used by the staff member to log in to the portal (e.g. STF-101, DOC-202, ADMIN-001)"
+    )
+    password = models.CharField(
+        max_length=128,
+        verbose_name="Password",
+        help_text="Password for Portal access at /portal"
+    )
+    role = models.CharField(
+        max_length=20, 
+        choices=ROLE_CHOICES,
+        default='staff',
+        verbose_name="Role / Access Level",
+        help_text="Select 'Medical / Clinical Staff' for staff dashboard, or 'Administrator' for management dashboard"
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Enrolled Date")
+
+    class Meta:
+        verbose_name = "Staff Member Profile"
+        verbose_name_plural = "Staff Member Directory"
+        ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.full_name} ({self.staff_id})"
+        return f"{self.full_name} ({self.staff_id}) - {self.position}"
 
 class Task(models.Model):
     title = models.CharField(max_length=200)
@@ -170,4 +226,37 @@ class TeamMember(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class RobotsTxt(models.Model):
+    content = models.TextField(
+        default="User-agent: *\nDisallow: /admin/\nAllow: /", 
+        help_text="Edit your website's robots.txt rules directly below."
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Robots.txt Setting"
+        verbose_name_plural = "Robots.txt Setting"
+
+    def __str__(self):
+        return "Robots.txt Configuration"
+
+
+class SitemapXml(models.Model):
+    content = models.TextField(
+        help_text="Edit your website's sitemap.xml XML content directly below."
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Sitemap.xml Setting"
+        verbose_name_plural = "Sitemap.xml Setting"
+
+    def __str__(self):
+        return "Sitemap.xml Configuration"
+
+
+
+
 

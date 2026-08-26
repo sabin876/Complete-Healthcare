@@ -1815,11 +1815,148 @@ class TeamMemberAdmin(admin.ModelAdmin):
     search_fields = ('name', 'post')
 
 
+class TaskInline(admin.TabularInline):
+    model = Task
+    fk_name = 'assigned_to'
+    extra = 0
+    fields = ('title', 'priority', 'status', 'due_date')
+    classes = ('collapse',)
+
+
+class LeaveApplicationInline(admin.TabularInline):
+    model = LeaveApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('leave_type', 'leave_start', 'leave_end', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
+class StaffProfileForm(forms.ModelForm):
+    confirm_password = forms.CharField(
+        label="Re-type Password (Portal)",
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Re-type password to confirm',
+            'style': 'font-family: Consolas, monospace;'
+        }),
+        help_text="Re-enter the portal login password to confirm."
+    )
+
+    class Meta:
+        model = StaffProfile
+        fields = ['full_name', 'department', 'position', 'staff_id', 'password', 'confirm_password', 'photo', 'role']
+        widgets = {
+            'full_name': forms.TextInput(attrs={
+                'placeholder': 'e.g. Dr. Sarah Jenkins, RN',
+                'style': 'font-weight: 600;'
+            }),
+            'position': forms.TextInput(attrs={
+                'placeholder': 'e.g. Senior DHA Registered Nurse / Consultant Physician',
+            }),
+            'staff_id': forms.TextInput(attrs={
+                'placeholder': 'e.g. STF-101 or ADMIN-001',
+                'style': 'font-weight: 700; font-family: Consolas, monospace; letter-spacing: 0.05em;'
+            }),
+            'password': forms.TextInput(attrs={
+                'placeholder': 'Enter Portal Login Password (e.g. Staff@2024)',
+                'style': 'font-family: Consolas, monospace;'
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.fields['confirm_password'].initial = self.instance.password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if password and confirm_password and password != confirm_password:
+            self.add_error('confirm_password', "Passwords do not match! Please re-type the exact same password.")
+
+        return cleaned_data
+
+
 @admin.register(StaffProfile)
 class StaffProfileAdmin(admin.ModelAdmin):
-    list_display = ('staff_id', 'full_name', 'position', 'department', 'role')
-    search_fields = ('staff_id', 'full_name', 'department')
+    form = StaffProfileForm
+    list_display = ('passport_photo_thumbnail', 'full_name', 'staff_id_badge', 'department_badge', 'position', 'role_badge')
+    list_display_links = ('passport_photo_thumbnail', 'full_name')
+    search_fields = ('staff_id', 'full_name', 'position', 'department')
     list_filter = ('role', 'department')
+    list_per_page = 25
+    readonly_fields = ('photo_preview',)
+
+    fieldsets = (
+        ('👤 Staff Member Details', {
+            'fields': (
+                'full_name',
+                ('department', 'position'),
+            ),
+            'description': 'Official medical registration name, healthcare specialty title, and clinical department.'
+        }),
+        ('🔒 Portal Login Credentials', {
+            'fields': (
+                'staff_id',
+                ('password', 'confirm_password'),
+                'role',
+            ),
+            'description': mark_safe('<span style="color: #08709d; font-weight: 600;">ℹ️ These credentials allow the staff member to log into the frontend Staff Portal at <code>/portal</code>.</span>')
+        }),
+        ('📷 Passport Size Photo', {
+            'fields': ('photo', 'photo_preview'),
+            'description': 'Upload clear official passport-size profile photograph for staff ID card and portal directory.'
+        }),
+    )
+
+    def photo_preview(self, obj):
+        if obj.photo:
+            return mark_safe(f"""
+                <div style="display: inline-block; padding: 6px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+                    <img src="{obj.photo.url}" alt="Passport Photo" style="width: 120px; height: 140px; object-fit: cover; border-radius: 8px;" />
+                </div>
+            """)
+        return mark_safe('<div style="color: #94a3b8; font-size: 13px; font-style: italic;">No passport photo uploaded yet. Choose an image file above.</div>')
+    photo_preview.short_description = "Passport Photo Preview"
+
+    def passport_photo_thumbnail(self, obj):
+        if obj.photo:
+            return mark_safe(f"""
+                <div style="display: inline-flex; align-items: center;">
+                    <img src="{obj.photo.url}" alt="{obj.full_name}" style="width: 36px; height: 42px; object-fit: cover; border-radius: 6px; border: 1.5px solid #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.08);" />
+                </div>
+            """)
+        initials = "".join([w[0].upper() for w in obj.full_name.split() if w])[:2] if obj.full_name else "??"
+        color = "#08709d" if obj.role == 'admin' else "#10b981"
+        return mark_safe(f"""
+            <div style="width: 36px; height: 42px; border-radius: 6px; background: {color}20; color: {color}; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; border: 1.5px dashed {color}50;">
+                {initials}
+            </div>
+        """)
+    passport_photo_thumbnail.short_description = "Photo"
+
+    def staff_id_badge(self, obj):
+        return mark_safe(f"""
+            <span style="font-family: Consolas, monospace; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 4px 8px; border-radius: 6px; font-size: 12.5px; border: 1px solid #bae6fd;">
+                {obj.staff_id}
+            </span>
+        """)
+    staff_id_badge.short_description = "Username / Login ID"
+
+    def role_badge(self, obj):
+        if obj.role == 'admin':
+            return mark_safe('<span style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em;">🛡️ Admin</span>')
+        return mark_safe('<span style="background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em;">🩺 Medical Staff</span>')
+    role_badge.short_description = "Role / Access"
+
+    def department_badge(self, obj):
+        return mark_safe(f'<span style="background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 6px;">{obj.department}</span>')
+    department_badge.short_description = "Department"
+
+
 
 
 @admin.register(Task)
@@ -1858,5 +1995,69 @@ class NoticeApplicationAdmin(admin.ModelAdmin):
 class DutyApplicationAdmin(admin.ModelAdmin):
     list_display = ('staff_name', 'duty_date', 'duty_replacement', 'status')
     list_filter = ('status',)
+
+
+from django.shortcuts import redirect
+from django.contrib.sites.models import Site
+from .models import RobotsTxt, SitemapXml
+
+# Completely remove Site / Add site from Django Admin
+try:
+    admin.site.unregister(Site)
+except Exception:
+    pass
+
+@admin.register(RobotsTxt)
+class RobotsTxtAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'updated_at')
+    fields = ('content',)
+
+    def has_add_permission(self, request):
+        return not RobotsTxt.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        obj, _ = RobotsTxt.objects.get_or_create(id=1)
+        return redirect(f'/admin/api/robotstxt/{obj.id}/change/')
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'content':
+            formfield.widget.attrs.update({
+                'rows': 18,
+                'style': 'font-family: Consolas, monospace; font-size: 14px; line-height: 1.6; background: #0b1329; color: #38bdf8; border: 1.5px solid #1e293b; padding: 14px; border-radius: 10px; width: 100%; max-width: 950px;'
+            })
+        return formfield
+
+
+@admin.register(SitemapXml)
+class SitemapXmlAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'updated_at')
+    fields = ('content',)
+
+    def has_add_permission(self, request):
+        return not SitemapXml.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        obj, _ = SitemapXml.objects.get_or_create(id=1)
+        return redirect(f'/admin/api/sitemapxml/{obj.id}/change/')
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'content':
+            formfield.widget.attrs.update({
+                'rows': 24,
+                'style': 'font-family: Consolas, monospace; font-size: 13.5px; line-height: 1.5; background: #0b1329; color: #34d399; border: 1.5px solid #1e293b; padding: 14px; border-radius: 10px; width: 100%; max-width: 950px;'
+            })
+        return formfield
+
+
+
+
 
 
