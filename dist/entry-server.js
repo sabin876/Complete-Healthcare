@@ -1,12 +1,12 @@
 import { jsxs, jsx, Fragment } from "react/jsx-runtime";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import { renderToString } from "react-dom/server";
 import { Link, useNavigate, useParams, useLocation, Routes, Route, Navigate, StaticRouter } from "react-router";
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from "framer-motion";
-import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, Shield, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save, Briefcase, Code, ExternalLink } from "lucide-react";
+import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Shield, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save, ArrowLeft, Lock, LogOut, ClipboardList, Sun, Zap, Moon, Paperclip, Briefcase, Code, ExternalLink } from "lucide-react";
 const logo = "/assets/logo-u28QMOuL.webp";
 const tollfree = "/assets/tollfree-3acubKEx.png";
-const rawBaseUrl = "https://api.corx.ae";
+const rawBaseUrl = "http://localhost:8000";
 const API_BASE_URL = rawBaseUrl.replace(/\/+$/, "");
 const SEND_EMAIL_URL = `${API_BASE_URL}/send-email/`;
 const Facebook$1 = ({ size = 20, className = "", style = {} }) => /* @__PURE__ */ jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className, style, children: /* @__PURE__ */ jsx("path", { d: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" }) });
@@ -259,6 +259,17 @@ const Header = () => {
             ]
           }
         ),
+        /* @__PURE__ */ jsxs(
+          Link,
+          {
+            to: "/portal",
+            className: "lg:hidden flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#08709d] text-white text-[11px] font-extrabold uppercase shadow-sm tracking-wide shrink-0",
+            children: [
+              /* @__PURE__ */ jsx(Shield, { size: 12, className: "text-emerald-300" }),
+              /* @__PURE__ */ jsx("span", { children: "Portal" })
+            ]
+          }
+        ),
         /* @__PURE__ */ jsxs("div", { className: "hidden md:flex items-center gap-4", children: [
           /* @__PURE__ */ jsx("a", { href: "https://www.facebook.com/corxhealthcare", target: "_blank", rel: "noopener noreferrer", className: "hover:text-accent-color transition-all hover:-translate-y-0.5", children: /* @__PURE__ */ jsx(Facebook$1, { size: 20, style: { color: "#63b158" } }) }),
           /* @__PURE__ */ jsx("a", { href: "https://www.instagram.com/corx_healthcare", target: "_blank", rel: "noopener noreferrer", className: "hover:text-accent-color transition-all hover:-translate-y-0.5", children: /* @__PURE__ */ jsx(Instagram$1, { size: 20, style: { color: "#63b158" } }) }),
@@ -486,29 +497,43 @@ const Header = () => {
         },
         link.name
       )) }),
-      /* @__PURE__ */ jsx("div", { className: "flex items-center gap-8 h-16", children: /* @__PURE__ */ jsxs(
-        motion.a,
-        {
-          href: "tel:+971547033311",
-          whileHover: { scale: 1.08 },
-          whileTap: { scale: 0.95 },
-          animate: { scale: [1, 1.03, 1] },
-          transition: { scale: { repeat: Infinity, duration: 2, ease: "easeInOut" } },
-          className: "flex items-center gap-2.5 font-bold text-[13px] uppercase tracking-widest text-white hover:text-accent-color transition-all group",
-          children: [
-            /* @__PURE__ */ jsx(
-              motion.span,
-              {
-                animate: { rotate: [0, -15, 15, -15, 15, 0] },
-                transition: { repeat: Infinity, duration: 1.2, repeatDelay: 3 },
-                className: "flex items-center",
-                children: /* @__PURE__ */ jsx(Phone, { size: 16, fill: "currentColor" })
-              }
-            ),
-            "CALL NOW"
-          ]
-        }
-      ) })
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-5 h-16", children: [
+        /* @__PURE__ */ jsxs(
+          motion.a,
+          {
+            href: "tel:+971547033311",
+            whileHover: { scale: 1.08 },
+            whileTap: { scale: 0.95 },
+            animate: { scale: [1, 1.03, 1] },
+            transition: { scale: { repeat: Infinity, duration: 2, ease: "easeInOut" } },
+            className: "flex items-center gap-2.5 font-bold text-[13px] uppercase tracking-widest text-white hover:text-accent-color transition-all group",
+            children: [
+              /* @__PURE__ */ jsx(
+                motion.span,
+                {
+                  animate: { rotate: [0, -15, 15, -15, 15, 0] },
+                  transition: { repeat: Infinity, duration: 1.2, repeatDelay: 3 },
+                  className: "flex items-center",
+                  children: /* @__PURE__ */ jsx(Phone, { size: 16, fill: "currentColor" })
+                }
+              ),
+              "CALL NOW"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsx("div", { className: "h-6 w-[1px] bg-white/20" }),
+        /* @__PURE__ */ jsxs(
+          Link,
+          {
+            to: "/portal",
+            className: "flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-black text-xs uppercase tracking-wider border border-white/20 backdrop-blur-md shadow-sm transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer",
+            children: [
+              /* @__PURE__ */ jsx(Shield, { size: 13, className: "text-emerald-300" }),
+              /* @__PURE__ */ jsx("span", { children: "Portal" })
+            ]
+          }
+        )
+      ] })
     ] }) }),
     /* @__PURE__ */ jsx(AnimatePresence, { children: isMobileMenuOpen && /* @__PURE__ */ jsxs(Fragment, { children: [
       /* @__PURE__ */ jsx(
@@ -632,6 +657,18 @@ const Header = () => {
               );
             }) }),
             /* @__PURE__ */ jsxs("div", { className: "p-5 bg-white border-t border-slate-100 space-y-2.5 sticky bottom-0 z-20 shadow-[0_-10px_25px_rgba(0,0,0,0.05)]", children: [
+              /* @__PURE__ */ jsxs(
+                Link,
+                {
+                  to: "/portal",
+                  className: "w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider shadow-md shadow-slate-900/20 active:scale-[0.98] transition-all",
+                  onClick: () => setIsMobileMenuOpen(false),
+                  children: [
+                    /* @__PURE__ */ jsx(Shield, { size: 15, className: "text-emerald-400" }),
+                    /* @__PURE__ */ jsx("span", { children: "Staff / Admin Portal" })
+                  ]
+                }
+              ),
               /* @__PURE__ */ jsxs(
                 "a",
                 {
@@ -1858,6 +1895,485 @@ We have received your request for ${bookingState.data.service}. Our medical coor
       ]
     }
   ) }) });
+};
+const API_BASE = `${API_BASE_URL}/api`;
+const SESSION_KEY = "chc_current_user";
+const AuthContext = createContext(null);
+const mapStaff = (s) => s ? {
+  id: s.id,
+  staffId: s.staff_id,
+  fullName: s.full_name,
+  position: s.position,
+  department: s.department,
+  password: s.password,
+  role: s.role,
+  createdAt: s.created_at
+} : null;
+const mapTask = (t) => t ? {
+  id: t.id,
+  title: t.title,
+  description: t.description,
+  priority: t.priority,
+  dueDate: t.due_date,
+  assignedToId: t.assigned_to,
+  assignedToName: t.assigned_to_name,
+  assignedByName: t.assigned_by_name,
+  status: t.status,
+  createdAt: t.created_at,
+  updatedAt: t.updated_at
+} : null;
+const mapLeave = (l) => l ? {
+  id: l.id,
+  staffId: l.staff,
+  staffName: l.staff_name,
+  staffDep: l.staff_dep,
+  staffPosition: l.staff_position,
+  leaveType: l.leave_type,
+  leaveStart: l.leave_start,
+  leaveEnd: l.leave_end,
+  reason: l.reason,
+  status: l.status,
+  submittedAt: l.submitted_at
+} : null;
+const mapOt = (o) => o ? {
+  id: o.id,
+  staffId: o.staff,
+  staffName: o.staff_name,
+  staffDep: o.staff_dep,
+  staffPosition: o.staff_position,
+  otType: o.ot_type,
+  otDate: o.ot_date,
+  otHours: o.ot_hours,
+  status: o.status,
+  submittedAt: o.submitted_at
+} : null;
+const mapSalary = (s) => s ? {
+  id: s.id,
+  staffId: s.staff,
+  staffName: s.staff_name,
+  staffDep: s.staff_dep,
+  staffPosition: s.staff_position,
+  incType: s.inc_type,
+  status: s.status,
+  submittedAt: s.submitted_at
+} : null;
+const mapNotice = (n) => n ? {
+  id: n.id,
+  staffId: n.staff,
+  staffName: n.staff_name,
+  noticeTitle: n.notice_title,
+  noticeMessage: n.notice_message,
+  status: n.status,
+  submittedAt: n.submitted_at
+} : null;
+const mapDuty = (d) => d ? {
+  id: d.id,
+  staffId: d.staff,
+  staffName: d.staff_name,
+  dutyDate: d.duty_date,
+  dutyReplacement: d.duty_replacement,
+  dutyReason: d.duty_reason,
+  status: d.status,
+  submittedAt: d.submitted_at
+} : null;
+const AuthProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem(SESSION_KEY);
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [staffUsers, setStaffUsers] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [leaveApplications, setLeaveApplications] = useState([]);
+  const [otApplications, setOtApplications] = useState([]);
+  const [salaryApplications, setSalaryApplications] = useState([]);
+  const [noticeApplications, setNoticeApplications] = useState([]);
+  const [dutyApplications, setDutyApplications] = useState([]);
+  const [loginError, setLoginError] = useState("");
+  const fetchData = async (user) => {
+    if (!user) return;
+    const isAd = user.role === "admin";
+    const query = isAd ? "" : `?staff_id=${user.id}`;
+    const taskQuery = isAd ? "" : `?assigned_to=${user.id}`;
+    try {
+      if (isAd) {
+        const staffRes = await fetch(`${API_BASE}/staff/`);
+        if (staffRes.ok) {
+          const list = await staffRes.json();
+          setStaffUsers(list.map(mapStaff));
+        }
+      }
+      const tasksRes = await fetch(`${API_BASE}/tasks/${taskQuery}`);
+      if (tasksRes.ok) {
+        const list = await tasksRes.json();
+        setTasks(list.map(mapTask));
+      }
+      const leavesRes = await fetch(`${API_BASE}/leaves/${query}`);
+      if (leavesRes.ok) {
+        const list = await leavesRes.json();
+        setLeaveApplications(list.map(mapLeave));
+      }
+      const otsRes = await fetch(`${API_BASE}/ots/${query}`);
+      if (otsRes.ok) {
+        const list = await otsRes.json();
+        setOtApplications(list.map(mapOt));
+      }
+      const salariesRes = await fetch(`${API_BASE}/salaries/${query}`);
+      if (salariesRes.ok) {
+        const list = await salariesRes.json();
+        setSalaryApplications(list.map(mapSalary));
+      }
+      const noticesRes = await fetch(`${API_BASE}/notices/${query}`);
+      if (noticesRes.ok) {
+        const list = await noticesRes.json();
+        setNoticeApplications(list.map(mapNotice));
+      }
+      const dutiesRes = await fetch(`${API_BASE}/duties/${query}`);
+      if (dutiesRes.ok) {
+        const list = await dutiesRes.json();
+        setDutyApplications(list.map(mapDuty));
+      }
+    } catch (err) {
+      console.error("Error fetching data from API:", err);
+    }
+  };
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(currentUser));
+      fetchData(currentUser);
+    } else {
+      localStorage.removeItem(SESSION_KEY);
+      setStaffUsers([]);
+      setTasks([]);
+      setLeaveApplications([]);
+      setOtApplications([]);
+      setSalaryApplications([]);
+      setNoticeApplications([]);
+      setDutyApplications([]);
+    }
+  }, [currentUser]);
+  const login = async (id, password) => {
+    setLoginError("");
+    try {
+      const res = await fetch(`${API_BASE}/login/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ staffId: id, password })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setCurrentUser(data.user);
+        return data.user;
+      } else {
+        setLoginError(data.message || "Invalid ID or password. Please try again.");
+        return null;
+      }
+    } catch {
+      setLoginError("Could not connect to the authentication server.");
+      return null;
+    }
+  };
+  const logout = () => setCurrentUser(null);
+  const createStaffUser = async (staffData) => {
+    try {
+      const res = await fetch(`${API_BASE}/staff/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: staffData.fullName,
+          staffId: staffData.staffId,
+          position: staffData.position,
+          department: staffData.department,
+          password: staffData.password,
+          role: "staff"
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        await fetchData(currentUser);
+        return { success: true, message: data.message };
+      } else {
+        return { success: false, message: data.message || "Failed to create staff account." };
+      }
+    } catch {
+      return { success: false, message: "Could not connect to server." };
+    }
+  };
+  const deleteStaffUser = async (staffId) => {
+    try {
+      const res = await fetch(`${API_BASE}/staff/${staffId}/`, {
+        method: "DELETE"
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+      }
+    } catch (err) {
+      console.error("Error deleting staff:", err);
+    }
+  };
+  const createTask = async (taskData) => {
+    try {
+      const res = await fetch(`${API_BASE}/tasks/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: taskData.title,
+          description: taskData.description,
+          priority: taskData.priority,
+          dueDate: taskData.dueDate,
+          assignedToId: taskData.assignedToId,
+          assignedByName: taskData.assignedByName
+        })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+        return mapTask(await res.json());
+      }
+    } catch (err) {
+      console.error("Error creating task:", err);
+    }
+  };
+  const updateTaskStatus = async (taskId, status) => {
+    try {
+      const res = await fetch(`${API_BASE}/tasks/${taskId}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+      }
+    } catch (err) {
+      console.error("Error updating task status:", err);
+    }
+  };
+  const deleteTask = async (taskId) => {
+    try {
+      const res = await fetch(`${API_BASE}/tasks/${taskId}/`, {
+        method: "DELETE"
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+      }
+    } catch (err) {
+      console.error("Error deleting task:", err);
+    }
+  };
+  const getTasksForStaff = (staffId) => {
+    return tasks.filter((t) => t.assignedToId === staffId);
+  };
+  const createLeaveApplication = async (data) => {
+    try {
+      const res = await fetch(`${API_BASE}/leaves/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          staffId: data.staffId,
+          leaveType: data.leaveType,
+          leaveStart: data.leaveStart,
+          leaveEnd: data.leaveEnd,
+          reason: data.reason
+        })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+        return mapLeave(await res.json());
+      }
+    } catch (err) {
+      console.error("Error applying for leave:", err);
+    }
+  };
+  const updateLeaveStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${API_BASE}/leaves/${id}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+      }
+    } catch (err) {
+      console.error("Error updating leave status:", err);
+    }
+  };
+  const createOtApplication = async (data) => {
+    try {
+      const res = await fetch(`${API_BASE}/ots/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          staffId: data.staffId,
+          otType: data.otType,
+          otDate: data.otDate,
+          otHours: data.otHours
+        })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+        return mapOt(await res.json());
+      }
+    } catch (err) {
+      console.error("Error logging OT:", err);
+    }
+  };
+  const updateOtStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${API_BASE}/ots/${id}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+      }
+    } catch (err) {
+      console.error("Error updating OT status:", err);
+    }
+  };
+  const createSalaryApplication = async (data) => {
+    try {
+      const res = await fetch(`${API_BASE}/salaries/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          staffId: data.staffId,
+          incType: data.incType
+        })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+        return mapSalary(await res.json());
+      }
+    } catch (err) {
+      console.error("Error applying for salary increment:", err);
+    }
+  };
+  const updateSalaryStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${API_BASE}/salaries/${id}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+      }
+    } catch (err) {
+      console.error("Error updating salary status:", err);
+    }
+  };
+  const createNoticeApplication = async (data) => {
+    try {
+      const res = await fetch(`${API_BASE}/notices/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          staffId: data.staffId,
+          noticeTitle: data.noticeTitle,
+          noticeMessage: data.noticeMessage
+        })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+        return mapNotice(await res.json());
+      }
+    } catch (err) {
+      console.error("Error creating notice:", err);
+    }
+  };
+  const updateNoticeStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${API_BASE}/notices/${id}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+      }
+    } catch (err) {
+      console.error("Error updating notice status:", err);
+    }
+  };
+  const createDutyApplication = async (data) => {
+    try {
+      const res = await fetch(`${API_BASE}/duties/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          staffId: data.staffId,
+          dutyDate: data.dutyDate,
+          dutyReplacement: data.dutyReplacement,
+          dutyReason: data.dutyReason
+        })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+        return mapDuty(await res.json());
+      }
+    } catch (err) {
+      console.error("Error creating duty replacement:", err);
+    }
+  };
+  const updateDutyStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${API_BASE}/duties/${id}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+      }
+    } catch (err) {
+      console.error("Error updating duty status:", err);
+    }
+  };
+  return /* @__PURE__ */ jsx(
+    AuthContext.Provider,
+    {
+      value: {
+        currentUser,
+        staffUsers,
+        loginError,
+        setLoginError,
+        login,
+        logout,
+        createStaffUser,
+        deleteStaffUser,
+        tasks,
+        createTask,
+        updateTaskStatus,
+        deleteTask,
+        getTasksForStaff,
+        leaveApplications,
+        createLeaveApplication,
+        updateLeaveStatus,
+        otApplications,
+        createOtApplication,
+        updateOtStatus,
+        salaryApplications,
+        createSalaryApplication,
+        updateSalaryStatus,
+        noticeApplications,
+        createNoticeApplication,
+        updateNoticeStatus,
+        dutyApplications,
+        createDutyApplication,
+        updateDutyStatus
+      },
+      children
+    }
+  );
+};
+const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
+  return ctx;
 };
 const partner1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAwFBMVEX///93dnsAgWUAe12CsqNWoY1kZGnZ2Nnt7e50c3j29vZ5eH35+fnS0tP8/Pxsa3Hg4OGYmJvy9/WJiIx+fYGvr7EAd1cAg2cjh20AclDw8PDp6eofgWXR0dJhoIzf3+DGxsfe7eqnp6m9vb+Qj5Ozs7ZcW2Hk8e6WlZiYwLTB29R1q5u50sqgoKKlxrvr8/FSUlfP4dxJl4GryMBXmYKOu616r581jXPH2tVGjnZQoItypJKZxbmOtKdenImCrJxdu03nAAAKSklEQVR4nO2bC3ubuBKGBc5ykUGAAddGIShcXCcxzaVNk2738v//1RlJYGPH7iZe59nT3XmflmIhAZ80mpGESgiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAjyf4oX+n7I/um3eEd45XOeN/Sffo93g6W8FVVI0zcX7Nmb+BK46r0sMCha2IUdHqXhxwiHxA4fk0K8rZzvjjVGO0itjfEBYjCSUpUxqr03pGPXDaKjdRymISQufDi+sRHzwOhw/U1q7Br7caVCqi67QbHvhjRxDfcdFDKpUNQZIftr9iD+RuF4Y3c/Vkj4WElMsj039BLjXRTKposzkSqpb2Gj0Ag2zX9YYaJcmW75XojXpAPGcKEu7FPjFMKrbRrRih+t0HDtHYUH+iHQqAyBrs42cAfoW52aoCKVL3uIEG8TuK0w3lLo1jx8SWfKtbuuEzG4xbvhVoTlFeAfEPIqhUbQd2Kt8Ee9KUtUFtchxSGLPrVC6A6Uem8V2CkE368Y89cqJLYqGCy1VCOwelRR69Qs3uhfdhUmous+y1crJJX2NmMt0M8cDVe+lDqn5ujBWteGPNXWauWvVsiijXkGmxp+t2hxLJ3CUEdxiAbKTtcKKd/B2RSl65gyVET3K2STyeTtfegU9Ap7lxOowdtaYRXseO1kILH3MVuhf6/C+8fvDw8PF4/3w8Qz4GrS/Xj+etZz9Vknfj4bss55tELSGZ1lbynccZTb45iu9xr2IG2PwvsHcwTIw/fbderVHH7P+t8X09GG2bVMmg1SRtObIwUOFHLtT9W47KBCY0th0/kn8UOFn6S46dSEP+b0S98U9+cmMLrUv7xvpsyjgOQpCJ/MN0nT6fzT31fYR243/aGVDhSuR+3BYLb0QuEVvPLoy+p2Mvk8g3e/0qnsYWR+gJ+rTi9cevg4uQWe4XQEuVZzc3Tj3fYcPbcfKOzHagHfKBRJvE296Yd8Y7vxRveuwucR6HjU59dgbU+3ve7ppw/m6Ku+8hma+awrsZqq5JuROV8dK+uAwrAzunqjkHm7bKR03lcd2nUV7yj0vgzendzcnD0qMwUbHZ2xB9N80hfOINfnLtOVKuF92djwyRSSprNTUb8iHrY6sx6grsd7uwrvoTed3+6WZd9G5tOEfB+Z5zoBtI4+6tNr2ejX5FLa7f1lz/ELUFsKmR6BGUmyG+VeonstzLiWuhX7EfGOwsfR2hIHQDOZz+CDwB5VAJFexby+Xq0+nUGbQ7cFW4V/zfOei2NjxY7CwYz/rxTaWlfNiJNsTYd3FIJDmT7vFoa+qTzOyuxscyUd6HwOPlPqm99MlN2am2Dx59ECdxSS0n2dQtrJ4muxwXKvwm97etPkyTQv5Al40JFyQuBVzNlsJuPH+cOjyg95zF96fr0+mUL6OoXdmDTQpqnH4N3YdI/CdTfs3NQjGOfZJ+AR/M131kXD64+Xz2CiMz3ukXb74XhZhxUOp7PyPSe3u7CNJrdzL6wd6FUK6/X9wYVM+7Ha/TkM3Bi5VqFeASffbrtoKHvaZNb7JRkNX/bfUygczBikwt/MD9s8SRPq5obrltI2q2eXcm5hjPN+rirDQDfgmkCfnN+AjULSXDPSNrxaRxR59l2efN3Xf0+ikPBthbKahzyBT+99y2bKFnZ+R6boSJO4el1LRgvzE7SP9xEEjqDFQPP0sYsBcD5/1g5XR0Mmo+A1UdFwdsleRuETKOyD4mGFbLBG07OOHeCPLVU6KPWVGzkaffj99ws5Oj2/lH509KWPbvfzD9LVgFcZdaZ8DTXyjahoOLtY88ffCP25GngOFdK6H4MeUJgG3eLXkFInCmiG7rRTyG5G2u/D3z8+ahtdT6LAn4welFeZ9Uny+kqHj02wmB8vkPhuIhl+aCjGKikZtzI0b3dDc/YxVyXG5fZ9vFqWGquumEcxjBnWq6+rC9XtZjdylHlmzj48rkuxJ4gRMIqZnV/0SZ8hbFxMrmTw2PDL31DIqGJrUEQ7wPq9yS5ywetFCUL6ZG99003fYZPb+8tbPSqRtxgUVXdk6rjOLH+8eCpymOeHX34Kfv3tWIWr+einYHr0yFQ5rZ+A48fe/wGF/3orvf969lPw9RRLNgiC/CPIAaQHh4MXmUd3vrsymnUX++HlZjD6miU/b/d2/bMGWbLMO9XeLtomLad1uvfVsjYpMwcOzlaR2vBUSaNLZnlcy5R2XO3bfbJL5W59ia8W6nNekaznKqyKqqp+896uQ9gW3Ko9MIVu5dNbY2cLl5y8C4dF67WYYhxQOQdOXlXvlbv1tLClxBOkcPMugS7lAp5484aEg1g1kRtUHB8OWciJ4xBasEK9hdybkSVKiW1DM4eFw0kY5LRJvMwSxNZNL1orI0Wpli24nYUkKxxmy6mXT+FGzLap3AQX+vJgL9XqDoVqyxh3KIc7RiWpAsZ1TUbq814GtWVz7kCqV/TPP47EtaH2qrRwM9IsQuZWpKyFK59mBymlvtXAe7e2a5O8tccNqYysspbctnik7Y3mYGmsqeT8Po9soyWVZbdBDq1hR2OaxU1oRJS2xViQJvUXsrGypUGyiC7hvpVXBw1d1sVYrfKEVr/lpUpFkHtxWSYUnm/kBwT8JalUIALOoU1Si/hBIRWqTZyNmwoRW5xkQegbGV84RWCTaEnshUPaJK9ctbHN8f2FXTmyX3LXzu58khpCQI0sW5K0pAmy8K5gceVY3A+gxlRnFYGzjD1R2UFI0jHxrDKMI9lMjdVtCcgDklscFIqKBr5tHe16aiiawYvki5CMWxbFlMb6QxKt5UJ9MmbgQ/yIkygmVUIzaKo2YQxqvNS17fPQinwq10jTBMyNkjimacLCBXdcQYTBSoMKFyyAxRFZKq8ECoVMdVKXsCCFpwtH73VMu70SsnKimoVyTTZN/GjvLsFXIY0ihPZbxoRbtnBL+Ec/g8tP+qFcUHLbjFAWVLomMg96nA290dC1nUKJlPgLQWhSsqSFtxIeuMY0oKnLCW+ggUkEnYBli5x3q8jCCkVQ2WRckvAuhDrzwI7UhYXMwCm986U6YTnEi5ecHNuETEhfCtIKcGACmsIqHXGnO3W1aAhLQTxJEi5sFsSN2zqt64dWFVYGDe9S+U68JA540eWiAIVJ5UZQTVm2SLPUSiM3p8tYOHIprrDz7G6ZuqWy0goqyfKJc1fxxs15kkKOXD6XxW5IbUGyxTINSohmkFQnYW4fFvFDuKjk8/1KQB3xNKSpTXyhL1WQGMoDKdISjAT6Q5MTP828VJAcWqyS7ogKkXmc+VXleyRvaAMuVhCvKYiThnaT0bK2oJacpswh0oks1a9aUOLAGYVbFWkh9xvaQkcRKspUGpHOK2R2npbHCnx/WGwTGpd/nfHnpUxtu3zjjtCfC+Zk2b/3/w8gCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIg/wH+ByeLAdwgtfGSAAAAAElFTkSuQmCC";
 const partner3 = "/assets/our%20partner%203-XFOfXyxL.png";
@@ -5464,6 +5980,11 @@ function OrthopedicArticlesPage() {
     }).catch((err) => console.log("Django API offline, using default articles:", err));
   }, []);
   return /* @__PURE__ */ jsx("div", { style: { minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Poppins', 'Inter', sans-serif", paddingTop: "120px", paddingBottom: "50px" }, children: /* @__PURE__ */ jsxs("div", { style: { maxWidth: "1140px", margin: "0 auto", padding: "0 24px" }, children: [
+    /* @__PURE__ */ jsxs("div", { className: "mb-10 text-center sm:text-left", children: [
+      /* @__PURE__ */ jsx("span", { className: "text-xs font-bold uppercase tracking-widest text-[#08709d] bg-sky-50 px-3.5 py-1.5 rounded-full border border-sky-100 inline-block mb-3", children: "Health Insights & Articles" }),
+      /* @__PURE__ */ jsx("h1", { className: "text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight", children: "Latest Medical Articles & Insights" }),
+      /* @__PURE__ */ jsx("p", { className: "text-slate-600 text-sm sm:text-base mt-2 max-w-2xl", children: "Stay informed with verified medical guides, health tips, and surgical care insights curated by our DHA-licensed clinical team." })
+    ] }),
     currentPosts.length > 0 ? /* @__PURE__ */ jsxs(Fragment, { children: [
       /* @__PURE__ */ jsx(
         "div",
@@ -11031,6 +11552,898 @@ function Dashboard() {
     ] })
   ] });
 }
+const loginHero = "/assets/portal_login_hero-HQtaEiDL.png";
+const PortalLogin = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [staffId, setStaffId] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [isIdFocused, setIsIdFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const navigate = useNavigate();
+  const { login, loginError, setLoginError } = useAuth();
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginError("");
+    setIsLoading(true);
+    const user = await login(staffId, password);
+    setIsLoading(false);
+    if (user) {
+      setLoginSuccess(true);
+      setTimeout(() => {
+        if (user.role === "admin") {
+          navigate("/portal/admin");
+        } else {
+          navigate("/portal/dashboard");
+        }
+      }, 1500);
+    }
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-gray-50 flex flex-col lg:flex-row font-['Poppins']", children: [
+    /* @__PURE__ */ jsx("div", { className: "absolute top-6 left-6 z-50", children: /* @__PURE__ */ jsxs(
+      Link,
+      {
+        to: "/",
+        className: "flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-[#08709d] bg-white px-4 py-2.5 rounded-full shadow-sm border border-gray-100 transition-all hover:-translate-x-1",
+        children: [
+          /* @__PURE__ */ jsx(ArrowLeft, { size: 16 }),
+          "Back to Home"
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ jsxs("div", { className: "hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#08709d]/5 to-[#5eb63b]/5 items-center justify-center p-12 relative overflow-hidden border-r border-gray-100", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute -top-40 -left-40 w-96 h-96 bg-[#08709d]/10 rounded-full blur-3xl" }),
+      /* @__PURE__ */ jsx("div", { className: "absolute -bottom-40 -right-40 w-96 h-96 bg-[#5eb63b]/10 rounded-full blur-3xl" }),
+      /* @__PURE__ */ jsxs(
+        motion.div,
+        {
+          initial: { opacity: 0, y: 30 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.8 },
+          className: "max-w-md text-center flex flex-col items-center z-10",
+          children: [
+            /* @__PURE__ */ jsx(
+              "img",
+              {
+                src: loginHero,
+                alt: "Medical consultancy illustration",
+                className: "w-full h-auto max-h-[380px] object-contain rounded-2xl drop-shadow-2xl mb-10"
+              }
+            ),
+            /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-[#1a294a] tracking-tight mb-4 uppercase", children: "Complete Healthcare Portal" }),
+            /* @__PURE__ */ jsx("p", { className: "text-gray-500 text-base leading-relaxed", children: "Manage your medical consultations, view lab reports, book sessions with your nurses or doctor, and access personalized health tips, all in one secure place." }),
+            /* @__PURE__ */ jsxs("div", { className: "mt-8 flex gap-6 text-left", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 text-xs font-semibold text-gray-500 bg-white px-4 py-2 rounded-full border border-gray-100 shadow-sm", children: [
+                /* @__PURE__ */ jsx("span", { className: "w-2.5 h-2.5 bg-[#5eb63b] rounded-full animate-pulse" }),
+                "24/7 Access"
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 text-xs font-semibold text-gray-500 bg-white px-4 py-2 rounded-full border border-gray-100 shadow-sm", children: [
+                /* @__PURE__ */ jsx("span", { className: "w-2.5 h-2.5 bg-[#08709d] rounded-full animate-pulse" }),
+                "DHA Licensed Team"
+              ] })
+            ] })
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "flex-1 flex flex-col items-center justify-center p-6 sm:p-12 relative bg-gradient-to-tr from-white to-gray-50/50 overflow-y-auto min-h-screen", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute top-10 right-10 w-48 h-48 bg-[#08709d]/5 rounded-full blur-2xl lg:hidden pointer-events-none" }),
+      /* @__PURE__ */ jsx("div", { className: "absolute bottom-10 left-10 w-48 h-48 bg-[#5eb63b]/5 rounded-full blur-2xl lg:hidden pointer-events-none" }),
+      /* @__PURE__ */ jsxs(
+        motion.div,
+        {
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.5 },
+          className: "w-full max-w-[460px] z-10 bg-white border border-gray-100 rounded-3xl p-6 sm:p-10 shadow-2xl shadow-gray-200/50 flex flex-col justify-center my-8 relative",
+          children: [
+            /* @__PURE__ */ jsx("div", { className: "absolute top-0 left-10 right-10 h-1 bg-gradient-to-r from-[#08709d] to-[#5eb63b] rounded-b-full" }),
+            /* @__PURE__ */ jsx("div", { className: "flex justify-center mb-6 shrink-0", style: { flexShrink: 0 }, children: /* @__PURE__ */ jsx(Link, { to: "/", children: /* @__PURE__ */ jsx("img", { src: logo, alt: "Complete Healthcare Logo", className: "h-20 w-auto object-contain" }) }) }),
+            loginSuccess ? /* @__PURE__ */ jsxs(
+              motion.div,
+              {
+                initial: { opacity: 0, scale: 0.95 },
+                animate: { opacity: 1, scale: 1 },
+                className: "text-center py-10 px-6 bg-green-50/30 border border-green-100 rounded-2xl flex flex-col items-center",
+                children: [
+                  /* @__PURE__ */ jsx(
+                    motion.div,
+                    {
+                      initial: { scale: 0 },
+                      animate: { scale: 1 },
+                      transition: { type: "spring", stiffness: 200, damping: 15 },
+                      className: "w-16 h-16 bg-[#5eb63b] text-white rounded-full flex items-center justify-center mb-6 shadow-lg shadow-[#5eb63b]/20",
+                      children: /* @__PURE__ */ jsx(CheckCircle2, { size: 32 })
+                    }
+                  ),
+                  /* @__PURE__ */ jsx("h3", { className: "text-xl font-bold text-gray-900 mb-2", children: "Login Successful!" }),
+                  /* @__PURE__ */ jsx("p", { className: "text-gray-500 text-sm", children: "Redirecting you to the portal dashboard..." })
+                ]
+              }
+            ) : /* @__PURE__ */ jsxs(Fragment, { children: [
+              /* @__PURE__ */ jsxs("div", { className: "text-center mb-8 shrink-0", style: { flexShrink: 0 }, children: [
+                /* @__PURE__ */ jsx("h1", { className: "text-2xl sm:text-3xl font-black text-[#1a294a] tracking-tight uppercase mb-1", children: "Staff / Admin Login" }),
+                /* @__PURE__ */ jsx("p", { className: "text-gray-400 text-xs sm:text-sm font-semibold leading-relaxed", children: "Enter your administrative credentials to access your dashboard" })
+              ] }),
+              /* @__PURE__ */ jsx(AnimatePresence, { children: loginError && /* @__PURE__ */ jsxs(
+                motion.div,
+                {
+                  initial: { opacity: 0, y: -8, height: 0 },
+                  animate: { opacity: 1, y: 0, height: "auto" },
+                  exit: { opacity: 0, y: -8, height: 0 },
+                  className: "flex items-center gap-3 bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-xl text-xs font-bold mb-5",
+                  children: [
+                    /* @__PURE__ */ jsx(AlertCircle, { size: 16, className: "shrink-0" }),
+                    loginError
+                  ]
+                }
+              ) }),
+              /* @__PURE__ */ jsxs("form", { onSubmit: handleLogin, className: "flex flex-col gap-6", children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1.5 shrink-0 text-left", style: { flexShrink: 0 }, children: [
+                  /* @__PURE__ */ jsx("label", { className: "text-[11px] font-black uppercase tracking-wider text-[#1a294a] mb-1 pl-1", children: "Staff / Admin ID" }),
+                  /* @__PURE__ */ jsxs("div", { className: "relative flex items-center", children: [
+                    /* @__PURE__ */ jsx(
+                      Shield,
+                      {
+                        size: 18,
+                        className: `absolute left-4 transition-colors duration-200 pointer-events-none ${isIdFocused ? "text-[#08709d]" : "text-gray-400"}`
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      "input",
+                      {
+                        type: "text",
+                        placeholder: "e.g. ADMIN-001 or STF-CO1234",
+                        value: staffId,
+                        onChange: (e) => {
+                          setStaffId(e.target.value);
+                          setLoginError("");
+                        },
+                        onFocus: () => setIsIdFocused(true),
+                        onBlur: () => setIsIdFocused(false),
+                        required: true,
+                        className: "w-full bg-gray-50/50 hover:bg-gray-50 focus:bg-white border border-gray-200 focus:border-[#08709d] focus:outline-none transition-all duration-200 text-sm text-gray-900 font-semibold",
+                        style: {
+                          height: "54px",
+                          paddingLeft: "48px",
+                          paddingRight: "16px",
+                          borderRadius: "14px",
+                          boxShadow: isIdFocused ? "0 0 0 4px rgba(8, 112, 157, 0.08)" : "none"
+                        }
+                      }
+                    )
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1.5 shrink-0 text-left", style: { flexShrink: 0 }, children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-1 pl-1", children: [
+                    /* @__PURE__ */ jsx("label", { className: "text-[11px] font-black uppercase tracking-wider text-[#1a294a]", children: "Password" }),
+                    /* @__PURE__ */ jsx("a", { href: "#", className: "text-xs font-bold text-[#08709d] hover:text-[#5eb63b] transition-colors", children: "Forgot Password?" })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "relative flex items-center", children: [
+                    /* @__PURE__ */ jsx(
+                      Lock,
+                      {
+                        size: 18,
+                        className: `absolute left-4 transition-colors duration-200 pointer-events-none ${isPasswordFocused ? "text-[#08709d]" : "text-gray-400"}`
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      "input",
+                      {
+                        type: showPassword ? "text" : "password",
+                        placeholder: "••••••••",
+                        value: password,
+                        onChange: (e) => {
+                          setPassword(e.target.value);
+                          setLoginError("");
+                        },
+                        onFocus: () => setIsPasswordFocused(true),
+                        onBlur: () => setIsPasswordFocused(false),
+                        required: true,
+                        className: "w-full bg-gray-50/50 hover:bg-gray-50 focus:bg-white border border-gray-200 focus:border-[#08709d] focus:outline-none transition-all duration-200 text-sm text-gray-900 font-semibold",
+                        style: {
+                          height: "54px",
+                          paddingLeft: "48px",
+                          paddingRight: "48px",
+                          borderRadius: "14px",
+                          boxShadow: isPasswordFocused ? "0 0 0 4px rgba(8, 112, 157, 0.08)" : "none"
+                        }
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => setShowPassword(!showPassword),
+                        className: "absolute right-4 text-gray-400 hover:text-gray-600 transition-colors p-1 bg-transparent border-none cursor-pointer",
+                        style: { display: "flex", alignItems: "center", justifyContent: "center" },
+                        children: showPassword ? /* @__PURE__ */ jsx(EyeOff, { size: 18 }) : /* @__PURE__ */ jsx(Eye, { size: 18 })
+                      }
+                    )
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs(
+                  "label",
+                  {
+                    className: "flex items-center gap-2.5 cursor-pointer mt-1 select-none shrink-0",
+                    style: { flexShrink: 0 },
+                    children: [
+                      /* @__PURE__ */ jsx(
+                        "input",
+                        {
+                          type: "checkbox",
+                          checked: rememberMe,
+                          onChange: (e) => setRememberMe(e.target.checked),
+                          className: "w-4.5 h-4.5 rounded border-gray-300 text-[#08709d] focus:ring-[#08709d] cursor-pointer"
+                        }
+                      ),
+                      /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm font-bold text-gray-400", children: "Remember my session" })
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "submit",
+                    disabled: isLoading,
+                    className: "mt-2 flex items-center justify-center transition-all cursor-pointer shadow-lg shadow-[#08709d]/10 hover:shadow-[#08709d]/20 active:scale-[0.99] disabled:opacity-75 disabled:pointer-events-none border-none text-white font-bold hover:scale-[1.02] duration-300",
+                    style: {
+                      height: "54px",
+                      borderRadius: "14px",
+                      background: "linear-gradient(to right, #08709d, #0ea5e9)",
+                      flexShrink: 0,
+                      width: "100%",
+                      fontSize: "14px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em"
+                    },
+                    children: isLoading ? /* @__PURE__ */ jsx("div", { className: "w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" }) : "Sign In"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsx("div", { className: "h-[1px] bg-gray-100 my-6" }),
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider shrink-0", style: { flexShrink: 0 }, children: [
+                /* @__PURE__ */ jsx(ShieldCheck, { size: 14, className: "text-[#5eb63b]" }),
+                /* @__PURE__ */ jsx("span", { children: "Secure End-to-End Encrypted Session" })
+              ] }),
+              /* @__PURE__ */ jsxs("p", { className: "text-center text-[10px] text-gray-300 font-semibold mt-4", children: [
+                "Admin: ",
+                /* @__PURE__ */ jsx("span", { className: "font-mono", children: "ADMIN-001" }),
+                " / ",
+                /* @__PURE__ */ jsx("span", { className: "font-mono", children: "Admin@2024" })
+              ] })
+            ] })
+          ]
+        }
+      )
+    ] })
+  ] });
+};
+const B = {
+  primary: "#08709d",
+  secondary: "#1a294a",
+  accent: "#5eb63b",
+  bg: "#F8F9FA",
+  white: "#FFFFFF",
+  border: "#E8EDF2",
+  muted: "#6B7A90",
+  lightBlue: "#EBF5FA",
+  lightGreen: "#EDF8E7"
+};
+const getInitials = (name = "") => name.trim().split(" ").map((w) => {
+  var _a;
+  return ((_a = w[0]) == null ? void 0 : _a.toUpperCase()) || "";
+}).slice(0, 2).join("");
+const getGreeting = () => {
+  const h = (/* @__PURE__ */ new Date()).getHours();
+  if (h < 12) return { text: "Good Morning", Icon: Sun };
+  if (h < 17) return { text: "Good Afternoon", Icon: Zap };
+  return { text: "Good Evening", Icon: Moon };
+};
+const formatDate = () => (/* @__PURE__ */ new Date()).toLocaleDateString("en-GB", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  year: "numeric"
+});
+const calculateDays = (start, end) => {
+  if (!start || !end) return "—";
+  const s = new Date(start), e = new Date(end);
+  if (isNaN(s) || isNaN(e)) return "—";
+  const d = Math.ceil((e - s) / 864e5) + 1;
+  return d > 0 ? `${d} day${d !== 1 ? "s" : ""}` : "0 days";
+};
+const inputCls = "w-full border border-[#E8EDF2] focus:border-[#08709d] focus:outline-none focus:ring-2 focus:ring-[#08709d]/10 transition-all px-4 py-3 rounded-xl bg-white text-[#1a294a] text-sm placeholder:text-[#6B7A90]/50";
+const inputStyle = { height: "48px" };
+const Field = ({ label, children }) => /* @__PURE__ */ jsxs("div", { style: { display: "flex", flexDirection: "column", gap: "6px" }, children: [
+  /* @__PURE__ */ jsx("label", { style: { fontSize: "11px", fontWeight: 600, color: B.muted, textTransform: "uppercase", letterSpacing: "0.08em" }, children: label }),
+  children
+] });
+const FileUpload = ({ label, file, onFile, onClear, accentColor = B.primary }) => /* @__PURE__ */ jsx(Field, { label, children: /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }, children: [
+  /* @__PURE__ */ jsxs(
+    "button",
+    {
+      type: "button",
+      onClick: onFile,
+      style: { display: "flex", alignItems: "center", gap: "8px", padding: "8px 16px", border: `1.5px dashed ${file ? accentColor : B.border}`, borderRadius: "10px", color: file ? accentColor : B.muted, fontSize: "13px", fontWeight: 500, background: "white", cursor: "pointer", transition: "all 0.2s" },
+      children: [
+        /* @__PURE__ */ jsx(Paperclip, { size: 14 }),
+        file ? "Change File" : "Attach File"
+      ]
+    }
+  ),
+  file && /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "8px", background: B.bg, border: `1px solid ${B.border}`, padding: "4px 12px", borderRadius: "8px", fontSize: "12px", color: B.muted }, children: [
+    /* @__PURE__ */ jsx("span", { style: { maxWidth: "160px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }, children: file.name }),
+    /* @__PURE__ */ jsx("button", { type: "button", onClick: onClear, style: { background: "none", border: "none", cursor: "pointer", color: B.muted, padding: "2px", display: "flex" }, children: /* @__PURE__ */ jsx(X, { size: 12 }) })
+  ] })
+] }) });
+const STATUS_CFG = {
+  Pending: { color: "#e67e22", bg: "#FEF3E2" },
+  "In Progress": { color: B.primary, bg: B.lightBlue },
+  Completed: { color: B.accent, bg: B.lightGreen }
+};
+const PRIORITY_CFG = {
+  Low: { color: B.accent, bg: B.lightGreen },
+  Medium: { color: "#e67e22", bg: "#FEF3E2" },
+  High: { color: "#dc3545", bg: "#FFF5F5" }
+};
+const EmptyState = ({ icon: Icon, text }) => /* @__PURE__ */ jsxs("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", padding: "56px 24px", textAlign: "center" }, children: [
+  /* @__PURE__ */ jsx("div", { style: { width: "60px", height: "60px", borderRadius: "16px", background: B.lightBlue, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }, children: /* @__PURE__ */ jsx(Icon, { size: 28, style: { color: B.primary, opacity: 0.5 } }) }),
+  /* @__PURE__ */ jsx("p", { style: { color: B.muted, fontSize: "14px", fontWeight: 400, lineHeight: 1.6 }, children: text })
+] });
+const ReportTable = ({ headers, rows, emptyIcon, emptyText, onApply, applyLabel }) => /* @__PURE__ */ jsxs("div", { style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "18px", overflow: "hidden" }, children: [
+  /* @__PURE__ */ jsxs("div", { style: { padding: "16px 24px", borderBottom: `1.5px solid ${B.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", background: B.bg }, children: [
+    /* @__PURE__ */ jsxs("span", { style: { fontSize: "13px", fontWeight: 600, color: B.secondary }, children: [
+      rows.length,
+      " record",
+      rows.length !== 1 ? "s" : ""
+    ] }),
+    onApply && /* @__PURE__ */ jsxs(
+      "button",
+      {
+        onClick: onApply,
+        style: { display: "flex", alignItems: "center", gap: "6px", height: "36px", padding: "0 16px", borderRadius: "10px", background: B.primary, color: "white", fontSize: "12px", fontWeight: 500, border: "none", cursor: "pointer", transition: "all 0.2s", boxShadow: `0 3px 10px ${B.primary}30` },
+        onMouseEnter: (e) => e.currentTarget.style.background = "#065f85",
+        onMouseLeave: (e) => e.currentTarget.style.background = B.primary,
+        children: [
+          /* @__PURE__ */ jsx(ArrowUpRight, { size: 14 }),
+          " ",
+          applyLabel || "Apply"
+        ]
+      }
+    )
+  ] }),
+  rows.length === 0 ? /* @__PURE__ */ jsx(EmptyState, { icon: emptyIcon, text: emptyText }) : /* @__PURE__ */ jsx("div", { style: { overflowX: "auto" }, children: /* @__PURE__ */ jsxs("table", { style: { width: "100%", borderCollapse: "collapse" }, children: [
+    /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsx("tr", { style: { borderBottom: `1.5px solid ${B.border}`, background: B.bg }, children: headers.map((h) => /* @__PURE__ */ jsx("th", { style: { textAlign: "left", fontSize: "10px", fontWeight: 600, color: B.muted, textTransform: "uppercase", letterSpacing: "0.1em", padding: "10px 20px" }, children: h }, h)) }) }),
+    /* @__PURE__ */ jsx("tbody", { children: /* @__PURE__ */ jsx(AnimatePresence, { initial: false, children: rows.map((row, i) => /* @__PURE__ */ jsx(
+      motion.tr,
+      {
+        initial: { opacity: 0, y: 6 },
+        animate: { opacity: 1, y: 0 },
+        transition: { delay: i * 0.04 },
+        style: { borderBottom: `1px solid ${B.border}`, transition: "background 0.15s" },
+        onMouseEnter: (e) => e.currentTarget.style.background = B.lightBlue + "55",
+        onMouseLeave: (e) => e.currentTarget.style.background = "transparent",
+        children: row
+      },
+      i
+    )) }) })
+  ] }) })
+] });
+const Td = ({ children, mono }) => /* @__PURE__ */ jsx("td", { style: { padding: "13px 20px", fontSize: "13px", color: mono ? B.primary : B.secondary, fontWeight: mono ? 500 : 400, fontFamily: mono ? "monospace" : void 0 }, children });
+const Badge = ({ label, color, bg }) => /* @__PURE__ */ jsx("span", { style: { background: bg, color, border: `1px solid ${color}30`, fontSize: "10px", fontWeight: 600, padding: "3px 10px", borderRadius: "999px", textTransform: "uppercase", letterSpacing: "0.07em" }, children: label });
+const StaffDashboard = () => {
+  var _a;
+  const navigate = useNavigate();
+  const {
+    currentUser,
+    logout,
+    getTasksForStaff,
+    updateTaskStatus,
+    leaveApplications,
+    createLeaveApplication,
+    otApplications,
+    createOtApplication,
+    salaryApplications,
+    createSalaryApplication
+  } = useAuth();
+  const [activeTab, setActiveTab] = useState("leave");
+  const [activeModal, setActiveModal] = useState(null);
+  const [successMsg, setSuccessMsg] = useState(null);
+  const [leaveType, setLeaveType] = useState("Annual Leave");
+  const [leaveStart, setLeaveStart] = useState("");
+  const [leaveEnd, setLeaveEnd] = useState("");
+  const [leaveFile, setLeaveFile] = useState(null);
+  const leaveFileRef = useRef(null);
+  const [otType, setOtType] = useState("Day Shift");
+  const [otDate, setOtDate] = useState("");
+  const [otHours, setOtHours] = useState("");
+  const [otFile, setOtFile] = useState(null);
+  const otFileRef = useRef(null);
+  const [incType, setIncType] = useState("Merit-Based Performance Review");
+  const [incFile, setIncFile] = useState(null);
+  const incFileRef = useRef(null);
+  const [staffName, setStaffName] = useState((currentUser == null ? void 0 : currentUser.name) || "");
+  const [staffId, setStaffId] = useState((currentUser == null ? void 0 : currentUser.id) || "");
+  const [staffDep, setStaffDep] = useState((currentUser == null ? void 0 : currentUser.department) || "");
+  const [staffPosition, setStaffPosition] = useState((currentUser == null ? void 0 : currentUser.position) || "");
+  useEffect(() => {
+    if (!currentUser && typeof window !== "undefined") {
+      navigate("/portal", { replace: true });
+    } else if (currentUser && currentUser.role === "admin" && typeof window !== "undefined") {
+      navigate("/portal/admin", { replace: true });
+    }
+  }, [currentUser, navigate]);
+  if (!currentUser) return null;
+  const handleLogout = () => {
+    logout();
+    navigate("/portal");
+  };
+  const openModal = (type) => setActiveModal(type);
+  const closeModal = () => {
+    setActiveModal(null);
+    setLeaveStart("");
+    setLeaveEnd("");
+    setLeaveFile(null);
+    setOtDate("");
+    setOtHours("");
+    setOtFile(null);
+    setIncFile(null);
+  };
+  const submitForm = (e, type, record) => {
+    e.preventDefault();
+    if (type === "leave") createLeaveApplication(record);
+    if (type === "ot") createOtApplication(record);
+    if (type === "salary") createSalaryApplication(record);
+    closeModal();
+    setSuccessMsg("Your request has been submitted to HR successfully.");
+    setTimeout(() => setSuccessMsg(null), 5e3);
+  };
+  const myLeaves = (leaveApplications || []).filter((r) => {
+    var _a2, _b;
+    return ((_a2 = r.staffId) == null ? void 0 : _a2.trim().toLowerCase()) === ((_b = currentUser == null ? void 0 : currentUser.id) == null ? void 0 : _b.trim().toLowerCase());
+  });
+  const myOts = (otApplications || []).filter((r) => {
+    var _a2, _b;
+    return ((_a2 = r.staffId) == null ? void 0 : _a2.trim().toLowerCase()) === ((_b = currentUser == null ? void 0 : currentUser.id) == null ? void 0 : _b.trim().toLowerCase());
+  });
+  const mySalaries = (salaryApplications || []).filter((r) => {
+    var _a2, _b;
+    return ((_a2 = r.staffId) == null ? void 0 : _a2.trim().toLowerCase()) === ((_b = currentUser == null ? void 0 : currentUser.id) == null ? void 0 : _b.trim().toLowerCase());
+  });
+  const greeting = getGreeting();
+  const initials = getInitials(currentUser == null ? void 0 : currentUser.name);
+  const myTasks = getTasksForStaff ? getTasksForStaff(currentUser == null ? void 0 : currentUser.id) : [];
+  return /* @__PURE__ */ jsxs("div", { style: { fontFamily: "'Poppins',sans-serif", minHeight: "100vh", background: B.bg, display: "flex", flexDirection: "column" }, children: [
+    /* @__PURE__ */ jsx("div", { style: { height: "4px", background: `linear-gradient(90deg, ${B.secondary}, ${B.primary}, ${B.accent})`, flexShrink: 0 } }),
+    /* @__PURE__ */ jsxs("header", { style: { height: "64px", background: B.white, borderBottom: `1.5px solid ${B.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", boxShadow: "0 2px 12px rgba(8,112,157,0.06)", flexShrink: 0, position: "sticky", top: 0, zIndex: 30 }, children: [
+      /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "16px" }, children: [
+        /* @__PURE__ */ jsx("img", { src: logo, alt: "Corx Logo", style: { height: "36px", objectFit: "contain" } }),
+        /* @__PURE__ */ jsx("div", { style: { width: "1px", height: "24px", background: B.border } }),
+        /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsx("h1", { style: { fontSize: "15px", fontWeight: 600, color: B.secondary, margin: 0 }, children: "Corx Staff Portal" }),
+          /* @__PURE__ */ jsx("p", { style: { fontSize: "11px", color: B.muted, margin: 0 }, children: formatDate() })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "14px" }, children: [
+        /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "8px", background: B.lightBlue, border: `1px solid ${B.primary}20`, padding: "6px 14px 6px 6px", borderRadius: "999px" }, children: [
+          /* @__PURE__ */ jsx("div", { style: { width: "30px", height: "30px", borderRadius: "50%", background: `linear-gradient(135deg, ${B.secondary}, ${B.primary})`, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: "11px", fontWeight: 600 }, children: initials }),
+          /* @__PURE__ */ jsxs("span", { style: { fontSize: "12px", fontWeight: 500, color: B.secondary }, className: "hidden sm:inline", children: [
+            /* @__PURE__ */ jsx(greeting.Icon, { size: 12, style: { display: "inline", marginRight: "4px", color: B.primary } }),
+            greeting.text
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs(
+          "button",
+          {
+            onClick: handleLogout,
+            style: { display: "flex", alignItems: "center", gap: "8px", height: "38px", padding: "0 16px", borderRadius: "10px", background: "#FFF5F5", color: "#dc3545", border: "1px solid #dc354520", fontSize: "12px", fontWeight: 600, cursor: "pointer", transition: "all 0.2s", fontFamily: "'Poppins',sans-serif" },
+            onMouseEnter: (e) => e.currentTarget.style.background = "#FFECEC",
+            onMouseLeave: (e) => e.currentTarget.style.background = "#FFF5F5",
+            children: [
+              /* @__PURE__ */ jsx(LogOut, { size: 14 }),
+              " Sign Out"
+            ]
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx("main", { style: { flex: 1, overflowY: "auto", padding: "28px 24px 48px" }, children: /* @__PURE__ */ jsxs("div", { style: { maxWidth: "1200px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "32px" }, children: [
+      /* @__PURE__ */ jsx(AnimatePresence, { children: successMsg && /* @__PURE__ */ jsxs(
+        motion.div,
+        {
+          initial: { opacity: 0, y: -10 },
+          animate: { opacity: 1, y: 0 },
+          exit: { opacity: 0 },
+          style: { background: B.lightGreen, border: `1px solid ${B.accent}40`, color: B.accent, padding: "13px 18px", borderRadius: "14px", display: "flex", alignItems: "center", gap: "10px", fontSize: "13px", fontWeight: 500 },
+          children: [
+            /* @__PURE__ */ jsx(CheckCircle2, { size: 16, style: { flexShrink: 0 } }),
+            successMsg
+          ]
+        }
+      ) }),
+      /* @__PURE__ */ jsxs("div", { style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "24px", padding: "28px", display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "center", justifyContent: "space-between", boxShadow: "0 2px 10px rgba(26,41,74,0.04)" }, children: [
+        /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsxs("p", { style: { fontSize: "13px", color: B.muted, marginBottom: "4px", display: "flex", alignItems: "center", gap: "6px" }, children: [
+            /* @__PURE__ */ jsx(greeting.Icon, { size: 14, style: { color: B.primary } }),
+            greeting.text
+          ] }),
+          /* @__PURE__ */ jsxs("h2", { style: { fontSize: "clamp(22px, 3.5vw, 30px)", fontWeight: 700, color: B.secondary, margin: 0 }, children: [
+            "Hey, ",
+            ((_a = currentUser == null ? void 0 : currentUser.name) == null ? void 0 : _a.split(" ")[0]) || "there",
+            "! 👋"
+          ] }),
+          /* @__PURE__ */ jsxs("p", { style: { fontSize: "13px", color: B.muted, marginTop: "4px", marginBottom: 0 }, children: [
+            "Logged in as ",
+            /* @__PURE__ */ jsx("strong", { style: { color: B.secondary }, children: (currentUser == null ? void 0 : currentUser.position) || "Staff" }),
+            " (",
+            (currentUser == null ? void 0 : currentUser.department) || "Medical Consultancy",
+            ")"
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { style: { display: "flex", gap: "16px" }, children: [
+          /* @__PURE__ */ jsxs("div", { style: { background: B.lightBlue, padding: "12px 20px", borderRadius: "16px", border: `1px solid ${B.primary}15` }, children: [
+            /* @__PURE__ */ jsx("span", { style: { fontSize: "11px", color: B.muted, display: "block", textTransform: "uppercase", letterSpacing: "0.05em" }, children: "My Tasks" }),
+            /* @__PURE__ */ jsx("strong", { style: { fontSize: "20px", color: B.primary }, children: myTasks.length })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { style: { background: B.lightGreen, padding: "12px 20px", borderRadius: "16px", border: `1px solid ${B.accent}15` }, children: [
+            /* @__PURE__ */ jsx("span", { style: { fontSize: "11px", color: B.muted, display: "block", textTransform: "uppercase", letterSpacing: "0.05em" }, children: "Requests Submitted" }),
+            /* @__PURE__ */ jsx("strong", { style: { fontSize: "20px", color: B.accent }, children: myLeaves.length + myOts.length + mySalaries.length })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { children: [
+        /* @__PURE__ */ jsx("p", { style: { fontSize: "11px", fontWeight: 600, color: B.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "16px" }, children: "Quick Actions" }),
+        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 sm:grid-cols-3 gap-5", children: [
+          { modal: "leave", color: B.primary, bg: B.lightBlue, icon: /* @__PURE__ */ jsx(Calendar, { size: 22 }), label: "Apply for Leave", sub: "Submit annual, sick or emergency leave" },
+          { modal: "ot", color: B.accent, bg: B.lightGreen, icon: /* @__PURE__ */ jsx(Clock, { size: 22 }), label: "Apply for OT", sub: "Log overtime and claim shift hours" },
+          { modal: "salary", color: B.secondary, bg: "#EAECF3", icon: /* @__PURE__ */ jsx(TrendingUp, { size: 22 }), label: "Salary Increment", sub: "Submit your appraisal or review" }
+        ].map((card) => /* @__PURE__ */ jsxs(
+          motion.div,
+          {
+            whileHover: { y: -4, boxShadow: `0 16px 36px ${card.color}18` },
+            whileTap: { scale: 0.98 },
+            onClick: () => openModal(card.modal),
+            style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "18px", padding: "22px", cursor: "pointer", position: "relative", overflow: "hidden", boxShadow: "0 2px 10px rgba(26,41,74,0.06)", transition: "all 0.2s" },
+            children: [
+              /* @__PURE__ */ jsx("div", { style: { position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg, ${card.color}, ${card.color}80)` } }),
+              /* @__PURE__ */ jsx("div", { style: { width: "44px", height: "44px", borderRadius: "12px", background: card.bg, display: "flex", alignItems: "center", justifyContent: "center", color: card.color, marginBottom: "14px" }, children: card.icon }),
+              /* @__PURE__ */ jsx("p", { style: { fontSize: "14px", fontWeight: 600, color: B.secondary, margin: "0 0 4px" }, children: card.label }),
+              /* @__PURE__ */ jsx("p", { style: { fontSize: "12px", color: B.muted, margin: "0 0 16px", lineHeight: 1.5 }, children: card.sub }),
+              /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", fontWeight: 600, color: card.color }, children: [
+                "Apply now ",
+                /* @__PURE__ */ jsx(ArrowUpRight, { size: 13 })
+              ] })
+            ]
+          },
+          card.modal
+        )) })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { children: [
+        /* @__PURE__ */ jsx("p", { style: { fontSize: "11px", fontWeight: 600, color: B.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "16px" }, children: "Assigned Tasks" }),
+        myTasks.length === 0 ? /* @__PURE__ */ jsx("div", { style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "18px" }, children: /* @__PURE__ */ jsx(EmptyState, { icon: ClipboardList, text: "No tasks assigned to you yet. Check back later." }) }) : /* @__PURE__ */ jsx("div", { style: { display: "flex", flexDirection: "column", gap: "12px" }, children: myTasks.map((task, i) => {
+          const pc = PRIORITY_CFG[task.priority] || PRIORITY_CFG.Medium;
+          const sc = STATUS_CFG[task.status] || STATUS_CFG.Pending;
+          return /* @__PURE__ */ jsx(
+            motion.div,
+            {
+              initial: { opacity: 0, y: 8 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: i * 0.05 },
+              style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "16px", padding: "18px 20px", boxShadow: "0 2px 8px rgba(26,41,74,0.05)" },
+              children: /* @__PURE__ */ jsxs("div", { style: { display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "flex-start", justifyContent: "space-between" }, children: [
+                /* @__PURE__ */ jsxs("div", { style: { flex: 1, minWidth: "200px" }, children: [
+                  /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", marginBottom: "6px" }, children: [
+                    /* @__PURE__ */ jsx("span", { style: { fontSize: "14px", fontWeight: 600, color: B.secondary }, children: task.title }),
+                    /* @__PURE__ */ jsx(Badge, { label: task.priority, color: pc.color, bg: pc.bg })
+                  ] }),
+                  task.description && /* @__PURE__ */ jsx("p", { style: { fontSize: "13px", color: B.muted, margin: "0 0 10px", lineHeight: 1.6 }, children: task.description }),
+                  /* @__PURE__ */ jsxs("div", { style: { display: "flex", gap: "16px", flexWrap: "wrap" }, children: [
+                    task.dueDate && /* @__PURE__ */ jsxs("span", { style: { display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", color: B.muted }, children: [
+                      /* @__PURE__ */ jsx(CalendarDays, { size: 12, style: { color: B.primary } }),
+                      "Due: ",
+                      new Date(task.dueDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+                    ] }),
+                    /* @__PURE__ */ jsxs("span", { style: { display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", color: B.muted }, children: [
+                      /* @__PURE__ */ jsx(User, { size: 12, style: { color: B.primary } }),
+                      " From: ",
+                      task.assignedByName
+                    ] })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { style: { position: "relative", flexShrink: 0 }, children: [
+                  /* @__PURE__ */ jsxs(
+                    "select",
+                    {
+                      value: task.status,
+                      onChange: (e) => updateTaskStatus(task.id, e.target.value),
+                      style: { height: "36px", paddingLeft: "12px", paddingRight: "28px", borderRadius: "10px", border: `1.5px solid ${sc.color}40`, background: sc.bg, color: sc.color, fontSize: "12px", fontWeight: 600, appearance: "none", cursor: "pointer", outline: "none", fontFamily: "'Poppins',sans-serif" },
+                      children: [
+                        /* @__PURE__ */ jsx("option", { children: "Pending" }),
+                        /* @__PURE__ */ jsx("option", { children: "In Progress" }),
+                        /* @__PURE__ */ jsx("option", { children: "Completed" })
+                      ]
+                    }
+                  ),
+                  /* @__PURE__ */ jsx(ChevronDown, { size: 12, style: { position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: sc.color } })
+                ] })
+              ] })
+            },
+            task.id
+          );
+        }) })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { children: [
+        /* @__PURE__ */ jsx("p", { style: { fontSize: "11px", fontWeight: 600, color: B.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "16px" }, children: "My Applications & Request History" }),
+        /* @__PURE__ */ jsxs("div", { style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "24px", padding: "24px", boxShadow: "0 2px 10px rgba(26,41,74,0.04)" }, children: [
+          /* @__PURE__ */ jsx("div", { style: { display: "flex", gap: "8px", borderBottom: `1.5px solid ${B.border}`, paddingBottom: "12px", marginBottom: "20px", overflowX: "auto" }, children: [
+            { id: "leave", label: "Leaves", count: myLeaves.length, icon: Calendar },
+            { id: "ot", label: "OT Claims", count: myOts.length, icon: Clock },
+            { id: "salary", label: "Salary Reviews", count: mySalaries.length, icon: TrendingUp }
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
+            return /* @__PURE__ */ jsxs(
+              "button",
+              {
+                onClick: () => setActiveTab(tab.id),
+                style: {
+                  padding: "8px 16px",
+                  borderRadius: "10px",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "13px",
+                  fontWeight: active ? 600 : 500,
+                  background: active ? B.lightBlue : "transparent",
+                  color: active ? B.primary : B.muted,
+                  transition: "all 0.15s",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  whiteSpace: "nowrap"
+                },
+                children: [
+                  /* @__PURE__ */ jsx(Icon, { size: 14 }),
+                  tab.label,
+                  /* @__PURE__ */ jsx("span", { style: {
+                    fontSize: "11px",
+                    background: active ? B.primary : B.border,
+                    color: active ? "white" : B.muted,
+                    padding: "2px 8px",
+                    borderRadius: "6px",
+                    fontWeight: 600
+                  }, children: tab.count })
+                ]
+              },
+              tab.id
+            );
+          }) }),
+          /* @__PURE__ */ jsxs("div", { style: { minHeight: "160px" }, children: [
+            activeTab === "leave" && /* @__PURE__ */ jsx(
+              ReportTable,
+              {
+                emptyIcon: Calendar,
+                emptyText: "No leave applications yet. Click 'Apply for Leave' above to submit one.",
+                applyLabel: "Apply for Leave",
+                onApply: () => openModal("leave"),
+                headers: ["Leave Type", "Start Date", "End Date", "Duration", "Status", "Submitted"],
+                rows: myLeaves.map((r) => {
+                  var _a2, _b;
+                  return /* @__PURE__ */ jsxs(Fragment, { children: [
+                    /* @__PURE__ */ jsx(Td, { children: r.leaveType }),
+                    /* @__PURE__ */ jsx(Td, { children: r.leaveStart }),
+                    /* @__PURE__ */ jsx(Td, { children: r.leaveEnd }),
+                    /* @__PURE__ */ jsx(Td, { children: calculateDays(r.leaveStart, r.leaveEnd) }),
+                    /* @__PURE__ */ jsx("td", { style: { padding: "13px 20px" }, children: /* @__PURE__ */ jsx(Badge, { label: r.status, color: ((_a2 = STATUS_CFG[r.status]) == null ? void 0 : _a2.color) || B.muted, bg: ((_b = STATUS_CFG[r.status]) == null ? void 0 : _b.bg) || B.bg }) }),
+                    /* @__PURE__ */ jsx(Td, { children: new Date(r.submittedAt).toLocaleDateString("en-GB") })
+                  ] });
+                })
+              }
+            ),
+            activeTab === "ot" && /* @__PURE__ */ jsx(
+              ReportTable,
+              {
+                emptyIcon: Clock,
+                emptyText: "No OT claims yet. Click 'Apply for OT' above to log your hours.",
+                applyLabel: "Log OT Hours",
+                onApply: () => openModal("ot"),
+                headers: ["Shift Type", "Date of Duty", "OT Hours", "Status", "Submitted"],
+                rows: myOts.map((r) => {
+                  var _a2, _b;
+                  return /* @__PURE__ */ jsxs(Fragment, { children: [
+                    /* @__PURE__ */ jsx(Td, { children: r.otType }),
+                    /* @__PURE__ */ jsx(Td, { children: r.otDate }),
+                    /* @__PURE__ */ jsxs(Td, { mono: true, children: [
+                      r.otHours,
+                      " hrs"
+                    ] }),
+                    /* @__PURE__ */ jsx("td", { style: { padding: "13px 20px" }, children: /* @__PURE__ */ jsx(Badge, { label: r.status, color: ((_a2 = STATUS_CFG[r.status]) == null ? void 0 : _a2.color) || B.muted, bg: ((_b = STATUS_CFG[r.status]) == null ? void 0 : _b.bg) || B.bg }) }),
+                    /* @__PURE__ */ jsx(Td, { children: new Date(r.submittedAt).toLocaleDateString("en-GB") })
+                  ] });
+                })
+              }
+            ),
+            activeTab === "salary" && /* @__PURE__ */ jsx(
+              ReportTable,
+              {
+                emptyIcon: TrendingUp,
+                emptyText: "No increment requests yet. Submit your first appraisal review above.",
+                applyLabel: "Submit Review",
+                onApply: () => openModal("salary"),
+                headers: ["Appraisal Type", "Status", "Submitted"],
+                rows: mySalaries.map((r) => {
+                  var _a2, _b;
+                  return /* @__PURE__ */ jsxs(Fragment, { children: [
+                    /* @__PURE__ */ jsx(Td, { children: r.incType }),
+                    /* @__PURE__ */ jsx("td", { style: { padding: "13px 20px" }, children: /* @__PURE__ */ jsx(Badge, { label: r.status, color: ((_a2 = STATUS_CFG[r.status]) == null ? void 0 : _a2.color) || B.muted, bg: ((_b = STATUS_CFG[r.status]) == null ? void 0 : _b.bg) || B.bg }) }),
+                    /* @__PURE__ */ jsx(Td, { children: new Date(r.submittedAt).toLocaleDateString("en-GB") })
+                  ] });
+                })
+              }
+            )
+          ] })
+        ] })
+      ] })
+    ] }) }),
+    /* @__PURE__ */ jsx(AnimatePresence, { children: activeModal && /* @__PURE__ */ jsxs(Fragment, { children: [
+      /* @__PURE__ */ jsx(
+        motion.div,
+        {
+          initial: { opacity: 0 },
+          animate: { opacity: 1 },
+          exit: { opacity: 0 },
+          onClick: closeModal,
+          style: { position: "fixed", inset: 0, background: "rgba(26,41,74,0.45)", backdropFilter: "blur(8px)", zIndex: 50 }
+        }
+      ),
+      /* @__PURE__ */ jsxs(
+        motion.div,
+        {
+          initial: { opacity: 0, scale: 0.94, y: 20 },
+          animate: { opacity: 1, scale: 1, y: 0 },
+          exit: { opacity: 0, scale: 0.94, y: 20 },
+          transition: { type: "spring", stiffness: 320, damping: 28 },
+          onClick: (e) => e.stopPropagation(),
+          style: { position: "fixed", left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: "95%", maxWidth: "540px", background: B.white, borderRadius: "22px", boxShadow: "0 24px 70px rgba(26,41,74,0.18)", zIndex: 51, overflow: "hidden", maxHeight: "92vh" },
+          children: [
+            /* @__PURE__ */ jsx("div", { style: { height: "4px", background: `linear-gradient(90deg, ${B.secondary}, ${B.primary}, ${B.accent})` } }),
+            /* @__PURE__ */ jsxs("div", { style: { overflowY: "auto", maxHeight: "calc(92vh - 4px)", padding: "26px 28px 28px" }, children: [
+              activeModal === "leave" && /* @__PURE__ */ jsxs("form", { onSubmit: (e) => submitForm(e, "leave", { staffName, staffId, staffDep, staffPosition, leaveType, leaveStart, leaveEnd }), style: { display: "flex", flexDirection: "column", gap: "18px" }, children: [
+                /* @__PURE__ */ jsx(ModalHeader, { title: "Apply for Leave", icon: /* @__PURE__ */ jsx(Calendar, { size: 18 }), color: B.primary, onClose: closeModal }),
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+                  /* @__PURE__ */ jsx(Field, { label: "Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value), placeholder: "Full name" }) }),
+                  /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value), placeholder: "STF-XXXXX" }) })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+                  /* @__PURE__ */ jsx(Field, { label: "Department", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffDep, onChange: (e) => setStaffDep(e.target.value), placeholder: "Department" }) }),
+                  /* @__PURE__ */ jsx(Field, { label: "Position", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffPosition, onChange: (e) => setStaffPosition(e.target.value), placeholder: "Position" }) })
+                ] }),
+                /* @__PURE__ */ jsx(Field, { label: "Leave Type", children: /* @__PURE__ */ jsxs("div", { style: { position: "relative" }, children: [
+                  /* @__PURE__ */ jsx("select", { className: inputCls, style: { ...inputStyle, appearance: "none", paddingRight: "36px", cursor: "pointer" }, value: leaveType, onChange: (e) => setLeaveType(e.target.value), children: ["Annual Leave", "Sick Leave", "Casual Leave", "Emergency Leave", "Unpaid Leave"].map((o) => /* @__PURE__ */ jsx("option", { children: o }, o)) }),
+                  /* @__PURE__ */ jsx(ChevronDown, { size: 15, style: { position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: B.muted } })
+                ] }) }),
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+                  /* @__PURE__ */ jsx(Field, { label: "Start Date", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, style: inputStyle, required: true, value: leaveStart, onChange: (e) => setLeaveStart(e.target.value) }) }),
+                  /* @__PURE__ */ jsx(Field, { label: "End Date", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, style: inputStyle, required: true, value: leaveEnd, onChange: (e) => setLeaveEnd(e.target.value) }) })
+                ] }),
+                leaveStart && leaveEnd && /* @__PURE__ */ jsxs("div", { style: { background: B.lightBlue, border: `1px solid ${B.primary}30`, borderRadius: "12px", padding: "12px", textAlign: "center" }, children: [
+                  /* @__PURE__ */ jsx("span", { style: { fontSize: "11px", color: B.muted }, children: "Total duration: " }),
+                  /* @__PURE__ */ jsx("strong", { style: { color: B.secondary }, children: calculateDays(leaveStart, leaveEnd) })
+                ] }),
+                /* @__PURE__ */ jsx(Field, { label: "Reason", children: /* @__PURE__ */ jsx("textarea", { className: inputCls, required: true, placeholder: "Brief reason for leave…", style: { minHeight: "90px", height: "auto", resize: "none" } }) }),
+                /* @__PURE__ */ jsx(FileUpload, { label: "Supporting Document (optional)", file: leaveFile, onFile: () => leaveFileRef.current.click(), onClear: () => setLeaveFile(null) }),
+                /* @__PURE__ */ jsx("input", { type: "file", ref: leaveFileRef, className: "hidden", onChange: (e) => setLeaveFile(e.target.files[0]) }),
+                /* @__PURE__ */ jsx(ModalFooter, { color: B.primary, grad: `linear-gradient(135deg,${B.secondary},${B.primary})`, label: "Submit Application", onCancel: closeModal })
+              ] }),
+              activeModal === "ot" && /* @__PURE__ */ jsxs("form", { onSubmit: (e) => submitForm(e, "ot", { staffName, staffId, staffDep, staffPosition, otType, otDate, otHours }), style: { display: "flex", flexDirection: "column", gap: "18px" }, children: [
+                /* @__PURE__ */ jsx(ModalHeader, { title: "Apply for OT", icon: /* @__PURE__ */ jsx(Clock, { size: 18 }), color: B.accent, onClose: closeModal }),
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+                  /* @__PURE__ */ jsx(Field, { label: "Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
+                  /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+                  /* @__PURE__ */ jsx(Field, { label: "Department", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffDep, onChange: (e) => setStaffDep(e.target.value) }) }),
+                  /* @__PURE__ */ jsx(Field, { label: "Position", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffPosition, onChange: (e) => setStaffPosition(e.target.value) }) })
+                ] }),
+                /* @__PURE__ */ jsx(Field, { label: "Shift Type", children: /* @__PURE__ */ jsxs("div", { style: { position: "relative" }, children: [
+                  /* @__PURE__ */ jsx("select", { className: inputCls, style: { ...inputStyle, appearance: "none", paddingRight: "36px", cursor: "pointer" }, value: otType, onChange: (e) => setOtType(e.target.value), children: ["Day Shift", "Night Shift", "Weekend Shift", "On-Call Duty", "Other"].map((o) => /* @__PURE__ */ jsx("option", { children: o }, o)) }),
+                  /* @__PURE__ */ jsx(ChevronDown, { size: 15, style: { position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: B.muted } })
+                ] }) }),
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+                  /* @__PURE__ */ jsx(Field, { label: "Date of Duty", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, style: inputStyle, required: true, value: otDate, onChange: (e) => setOtDate(e.target.value) }) }),
+                  /* @__PURE__ */ jsx(Field, { label: "OT Hours", children: /* @__PURE__ */ jsx("input", { type: "number", step: "0.5", placeholder: "e.g. 4.5", className: inputCls, style: inputStyle, required: true, value: otHours, onChange: (e) => setOtHours(e.target.value) }) })
+                ] }),
+                /* @__PURE__ */ jsx(Field, { label: "Shift Description", children: /* @__PURE__ */ jsx("textarea", { className: inputCls, required: true, placeholder: "Shift extension details…", style: { minHeight: "90px", height: "auto", resize: "none" } }) }),
+                /* @__PURE__ */ jsx(FileUpload, { label: "Shift Proof (optional)", file: otFile, onFile: () => otFileRef.current.click(), onClear: () => setOtFile(null), accentColor: B.accent }),
+                /* @__PURE__ */ jsx("input", { type: "file", ref: otFileRef, className: "hidden", onChange: (e) => setOtFile(e.target.files[0]) }),
+                /* @__PURE__ */ jsx(ModalFooter, { color: B.accent, grad: `linear-gradient(135deg,#3a8a25,${B.accent})`, label: "Submit Claim", onCancel: closeModal })
+              ] }),
+              activeModal === "salary" && /* @__PURE__ */ jsxs("form", { onSubmit: (e) => submitForm(e, "salary", { staffName, staffId, staffDep, staffPosition, incType }), style: { display: "flex", flexDirection: "column", gap: "18px" }, children: [
+                /* @__PURE__ */ jsx(ModalHeader, { title: "Salary Increment", icon: /* @__PURE__ */ jsx(TrendingUp, { size: 18 }), color: B.primary, onClose: closeModal }),
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+                  /* @__PURE__ */ jsx(Field, { label: "Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
+                  /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+                  /* @__PURE__ */ jsx(Field, { label: "Department", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffDep, onChange: (e) => setStaffDep(e.target.value) }) }),
+                  /* @__PURE__ */ jsx(Field, { label: "Position", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffPosition, onChange: (e) => setStaffPosition(e.target.value) }) })
+                ] }),
+                /* @__PURE__ */ jsx(Field, { label: "Appraisal Type", children: /* @__PURE__ */ jsxs("div", { style: { position: "relative" }, children: [
+                  /* @__PURE__ */ jsx("select", { className: inputCls, style: { ...inputStyle, appearance: "none", paddingRight: "36px", cursor: "pointer" }, value: incType, onChange: (e) => setIncType(e.target.value), children: ["Merit-Based Performance Review", "Senior Promotion Review", "Market Adjustment Alignment", "Other"].map((o) => /* @__PURE__ */ jsx("option", { children: o }, o)) }),
+                  /* @__PURE__ */ jsx(ChevronDown, { size: 15, style: { position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: B.muted } })
+                ] }) }),
+                /* @__PURE__ */ jsx(Field, { label: "Justification", children: /* @__PURE__ */ jsx("textarea", { className: inputCls, required: true, placeholder: "Achievements, DHA certifications, performance highlights…", style: { minHeight: "90px", height: "auto", resize: "none" } }) }),
+                /* @__PURE__ */ jsx(FileUpload, { label: "Supporting Docs / DHA Certs (optional)", file: incFile, onFile: () => incFileRef.current.click(), onClear: () => setIncFile(null) }),
+                /* @__PURE__ */ jsx("input", { type: "file", ref: incFileRef, className: "hidden", onChange: (e) => setIncFile(e.target.files[0]) }),
+                /* @__PURE__ */ jsx(ModalFooter, { color: B.primary, grad: `linear-gradient(135deg,${B.secondary},${B.primary})`, label: "Submit Review", onCancel: closeModal })
+              ] })
+            ] })
+          ]
+        }
+      )
+    ] }) })
+  ] });
+};
+const ModalHeader = ({ title, icon, color, onClose }) => /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }, children: [
+  /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "12px" }, children: [
+    /* @__PURE__ */ jsx("div", { style: { width: "40px", height: "40px", borderRadius: "12px", background: `${color}12`, color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }, children: icon }),
+    /* @__PURE__ */ jsx("h2", { style: { fontSize: "17px", fontWeight: 600, color: B.secondary, margin: 0 }, children: title })
+  ] }),
+  /* @__PURE__ */ jsx(
+    "button",
+    {
+      type: "button",
+      onClick: onClose,
+      style: { width: "32px", height: "32px", borderRadius: "8px", background: B.bg, border: `1px solid ${B.border}`, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: B.muted, transition: "all 0.2s" },
+      onMouseEnter: (e) => {
+        e.currentTarget.style.background = "#FFF5F5";
+        e.currentTarget.style.color = "#dc3545";
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.background = B.bg;
+        e.currentTarget.style.color = B.muted;
+      },
+      children: /* @__PURE__ */ jsx(X, { size: 14 })
+    }
+  )
+] });
+const ModalFooter = ({ color, grad, label, onCancel }) => /* @__PURE__ */ jsxs("div", { style: { display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", paddingTop: "4px" }, children: [
+  /* @__PURE__ */ jsxs(
+    motion.button,
+    {
+      type: "submit",
+      whileHover: { scale: 1.02 },
+      whileTap: { scale: 0.98 },
+      style: { width: "100%", maxWidth: "280px", height: "50px", background: grad, border: "none", borderRadius: "14px", color: "white", fontSize: "13px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxShadow: `0 6px 18px ${color}30`, fontFamily: "'Poppins',sans-serif" },
+      children: [
+        /* @__PURE__ */ jsxs("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round", children: [
+          /* @__PURE__ */ jsx("line", { x1: "22", y1: "2", x2: "11", y2: "13" }),
+          /* @__PURE__ */ jsx("polygon", { points: "22 2 15 22 11 13 2 9 22 2" })
+        ] }),
+        label
+      ]
+    }
+  ),
+  /* @__PURE__ */ jsx(
+    "button",
+    {
+      type: "button",
+      onClick: onCancel,
+      style: { width: "100%", maxWidth: "280px", height: "42px", background: "transparent", border: `1px solid ${B.border}`, borderRadius: "12px", color: B.muted, fontSize: "12px", fontWeight: 500, cursor: "pointer", transition: "all 0.2s", fontFamily: "'Poppins',sans-serif" },
+      onMouseEnter: (e) => {
+        e.currentTarget.style.borderColor = B.primary;
+        e.currentTarget.style.color = B.primary;
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.borderColor = B.border;
+        e.currentTarget.style.color = B.muted;
+      },
+      children: "Cancel"
+    }
+  )
+] });
 const PrivacyPolicy = () => {
   React.useEffect(() => {
     document.title = "Privacy Policy | CORx Healthcare Dubai";
@@ -11444,12 +12857,26 @@ const Sitemap = () => {
     ] })
   ] }) });
 };
+const ServiceRedirect = () => {
+  const { serviceSlug } = useParams();
+  return /* @__PURE__ */ jsx(Navigate, { to: `/${serviceSlug || "lab-test-at-home"}`, replace: true });
+};
 const AnimatedRoutes = () => {
   const location = useLocation();
   return /* @__PURE__ */ jsx(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxs(Routes, { location, children: [
     /* @__PURE__ */ jsx(Route, { path: "/", element: /* @__PURE__ */ jsx(Home, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/about", element: /* @__PURE__ */ jsx(Navigate, { to: "/about-us", replace: true }) }),
     /* @__PURE__ */ jsx(Route, { path: "/dashboard", element: /* @__PURE__ */ jsx(Dashboard, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/dashboard/", element: /* @__PURE__ */ jsx(Dashboard, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/portal", element: /* @__PURE__ */ jsx(PortalLogin, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/portal/", element: /* @__PURE__ */ jsx(PortalLogin, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/portal/login", element: /* @__PURE__ */ jsx(PortalLogin, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/portal/login/", element: /* @__PURE__ */ jsx(PortalLogin, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/portal/dashboard", element: /* @__PURE__ */ jsx(StaffDashboard, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/portal/dashboard/", element: /* @__PURE__ */ jsx(StaffDashboard, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/portal/staff", element: /* @__PURE__ */ jsx(StaffDashboard, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/portal/staff/", element: /* @__PURE__ */ jsx(StaffDashboard, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/portal/admin", element: /* @__PURE__ */ jsx(Dashboard, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/portal/admin/", element: /* @__PURE__ */ jsx(Dashboard, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/services", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/services/", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/services/:parentSlug/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
@@ -11470,33 +12897,45 @@ const AnimatedRoutes = () => {
     /* @__PURE__ */ jsx(Route, { path: "/iv-therapy/", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "iv-therapy" }) }),
     /* @__PURE__ */ jsx(Route, { path: "/doctor-on-call", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "doctor-on-call" }) }),
     /* @__PURE__ */ jsx(Route, { path: "/doctor-on-call/", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "doctor-on-call" }) }),
-    /* @__PURE__ */ jsx(Route, { path: "/blog", element: /* @__PURE__ */ jsx(OrthopedicArticlesPage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/blog/:slug", element: /* @__PURE__ */ jsx(BlogDetails, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/blog/details", element: /* @__PURE__ */ jsx(BlogDetails, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/locations", element: /* @__PURE__ */ jsx(Locations, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/contact", element: /* @__PURE__ */ jsx(Navigate, { to: "/book-an-appointment", replace: true }) }),
+    /* @__PURE__ */ jsx(Route, { path: "/physiotherapy-at-home-in-dubai", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "physiotherapy-at-home-in-dubai" }) }),
+    /* @__PURE__ */ jsx(Route, { path: "/physiotherapy-at-home-in-dubai/", element: /* @__PURE__ */ jsx(ServicePage, { serviceId: "physiotherapy-at-home-in-dubai" }) }),
+    /* @__PURE__ */ jsx(Route, { path: "/physiotherapy", element: /* @__PURE__ */ jsx(Navigate, { to: "/physiotherapy-at-home-in-dubai", replace: true }) }),
+    /* @__PURE__ */ jsx(Route, { path: "/physiotherapy/", element: /* @__PURE__ */ jsx(Navigate, { to: "/physiotherapy-at-home-in-dubai", replace: true }) }),
+    /* @__PURE__ */ jsx(Route, { path: "/contact-us", element: /* @__PURE__ */ jsx(Contact, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/contact-us/", element: /* @__PURE__ */ jsx(Contact, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/contact", element: /* @__PURE__ */ jsx(Navigate, { to: "/contact-us", replace: true }) }),
+    /* @__PURE__ */ jsx(Route, { path: "/contact/", element: /* @__PURE__ */ jsx(Navigate, { to: "/contact-us", replace: true }) }),
     /* @__PURE__ */ jsx(Route, { path: "/book-an-appointment", element: /* @__PURE__ */ jsx(Contact, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/book-an-appointment/", element: /* @__PURE__ */ jsx(Contact, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/locations", element: /* @__PURE__ */ jsx(Locations, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/locations/", element: /* @__PURE__ */ jsx(Locations, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/team", element: /* @__PURE__ */ jsx(Team, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/privacy-policy", element: /* @__PURE__ */ jsx(PrivacyPolicy, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/privacy-policy/", element: /* @__PURE__ */ jsx(PrivacyPolicy, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/team/", element: /* @__PURE__ */ jsx(Team, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/career", element: /* @__PURE__ */ jsx(Career, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/career/", element: /* @__PURE__ */ jsx(Career, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/careers", element: /* @__PURE__ */ jsx(Career, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/careers/", element: /* @__PURE__ */ jsx(Career, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/privacy-policy", element: /* @__PURE__ */ jsx(PrivacyPolicy, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/privacy-policy/", element: /* @__PURE__ */ jsx(PrivacyPolicy, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/sitemap", element: /* @__PURE__ */ jsx(Sitemap, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/sitemap/", element: /* @__PURE__ */ jsx(Sitemap, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/services/:parentSlug/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/services/:parentSlug/:serviceSlug/", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/:parentSlug/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/:parentSlug/:serviceSlug/", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/:serviceSlug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/blog", element: /* @__PURE__ */ jsx(OrthopedicArticlesPage, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/blog/", element: /* @__PURE__ */ jsx(OrthopedicArticlesPage, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/blog/:slug", element: /* @__PURE__ */ jsx(BlogDetails, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/blog/:slug/", element: /* @__PURE__ */ jsx(BlogDetails, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/service/:serviceSlug", element: /* @__PURE__ */ jsx(ServiceRedirect, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/service/:serviceSlug/", element: /* @__PURE__ */ jsx(ServiceRedirect, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/:slug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/:slug/", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/404", element: /* @__PURE__ */ jsx(NotFound, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/404/", element: /* @__PURE__ */ jsx(NotFound, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "*", element: /* @__PURE__ */ jsx(NotFound, {}) })
   ] }, location.pathname) });
 };
 const MainLayout = ({ children }) => {
+  const location = useLocation();
+  const isPortal = location.pathname.startsWith("/portal") || location.pathname.startsWith("/dashboard");
+  if (isPortal) {
+    return /* @__PURE__ */ jsx("div", { className: "min-h-screen bg-gray-50", children });
+  }
   return /* @__PURE__ */ jsxs("div", { className: "flex flex-col min-h-screen overflow-x-hidden", children: [
     /* @__PURE__ */ jsx(Header, {}),
     /* @__PURE__ */ jsx("div", { className: "flex-grow", children }),
@@ -11527,8 +12966,8 @@ class GlobalErrorBoundary extends React.Component {
   }
   render() {
     if (this.state.hasError) {
-      return /* @__PURE__ */ jsx("div", { className: "min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center", children: /* @__PURE__ */ jsxs("div", { className: "bg-[#ffffff] p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-xl max-w-md w-full", children: [
-        /* @__PURE__ */ jsx("div", { className: "w-16 h-16 rounded-2xl bg-sky-50 text-[#08709d] flex items-center justify-center mx-auto mb-6", children: /* @__PURE__ */ jsx("svg", { className: "w-8 h-8", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" }) }) }),
+      return /* @__PURE__ */ jsx("div", { className: "min-h-screen flex items-center justify-center bg-slate-50 p-6 text-center", children: /* @__PURE__ */ jsxs("div", { className: "max-w-md w-full bg-white rounded-2xl p-8 shadow-xl border border-slate-100", children: [
+        /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4", children: /* @__PURE__ */ jsx("svg", { className: "w-8 h-8", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" }) }) }),
         /* @__PURE__ */ jsx("h1", { className: "text-xl font-extrabold text-slate-900 mb-2", children: "CORx Healthcare" }),
         /* @__PURE__ */ jsx("p", { className: "text-slate-600 text-sm mb-6", children: "We experienced a temporary glitch while loading this view. Please refresh or return to the homepage." }),
         /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row gap-3 justify-center", children: [
@@ -11555,10 +12994,10 @@ class GlobalErrorBoundary extends React.Component {
   }
 }
 function App() {
-  return /* @__PURE__ */ jsxs(GlobalErrorBoundary, { children: [
+  return /* @__PURE__ */ jsx(GlobalErrorBoundary, { children: /* @__PURE__ */ jsxs(AuthProvider, { children: [
     /* @__PURE__ */ jsx(ScrollToTop, {}),
     /* @__PURE__ */ jsx(MainLayout, { children: /* @__PURE__ */ jsx(AnimatedRoutes, {}) })
-  ] });
+  ] }) });
 }
 function render(url) {
   const html = renderToString(
