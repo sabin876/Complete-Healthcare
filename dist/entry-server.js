@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, createContext, useContext } from "r
 import { renderToString } from "react-dom/server";
 import { Link, useNavigate, useParams, useLocation, Routes, Route, Navigate, StaticRouter } from "react-router";
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from "framer-motion";
-import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Shield, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save, ArrowLeft, Lock, LogOut, ClipboardList, Sun, Zap, Moon, Paperclip, Briefcase, Code, ExternalLink } from "lucide-react";
+import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Shield, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save, ArrowLeft, Lock, LogOut, Megaphone, Bell, ClipboardList, Sun, Zap, Moon, Paperclip, Briefcase, Code, ExternalLink } from "lucide-react";
 const logo = "/assets/logo-u28QMOuL.webp";
 const tollfree = "/assets/tollfree-3acubKEx.png";
 const rawBaseUrl = "http://localhost:8000";
@@ -1961,8 +1961,13 @@ const mapNotice = (n) => n ? {
   id: n.id,
   staffId: n.staff,
   staffName: n.staff_name,
-  noticeTitle: n.notice_title,
-  noticeMessage: n.notice_message,
+  title: n.title || n.notice_title || "Notice",
+  content: n.content || n.notice_message || "",
+  targetAudience: n.target_audience,
+  selectedStaff: n.selected_staff,
+  selectedStaffDetails: n.selected_staff_details || [],
+  targetDepartment: n.target_department,
+  priority: n.priority || "normal",
   status: n.status,
   submittedAt: n.submitted_at
 } : null;
@@ -2273,8 +2278,13 @@ const AuthProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           staffId: data.staffId,
-          noticeTitle: data.noticeTitle,
-          noticeMessage: data.noticeMessage
+          title: data.title || data.noticeTitle,
+          content: data.content || data.noticeMessage,
+          noticeTitle: data.title || data.noticeTitle,
+          noticeMessage: data.content || data.noticeMessage,
+          priority: data.priority || "normal",
+          targetAudience: data.targetAudience || "all",
+          targetDepartment: data.targetDepartment || ""
         })
       });
       if (res.ok) {
@@ -11560,6 +11570,7 @@ const PortalLogin = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(null);
   const [isIdFocused, setIsIdFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const navigate = useNavigate();
@@ -11571,6 +11582,7 @@ const PortalLogin = () => {
     const user = await login(staffId, password);
     setIsLoading(false);
     if (user) {
+      setLoggedInUser(user);
       setLoginSuccess(true);
       setTimeout(() => {
         if (user.role === "admin") {
@@ -11578,22 +11590,22 @@ const PortalLogin = () => {
         } else {
           navigate("/portal/dashboard");
         }
-      }, 1500);
+      }, 2e3);
     }
   };
-  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-gray-50 flex flex-col lg:flex-row font-['Poppins']", children: [
-    /* @__PURE__ */ jsx("div", { className: "absolute top-6 left-6 z-50", children: /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-slate-50 flex flex-col lg:flex-row font-['Poppins'] relative", children: [
+    /* @__PURE__ */ jsx("div", { className: "absolute top-4 left-4 sm:top-6 sm:left-6 z-50", children: /* @__PURE__ */ jsxs(
       Link,
       {
         to: "/",
-        className: "flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-[#08709d] bg-white px-4 py-2.5 rounded-full shadow-sm border border-gray-100 transition-all hover:-translate-x-1",
+        className: "flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-[#08709d] bg-white/90 backdrop-blur-sm px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-sm border border-slate-200/80 transition-all hover:-translate-x-1",
         children: [
           /* @__PURE__ */ jsx(ArrowLeft, { size: 16 }),
-          "Back to Home"
+          /* @__PURE__ */ jsx("span", { children: "Back to Home" })
         ]
       }
     ) }),
-    /* @__PURE__ */ jsxs("div", { className: "hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#08709d]/5 to-[#5eb63b]/5 items-center justify-center p-12 relative overflow-hidden border-r border-gray-100", children: [
+    /* @__PURE__ */ jsxs("div", { className: "hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#08709d]/5 via-white to-[#5eb63b]/5 items-center justify-center p-12 relative overflow-hidden border-r border-slate-200/70", children: [
       /* @__PURE__ */ jsx("div", { className: "absolute -top-40 -left-40 w-96 h-96 bg-[#08709d]/10 rounded-full blur-3xl" }),
       /* @__PURE__ */ jsx("div", { className: "absolute -bottom-40 -right-40 w-96 h-96 bg-[#5eb63b]/10 rounded-full blur-3xl" }),
       /* @__PURE__ */ jsxs(
@@ -11609,26 +11621,26 @@ const PortalLogin = () => {
               {
                 src: loginHero,
                 alt: "Medical consultancy illustration",
-                className: "w-full h-auto max-h-[380px] object-contain rounded-2xl drop-shadow-2xl mb-10"
+                className: "w-full h-auto max-h-[360px] object-contain rounded-2xl drop-shadow-2xl mb-8"
               }
             ),
-            /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-[#1a294a] tracking-tight mb-4 uppercase", children: "Complete Healthcare Portal" }),
-            /* @__PURE__ */ jsx("p", { className: "text-gray-500 text-base leading-relaxed", children: "Manage your medical consultations, view lab reports, book sessions with your nurses or doctor, and access personalized health tips, all in one secure place." }),
-            /* @__PURE__ */ jsxs("div", { className: "mt-8 flex gap-6 text-left", children: [
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 text-xs font-semibold text-gray-500 bg-white px-4 py-2 rounded-full border border-gray-100 shadow-sm", children: [
-                /* @__PURE__ */ jsx("span", { className: "w-2.5 h-2.5 bg-[#5eb63b] rounded-full animate-pulse" }),
-                "24/7 Access"
+            /* @__PURE__ */ jsx("h2", { className: "text-2xl xl:text-3xl font-black text-[#1a294a] tracking-tight mb-3 uppercase", children: "Complete Healthcare Portal" }),
+            /* @__PURE__ */ jsx("p", { className: "text-slate-500 text-sm leading-relaxed mb-6", children: "Clinical management, official staff announcements, leave approvals, and patient scheduling in one secure platform." }),
+            /* @__PURE__ */ jsxs("div", { className: "flex gap-4 text-left flex-wrap justify-center", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-xs font-bold text-slate-600 bg-white px-3.5 py-2 rounded-full border border-slate-200 shadow-2xs", children: [
+                /* @__PURE__ */ jsx("span", { className: "w-2 h-2 bg-[#5eb63b] rounded-full animate-pulse" }),
+                "24/7 Clinical System"
               ] }),
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 text-xs font-semibold text-gray-500 bg-white px-4 py-2 rounded-full border border-gray-100 shadow-sm", children: [
-                /* @__PURE__ */ jsx("span", { className: "w-2.5 h-2.5 bg-[#08709d] rounded-full animate-pulse" }),
-                "DHA Licensed Team"
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-xs font-bold text-slate-600 bg-white px-3.5 py-2 rounded-full border border-slate-200 shadow-2xs", children: [
+                /* @__PURE__ */ jsx("span", { className: "w-2 h-2 bg-[#08709d] rounded-full animate-pulse" }),
+                "DHA Licensed Portal"
               ] })
             ] })
           ]
         }
       )
     ] }),
-    /* @__PURE__ */ jsxs("div", { className: "flex-1 flex flex-col items-center justify-center p-6 sm:p-12 relative bg-gradient-to-tr from-white to-gray-50/50 overflow-y-auto min-h-screen", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex-1 flex flex-col items-center justify-center p-4 sm:p-8 lg:p-12 relative overflow-y-auto min-h-screen pt-20 sm:pt-16", children: [
       /* @__PURE__ */ jsx("div", { className: "absolute top-10 right-10 w-48 h-48 bg-[#08709d]/5 rounded-full blur-2xl lg:hidden pointer-events-none" }),
       /* @__PURE__ */ jsx("div", { className: "absolute bottom-10 left-10 w-48 h-48 bg-[#5eb63b]/5 rounded-full blur-2xl lg:hidden pointer-events-none" }),
       /* @__PURE__ */ jsxs(
@@ -11637,35 +11649,102 @@ const PortalLogin = () => {
           initial: { opacity: 0, y: 20 },
           animate: { opacity: 1, y: 0 },
           transition: { duration: 0.5 },
-          className: "w-full max-w-[460px] z-10 bg-white border border-gray-100 rounded-3xl p-6 sm:p-10 shadow-2xl shadow-gray-200/50 flex flex-col justify-center my-8 relative",
+          className: "w-full max-w-[440px] z-10 bg-white border border-slate-200/80 rounded-3xl p-5 sm:p-9 shadow-xl shadow-slate-200/60 flex flex-col justify-center my-4 sm:my-8 relative",
           children: [
-            /* @__PURE__ */ jsx("div", { className: "absolute top-0 left-10 right-10 h-1 bg-gradient-to-r from-[#08709d] to-[#5eb63b] rounded-b-full" }),
-            /* @__PURE__ */ jsx("div", { className: "flex justify-center mb-6 shrink-0", style: { flexShrink: 0 }, children: /* @__PURE__ */ jsx(Link, { to: "/", children: /* @__PURE__ */ jsx("img", { src: logo, alt: "Complete Healthcare Logo", className: "h-20 w-auto object-contain" }) }) }),
+            /* @__PURE__ */ jsx("div", { className: "absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-[#08709d] via-[#38bdf8] to-[#5eb63b] rounded-b-full" }),
+            /* @__PURE__ */ jsx("div", { className: "flex justify-center mb-5 shrink-0", children: /* @__PURE__ */ jsx(Link, { to: "/", children: /* @__PURE__ */ jsx("img", { src: logo, alt: "Complete Healthcare Logo", className: "h-16 sm:h-20 w-auto object-contain" }) }) }),
             loginSuccess ? /* @__PURE__ */ jsxs(
               motion.div,
               {
-                initial: { opacity: 0, scale: 0.95 },
-                animate: { opacity: 1, scale: 1 },
-                className: "text-center py-10 px-6 bg-green-50/30 border border-green-100 rounded-2xl flex flex-col items-center",
+                initial: { opacity: 0, scale: 0.9, y: 10 },
+                animate: { opacity: 1, scale: 1, y: 0 },
+                transition: { duration: 0.4 },
+                className: "text-center py-6 sm:py-8 px-4 sm:px-6 bg-gradient-to-b from-sky-50/60 via-white to-emerald-50/40 border border-sky-100 rounded-3xl flex flex-col items-center shadow-md relative overflow-hidden",
                 children: [
-                  /* @__PURE__ */ jsx(
+                  /* @__PURE__ */ jsx("div", { className: "absolute -top-12 -left-12 w-32 h-32 bg-[#08709d]/15 rounded-full blur-2xl pointer-events-none" }),
+                  /* @__PURE__ */ jsx("div", { className: "absolute -bottom-12 -right-12 w-32 h-32 bg-[#10b981]/15 rounded-full blur-2xl pointer-events-none" }),
+                  /* @__PURE__ */ jsxs("div", { className: "relative mb-4", children: [
+                    /* @__PURE__ */ jsxs(
+                      motion.div,
+                      {
+                        initial: { scale: 0, rotate: -20 },
+                        animate: { scale: 1, rotate: 0 },
+                        transition: { type: "spring", stiffness: 220, damping: 18, delay: 0.1 },
+                        className: "relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1.5 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#10b981] shadow-lg flex items-center justify-center",
+                        children: [
+                          (loggedInUser == null ? void 0 : loggedInUser.photo) ? /* @__PURE__ */ jsx(
+                            motion.img,
+                            {
+                              initial: { opacity: 0, scale: 0.8 },
+                              animate: { opacity: 1, scale: 1 },
+                              transition: { duration: 0.3, delay: 0.2 },
+                              src: loggedInUser.photo,
+                              alt: loggedInUser.name,
+                              className: "w-full h-full object-cover rounded-full bg-white border-2 border-white"
+                            }
+                          ) : /* @__PURE__ */ jsx("div", { className: "w-full h-full rounded-full bg-gradient-to-br from-[#1a294a] to-[#08709d] flex items-center justify-center text-white text-2xl font-black border-2 border-white", children: (loggedInUser == null ? void 0 : loggedInUser.name) ? loggedInUser.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase() : "ST" }),
+                          /* @__PURE__ */ jsx(
+                            motion.div,
+                            {
+                              animate: { scale: [1, 1.25, 1], opacity: [0.6, 0, 0.6] },
+                              transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                              className: "absolute inset-0 rounded-full border-2 border-[#38bdf8] pointer-events-none"
+                            }
+                          )
+                        ]
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      motion.div,
+                      {
+                        initial: { scale: 0, y: 10 },
+                        animate: { scale: 1, y: 0 },
+                        transition: { type: "spring", stiffness: 300, damping: 15, delay: 0.35 },
+                        className: "absolute -bottom-1 -right-1 w-8 h-8 sm:w-9 sm:h-9 bg-[#10b981] text-white rounded-full flex items-center justify-center border-2 border-white shadow-sm",
+                        children: /* @__PURE__ */ jsx(CheckCircle2, { size: 18 })
+                      }
+                    )
+                  ] }),
+                  /* @__PURE__ */ jsxs(
                     motion.div,
                     {
-                      initial: { scale: 0 },
-                      animate: { scale: 1 },
-                      transition: { type: "spring", stiffness: 200, damping: 15 },
-                      className: "w-16 h-16 bg-[#5eb63b] text-white rounded-full flex items-center justify-center mb-6 shadow-lg shadow-[#5eb63b]/20",
-                      children: /* @__PURE__ */ jsx(CheckCircle2, { size: 32 })
+                      initial: { opacity: 0, y: 10 },
+                      animate: { opacity: 1, y: 0 },
+                      transition: { duration: 0.4, delay: 0.25 },
+                      children: [
+                        /* @__PURE__ */ jsxs("div", { className: "inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[11px] font-bold uppercase tracking-wider mb-2 border border-sky-200", children: [
+                          /* @__PURE__ */ jsx("span", { className: "w-2 h-2 rounded-full bg-[#0284c7] animate-ping" }),
+                          "Authenticated Staff"
+                        ] }),
+                        /* @__PURE__ */ jsxs("h3", { className: "text-lg sm:text-xl font-black text-[#1a294a] mb-1", children: [
+                          "Welcome, ",
+                          (loggedInUser == null ? void 0 : loggedInUser.name) || "Staff Member",
+                          "!"
+                        ] }),
+                        /* @__PURE__ */ jsxs("p", { className: "text-slate-500 text-xs sm:text-sm font-semibold mb-3", children: [
+                          (loggedInUser == null ? void 0 : loggedInUser.position) || "Healthcare Professional",
+                          " ",
+                          (loggedInUser == null ? void 0 : loggedInUser.department) ? `• ${loggedInUser.department}` : ""
+                        ] }),
+                        /* @__PURE__ */ jsx("div", { className: "w-44 h-1.5 bg-slate-100 rounded-full mx-auto overflow-hidden mt-3", children: /* @__PURE__ */ jsx(
+                          motion.div,
+                          {
+                            initial: { x: "-100%" },
+                            animate: { x: "100%" },
+                            transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut" },
+                            className: "w-full h-full bg-gradient-to-r from-[#08709d] to-[#10b981]"
+                          }
+                        ) }),
+                        /* @__PURE__ */ jsx("p", { className: "text-slate-400 text-[11px] font-medium mt-2", children: "Opening your clinical dashboard..." })
+                      ]
                     }
-                  ),
-                  /* @__PURE__ */ jsx("h3", { className: "text-xl font-bold text-gray-900 mb-2", children: "Login Successful!" }),
-                  /* @__PURE__ */ jsx("p", { className: "text-gray-500 text-sm", children: "Redirecting you to the portal dashboard..." })
+                  )
                 ]
               }
             ) : /* @__PURE__ */ jsxs(Fragment, { children: [
-              /* @__PURE__ */ jsxs("div", { className: "text-center mb-8 shrink-0", style: { flexShrink: 0 }, children: [
-                /* @__PURE__ */ jsx("h1", { className: "text-2xl sm:text-3xl font-black text-[#1a294a] tracking-tight uppercase mb-1", children: "Staff / Admin Login" }),
-                /* @__PURE__ */ jsx("p", { className: "text-gray-400 text-xs sm:text-sm font-semibold leading-relaxed", children: "Enter your administrative credentials to access your dashboard" })
+              /* @__PURE__ */ jsxs("div", { className: "text-center mb-6 shrink-0", children: [
+                /* @__PURE__ */ jsx("h1", { className: "text-xl sm:text-2xl font-black text-[#1a294a] tracking-tight uppercase mb-1", children: "Staff / Admin Login" }),
+                /* @__PURE__ */ jsx("p", { className: "text-slate-400 text-xs sm:text-sm font-medium", children: "Enter your credentials to access clinical dashboard" })
               ] }),
               /* @__PURE__ */ jsx(AnimatePresence, { children: loginError && /* @__PURE__ */ jsxs(
                 motion.div,
@@ -11673,22 +11752,22 @@ const PortalLogin = () => {
                   initial: { opacity: 0, y: -8, height: 0 },
                   animate: { opacity: 1, y: 0, height: "auto" },
                   exit: { opacity: 0, y: -8, height: 0 },
-                  className: "flex items-center gap-3 bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-xl text-xs font-bold mb-5",
+                  className: "flex items-center gap-2.5 bg-red-50 border border-red-200 text-red-700 px-3.5 py-2.5 rounded-xl text-xs font-bold mb-4",
                   children: [
-                    /* @__PURE__ */ jsx(AlertCircle, { size: 16, className: "shrink-0" }),
-                    loginError
+                    /* @__PURE__ */ jsx(AlertCircle, { size: 15, className: "shrink-0" }),
+                    /* @__PURE__ */ jsx("span", { children: loginError })
                   ]
                 }
               ) }),
-              /* @__PURE__ */ jsxs("form", { onSubmit: handleLogin, className: "flex flex-col gap-6", children: [
-                /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1.5 shrink-0 text-left", style: { flexShrink: 0 }, children: [
-                  /* @__PURE__ */ jsx("label", { className: "text-[11px] font-black uppercase tracking-wider text-[#1a294a] mb-1 pl-1", children: "Staff / Admin ID" }),
+              /* @__PURE__ */ jsxs("form", { onSubmit: handleLogin, className: "flex flex-col gap-4", children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 text-left", children: [
+                  /* @__PURE__ */ jsx("label", { className: "text-[11px] font-bold uppercase tracking-wider text-slate-600 pl-0.5", children: "Staff / Admin ID" }),
                   /* @__PURE__ */ jsxs("div", { className: "relative flex items-center", children: [
                     /* @__PURE__ */ jsx(
                       Shield,
                       {
-                        size: 18,
-                        className: `absolute left-4 transition-colors duration-200 pointer-events-none ${isIdFocused ? "text-[#08709d]" : "text-gray-400"}`
+                        size: 17,
+                        className: `absolute left-3.5 transition-colors duration-200 pointer-events-none ${isIdFocused ? "text-[#08709d]" : "text-slate-400"}`
                       }
                     ),
                     /* @__PURE__ */ jsx(
@@ -11704,29 +11783,22 @@ const PortalLogin = () => {
                         onFocus: () => setIsIdFocused(true),
                         onBlur: () => setIsIdFocused(false),
                         required: true,
-                        className: "w-full bg-gray-50/50 hover:bg-gray-50 focus:bg-white border border-gray-200 focus:border-[#08709d] focus:outline-none transition-all duration-200 text-sm text-gray-900 font-semibold",
-                        style: {
-                          height: "54px",
-                          paddingLeft: "48px",
-                          paddingRight: "16px",
-                          borderRadius: "14px",
-                          boxShadow: isIdFocused ? "0 0 0 4px rgba(8, 112, 157, 0.08)" : "none"
-                        }
+                        className: "w-full bg-slate-50/70 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-[#08709d] focus:outline-none transition-all duration-200 text-xs sm:text-sm text-slate-800 font-semibold h-12 pl-11 pr-4 rounded-xl shadow-2xs"
                       }
                     )
                   ] })
                 ] }),
-                /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1.5 shrink-0 text-left", style: { flexShrink: 0 }, children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-1 pl-1", children: [
-                    /* @__PURE__ */ jsx("label", { className: "text-[11px] font-black uppercase tracking-wider text-[#1a294a]", children: "Password" }),
-                    /* @__PURE__ */ jsx("a", { href: "#", className: "text-xs font-bold text-[#08709d] hover:text-[#5eb63b] transition-colors", children: "Forgot Password?" })
+                /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 text-left", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center pl-0.5", children: [
+                    /* @__PURE__ */ jsx("label", { className: "text-[11px] font-bold uppercase tracking-wider text-slate-600", children: "Password" }),
+                    /* @__PURE__ */ jsx("a", { href: "#", className: "text-[11px] font-bold text-[#08709d] hover:text-[#5eb63b] transition-colors", children: "Forgot?" })
                   ] }),
                   /* @__PURE__ */ jsxs("div", { className: "relative flex items-center", children: [
                     /* @__PURE__ */ jsx(
                       Lock,
                       {
-                        size: 18,
-                        className: `absolute left-4 transition-colors duration-200 pointer-events-none ${isPasswordFocused ? "text-[#08709d]" : "text-gray-400"}`
+                        size: 17,
+                        className: `absolute left-3.5 transition-colors duration-200 pointer-events-none ${isPasswordFocused ? "text-[#08709d]" : "text-slate-400"}`
                       }
                     ),
                     /* @__PURE__ */ jsx(
@@ -11742,14 +11814,7 @@ const PortalLogin = () => {
                         onFocus: () => setIsPasswordFocused(true),
                         onBlur: () => setIsPasswordFocused(false),
                         required: true,
-                        className: "w-full bg-gray-50/50 hover:bg-gray-50 focus:bg-white border border-gray-200 focus:border-[#08709d] focus:outline-none transition-all duration-200 text-sm text-gray-900 font-semibold",
-                        style: {
-                          height: "54px",
-                          paddingLeft: "48px",
-                          paddingRight: "48px",
-                          borderRadius: "14px",
-                          boxShadow: isPasswordFocused ? "0 0 0 4px rgba(8, 112, 157, 0.08)" : "none"
-                        }
+                        className: "w-full bg-slate-50/70 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-[#08709d] focus:outline-none transition-all duration-200 text-xs sm:text-sm text-slate-800 font-semibold h-12 pl-11 pr-11 rounded-xl shadow-2xs"
                       }
                     ),
                     /* @__PURE__ */ jsx(
@@ -11757,9 +11822,8 @@ const PortalLogin = () => {
                       {
                         type: "button",
                         onClick: () => setShowPassword(!showPassword),
-                        className: "absolute right-4 text-gray-400 hover:text-gray-600 transition-colors p-1 bg-transparent border-none cursor-pointer",
-                        style: { display: "flex", alignItems: "center", justifyContent: "center" },
-                        children: showPassword ? /* @__PURE__ */ jsx(EyeOff, { size: 18 }) : /* @__PURE__ */ jsx(Eye, { size: 18 })
+                        className: "absolute right-3.5 text-slate-400 hover:text-slate-600 transition-colors p-1 bg-transparent border-none cursor-pointer flex items-center justify-center",
+                        children: showPassword ? /* @__PURE__ */ jsx(EyeOff, { size: 16 }) : /* @__PURE__ */ jsx(Eye, { size: 16 })
                       }
                     )
                   ] })
@@ -11767,8 +11831,7 @@ const PortalLogin = () => {
                 /* @__PURE__ */ jsxs(
                   "label",
                   {
-                    className: "flex items-center gap-2.5 cursor-pointer mt-1 select-none shrink-0",
-                    style: { flexShrink: 0 },
+                    className: "flex items-center gap-2 cursor-pointer mt-0.5 select-none",
                     children: [
                       /* @__PURE__ */ jsx(
                         "input",
@@ -11776,10 +11839,10 @@ const PortalLogin = () => {
                           type: "checkbox",
                           checked: rememberMe,
                           onChange: (e) => setRememberMe(e.target.checked),
-                          className: "w-4.5 h-4.5 rounded border-gray-300 text-[#08709d] focus:ring-[#08709d] cursor-pointer"
+                          className: "w-4 h-4 rounded border-slate-300 text-[#08709d] focus:ring-[#08709d] cursor-pointer"
                         }
                       ),
-                      /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm font-bold text-gray-400", children: "Remember my session" })
+                      /* @__PURE__ */ jsx("span", { className: "text-xs font-bold text-slate-500", children: "Remember my session" })
                     ]
                   }
                 ),
@@ -11788,31 +11851,21 @@ const PortalLogin = () => {
                   {
                     type: "submit",
                     disabled: isLoading,
-                    className: "mt-2 flex items-center justify-center transition-all cursor-pointer shadow-lg shadow-[#08709d]/10 hover:shadow-[#08709d]/20 active:scale-[0.99] disabled:opacity-75 disabled:pointer-events-none border-none text-white font-bold hover:scale-[1.02] duration-300",
-                    style: {
-                      height: "54px",
-                      borderRadius: "14px",
-                      background: "linear-gradient(to right, #08709d, #0ea5e9)",
-                      flexShrink: 0,
-                      width: "100%",
-                      fontSize: "14px",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.1em"
-                    },
+                    className: "mt-2 flex items-center justify-center transition-all cursor-pointer shadow-md hover:shadow-lg active:scale-[0.99] disabled:opacity-75 disabled:pointer-events-none border-none text-white font-bold h-12 rounded-xl bg-gradient-to-r from-[#08709d] to-[#0ea5e9] hover:from-[#065679] hover:to-[#0284c7] text-xs sm:text-sm uppercase tracking-wider",
                     children: isLoading ? /* @__PURE__ */ jsx("div", { className: "w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" }) : "Sign In"
                   }
                 )
               ] }),
-              /* @__PURE__ */ jsx("div", { className: "h-[1px] bg-gray-100 my-6" }),
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider shrink-0", style: { flexShrink: 0 }, children: [
+              /* @__PURE__ */ jsx("div", { className: "h-px bg-slate-100 my-5" }),
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider", children: [
                 /* @__PURE__ */ jsx(ShieldCheck, { size: 14, className: "text-[#5eb63b]" }),
-                /* @__PURE__ */ jsx("span", { children: "Secure End-to-End Encrypted Session" })
+                /* @__PURE__ */ jsx("span", { children: "End-to-End Clinical Encryption" })
               ] }),
-              /* @__PURE__ */ jsxs("p", { className: "text-center text-[10px] text-gray-300 font-semibold mt-4", children: [
+              /* @__PURE__ */ jsxs("p", { className: "text-center text-[10px] text-slate-400 font-medium mt-3", children: [
                 "Admin: ",
-                /* @__PURE__ */ jsx("span", { className: "font-mono", children: "ADMIN-001" }),
+                /* @__PURE__ */ jsx("span", { className: "font-mono font-bold text-slate-600", children: "ADMIN-001" }),
                 " / ",
-                /* @__PURE__ */ jsx("span", { className: "font-mono", children: "Admin@2024" })
+                /* @__PURE__ */ jsx("span", { className: "font-mono font-bold text-slate-600", children: "Admin@2024" })
               ] })
             ] })
           ]
@@ -11822,15 +11875,7 @@ const PortalLogin = () => {
   ] });
 };
 const B = {
-  primary: "#08709d",
-  secondary: "#1a294a",
-  accent: "#5eb63b",
-  bg: "#F8F9FA",
-  white: "#FFFFFF",
-  border: "#E8EDF2",
-  muted: "#6B7A90",
-  lightBlue: "#EBF5FA",
-  lightGreen: "#EDF8E7"
+  primary: "#08709d"
 };
 const getInitials = (name = "") => name.trim().split(" ").map((w) => {
   var _a;
@@ -11843,9 +11888,9 @@ const getGreeting = () => {
   return { text: "Good Evening", Icon: Moon };
 };
 const formatDate = () => (/* @__PURE__ */ new Date()).toLocaleDateString("en-GB", {
-  weekday: "long",
+  weekday: "short",
   day: "numeric",
-  month: "long",
+  month: "short",
   year: "numeric"
 });
 const calculateDays = (start, end) => {
@@ -11855,85 +11900,69 @@ const calculateDays = (start, end) => {
   const d = Math.ceil((e - s) / 864e5) + 1;
   return d > 0 ? `${d} day${d !== 1 ? "s" : ""}` : "0 days";
 };
-const inputCls = "w-full border border-[#E8EDF2] focus:border-[#08709d] focus:outline-none focus:ring-2 focus:ring-[#08709d]/10 transition-all px-4 py-3 rounded-xl bg-white text-[#1a294a] text-sm placeholder:text-[#6B7A90]/50";
-const inputStyle = { height: "48px" };
-const Field = ({ label, children }) => /* @__PURE__ */ jsxs("div", { style: { display: "flex", flexDirection: "column", gap: "6px" }, children: [
-  /* @__PURE__ */ jsx("label", { style: { fontSize: "11px", fontWeight: 600, color: B.muted, textTransform: "uppercase", letterSpacing: "0.08em" }, children: label }),
+const inputCls = "w-full border border-slate-200 focus:border-[#08709d] focus:outline-none focus:ring-2 focus:ring-[#08709d]/15 transition-all px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white text-slate-800 text-xs sm:text-sm placeholder:text-slate-400 font-medium";
+const Field = ({ label, children }) => /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1.5 text-left", children: [
+  /* @__PURE__ */ jsx("label", { className: "text-[11px] font-bold text-slate-500 uppercase tracking-wider", children: label }),
   children
 ] });
-const FileUpload = ({ label, file, onFile, onClear, accentColor = B.primary }) => /* @__PURE__ */ jsx(Field, { label, children: /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }, children: [
+const FileUpload = ({ label, file, onFile, onClear, accentColor = B.primary }) => /* @__PURE__ */ jsx(Field, { label, children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 flex-wrap", children: [
   /* @__PURE__ */ jsxs(
     "button",
     {
       type: "button",
       onClick: onFile,
-      style: { display: "flex", alignItems: "center", gap: "8px", padding: "8px 16px", border: `1.5px dashed ${file ? accentColor : B.border}`, borderRadius: "10px", color: file ? accentColor : B.muted, fontSize: "13px", fontWeight: 500, background: "white", cursor: "pointer", transition: "all 0.2s" },
+      className: "flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer bg-white border border-dashed hover:border-[#08709d] text-slate-600 hover:text-[#08709d] active:scale-95",
+      style: { borderColor: file ? accentColor : "#CBD5E1" },
       children: [
-        /* @__PURE__ */ jsx(Paperclip, { size: 14 }),
-        file ? "Change File" : "Attach File"
+        /* @__PURE__ */ jsx(Paperclip, { size: 14, className: file ? "text-[#08709d]" : "text-slate-400" }),
+        file ? "Change File" : "Attach Document"
       ]
     }
   ),
-  file && /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "8px", background: B.bg, border: `1px solid ${B.border}`, padding: "4px 12px", borderRadius: "8px", fontSize: "12px", color: B.muted }, children: [
-    /* @__PURE__ */ jsx("span", { style: { maxWidth: "160px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }, children: file.name }),
-    /* @__PURE__ */ jsx("button", { type: "button", onClick: onClear, style: { background: "none", border: "none", cursor: "pointer", color: B.muted, padding: "2px", display: "flex" }, children: /* @__PURE__ */ jsx(X, { size: 12 }) })
+  file && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-xs text-slate-700", children: [
+    /* @__PURE__ */ jsx("span", { className: "max-w-[160px] truncate font-medium", children: file.name }),
+    /* @__PURE__ */ jsx(
+      "button",
+      {
+        type: "button",
+        onClick: onClear,
+        className: "text-slate-400 hover:text-red-500 cursor-pointer p-0.5",
+        children: /* @__PURE__ */ jsx(X, { size: 13 })
+      }
+    )
   ] })
 ] }) });
 const STATUS_CFG = {
-  Pending: { color: "#e67e22", bg: "#FEF3E2" },
-  "In Progress": { color: B.primary, bg: B.lightBlue },
-  Completed: { color: B.accent, bg: B.lightGreen }
+  Pending: { label: "Pending Approval", color: "#d97706", bg: "#FEF3C7", border: "#FDE68A" },
+  "In Progress": { label: "In Progress", color: "#0284c7", bg: "#E0F2FE", border: "#BAE6FD" },
+  Completed: { label: "Completed", color: "#16a34a", bg: "#DCFCE7", border: "#BBF7D0" },
+  Approved: { label: "Approved", color: "#16a34a", bg: "#DCFCE7", border: "#BBF7D0" },
+  Published: { label: "Published", color: "#08709d", bg: "#E0F2FE", border: "#BAE6FD" },
+  Rejected: { label: "Rejected", color: "#dc2626", bg: "#FEE2E2", border: "#FECACA" }
 };
 const PRIORITY_CFG = {
-  Low: { color: B.accent, bg: B.lightGreen },
-  Medium: { color: "#e67e22", bg: "#FEF3E2" },
-  High: { color: "#dc3545", bg: "#FFF5F5" }
+  normal: { label: "Normal", color: "#0284c7", bg: "#E0F2FE", border: "#BAE6FD" },
+  Low: { label: "Low", color: "#16a34a", bg: "#DCFCE7", border: "#BBF7D0" },
+  Medium: { label: "Medium", color: "#d97706", bg: "#FEF3C7", border: "#FDE68A" },
+  important: { label: "Important", color: "#d97706", bg: "#FEF3C7", border: "#FDE68A" },
+  urgent: { label: "Urgent", color: "#dc2626", bg: "#FEE2E2", border: "#FECACA" },
+  High: { label: "High", color: "#dc2626", bg: "#FEE2E2", border: "#FECACA" }
 };
-const EmptyState = ({ icon: Icon, text }) => /* @__PURE__ */ jsxs("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", padding: "56px 24px", textAlign: "center" }, children: [
-  /* @__PURE__ */ jsx("div", { style: { width: "60px", height: "60px", borderRadius: "16px", background: B.lightBlue, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }, children: /* @__PURE__ */ jsx(Icon, { size: 28, style: { color: B.primary, opacity: 0.5 } }) }),
-  /* @__PURE__ */ jsx("p", { style: { color: B.muted, fontSize: "14px", fontWeight: 400, lineHeight: 1.6 }, children: text })
+const Badge = ({ label, cfg }) => {
+  const c = cfg || STATUS_CFG[label] || { label, color: "#64748B", bg: "#F1F5F9", border: "#E2E8F0" };
+  return /* @__PURE__ */ jsx(
+    "span",
+    {
+      className: "inline-flex items-center gap-1 text-[10.5px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider border whitespace-nowrap",
+      style: { color: c.color, backgroundColor: c.bg, borderColor: c.border },
+      children: c.label || label
+    }
+  );
+};
+const EmptyState = ({ icon: Icon, text }) => /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center justify-center p-8 sm:p-12 text-center", children: [
+  /* @__PURE__ */ jsx("div", { className: "w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-sky-50 text-[#08709d] flex items-center justify-center mb-3", children: /* @__PURE__ */ jsx(Icon, { size: 24, className: "opacity-60" }) }),
+  /* @__PURE__ */ jsx("p", { className: "text-slate-500 text-xs sm:text-sm font-medium max-w-sm leading-relaxed", children: text })
 ] });
-const ReportTable = ({ headers, rows, emptyIcon, emptyText, onApply, applyLabel }) => /* @__PURE__ */ jsxs("div", { style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "18px", overflow: "hidden" }, children: [
-  /* @__PURE__ */ jsxs("div", { style: { padding: "16px 24px", borderBottom: `1.5px solid ${B.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", background: B.bg }, children: [
-    /* @__PURE__ */ jsxs("span", { style: { fontSize: "13px", fontWeight: 600, color: B.secondary }, children: [
-      rows.length,
-      " record",
-      rows.length !== 1 ? "s" : ""
-    ] }),
-    onApply && /* @__PURE__ */ jsxs(
-      "button",
-      {
-        onClick: onApply,
-        style: { display: "flex", alignItems: "center", gap: "6px", height: "36px", padding: "0 16px", borderRadius: "10px", background: B.primary, color: "white", fontSize: "12px", fontWeight: 500, border: "none", cursor: "pointer", transition: "all 0.2s", boxShadow: `0 3px 10px ${B.primary}30` },
-        onMouseEnter: (e) => e.currentTarget.style.background = "#065f85",
-        onMouseLeave: (e) => e.currentTarget.style.background = B.primary,
-        children: [
-          /* @__PURE__ */ jsx(ArrowUpRight, { size: 14 }),
-          " ",
-          applyLabel || "Apply"
-        ]
-      }
-    )
-  ] }),
-  rows.length === 0 ? /* @__PURE__ */ jsx(EmptyState, { icon: emptyIcon, text: emptyText }) : /* @__PURE__ */ jsx("div", { style: { overflowX: "auto" }, children: /* @__PURE__ */ jsxs("table", { style: { width: "100%", borderCollapse: "collapse" }, children: [
-    /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsx("tr", { style: { borderBottom: `1.5px solid ${B.border}`, background: B.bg }, children: headers.map((h) => /* @__PURE__ */ jsx("th", { style: { textAlign: "left", fontSize: "10px", fontWeight: 600, color: B.muted, textTransform: "uppercase", letterSpacing: "0.1em", padding: "10px 20px" }, children: h }, h)) }) }),
-    /* @__PURE__ */ jsx("tbody", { children: /* @__PURE__ */ jsx(AnimatePresence, { initial: false, children: rows.map((row, i) => /* @__PURE__ */ jsx(
-      motion.tr,
-      {
-        initial: { opacity: 0, y: 6 },
-        animate: { opacity: 1, y: 0 },
-        transition: { delay: i * 0.04 },
-        style: { borderBottom: `1px solid ${B.border}`, transition: "background 0.15s" },
-        onMouseEnter: (e) => e.currentTarget.style.background = B.lightBlue + "55",
-        onMouseLeave: (e) => e.currentTarget.style.background = "transparent",
-        children: row
-      },
-      i
-    )) }) })
-  ] }) })
-] });
-const Td = ({ children, mono }) => /* @__PURE__ */ jsx("td", { style: { padding: "13px 20px", fontSize: "13px", color: mono ? B.primary : B.secondary, fontWeight: mono ? 500 : 400, fontFamily: mono ? "monospace" : void 0 }, children });
-const Badge = ({ label, color, bg }) => /* @__PURE__ */ jsx("span", { style: { background: bg, color, border: `1px solid ${color}30`, fontSize: "10px", fontWeight: 600, padding: "3px 10px", borderRadius: "999px", textTransform: "uppercase", letterSpacing: "0.07em" }, children: label });
 const StaffDashboard = () => {
   var _a;
   const navigate = useNavigate();
@@ -11947,22 +11976,45 @@ const StaffDashboard = () => {
     otApplications,
     createOtApplication,
     salaryApplications,
-    createSalaryApplication
+    createSalaryApplication,
+    noticeApplications,
+    createNoticeApplication
   } = useAuth();
   const [activeTab, setActiveTab] = useState("leave");
   const [activeModal, setActiveModal] = useState(null);
+  const [selectedNotice, setSelectedNotice] = useState(null);
+  const [selectedLeave, setSelectedLeave] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
+  const [noticeFilter, setNoticeFilter] = useState("all");
+  const [acknowledgedNotices, setAcknowledgedNotices] = useState(() => {
+    try {
+      const stored = localStorage.getItem("chc_acknowledged_notices");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
   const [leaveType, setLeaveType] = useState("Annual Leave");
   const [leaveStart, setLeaveStart] = useState("");
   const [leaveEnd, setLeaveEnd] = useState("");
+  const [leaveReason, setLeaveReason] = useState("");
   const [leaveFile, setLeaveFile] = useState(null);
   const leaveFileRef = useRef(null);
   const [otType, setOtType] = useState("Day Shift");
   const [otDate, setOtDate] = useState("");
   const [otHours, setOtHours] = useState("");
+  const [otDescription, setOtDescription] = useState("");
   const [otFile, setOtFile] = useState(null);
   const otFileRef = useRef(null);
+  const [noticeTitle, setNoticeTitle] = useState("");
+  const [noticeCategory, setNoticeCategory] = useState("Internal Staff Notice");
+  const [noticePriority, setNoticePriority] = useState("normal");
+  const [noticeTargetAudience, setNoticeTargetAudience] = useState("all");
+  const [noticeMessage, setNoticeMessage] = useState("");
+  const [noticeFile, setNoticeFile] = useState(null);
+  const noticeFileRef = useRef(null);
   const [incType, setIncType] = useState("Merit-Based Performance Review");
+  const [incJustification, setIncJustification] = useState("");
   const [incFile, setIncFile] = useState(null);
   const incFileRef = useRef(null);
   const [staffName, setStaffName] = useState((currentUser == null ? void 0 : currentUser.name) || "");
@@ -11981,24 +12033,59 @@ const StaffDashboard = () => {
     logout();
     navigate("/portal");
   };
-  const openModal = (type) => setActiveModal(type);
+  const openModal = (type, data = null) => {
+    if (type === "viewNotice") {
+      setSelectedNotice(data);
+    } else if (type === "viewLeave") {
+      setSelectedLeave(data);
+    }
+    setActiveModal(type);
+  };
   const closeModal = () => {
     setActiveModal(null);
+    setSelectedNotice(null);
+    setSelectedLeave(null);
     setLeaveStart("");
     setLeaveEnd("");
+    setLeaveReason("");
     setLeaveFile(null);
     setOtDate("");
     setOtHours("");
+    setOtDescription("");
     setOtFile(null);
+    setNoticeTitle("");
+    setNoticeMessage("");
+    setNoticeFile(null);
+    setIncJustification("");
     setIncFile(null);
   };
-  const submitForm = (e, type, record) => {
+  const toggleAcknowledgeNotice = (id) => {
+    setAcknowledgedNotices((prev) => {
+      const next = prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id];
+      try {
+        localStorage.setItem("chc_acknowledged_notices", JSON.stringify(next));
+      } catch (err) {
+        console.error(err);
+      }
+      return next;
+    });
+  };
+  const submitForm = async (e, type, record) => {
     e.preventDefault();
-    if (type === "leave") createLeaveApplication(record);
-    if (type === "ot") createOtApplication(record);
-    if (type === "salary") createSalaryApplication(record);
+    if (type === "leave") {
+      await createLeaveApplication(record);
+      setSuccessMsg("Leave application submitted to HR successfully.");
+    } else if (type === "ot") {
+      await createOtApplication(record);
+      setSuccessMsg("Overtime claim submitted successfully.");
+    } else if (type === "notice") {
+      await createNoticeApplication(record);
+      setSuccessMsg("Staff Notice submitted and published successfully.");
+    } else if (type === "salary") {
+      await createSalaryApplication(record);
+      setSuccessMsg("Salary review request submitted to HR.");
+    }
     closeModal();
-    setSuccessMsg("Your request has been submitted to HR successfully.");
     setTimeout(() => setSuccessMsg(null), 5e3);
   };
   const myLeaves = (leaveApplications || []).filter((r) => {
@@ -12013,281 +12100,624 @@ const StaffDashboard = () => {
     var _a2, _b;
     return ((_a2 = r.staffId) == null ? void 0 : _a2.trim().toLowerCase()) === ((_b = currentUser == null ? void 0 : currentUser.id) == null ? void 0 : _b.trim().toLowerCase());
   });
+  const allNotices = noticeApplications || [];
+  const mySubmittedNotices = allNotices.filter((r) => {
+    var _a2, _b;
+    return ((_a2 = r.staffId) == null ? void 0 : _a2.trim().toLowerCase()) === ((_b = currentUser == null ? void 0 : currentUser.id) == null ? void 0 : _b.trim().toLowerCase());
+  });
+  const filteredNotices = allNotices.filter((n) => {
+    if (noticeFilter === "urgent") return n.priority === "urgent" || n.priority === "important";
+    if (noticeFilter === "broadcast") return n.targetAudience === "all";
+    return true;
+  });
   const greeting = getGreeting();
   const initials = getInitials(currentUser == null ? void 0 : currentUser.name);
   const myTasks = getTasksForStaff ? getTasksForStaff(currentUser == null ? void 0 : currentUser.id) : [];
-  return /* @__PURE__ */ jsxs("div", { style: { fontFamily: "'Poppins',sans-serif", minHeight: "100vh", background: B.bg, display: "flex", flexDirection: "column" }, children: [
-    /* @__PURE__ */ jsx("div", { style: { height: "4px", background: `linear-gradient(90deg, ${B.secondary}, ${B.primary}, ${B.accent})`, flexShrink: 0 } }),
-    /* @__PURE__ */ jsxs("header", { style: { height: "64px", background: B.white, borderBottom: `1.5px solid ${B.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", boxShadow: "0 2px 12px rgba(8,112,157,0.06)", flexShrink: 0, position: "sticky", top: 0, zIndex: 30 }, children: [
-      /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "16px" }, children: [
-        /* @__PURE__ */ jsx("img", { src: logo, alt: "Corx Logo", style: { height: "36px", objectFit: "contain" } }),
-        /* @__PURE__ */ jsx("div", { style: { width: "1px", height: "24px", background: B.border } }),
-        /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsx("h1", { style: { fontSize: "15px", fontWeight: 600, color: B.secondary, margin: 0 }, children: "Corx Staff Portal" }),
-          /* @__PURE__ */ jsx("p", { style: { fontSize: "11px", color: B.muted, margin: 0 }, children: formatDate() })
+  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-['Poppins']", children: [
+    /* @__PURE__ */ jsx("div", { className: "h-1 bg-gradient-to-r from-[#1a294a] via-[#08709d] to-[#5eb63b] w-full shrink-0" }),
+    /* @__PURE__ */ jsx("header", { className: "sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 px-3.5 sm:px-6 lg:px-8 py-3 shadow-xs", children: /* @__PURE__ */ jsxs("div", { className: "max-w-7xl mx-auto flex items-center justify-between gap-3", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 sm:gap-4 min-w-0", children: [
+        /* @__PURE__ */ jsx(Link, { to: "/", className: "shrink-0 flex items-center", children: /* @__PURE__ */ jsx("img", { src: logo, alt: "Corx Logo", className: "h-8 sm:h-9 w-auto object-contain" }) }),
+        /* @__PURE__ */ jsx("div", { className: "h-5 w-px bg-slate-200 hidden sm:block shrink-0" }),
+        /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsx("h1", { className: "text-xs sm:text-sm font-bold text-[#1a294a] truncate", children: "Staff Portal" }),
+            /* @__PURE__ */ jsxs("span", { className: "hidden md:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200", children: [
+              /* @__PURE__ */ jsx("span", { className: "w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" }),
+              "Active"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx("p", { className: "text-[10px] sm:text-xs text-slate-400 font-medium hidden xs:block truncate", children: formatDate() })
         ] })
       ] }),
-      /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "14px" }, children: [
-        /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "8px", background: B.lightBlue, border: `1px solid ${B.primary}20`, padding: "6px 14px 6px 6px", borderRadius: "999px" }, children: [
-          /* @__PURE__ */ jsx("div", { style: { width: "30px", height: "30px", borderRadius: "50%", background: `linear-gradient(135deg, ${B.secondary}, ${B.primary})`, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: "11px", fontWeight: 600 }, children: initials }),
-          /* @__PURE__ */ jsxs("span", { style: { fontSize: "12px", fontWeight: 500, color: B.secondary }, className: "hidden sm:inline", children: [
-            /* @__PURE__ */ jsx(greeting.Icon, { size: 12, style: { display: "inline", marginRight: "4px", color: B.primary } }),
-            greeting.text
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-3 shrink-0", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 bg-sky-50/80 border border-sky-100 py-1 px-2 sm:px-3 rounded-full", children: [
+          /* @__PURE__ */ jsxs("div", { className: "relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-[#1a294a] to-[#08709d] flex items-center justify-center text-white text-[11px] font-extrabold shrink-0 overflow-hidden shadow-xs", children: [
+            (currentUser == null ? void 0 : currentUser.photo) ? /* @__PURE__ */ jsx("img", { src: currentUser.photo, alt: currentUser.name, className: "w-full h-full object-cover" }) : initials,
+            /* @__PURE__ */ jsx("span", { className: "absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white" })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "hidden sm:block text-left pr-1", children: [
+            /* @__PURE__ */ jsx("span", { className: "block text-xs font-bold text-[#1a294a] truncate max-w-[120px]", children: ((_a = currentUser == null ? void 0 : currentUser.name) == null ? void 0 : _a.split(" ")[0]) || "Staff" }),
+            /* @__PURE__ */ jsx("span", { className: "block text-[10px] text-slate-500 font-medium truncate max-w-[120px]", children: (currentUser == null ? void 0 : currentUser.position) || "Healthcare" })
           ] })
         ] }),
         /* @__PURE__ */ jsxs(
           "button",
           {
             onClick: handleLogout,
-            style: { display: "flex", alignItems: "center", gap: "8px", height: "38px", padding: "0 16px", borderRadius: "10px", background: "#FFF5F5", color: "#dc3545", border: "1px solid #dc354520", fontSize: "12px", fontWeight: 600, cursor: "pointer", transition: "all 0.2s", fontFamily: "'Poppins',sans-serif" },
-            onMouseEnter: (e) => e.currentTarget.style.background = "#FFECEC",
-            onMouseLeave: (e) => e.currentTarget.style.background = "#FFF5F5",
+            className: "flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200/60 text-xs font-bold transition-all cursor-pointer active:scale-95 shadow-2xs",
+            title: "Sign Out of Portal",
             children: [
               /* @__PURE__ */ jsx(LogOut, { size: 14 }),
-              " Sign Out"
+              /* @__PURE__ */ jsx("span", { className: "hidden sm:inline", children: "Sign Out" })
             ]
           }
         )
       ] })
-    ] }),
-    /* @__PURE__ */ jsx("main", { style: { flex: 1, overflowY: "auto", padding: "28px 24px 48px" }, children: /* @__PURE__ */ jsxs("div", { style: { maxWidth: "1200px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "32px" }, children: [
+    ] }) }),
+    /* @__PURE__ */ jsxs("main", { className: "flex-1 px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 max-w-7xl w-full mx-auto flex flex-col gap-6 sm:gap-8", children: [
       /* @__PURE__ */ jsx(AnimatePresence, { children: successMsg && /* @__PURE__ */ jsxs(
         motion.div,
         {
-          initial: { opacity: 0, y: -10 },
-          animate: { opacity: 1, y: 0 },
-          exit: { opacity: 0 },
-          style: { background: B.lightGreen, border: `1px solid ${B.accent}40`, color: B.accent, padding: "13px 18px", borderRadius: "14px", display: "flex", alignItems: "center", gap: "10px", fontSize: "13px", fontWeight: 500 },
+          initial: { opacity: 0, y: -10, scale: 0.95 },
+          animate: { opacity: 1, y: 0, scale: 1 },
+          exit: { opacity: 0, y: -10 },
+          className: "bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-2xl flex items-center justify-between gap-3 text-xs sm:text-sm font-semibold shadow-sm",
           children: [
-            /* @__PURE__ */ jsx(CheckCircle2, { size: 16, style: { flexShrink: 0 } }),
-            successMsg
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5", children: [
+              /* @__PURE__ */ jsx(CheckCircle2, { size: 18, className: "text-emerald-600 shrink-0" }),
+              /* @__PURE__ */ jsx("span", { children: successMsg })
+            ] }),
+            /* @__PURE__ */ jsx("button", { onClick: () => setSuccessMsg(null), className: "text-emerald-500 hover:text-emerald-800 p-1", children: /* @__PURE__ */ jsx(X, { size: 14 }) })
           ]
         }
       ) }),
-      /* @__PURE__ */ jsxs("div", { style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "24px", padding: "28px", display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "center", justifyContent: "space-between", boxShadow: "0 2px 10px rgba(26,41,74,0.04)" }, children: [
-        /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsxs("p", { style: { fontSize: "13px", color: B.muted, marginBottom: "4px", display: "flex", alignItems: "center", gap: "6px" }, children: [
-            /* @__PURE__ */ jsx(greeting.Icon, { size: 14, style: { color: B.primary } }),
-            greeting.text
+      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-xs relative overflow-hidden", children: [
+        /* @__PURE__ */ jsx("div", { className: "absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-sky-100/60 via-emerald-50/40 to-transparent rounded-full blur-3xl pointer-events-none -z-0" }),
+        /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 sm:gap-5 flex-wrap sm:flex-nowrap", children: [
+            /* @__PURE__ */ jsxs("div", { className: "relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl p-1 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] shadow-md shrink-0", children: [
+              (currentUser == null ? void 0 : currentUser.photo) ? /* @__PURE__ */ jsx(
+                "img",
+                {
+                  src: currentUser.photo,
+                  alt: currentUser.name,
+                  className: "w-full h-full object-cover rounded-[14px] bg-white"
+                }
+              ) : /* @__PURE__ */ jsx("div", { className: "w-full h-full rounded-[14px] bg-gradient-to-br from-[#1a294a] to-[#08709d] flex items-center justify-center text-white text-xl sm:text-2xl font-black", children: initials }),
+              /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 -right-1 w-4.5 h-4.5 bg-emerald-500 border-2 border-white rounded-full shadow-xs" })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-xs font-semibold text-sky-700 mb-1", children: [
+                /* @__PURE__ */ jsx(greeting.Icon, { size: 14, className: "text-[#08709d]" }),
+                /* @__PURE__ */ jsx("span", { children: greeting.text }),
+                /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: "•" }),
+                /* @__PURE__ */ jsx("span", { className: "text-slate-500 font-mono text-[11px]", children: currentUser == null ? void 0 : currentUser.id })
+              ] }),
+              /* @__PURE__ */ jsxs("h2", { className: "text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#1a294a] tracking-tight", children: [
+                "Welcome back, ",
+                (currentUser == null ? void 0 : currentUser.name) || "Staff Member",
+                "! 👋"
+              ] }),
+              /* @__PURE__ */ jsxs("p", { className: "text-xs sm:text-sm text-slate-500 mt-1 font-medium", children: [
+                (currentUser == null ? void 0 : currentUser.position) || "Healthcare Professional",
+                " ",
+                (currentUser == null ? void 0 : currentUser.department) ? `• ${currentUser.department}` : ""
+              ] })
+            ] })
           ] }),
-          /* @__PURE__ */ jsxs("h2", { style: { fontSize: "clamp(22px, 3.5vw, 30px)", fontWeight: 700, color: B.secondary, margin: 0 }, children: [
-            "Hey, ",
-            ((_a = currentUser == null ? void 0 : currentUser.name) == null ? void 0 : _a.split(" ")[0]) || "there",
-            "! 👋"
-          ] }),
-          /* @__PURE__ */ jsxs("p", { style: { fontSize: "13px", color: B.muted, marginTop: "4px", marginBottom: 0 }, children: [
-            "Logged in as ",
-            /* @__PURE__ */ jsx("strong", { style: { color: B.secondary }, children: (currentUser == null ? void 0 : currentUser.position) || "Staff" }),
-            " (",
-            (currentUser == null ? void 0 : currentUser.department) || "Medical Consultancy",
-            ")"
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxs("div", { style: { display: "flex", gap: "16px" }, children: [
-          /* @__PURE__ */ jsxs("div", { style: { background: B.lightBlue, padding: "12px 20px", borderRadius: "16px", border: `1px solid ${B.primary}15` }, children: [
-            /* @__PURE__ */ jsx("span", { style: { fontSize: "11px", color: B.muted, display: "block", textTransform: "uppercase", letterSpacing: "0.05em" }, children: "My Tasks" }),
-            /* @__PURE__ */ jsx("strong", { style: { fontSize: "20px", color: B.primary }, children: myTasks.length })
-          ] }),
-          /* @__PURE__ */ jsxs("div", { style: { background: B.lightGreen, padding: "12px 20px", borderRadius: "16px", border: `1px solid ${B.accent}15` }, children: [
-            /* @__PURE__ */ jsx("span", { style: { fontSize: "11px", color: B.muted, display: "block", textTransform: "uppercase", letterSpacing: "0.05em" }, children: "Requests Submitted" }),
-            /* @__PURE__ */ jsx("strong", { style: { fontSize: "20px", color: B.accent }, children: myLeaves.length + myOts.length + mySalaries.length })
+          /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 w-full lg:w-auto shrink-0", children: [
+            /* @__PURE__ */ jsxs("div", { className: "bg-sky-50/70 border border-sky-100 p-3 sm:p-3.5 rounded-2xl text-center", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold text-sky-700 uppercase tracking-wider block", children: "My Tasks" }),
+              /* @__PURE__ */ jsx("span", { className: "text-lg sm:text-xl font-black text-[#08709d] block", children: myTasks.length })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "bg-amber-50/70 border border-amber-100 p-3 sm:p-3.5 rounded-2xl text-center", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold text-amber-700 uppercase tracking-wider block", children: "Notices" }),
+              /* @__PURE__ */ jsx("span", { className: "text-lg sm:text-xl font-black text-amber-600 block", children: allNotices.length })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "bg-emerald-50/70 border border-emerald-100 p-3 sm:p-3.5 rounded-2xl text-center", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold text-emerald-700 uppercase tracking-wider block", children: "My Leaves" }),
+              /* @__PURE__ */ jsx("span", { className: "text-lg sm:text-xl font-black text-emerald-600 block", children: myLeaves.length })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "bg-indigo-50/70 border border-indigo-100 p-3 sm:p-3.5 rounded-2xl text-center", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold text-indigo-700 uppercase tracking-wider block", children: "Total Claims" }),
+              /* @__PURE__ */ jsx("span", { className: "text-lg sm:text-xl font-black text-indigo-600 block", children: myLeaves.length + myOts.length + mySalaries.length })
+            ] })
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("p", { style: { fontSize: "11px", fontWeight: 600, color: B.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "16px" }, children: "Quick Actions" }),
-        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 sm:grid-cols-3 gap-5", children: [
-          { modal: "leave", color: B.primary, bg: B.lightBlue, icon: /* @__PURE__ */ jsx(Calendar, { size: 22 }), label: "Apply for Leave", sub: "Submit annual, sick or emergency leave" },
-          { modal: "ot", color: B.accent, bg: B.lightGreen, icon: /* @__PURE__ */ jsx(Clock, { size: 22 }), label: "Apply for OT", sub: "Log overtime and claim shift hours" },
-          { modal: "salary", color: B.secondary, bg: "#EAECF3", icon: /* @__PURE__ */ jsx(TrendingUp, { size: 22 }), label: "Salary Increment", sub: "Submit your appraisal or review" }
-        ].map((card) => /* @__PURE__ */ jsxs(
-          motion.div,
+      /* @__PURE__ */ jsxs("section", { children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-3.5", children: [
+          /* @__PURE__ */ jsxs("h3", { className: "text-xs sm:text-sm font-extrabold text-slate-500 uppercase tracking-wider flex items-center gap-2", children: [
+            /* @__PURE__ */ jsx(Sparkles, { size: 15, className: "text-[#08709d]" }),
+            "Quick Actions & Applications"
+          ] }),
+          /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-400 font-medium hidden sm:inline", children: "Instant HR & Administration Submissions" })
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4", children: [
           {
-            whileHover: { y: -4, boxShadow: `0 16px 36px ${card.color}18` },
-            whileTap: { scale: 0.98 },
-            onClick: () => openModal(card.modal),
-            style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "18px", padding: "22px", cursor: "pointer", position: "relative", overflow: "hidden", boxShadow: "0 2px 10px rgba(26,41,74,0.06)", transition: "all 0.2s" },
-            children: [
-              /* @__PURE__ */ jsx("div", { style: { position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg, ${card.color}, ${card.color}80)` } }),
-              /* @__PURE__ */ jsx("div", { style: { width: "44px", height: "44px", borderRadius: "12px", background: card.bg, display: "flex", alignItems: "center", justifyContent: "center", color: card.color, marginBottom: "14px" }, children: card.icon }),
-              /* @__PURE__ */ jsx("p", { style: { fontSize: "14px", fontWeight: 600, color: B.secondary, margin: "0 0 4px" }, children: card.label }),
-              /* @__PURE__ */ jsx("p", { style: { fontSize: "12px", color: B.muted, margin: "0 0 16px", lineHeight: 1.5 }, children: card.sub }),
-              /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", fontWeight: 600, color: card.color }, children: [
-                "Apply now ",
-                /* @__PURE__ */ jsx(ArrowUpRight, { size: 13 })
-              ] })
-            ]
+            id: "leave",
+            title: "Apply for Leave",
+            sub: "Submit annual, sick, or casual leave",
+            icon: Calendar,
+            color: "#08709d",
+            bg: "bg-sky-50 text-[#08709d]",
+            gradient: "from-[#08709d] to-[#0ea5e9]",
+            border: "hover:border-[#08709d]/50",
+            actionLabel: "Apply Leave"
           },
-          card.modal
-        )) })
+          {
+            id: "ot",
+            title: "Apply for OT",
+            sub: "Log shift hours & overtime claims",
+            icon: Clock,
+            color: "#5eb63b",
+            bg: "bg-emerald-50 text-[#5eb63b]",
+            gradient: "from-[#5eb63b] to-[#10b981]",
+            border: "hover:border-[#5eb63b]/50",
+            actionLabel: "Log OT Hours"
+          },
+          {
+            id: "notice",
+            title: "Submit Staff Notice",
+            sub: "Post shift handover, duty note or request",
+            icon: Megaphone,
+            color: "#6366f1",
+            bg: "bg-indigo-50 text-[#6366f1]",
+            gradient: "from-[#6366f1] to-[#818cf8]",
+            border: "hover:border-[#6366f1]/50",
+            actionLabel: "Post Notice"
+          },
+          {
+            id: "salary",
+            title: "Salary Review",
+            sub: "Submit merit increment or appraisal",
+            icon: TrendingUp,
+            color: "#1a294a",
+            bg: "bg-slate-100 text-[#1a294a]",
+            gradient: "from-[#1a294a] to-[#334155]",
+            border: "hover:border-[#1a294a]/50",
+            actionLabel: "Request Review"
+          }
+        ].map((card) => {
+          const Icon = card.icon;
+          return /* @__PURE__ */ jsxs(
+            motion.div,
+            {
+              whileHover: { y: -3, transition: { duration: 0.2 } },
+              whileTap: { scale: 0.98 },
+              onClick: () => openModal(card.id),
+              className: `bg-white border border-slate-200 ${card.border} rounded-2xl p-4 sm:p-5 cursor-pointer relative overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group`,
+              children: [
+                /* @__PURE__ */ jsx("div", { className: `absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient}` }),
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-3", children: [
+                    /* @__PURE__ */ jsx("div", { className: `w-10 h-10 sm:w-11 sm:h-11 rounded-xl ${card.bg} flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform`, children: /* @__PURE__ */ jsx(Icon, { size: 20 }) }),
+                    /* @__PURE__ */ jsxs("span", { className: "text-[11px] font-bold text-slate-400 group-hover:text-slate-700 transition-colors flex items-center gap-0.5", children: [
+                      "Open ",
+                      /* @__PURE__ */ jsx(ArrowUpRight, { size: 13 })
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsx("h4", { className: "text-sm sm:text-base font-bold text-[#1a294a] mb-1", children: card.title }),
+                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500 font-medium leading-relaxed mb-4", children: card.sub })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold", style: { color: card.color }, children: [
+                  /* @__PURE__ */ jsx("span", { children: card.actionLabel }),
+                  /* @__PURE__ */ jsx(ArrowUpRight, { size: 14, className: "group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" })
+                ] })
+              ]
+            },
+            card.id
+          );
+        }) })
       ] }),
-      /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("p", { style: { fontSize: "11px", fontWeight: 600, color: B.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "16px" }, children: "Assigned Tasks" }),
-        myTasks.length === 0 ? /* @__PURE__ */ jsx("div", { style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "18px" }, children: /* @__PURE__ */ jsx(EmptyState, { icon: ClipboardList, text: "No tasks assigned to you yet. Check back later." }) }) : /* @__PURE__ */ jsx("div", { style: { display: "flex", flexDirection: "column", gap: "12px" }, children: myTasks.map((task, i) => {
-          const pc = PRIORITY_CFG[task.priority] || PRIORITY_CFG.Medium;
-          const sc = STATUS_CFG[task.status] || STATUS_CFG.Pending;
-          return /* @__PURE__ */ jsx(
+      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-xs", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100", children: [
+          /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5", children: [
+            /* @__PURE__ */ jsx("div", { className: "w-8 h-8 rounded-xl bg-gradient-to-tr from-[#08709d] to-[#0ea5e9] text-white flex items-center justify-center shadow-xs", children: /* @__PURE__ */ jsx(Megaphone, { size: 16 }) }),
+            /* @__PURE__ */ jsxs("div", { children: [
+              /* @__PURE__ */ jsx("h3", { className: "text-base sm:text-lg font-bold text-[#1a294a]", children: "Notice Board & Announcements" }),
+              /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-400 font-medium", children: "Official hospital communications, clinical guidelines, and updates" })
+            ] })
+          ] }) }),
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [
+            /* @__PURE__ */ jsx("div", { className: "flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200", children: [
+              { id: "all", label: "All" },
+              { id: "urgent", label: "Urgent" },
+              { id: "broadcast", label: "Broadcasts" }
+            ].map((f) => /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => setNoticeFilter(f.id),
+                className: `px-3 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${noticeFilter === f.id ? "bg-white text-[#08709d] shadow-2xs" : "text-slate-500 hover:text-slate-800"}`,
+                children: f.label
+              },
+              f.id
+            )) }),
+            /* @__PURE__ */ jsxs(
+              "button",
+              {
+                onClick: () => openModal("notice"),
+                className: "flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#08709d] hover:bg-[#065679] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-95",
+                children: [
+                  /* @__PURE__ */ jsx(Send, { size: 13 }),
+                  /* @__PURE__ */ jsx("span", { children: "Post Notice" })
+                ]
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "mt-5", children: filteredNotices.length === 0 ? /* @__PURE__ */ jsx(
+          EmptyState,
+          {
+            icon: Bell,
+            text: "No announcements matching your filter. You are all caught up on official hospital notices."
+          }
+        ) : /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: filteredNotices.map((notice, idx) => {
+          const isUrgent = notice.priority === "urgent";
+          const isImportant = notice.priority === "important";
+          const isAck = acknowledgedNotices.includes(notice.id);
+          const borderClass = isUrgent ? "border-red-200 bg-red-50/20" : isImportant ? "border-amber-200 bg-amber-50/20" : "border-slate-200 bg-white";
+          const badgeCfg = isUrgent ? PRIORITY_CFG.urgent : isImportant ? PRIORITY_CFG.important : PRIORITY_CFG.normal;
+          return /* @__PURE__ */ jsxs(
             motion.div,
             {
               initial: { opacity: 0, y: 8 },
               animate: { opacity: 1, y: 0 },
-              transition: { delay: i * 0.05 },
-              style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "16px", padding: "18px 20px", boxShadow: "0 2px 8px rgba(26,41,74,0.05)" },
-              children: /* @__PURE__ */ jsxs("div", { style: { display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "flex-start", justifyContent: "space-between" }, children: [
-                /* @__PURE__ */ jsxs("div", { style: { flex: 1, minWidth: "200px" }, children: [
-                  /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", marginBottom: "6px" }, children: [
-                    /* @__PURE__ */ jsx("span", { style: { fontSize: "14px", fontWeight: 600, color: B.secondary }, children: task.title }),
-                    /* @__PURE__ */ jsx(Badge, { label: task.priority, color: pc.color, bg: pc.bg })
-                  ] }),
-                  task.description && /* @__PURE__ */ jsx("p", { style: { fontSize: "13px", color: B.muted, margin: "0 0 10px", lineHeight: 1.6 }, children: task.description }),
-                  /* @__PURE__ */ jsxs("div", { style: { display: "flex", gap: "16px", flexWrap: "wrap" }, children: [
-                    task.dueDate && /* @__PURE__ */ jsxs("span", { style: { display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", color: B.muted }, children: [
-                      /* @__PURE__ */ jsx(CalendarDays, { size: 12, style: { color: B.primary } }),
-                      "Due: ",
-                      new Date(task.dueDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+              transition: { delay: idx * 0.04 },
+              className: `border ${borderClass} rounded-2xl p-4 sm:p-5 shadow-2xs hover:shadow-sm transition-all flex flex-col justify-between relative group`,
+              children: [
+                /* @__PURE__ */ jsx(
+                  "div",
+                  {
+                    className: "absolute left-0 top-3 bottom-3 w-1 rounded-r-full",
+                    style: {
+                      backgroundColor: isUrgent ? "#dc2626" : isImportant ? "#d97706" : "#08709d"
+                    }
+                  }
+                ),
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-3 mb-2.5 pl-1.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [
+                      /* @__PURE__ */ jsx(Badge, { label: badgeCfg.label, cfg: badgeCfg }),
+                      notice.targetAudience === "all" ? /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200", children: "📢 All Staff" }) : /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200", children: "🎯 Targeted" })
                     ] }),
-                    /* @__PURE__ */ jsxs("span", { style: { display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", color: B.muted }, children: [
-                      /* @__PURE__ */ jsx(User, { size: 12, style: { color: B.primary } }),
-                      " From: ",
-                      task.assignedByName
+                    /* @__PURE__ */ jsxs("span", { className: "text-[11px] text-slate-400 font-medium flex items-center gap-1 shrink-0", children: [
+                      /* @__PURE__ */ jsx(Clock, { size: 12 }),
+                      notice.submittedAt ? new Date(notice.submittedAt).toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "short"
+                      }) : "Recently"
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsx("h4", { className: "text-sm sm:text-base font-bold text-[#1a294a] mb-2 pl-1.5 line-clamp-1 group-hover:text-[#08709d] transition-colors", children: notice.title }),
+                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-600 leading-relaxed pl-1.5 line-clamp-3 mb-4 font-normal", children: notice.content })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "pt-3 border-t border-slate-100 flex items-center justify-between gap-2 pl-1.5 flex-wrap", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 text-[11px] font-semibold text-slate-500", children: [
+                    /* @__PURE__ */ jsx(User, { size: 12, className: "text-[#08709d]" }),
+                    /* @__PURE__ */ jsx("span", { className: "truncate max-w-[130px]", children: notice.staffName || "Administration" })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+                    /* @__PURE__ */ jsxs(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => toggleAcknowledgeNotice(notice.id),
+                        className: `px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${isAck ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`,
+                        title: "Mark as Acknowledged",
+                        children: [
+                          /* @__PURE__ */ jsx(Check, { size: 12 }),
+                          /* @__PURE__ */ jsx("span", { children: isAck ? "Read" : "Acknowledge" })
+                        ]
+                      }
+                    ),
+                    /* @__PURE__ */ jsxs(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => openModal("viewNotice", notice),
+                        className: "px-2.5 py-1 rounded-lg text-[11px] font-bold bg-sky-50 text-[#08709d] hover:bg-sky-100 transition-all cursor-pointer flex items-center gap-1",
+                        children: [
+                          /* @__PURE__ */ jsx(Eye, { size: 12 }),
+                          /* @__PURE__ */ jsx("span", { children: "Details" })
+                        ]
+                      }
+                    )
+                  ] })
+                ] })
+              ]
+            },
+            notice.id || idx
+          );
+        }) }) })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-xs", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-4", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5", children: [
+            /* @__PURE__ */ jsx("div", { className: "w-8 h-8 rounded-xl bg-gradient-to-tr from-[#5eb63b] to-[#10b981] text-white flex items-center justify-center shadow-xs", children: /* @__PURE__ */ jsx(ClipboardList, { size: 16 }) }),
+            /* @__PURE__ */ jsxs("div", { children: [
+              /* @__PURE__ */ jsx("h3", { className: "text-base sm:text-lg font-bold text-[#1a294a]", children: "My Assigned Tasks" }),
+              /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-400 font-medium", children: "Clinical duties, patient follow-ups, and departmental assignments" })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs("span", { className: "text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full", children: [
+            myTasks.length,
+            " Task",
+            myTasks.length !== 1 ? "s" : ""
+          ] })
+        ] }),
+        myTasks.length === 0 ? /* @__PURE__ */ jsx(
+          EmptyState,
+          {
+            icon: ClipboardList,
+            text: "No tasks currently assigned to you. Your supervisor will assign clinical items here."
+          }
+        ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3", children: myTasks.map((task, i) => {
+          const pc = PRIORITY_CFG[task.priority] || PRIORITY_CFG.Medium;
+          const sc = STATUS_CFG[task.status] || STATUS_CFG.Pending;
+          return /* @__PURE__ */ jsxs(
+            motion.div,
+            {
+              initial: { opacity: 0, y: 6 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: i * 0.04 },
+              className: "border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 flex-wrap mb-1.5", children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-sm sm:text-base font-bold text-[#1a294a]", children: task.title }),
+                    /* @__PURE__ */ jsx(Badge, { label: pc.label, cfg: pc })
+                  ] }),
+                  task.description && /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500 font-medium mb-3 leading-relaxed", children: task.description }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 text-[11px] text-slate-400 font-medium flex-wrap", children: [
+                    task.dueDate && /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1 text-slate-500", children: [
+                      /* @__PURE__ */ jsx(CalendarDays, { size: 12, className: "text-[#08709d]" }),
+                      "Due: ",
+                      new Date(task.dueDate).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
+                    ] }),
+                    /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1 text-slate-500", children: [
+                      /* @__PURE__ */ jsx(User, { size: 12, className: "text-[#08709d]" }),
+                      "Assigned by: ",
+                      task.assignedByName || "Supervisor"
                     ] })
                   ] })
                 ] }),
-                /* @__PURE__ */ jsxs("div", { style: { position: "relative", flexShrink: 0 }, children: [
+                /* @__PURE__ */ jsxs("div", { className: "relative shrink-0 w-full sm:w-auto", children: [
                   /* @__PURE__ */ jsxs(
                     "select",
                     {
                       value: task.status,
                       onChange: (e) => updateTaskStatus(task.id, e.target.value),
-                      style: { height: "36px", paddingLeft: "12px", paddingRight: "28px", borderRadius: "10px", border: `1.5px solid ${sc.color}40`, background: sc.bg, color: sc.color, fontSize: "12px", fontWeight: 600, appearance: "none", cursor: "pointer", outline: "none", fontFamily: "'Poppins',sans-serif" },
+                      className: "w-full sm:w-auto appearance-none font-bold text-xs px-4 py-2.5 pr-8 rounded-xl border transition-all cursor-pointer outline-none",
+                      style: {
+                        color: sc.color,
+                        backgroundColor: sc.bg,
+                        borderColor: sc.border
+                      },
                       children: [
-                        /* @__PURE__ */ jsx("option", { children: "Pending" }),
-                        /* @__PURE__ */ jsx("option", { children: "In Progress" }),
-                        /* @__PURE__ */ jsx("option", { children: "Completed" })
+                        /* @__PURE__ */ jsx("option", { value: "Pending", children: "Pending" }),
+                        /* @__PURE__ */ jsx("option", { value: "In Progress", children: "In Progress" }),
+                        /* @__PURE__ */ jsx("option", { value: "Completed", children: "Completed" })
                       ]
                     }
                   ),
-                  /* @__PURE__ */ jsx(ChevronDown, { size: 12, style: { position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: sc.color } })
+                  /* @__PURE__ */ jsx(
+                    ChevronDown,
+                    {
+                      size: 13,
+                      className: "absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none",
+                      style: { color: sc.color }
+                    }
+                  )
                 ] })
-              ] })
+              ]
             },
-            task.id
+            task.id || i
           );
         }) })
       ] }),
-      /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("p", { style: { fontSize: "11px", fontWeight: 600, color: B.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "16px" }, children: "My Applications & Request History" }),
-        /* @__PURE__ */ jsxs("div", { style: { background: B.white, border: `1.5px solid ${B.border}`, borderRadius: "24px", padding: "24px", boxShadow: "0 2px 10px rgba(26,41,74,0.04)" }, children: [
-          /* @__PURE__ */ jsx("div", { style: { display: "flex", gap: "8px", borderBottom: `1.5px solid ${B.border}`, paddingBottom: "12px", marginBottom: "20px", overflowX: "auto" }, children: [
-            { id: "leave", label: "Leaves", count: myLeaves.length, icon: Calendar },
-            { id: "ot", label: "OT Claims", count: myOts.length, icon: Clock },
-            { id: "salary", label: "Salary Reviews", count: mySalaries.length, icon: TrendingUp }
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const active = activeTab === tab.id;
+      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-xs", children: [
+        /* @__PURE__ */ jsx("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5", children: /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsx("h3", { className: "text-base sm:text-lg font-bold text-[#1a294a]", children: "Applications & Request History" }),
+          /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-400 font-medium", children: "Track status and approval lifecycle of your submitted forms" })
+        ] }) }),
+        /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 border-b border-slate-200 pb-3 mb-5 overflow-x-auto no-scrollbar", children: [
+          { id: "leave", label: "Leaves", count: myLeaves.length, icon: Calendar },
+          { id: "ot", label: "OT Claims", count: myOts.length, icon: Clock },
+          { id: "notice", label: "My Notices", count: mySubmittedNotices.length, icon: Megaphone },
+          { id: "salary", label: "Salary Reviews", count: mySalaries.length, icon: TrendingUp }
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const active = activeTab === tab.id;
+          return /* @__PURE__ */ jsxs(
+            "button",
+            {
+              onClick: () => setActiveTab(tab.id),
+              className: `flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${active ? "bg-sky-50 text-[#08709d] shadow-2xs border border-sky-200" : "text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-transparent"}`,
+              children: [
+                /* @__PURE__ */ jsx(Icon, { size: 15 }),
+                /* @__PURE__ */ jsx("span", { children: tab.label }),
+                /* @__PURE__ */ jsx(
+                  "span",
+                  {
+                    className: `text-[10.5px] px-2 py-0.5 rounded-full font-bold ${active ? "bg-[#08709d] text-white" : "bg-slate-100 text-slate-500"}`,
+                    children: tab.count
+                  }
+                )
+              ]
+            },
+            tab.id
+          );
+        }) }),
+        /* @__PURE__ */ jsxs("div", { children: [
+          activeTab === "leave" && (myLeaves.length === 0 ? /* @__PURE__ */ jsx(
+            EmptyState,
+            {
+              icon: Calendar,
+              text: "No leave applications submitted yet. Click 'Apply for Leave' to create your first request."
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3.5", children: myLeaves.map((r, i) => {
+            const statusInfo = STATUS_CFG[r.status] || STATUS_CFG.Pending;
+            const durationText = calculateDays(r.leaveStart, r.leaveEnd);
             return /* @__PURE__ */ jsxs(
-              "button",
+              motion.div,
               {
-                onClick: () => setActiveTab(tab.id),
-                style: {
-                  padding: "8px 16px",
-                  borderRadius: "10px",
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: "13px",
-                  fontWeight: active ? 600 : 500,
-                  background: active ? B.lightBlue : "transparent",
-                  color: active ? B.primary : B.muted,
-                  transition: "all 0.15s",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  whiteSpace: "nowrap"
-                },
+                initial: { opacity: 0, y: 6 },
+                animate: { opacity: 1, y: 0 },
+                transition: { delay: i * 0.03 },
+                className: "border border-slate-200/90 rounded-2xl p-4 sm:p-5 bg-white hover:border-slate-300 hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden group",
                 children: [
-                  /* @__PURE__ */ jsx(Icon, { size: 14 }),
-                  tab.label,
-                  /* @__PURE__ */ jsx("span", { style: {
-                    fontSize: "11px",
-                    background: active ? B.primary : B.border,
-                    color: active ? "white" : B.muted,
-                    padding: "2px 8px",
-                    borderRadius: "6px",
-                    fontWeight: 600
-                  }, children: tab.count })
+                  /* @__PURE__ */ jsx(
+                    "div",
+                    {
+                      className: "absolute left-0 top-3 bottom-3 w-1 rounded-r-full",
+                      style: { backgroundColor: statusInfo.color }
+                    }
+                  ),
+                  /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0 pl-1.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 flex-wrap mb-1.5", children: [
+                      /* @__PURE__ */ jsx("span", { className: "text-sm sm:text-base font-bold text-[#1a294a]", children: r.leaveType }),
+                      /* @__PURE__ */ jsx(Badge, { label: r.status, cfg: statusInfo }),
+                      /* @__PURE__ */ jsxs("span", { className: "text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-50 text-[#08709d] border border-sky-100", children: [
+                        "⏳ ",
+                        durationText
+                      ] })
+                    ] }),
+                    r.reason ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500 font-medium truncate max-w-xl mb-1.5", children: r.reason }) : /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-400 font-medium italic mb-1.5", children: "Standard Leave Application" }),
+                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 text-[11px] text-slate-400 font-medium", children: [
+                      /* @__PURE__ */ jsxs("span", { children: [
+                        "Submitted: ",
+                        new Date(r.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+                      ] }),
+                      /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: "•" }),
+                      /* @__PURE__ */ jsxs("span", { className: "text-slate-500 font-mono", children: [
+                        "ID: ",
+                        r.staffId || (currentUser == null ? void 0 : currentUser.id)
+                      ] })
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 shrink-0 self-end sm:self-center", children: /* @__PURE__ */ jsxs(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => openModal("viewLeave", r),
+                      className: "px-4 py-2 rounded-xl text-xs font-bold bg-sky-50 hover:bg-sky-100 text-[#08709d] border border-sky-200/70 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95 group-hover:border-[#08709d]/40",
+                      children: [
+                        /* @__PURE__ */ jsx(Eye, { size: 14, className: "text-[#08709d]" }),
+                        /* @__PURE__ */ jsx("span", { children: "View Details" })
+                      ]
+                    }
+                  ) })
                 ]
               },
-              tab.id
+              r.id || i
             );
-          }) }),
-          /* @__PURE__ */ jsxs("div", { style: { minHeight: "160px" }, children: [
-            activeTab === "leave" && /* @__PURE__ */ jsx(
-              ReportTable,
-              {
-                emptyIcon: Calendar,
-                emptyText: "No leave applications yet. Click 'Apply for Leave' above to submit one.",
-                applyLabel: "Apply for Leave",
-                onApply: () => openModal("leave"),
-                headers: ["Leave Type", "Start Date", "End Date", "Duration", "Status", "Submitted"],
-                rows: myLeaves.map((r) => {
-                  var _a2, _b;
-                  return /* @__PURE__ */ jsxs(Fragment, { children: [
-                    /* @__PURE__ */ jsx(Td, { children: r.leaveType }),
-                    /* @__PURE__ */ jsx(Td, { children: r.leaveStart }),
-                    /* @__PURE__ */ jsx(Td, { children: r.leaveEnd }),
-                    /* @__PURE__ */ jsx(Td, { children: calculateDays(r.leaveStart, r.leaveEnd) }),
-                    /* @__PURE__ */ jsx("td", { style: { padding: "13px 20px" }, children: /* @__PURE__ */ jsx(Badge, { label: r.status, color: ((_a2 = STATUS_CFG[r.status]) == null ? void 0 : _a2.color) || B.muted, bg: ((_b = STATUS_CFG[r.status]) == null ? void 0 : _b.bg) || B.bg }) }),
-                    /* @__PURE__ */ jsx(Td, { children: new Date(r.submittedAt).toLocaleDateString("en-GB") })
-                  ] });
-                })
-              }
-            ),
-            activeTab === "ot" && /* @__PURE__ */ jsx(
-              ReportTable,
-              {
-                emptyIcon: Clock,
-                emptyText: "No OT claims yet. Click 'Apply for OT' above to log your hours.",
-                applyLabel: "Log OT Hours",
-                onApply: () => openModal("ot"),
-                headers: ["Shift Type", "Date of Duty", "OT Hours", "Status", "Submitted"],
-                rows: myOts.map((r) => {
-                  var _a2, _b;
-                  return /* @__PURE__ */ jsxs(Fragment, { children: [
-                    /* @__PURE__ */ jsx(Td, { children: r.otType }),
-                    /* @__PURE__ */ jsx(Td, { children: r.otDate }),
-                    /* @__PURE__ */ jsxs(Td, { mono: true, children: [
-                      r.otHours,
-                      " hrs"
+          }) })),
+          activeTab === "ot" && (myOts.length === 0 ? /* @__PURE__ */ jsx(
+            EmptyState,
+            {
+              icon: Clock,
+              text: "No OT claims recorded. Click 'Apply for OT' to log your extra shift duty hours."
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3", children: myOts.map((r, i) => /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: "border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-[#1a294a]", children: r.otType }),
+                    /* @__PURE__ */ jsx(Badge, { label: r.status })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 text-xs text-slate-500 font-medium flex-wrap", children: [
+                    /* @__PURE__ */ jsxs("span", { children: [
+                      "📅 Duty Date: ",
+                      r.otDate
                     ] }),
-                    /* @__PURE__ */ jsx("td", { style: { padding: "13px 20px" }, children: /* @__PURE__ */ jsx(Badge, { label: r.status, color: ((_a2 = STATUS_CFG[r.status]) == null ? void 0 : _a2.color) || B.muted, bg: ((_b = STATUS_CFG[r.status]) == null ? void 0 : _b.bg) || B.bg }) }),
-                    /* @__PURE__ */ jsx(Td, { children: new Date(r.submittedAt).toLocaleDateString("en-GB") })
-                  ] });
-                })
-              }
-            ),
-            activeTab === "salary" && /* @__PURE__ */ jsx(
-              ReportTable,
-              {
-                emptyIcon: TrendingUp,
-                emptyText: "No increment requests yet. Submit your first appraisal review above.",
-                applyLabel: "Submit Review",
-                onApply: () => openModal("salary"),
-                headers: ["Appraisal Type", "Status", "Submitted"],
-                rows: mySalaries.map((r) => {
-                  var _a2, _b;
-                  return /* @__PURE__ */ jsxs(Fragment, { children: [
-                    /* @__PURE__ */ jsx(Td, { children: r.incType }),
-                    /* @__PURE__ */ jsx("td", { style: { padding: "13px 20px" }, children: /* @__PURE__ */ jsx(Badge, { label: r.status, color: ((_a2 = STATUS_CFG[r.status]) == null ? void 0 : _a2.color) || B.muted, bg: ((_b = STATUS_CFG[r.status]) == null ? void 0 : _b.bg) || B.bg }) }),
-                    /* @__PURE__ */ jsx(Td, { children: new Date(r.submittedAt).toLocaleDateString("en-GB") })
-                  ] });
-                })
-              }
-            )
-          ] })
+                    /* @__PURE__ */ jsxs("span", { className: "text-emerald-700 font-bold font-mono", children: [
+                      "⏱️ ",
+                      r.otHours,
+                      " Hours Claimed"
+                    ] })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("span", { className: "text-[11px] text-slate-400 font-mono shrink-0", children: [
+                  "Submitted: ",
+                  new Date(r.submittedAt).toLocaleDateString("en-GB")
+                ] })
+              ]
+            },
+            r.id || i
+          )) })),
+          activeTab === "notice" && (mySubmittedNotices.length === 0 ? /* @__PURE__ */ jsx(
+            EmptyState,
+            {
+              icon: Megaphone,
+              text: "You haven't posted any staff notices yet. Click 'Submit Staff Notice' above to create one."
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3", children: mySubmittedNotices.map((r, i) => /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: "border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-[#1a294a]", children: r.title }),
+                    /* @__PURE__ */ jsx(Badge, { label: r.status || "Published" }),
+                    /* @__PURE__ */ jsxs("span", { className: "text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600", children: [
+                      "Priority: ",
+                      r.priority
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500 font-normal line-clamp-1", children: r.content })
+                ] }),
+                /* @__PURE__ */ jsxs(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => openModal("viewNotice", r),
+                    className: "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-sky-50 text-[#08709d] hover:bg-sky-100 transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
+                    children: [
+                      /* @__PURE__ */ jsx(Eye, { size: 13 }),
+                      /* @__PURE__ */ jsx("span", { children: "View Details" })
+                    ]
+                  }
+                )
+              ]
+            },
+            r.id || i
+          )) })),
+          activeTab === "salary" && (mySalaries.length === 0 ? /* @__PURE__ */ jsx(
+            EmptyState,
+            {
+              icon: TrendingUp,
+              text: "No salary appraisals submitted. Click 'Salary Review' above to request an evaluation."
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3", children: mySalaries.map((r, i) => /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: "border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-[#1a294a]", children: r.incType }),
+                    /* @__PURE__ */ jsx(Badge, { label: r.status })
+                  ] }),
+                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500 font-medium", children: "Annual Clinical Appraisal & Performance Review" })
+                ] }),
+                /* @__PURE__ */ jsxs("span", { className: "text-[11px] text-slate-400 font-mono shrink-0", children: [
+                  "Submitted: ",
+                  new Date(r.submittedAt).toLocaleDateString("en-GB")
+                ] })
+              ]
+            },
+            r.id || i
+          )) }))
         ] })
       ] })
-    ] }) }),
-    /* @__PURE__ */ jsx(AnimatePresence, { children: activeModal && /* @__PURE__ */ jsxs(Fragment, { children: [
+    ] }),
+    /* @__PURE__ */ jsx(AnimatePresence, { children: activeModal && /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-6 overflow-y-auto", children: [
       /* @__PURE__ */ jsx(
         motion.div,
         {
@@ -12295,89 +12725,323 @@ const StaffDashboard = () => {
           animate: { opacity: 1 },
           exit: { opacity: 0 },
           onClick: closeModal,
-          style: { position: "fixed", inset: 0, background: "rgba(26,41,74,0.45)", backdropFilter: "blur(8px)", zIndex: 50 }
+          className: "fixed inset-0 bg-[#1a294a]/60 backdrop-blur-sm"
         }
       ),
       /* @__PURE__ */ jsxs(
         motion.div,
         {
-          initial: { opacity: 0, scale: 0.94, y: 20 },
+          initial: { opacity: 0, scale: 0.94, y: 15 },
           animate: { opacity: 1, scale: 1, y: 0 },
-          exit: { opacity: 0, scale: 0.94, y: 20 },
-          transition: { type: "spring", stiffness: 320, damping: 28 },
-          onClick: (e) => e.stopPropagation(),
-          style: { position: "fixed", left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: "95%", maxWidth: "540px", background: B.white, borderRadius: "22px", boxShadow: "0 24px 70px rgba(26,41,74,0.18)", zIndex: 51, overflow: "hidden", maxHeight: "92vh" },
+          exit: { opacity: 0, scale: 0.94, y: 15 },
+          transition: { type: "spring", stiffness: 300, damping: 26 },
+          className: "relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-10 my-auto max-h-[92vh] flex flex-col",
           children: [
-            /* @__PURE__ */ jsx("div", { style: { height: "4px", background: `linear-gradient(90deg, ${B.secondary}, ${B.primary}, ${B.accent})` } }),
-            /* @__PURE__ */ jsxs("div", { style: { overflowY: "auto", maxHeight: "calc(92vh - 4px)", padding: "26px 28px 28px" }, children: [
-              activeModal === "leave" && /* @__PURE__ */ jsxs("form", { onSubmit: (e) => submitForm(e, "leave", { staffName, staffId, staffDep, staffPosition, leaveType, leaveStart, leaveEnd }), style: { display: "flex", flexDirection: "column", gap: "18px" }, children: [
-                /* @__PURE__ */ jsx(ModalHeader, { title: "Apply for Leave", icon: /* @__PURE__ */ jsx(Calendar, { size: 18 }), color: B.primary, onClose: closeModal }),
-                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
-                  /* @__PURE__ */ jsx(Field, { label: "Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value), placeholder: "Full name" }) }),
-                  /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value), placeholder: "STF-XXXXX" }) })
+            /* @__PURE__ */ jsx("div", { className: "h-1.5 bg-gradient-to-r from-[#1a294a] via-[#08709d] to-[#5eb63b] shrink-0" }),
+            /* @__PURE__ */ jsxs("div", { className: "overflow-y-auto p-5 sm:p-7 flex flex-col gap-5", children: [
+              activeModal === "leave" && /* @__PURE__ */ jsxs(
+                "form",
+                {
+                  onSubmit: (e) => submitForm(e, "leave", {
+                    staffName,
+                    staffId,
+                    staffDep,
+                    staffPosition,
+                    leaveType,
+                    leaveStart,
+                    leaveEnd,
+                    reason: leaveReason
+                  }),
+                  className: "flex flex-col gap-4 text-left",
+                  children: [
+                    /* @__PURE__ */ jsx(ModalHeader, { title: "Apply for Leave", icon: /* @__PURE__ */ jsx(Calendar, { size: 18 }), color: "#08709d", onClose: closeModal }),
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Full Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
+                    ] }),
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Department", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffDep, onChange: (e) => setStaffDep(e.target.value) }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "Position", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffPosition, onChange: (e) => setStaffPosition(e.target.value) }) })
+                    ] }),
+                    /* @__PURE__ */ jsx(Field, { label: "Leave Category", children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+                      /* @__PURE__ */ jsx("select", { className: `${inputCls} appearance-none pr-9 cursor-pointer`, value: leaveType, onChange: (e) => setLeaveType(e.target.value), children: ["Annual Leave", "Sick Leave", "Casual Leave", "Emergency Leave", "Unpaid Leave", "Maternity/Paternity Leave"].map((o) => /* @__PURE__ */ jsx("option", { value: o, children: o }, o)) }),
+                      /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
+                    ] }) }),
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Start Date", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, required: true, value: leaveStart, onChange: (e) => setLeaveStart(e.target.value) }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "End Date", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, required: true, value: leaveEnd, onChange: (e) => setLeaveEnd(e.target.value) }) })
+                    ] }),
+                    leaveStart && leaveEnd && /* @__PURE__ */ jsxs("div", { className: "bg-sky-50 border border-sky-200 rounded-xl p-3 text-center text-xs text-sky-800 font-semibold", children: [
+                      "Total leave duration: ",
+                      /* @__PURE__ */ jsx("span", { className: "font-extrabold text-[#08709d]", children: calculateDays(leaveStart, leaveEnd) })
+                    ] }),
+                    /* @__PURE__ */ jsx(Field, { label: "Reason / Cover Plan", children: /* @__PURE__ */ jsx(
+                      "textarea",
+                      {
+                        className: inputCls,
+                        required: true,
+                        placeholder: "State reason and handover arrangements…",
+                        value: leaveReason,
+                        onChange: (e) => setLeaveReason(e.target.value),
+                        rows: 3
+                      }
+                    ) }),
+                    /* @__PURE__ */ jsx(FileUpload, { label: "Supporting Medical/Travel Doc (Optional)", file: leaveFile, onFile: () => leaveFileRef.current.click(), onClear: () => setLeaveFile(null) }),
+                    /* @__PURE__ */ jsx("input", { type: "file", ref: leaveFileRef, className: "hidden", onChange: (e) => setLeaveFile(e.target.files[0]) }),
+                    /* @__PURE__ */ jsx(ModalFooter, { color: "#08709d", label: "Submit Leave Application", onCancel: closeModal })
+                  ]
+                }
+              ),
+              activeModal === "viewLeave" && selectedLeave && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 text-left", children: [
+                /* @__PURE__ */ jsx(ModalHeader, { title: "Leave Application Details", icon: /* @__PURE__ */ jsx(Calendar, { size: 18 }), color: "#08709d", onClose: closeModal }),
+                /* @__PURE__ */ jsxs("div", { className: "bg-gradient-to-r from-sky-50 via-white to-sky-50/50 border border-sky-100 rounded-2xl p-4 flex items-center justify-between gap-3 flex-wrap shadow-2xs", children: [
+                  /* @__PURE__ */ jsxs("div", { children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1", children: "Current Status" }),
+                    /* @__PURE__ */ jsx(Badge, { label: selectedLeave.status || "Pending" })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "text-right", children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1", children: "Duration" }),
+                    /* @__PURE__ */ jsx("span", { className: "text-sm sm:text-base font-extrabold text-[#08709d] bg-white px-3 py-1 rounded-xl border border-sky-100 shadow-2xs", children: calculateDays(selectedLeave.leaveStart, selectedLeave.leaveEnd) })
+                  ] })
                 ] }),
-                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
-                  /* @__PURE__ */ jsx(Field, { label: "Department", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffDep, onChange: (e) => setStaffDep(e.target.value), placeholder: "Department" }) }),
-                  /* @__PURE__ */ jsx(Field, { label: "Position", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffPosition, onChange: (e) => setStaffPosition(e.target.value), placeholder: "Position" }) })
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5", children: [
+                    /* @__PURE__ */ jsxs("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1", children: [
+                      /* @__PURE__ */ jsx(CalendarDays, { size: 13, className: "text-[#08709d]" }),
+                      " Start Date"
+                    ] }),
+                    /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-[#1a294a] block", children: selectedLeave.leaveStart ? new Date(selectedLeave.leaveStart).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "long", year: "numeric" }) : "—" })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5", children: [
+                    /* @__PURE__ */ jsxs("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1", children: [
+                      /* @__PURE__ */ jsx(CalendarDays, { size: 13, className: "text-[#08709d]" }),
+                      " End Date"
+                    ] }),
+                    /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-[#1a294a] block", children: selectedLeave.leaveEnd ? new Date(selectedLeave.leaveEnd).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "long", year: "numeric" }) : "—" })
+                  ] })
                 ] }),
-                /* @__PURE__ */ jsx(Field, { label: "Leave Type", children: /* @__PURE__ */ jsxs("div", { style: { position: "relative" }, children: [
-                  /* @__PURE__ */ jsx("select", { className: inputCls, style: { ...inputStyle, appearance: "none", paddingRight: "36px", cursor: "pointer" }, value: leaveType, onChange: (e) => setLeaveType(e.target.value), children: ["Annual Leave", "Sick Leave", "Casual Leave", "Emergency Leave", "Unpaid Leave"].map((o) => /* @__PURE__ */ jsx("option", { children: o }, o)) }),
-                  /* @__PURE__ */ jsx(ChevronDown, { size: 15, style: { position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: B.muted } })
-                ] }) }),
-                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
-                  /* @__PURE__ */ jsx(Field, { label: "Start Date", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, style: inputStyle, required: true, value: leaveStart, onChange: (e) => setLeaveStart(e.target.value) }) }),
-                  /* @__PURE__ */ jsx(Field, { label: "End Date", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, style: inputStyle, required: true, value: leaveEnd, onChange: (e) => setLeaveEnd(e.target.value) }) })
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3 text-xs bg-white border border-slate-200 rounded-2xl p-3.5", children: [
+                  /* @__PURE__ */ jsxs("div", { children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Staff Name" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-bold text-slate-700", children: selectedLeave.staffName || (currentUser == null ? void 0 : currentUser.name) })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Staff ID" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-bold font-mono text-[#08709d]", children: selectedLeave.staffId || (currentUser == null ? void 0 : currentUser.id) })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "mt-1", children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Department" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-bold text-slate-700", children: selectedLeave.staffDep || (currentUser == null ? void 0 : currentUser.department) || "Clinical" })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "mt-1", children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Leave Category" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-bold text-slate-700", children: selectedLeave.leaveType })
+                  ] })
                 ] }),
-                leaveStart && leaveEnd && /* @__PURE__ */ jsxs("div", { style: { background: B.lightBlue, border: `1px solid ${B.primary}30`, borderRadius: "12px", padding: "12px", textAlign: "center" }, children: [
-                  /* @__PURE__ */ jsx("span", { style: { fontSize: "11px", color: B.muted }, children: "Total duration: " }),
-                  /* @__PURE__ */ jsx("strong", { style: { color: B.secondary }, children: calculateDays(leaveStart, leaveEnd) })
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsx("span", { className: "text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5", children: "Reason & Handover Cover Plan" }),
+                  /* @__PURE__ */ jsx("div", { className: "bg-slate-50 rounded-2xl p-4 border border-slate-200 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium", children: selectedLeave.reason || "No additional notes provided with this application." })
                 ] }),
-                /* @__PURE__ */ jsx(Field, { label: "Reason", children: /* @__PURE__ */ jsx("textarea", { className: inputCls, required: true, placeholder: "Brief reason for leave…", style: { minHeight: "90px", height: "auto", resize: "none" } }) }),
-                /* @__PURE__ */ jsx(FileUpload, { label: "Supporting Document (optional)", file: leaveFile, onFile: () => leaveFileRef.current.click(), onClear: () => setLeaveFile(null) }),
-                /* @__PURE__ */ jsx("input", { type: "file", ref: leaveFileRef, className: "hidden", onChange: (e) => setLeaveFile(e.target.files[0]) }),
-                /* @__PURE__ */ jsx(ModalFooter, { color: B.primary, grad: `linear-gradient(135deg,${B.secondary},${B.primary})`, label: "Submit Application", onCancel: closeModal })
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-100 pt-3", children: [
+                  /* @__PURE__ */ jsxs("span", { children: [
+                    "Submitted on: ",
+                    new Date(selectedLeave.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+                  ] }),
+                  /* @__PURE__ */ jsx("span", { className: "text-slate-500 font-semibold", children: "Corx HR & Clinical Approval" })
+                ] }),
+                /* @__PURE__ */ jsx("div", { className: "flex items-center justify-end gap-3 pt-1", children: /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: closeModal,
+                    className: "px-5 py-2.5 rounded-xl bg-[#08709d] text-white text-xs font-bold cursor-pointer hover:bg-[#065679] transition-all shadow-xs",
+                    children: "Close Details"
+                  }
+                ) })
               ] }),
-              activeModal === "ot" && /* @__PURE__ */ jsxs("form", { onSubmit: (e) => submitForm(e, "ot", { staffName, staffId, staffDep, staffPosition, otType, otDate, otHours }), style: { display: "flex", flexDirection: "column", gap: "18px" }, children: [
-                /* @__PURE__ */ jsx(ModalHeader, { title: "Apply for OT", icon: /* @__PURE__ */ jsx(Clock, { size: 18 }), color: B.accent, onClose: closeModal }),
-                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
-                  /* @__PURE__ */ jsx(Field, { label: "Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
-                  /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
+              activeModal === "ot" && /* @__PURE__ */ jsxs(
+                "form",
+                {
+                  onSubmit: (e) => submitForm(e, "ot", {
+                    staffName,
+                    staffId,
+                    staffDep,
+                    staffPosition,
+                    otType,
+                    otDate,
+                    otHours,
+                    description: otDescription
+                  }),
+                  className: "flex flex-col gap-4 text-left",
+                  children: [
+                    /* @__PURE__ */ jsx(ModalHeader, { title: "Apply for OT", icon: /* @__PURE__ */ jsx(Clock, { size: 18 }), color: "#5eb63b", onClose: closeModal }),
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Full Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
+                    ] }),
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Department", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffDep, onChange: (e) => setStaffDep(e.target.value) }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "Position", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffPosition, onChange: (e) => setStaffPosition(e.target.value) }) })
+                    ] }),
+                    /* @__PURE__ */ jsx(Field, { label: "Shift Type", children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+                      /* @__PURE__ */ jsx("select", { className: `${inputCls} appearance-none pr-9 cursor-pointer`, value: otType, onChange: (e) => setOtType(e.target.value), children: ["Day Shift Extension", "Night Shift", "Weekend Clinical Duty", "Emergency On-Call Duty", "Home Visit Overtime"].map((o) => /* @__PURE__ */ jsx("option", { value: o, children: o }, o)) }),
+                      /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
+                    ] }) }),
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Date of Duty", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, required: true, value: otDate, onChange: (e) => setOtDate(e.target.value) }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "Hours Worked", children: /* @__PURE__ */ jsx("input", { type: "number", step: "0.5", min: "0.5", max: "24", placeholder: "e.g. 4.5", className: inputCls, required: true, value: otHours, onChange: (e) => setOtHours(e.target.value) }) })
+                    ] }),
+                    /* @__PURE__ */ jsx(Field, { label: "Shift / Patient Activity Summary", children: /* @__PURE__ */ jsx(
+                      "textarea",
+                      {
+                        className: inputCls,
+                        required: true,
+                        placeholder: "Details of the overtime duty and supervisor confirmation…",
+                        value: otDescription,
+                        onChange: (e) => setOtDescription(e.target.value),
+                        rows: 3
+                      }
+                    ) }),
+                    /* @__PURE__ */ jsx(FileUpload, { label: "Shift Logsheet / Proof (Optional)", file: otFile, onFile: () => otFileRef.current.click(), onClear: () => setOtFile(null), accentColor: "#5eb63b" }),
+                    /* @__PURE__ */ jsx("input", { type: "file", ref: otFileRef, className: "hidden", onChange: (e) => setOtFile(e.target.files[0]) }),
+                    /* @__PURE__ */ jsx(ModalFooter, { color: "#5eb63b", label: "Submit OT Claim", onCancel: closeModal })
+                  ]
+                }
+              ),
+              activeModal === "notice" && /* @__PURE__ */ jsxs(
+                "form",
+                {
+                  onSubmit: (e) => submitForm(e, "notice", {
+                    staffId,
+                    staffName,
+                    title: noticeTitle,
+                    content: noticeMessage,
+                    priority: noticePriority,
+                    targetAudience: noticeTargetAudience
+                  }),
+                  className: "flex flex-col gap-4 text-left",
+                  children: [
+                    /* @__PURE__ */ jsx(ModalHeader, { title: "Submit Staff Notice", icon: /* @__PURE__ */ jsx(Megaphone, { size: 18 }), color: "#6366f1", onClose: closeModal }),
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Notice Category", children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+                        /* @__PURE__ */ jsx("select", { className: `${inputCls} appearance-none pr-9 cursor-pointer`, value: noticeCategory, onChange: (e) => setNoticeCategory(e.target.value), children: ["Internal Staff Notice", "Clinical Shift Handover", "Duty Replacement Note", "Departmental Update", "General Request"].map((o) => /* @__PURE__ */ jsx("option", { value: o, children: o }, o)) }),
+                        /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
+                      ] }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "Priority / Urgency", children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+                        /* @__PURE__ */ jsxs("select", { className: `${inputCls} appearance-none pr-9 cursor-pointer`, value: noticePriority, onChange: (e) => setNoticePriority(e.target.value), children: [
+                          /* @__PURE__ */ jsx("option", { value: "normal", children: "🟢 Normal Notice" }),
+                          /* @__PURE__ */ jsx("option", { value: "important", children: "🟡 Important" }),
+                          /* @__PURE__ */ jsx("option", { value: "urgent", children: "🔴 Urgent Announcement" })
+                        ] }),
+                        /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
+                      ] }) })
+                    ] }),
+                    /* @__PURE__ */ jsx(Field, { label: "Notice Title / Headline", children: /* @__PURE__ */ jsx(
+                      "input",
+                      {
+                        className: inputCls,
+                        required: true,
+                        placeholder: "e.g. Duty Handover for ICU Patient, Shift Swap Request",
+                        value: noticeTitle,
+                        onChange: (e) => setNoticeTitle(e.target.value)
+                      }
+                    ) }),
+                    /* @__PURE__ */ jsx(Field, { label: "Target Audience", children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+                      /* @__PURE__ */ jsxs("select", { className: `${inputCls} appearance-none pr-9 cursor-pointer`, value: noticeTargetAudience, onChange: (e) => setNoticeTargetAudience(e.target.value), children: [
+                        /* @__PURE__ */ jsx("option", { value: "all", children: "📢 Broadcast to All Staff" }),
+                        /* @__PURE__ */ jsx("option", { value: "specific_dept", children: "🏢 My Department Only" })
+                      ] }),
+                      /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
+                    ] }) }),
+                    /* @__PURE__ */ jsx(Field, { label: "Notice Content / Message", children: /* @__PURE__ */ jsx(
+                      "textarea",
+                      {
+                        className: inputCls,
+                        required: true,
+                        placeholder: "Write your notice details clearly for colleagues and administration…",
+                        value: noticeMessage,
+                        onChange: (e) => setNoticeMessage(e.target.value),
+                        rows: 4
+                      }
+                    ) }),
+                    /* @__PURE__ */ jsx(FileUpload, { label: "Attachment (Optional)", file: noticeFile, onFile: () => noticeFileRef.current.click(), onClear: () => setNoticeFile(null), accentColor: "#6366f1" }),
+                    /* @__PURE__ */ jsx("input", { type: "file", ref: noticeFileRef, className: "hidden", onChange: (e) => setNoticeFile(e.target.files[0]) }),
+                    /* @__PURE__ */ jsx(ModalFooter, { color: "#6366f1", label: "Publish Staff Notice", onCancel: closeModal })
+                  ]
+                }
+              ),
+              activeModal === "salary" && /* @__PURE__ */ jsxs(
+                "form",
+                {
+                  onSubmit: (e) => submitForm(e, "salary", {
+                    staffName,
+                    staffId,
+                    staffDep,
+                    staffPosition,
+                    incType,
+                    justification: incJustification
+                  }),
+                  className: "flex flex-col gap-4 text-left",
+                  children: [
+                    /* @__PURE__ */ jsx(ModalHeader, { title: "Salary Increment Review", icon: /* @__PURE__ */ jsx(TrendingUp, { size: 18 }), color: "#1a294a", onClose: closeModal }),
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Full Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
+                    ] }),
+                    /* @__PURE__ */ jsx(Field, { label: "Appraisal Type", children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+                      /* @__PURE__ */ jsx("select", { className: `${inputCls} appearance-none pr-9 cursor-pointer`, value: incType, onChange: (e) => setIncType(e.target.value), children: ["Merit-Based Performance Review", "DHA License Upgrade Alignment", "Senior Position Promotion", "Market Adjustment Alignment"].map((o) => /* @__PURE__ */ jsx("option", { value: o, children: o }, o)) }),
+                      /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
+                    ] }) }),
+                    /* @__PURE__ */ jsx(Field, { label: "Key Accomplishments & Justification", children: /* @__PURE__ */ jsx(
+                      "textarea",
+                      {
+                        className: inputCls,
+                        required: true,
+                        placeholder: "Detail your clinical milestones, patient satisfaction feedback, and certifications…",
+                        value: incJustification,
+                        onChange: (e) => setIncJustification(e.target.value),
+                        rows: 3
+                      }
+                    ) }),
+                    /* @__PURE__ */ jsx(FileUpload, { label: "DHA Certs / Credentials (Optional)", file: incFile, onFile: () => incFileRef.current.click(), onClear: () => setIncFile(null), accentColor: "#1a294a" }),
+                    /* @__PURE__ */ jsx("input", { type: "file", ref: incFileRef, className: "hidden", onChange: (e) => setIncFile(e.target.files[0]) }),
+                    /* @__PURE__ */ jsx(ModalFooter, { color: "#1a294a", label: "Submit Appraisal Review", onCancel: closeModal })
+                  ]
+                }
+              ),
+              activeModal === "viewNotice" && selectedNotice && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 text-left", children: [
+                /* @__PURE__ */ jsx(ModalHeader, { title: "Notice Details", icon: /* @__PURE__ */ jsx(Megaphone, { size: 18 }), color: "#08709d", onClose: closeModal }),
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [
+                  /* @__PURE__ */ jsx(Badge, { label: selectedNotice.priority || "Normal" }),
+                  /* @__PURE__ */ jsx("span", { className: "text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full", children: selectedNotice.targetAudience === "all" ? "📢 All Staff" : "🏢 Departmental" })
                 ] }),
-                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
-                  /* @__PURE__ */ jsx(Field, { label: "Department", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffDep, onChange: (e) => setStaffDep(e.target.value) }) }),
-                  /* @__PURE__ */ jsx(Field, { label: "Position", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffPosition, onChange: (e) => setStaffPosition(e.target.value) }) })
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-[#1a294a] mb-2", children: selectedNotice.title }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 text-xs text-slate-400 pb-3 border-b border-slate-100 font-medium", children: [
+                    /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1", children: [
+                      /* @__PURE__ */ jsx(User, { size: 13, className: "text-[#08709d]" }),
+                      "Issued by: ",
+                      /* @__PURE__ */ jsx("strong", { className: "text-slate-700", children: selectedNotice.staffName || "Administration" })
+                    ] }),
+                    /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1", children: [
+                      /* @__PURE__ */ jsx(Clock, { size: 13, className: "text-[#08709d]" }),
+                      selectedNotice.submittedAt ? new Date(selectedNotice.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : "Recently"
+                    ] })
+                  ] })
                 ] }),
-                /* @__PURE__ */ jsx(Field, { label: "Shift Type", children: /* @__PURE__ */ jsxs("div", { style: { position: "relative" }, children: [
-                  /* @__PURE__ */ jsx("select", { className: inputCls, style: { ...inputStyle, appearance: "none", paddingRight: "36px", cursor: "pointer" }, value: otType, onChange: (e) => setOtType(e.target.value), children: ["Day Shift", "Night Shift", "Weekend Shift", "On-Call Duty", "Other"].map((o) => /* @__PURE__ */ jsx("option", { children: o }, o)) }),
-                  /* @__PURE__ */ jsx(ChevronDown, { size: 15, style: { position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: B.muted } })
-                ] }) }),
-                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
-                  /* @__PURE__ */ jsx(Field, { label: "Date of Duty", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, style: inputStyle, required: true, value: otDate, onChange: (e) => setOtDate(e.target.value) }) }),
-                  /* @__PURE__ */ jsx(Field, { label: "OT Hours", children: /* @__PURE__ */ jsx("input", { type: "number", step: "0.5", placeholder: "e.g. 4.5", className: inputCls, style: inputStyle, required: true, value: otHours, onChange: (e) => setOtHours(e.target.value) }) })
-                ] }),
-                /* @__PURE__ */ jsx(Field, { label: "Shift Description", children: /* @__PURE__ */ jsx("textarea", { className: inputCls, required: true, placeholder: "Shift extension details…", style: { minHeight: "90px", height: "auto", resize: "none" } }) }),
-                /* @__PURE__ */ jsx(FileUpload, { label: "Shift Proof (optional)", file: otFile, onFile: () => otFileRef.current.click(), onClear: () => setOtFile(null), accentColor: B.accent }),
-                /* @__PURE__ */ jsx("input", { type: "file", ref: otFileRef, className: "hidden", onChange: (e) => setOtFile(e.target.files[0]) }),
-                /* @__PURE__ */ jsx(ModalFooter, { color: B.accent, grad: `linear-gradient(135deg,#3a8a25,${B.accent})`, label: "Submit Claim", onCancel: closeModal })
-              ] }),
-              activeModal === "salary" && /* @__PURE__ */ jsxs("form", { onSubmit: (e) => submitForm(e, "salary", { staffName, staffId, staffDep, staffPosition, incType }), style: { display: "flex", flexDirection: "column", gap: "18px" }, children: [
-                /* @__PURE__ */ jsx(ModalHeader, { title: "Salary Increment", icon: /* @__PURE__ */ jsx(TrendingUp, { size: 18 }), color: B.primary, onClose: closeModal }),
-                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
-                  /* @__PURE__ */ jsx(Field, { label: "Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
-                  /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
-                ] }),
-                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
-                  /* @__PURE__ */ jsx(Field, { label: "Department", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffDep, onChange: (e) => setStaffDep(e.target.value) }) }),
-                  /* @__PURE__ */ jsx(Field, { label: "Position", children: /* @__PURE__ */ jsx("input", { className: inputCls, style: inputStyle, required: true, value: staffPosition, onChange: (e) => setStaffPosition(e.target.value) }) })
-                ] }),
-                /* @__PURE__ */ jsx(Field, { label: "Appraisal Type", children: /* @__PURE__ */ jsxs("div", { style: { position: "relative" }, children: [
-                  /* @__PURE__ */ jsx("select", { className: inputCls, style: { ...inputStyle, appearance: "none", paddingRight: "36px", cursor: "pointer" }, value: incType, onChange: (e) => setIncType(e.target.value), children: ["Merit-Based Performance Review", "Senior Promotion Review", "Market Adjustment Alignment", "Other"].map((o) => /* @__PURE__ */ jsx("option", { children: o }, o)) }),
-                  /* @__PURE__ */ jsx(ChevronDown, { size: 15, style: { position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: B.muted } })
-                ] }) }),
-                /* @__PURE__ */ jsx(Field, { label: "Justification", children: /* @__PURE__ */ jsx("textarea", { className: inputCls, required: true, placeholder: "Achievements, DHA certifications, performance highlights…", style: { minHeight: "90px", height: "auto", resize: "none" } }) }),
-                /* @__PURE__ */ jsx(FileUpload, { label: "Supporting Docs / DHA Certs (optional)", file: incFile, onFile: () => incFileRef.current.click(), onClear: () => setIncFile(null) }),
-                /* @__PURE__ */ jsx("input", { type: "file", ref: incFileRef, className: "hidden", onChange: (e) => setIncFile(e.target.files[0]) }),
-                /* @__PURE__ */ jsx(ModalFooter, { color: B.primary, grad: `linear-gradient(135deg,${B.secondary},${B.primary})`, label: "Submit Review", onCancel: closeModal })
+                /* @__PURE__ */ jsx("div", { className: "bg-slate-50 rounded-2xl p-4 border border-slate-100 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium", children: selectedNotice.content }),
+                /* @__PURE__ */ jsx("div", { className: "flex items-center justify-end gap-3 pt-2", children: /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => {
+                      toggleAcknowledgeNotice(selectedNotice.id);
+                      closeModal();
+                    },
+                    className: "px-5 py-2.5 rounded-xl bg-[#08709d] text-white text-xs font-bold cursor-pointer hover:bg-[#065679] transition-all shadow-xs",
+                    children: "Acknowledge & Close"
+                  }
+                ) })
               ] })
             ] })
           ]
@@ -12386,43 +13050,33 @@ const StaffDashboard = () => {
     ] }) })
   ] });
 };
-const ModalHeader = ({ title, icon, color, onClose }) => /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }, children: [
-  /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "12px" }, children: [
-    /* @__PURE__ */ jsx("div", { style: { width: "40px", height: "40px", borderRadius: "12px", background: `${color}12`, color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }, children: icon }),
-    /* @__PURE__ */ jsx("h2", { style: { fontSize: "17px", fontWeight: 600, color: B.secondary, margin: 0 }, children: title })
+const ModalHeader = ({ title, icon, color, onClose }) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between pb-3 border-b border-slate-100", children: [
+  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5", children: [
+    /* @__PURE__ */ jsx("div", { className: "w-9 h-9 rounded-xl flex items-center justify-center font-bold", style: { backgroundColor: `${color}15`, color }, children: icon }),
+    /* @__PURE__ */ jsx("h3", { className: "text-base sm:text-lg font-bold text-[#1a294a]", children: title })
   ] }),
   /* @__PURE__ */ jsx(
     "button",
     {
       type: "button",
       onClick: onClose,
-      style: { width: "32px", height: "32px", borderRadius: "8px", background: B.bg, border: `1px solid ${B.border}`, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: B.muted, transition: "all 0.2s" },
-      onMouseEnter: (e) => {
-        e.currentTarget.style.background = "#FFF5F5";
-        e.currentTarget.style.color = "#dc3545";
-      },
-      onMouseLeave: (e) => {
-        e.currentTarget.style.background = B.bg;
-        e.currentTarget.style.color = B.muted;
-      },
-      children: /* @__PURE__ */ jsx(X, { size: 14 })
+      className: "w-8 h-8 rounded-xl bg-slate-100 hover:bg-red-50 hover:text-red-500 text-slate-400 flex items-center justify-center transition-all cursor-pointer",
+      children: /* @__PURE__ */ jsx(X, { size: 15 })
     }
   )
 ] });
-const ModalFooter = ({ color, grad, label, onCancel }) => /* @__PURE__ */ jsxs("div", { style: { display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", paddingTop: "4px" }, children: [
+const ModalFooter = ({ color, label, onCancel }) => /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row items-center gap-2.5 pt-3 border-t border-slate-100", children: [
   /* @__PURE__ */ jsxs(
     motion.button,
     {
       type: "submit",
-      whileHover: { scale: 1.02 },
+      whileHover: { scale: 1.01 },
       whileTap: { scale: 0.98 },
-      style: { width: "100%", maxWidth: "280px", height: "50px", background: grad, border: "none", borderRadius: "14px", color: "white", fontSize: "13px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxShadow: `0 6px 18px ${color}30`, fontFamily: "'Poppins',sans-serif" },
+      className: "w-full sm:flex-1 h-11 rounded-xl text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all",
+      style: { backgroundColor: color },
       children: [
-        /* @__PURE__ */ jsxs("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round", children: [
-          /* @__PURE__ */ jsx("line", { x1: "22", y1: "2", x2: "11", y2: "13" }),
-          /* @__PURE__ */ jsx("polygon", { points: "22 2 15 22 11 13 2 9 22 2" })
-        ] }),
-        label
+        /* @__PURE__ */ jsx(Send, { size: 14 }),
+        /* @__PURE__ */ jsx("span", { children: label })
       ]
     }
   ),
@@ -12431,15 +13085,7 @@ const ModalFooter = ({ color, grad, label, onCancel }) => /* @__PURE__ */ jsxs("
     {
       type: "button",
       onClick: onCancel,
-      style: { width: "100%", maxWidth: "280px", height: "42px", background: "transparent", border: `1px solid ${B.border}`, borderRadius: "12px", color: B.muted, fontSize: "12px", fontWeight: 500, cursor: "pointer", transition: "all 0.2s", fontFamily: "'Poppins',sans-serif" },
-      onMouseEnter: (e) => {
-        e.currentTarget.style.borderColor = B.primary;
-        e.currentTarget.style.color = B.primary;
-      },
-      onMouseLeave: (e) => {
-        e.currentTarget.style.borderColor = B.border;
-        e.currentTarget.style.color = B.muted;
-      },
+      className: "w-full sm:w-auto px-5 h-11 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs sm:text-sm font-bold cursor-pointer transition-all",
       children: "Cancel"
     }
   )
