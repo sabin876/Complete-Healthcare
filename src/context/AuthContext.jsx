@@ -74,8 +74,13 @@ const mapNotice = (n) => n ? {
   id: n.id,
   staffId: n.staff,
   staffName: n.staff_name,
-  noticeTitle: n.notice_title,
-  noticeMessage: n.notice_message,
+  title: n.title || n.notice_title || 'Notice',
+  content: n.content || n.notice_message || '',
+  targetAudience: n.target_audience,
+  selectedStaff: n.selected_staff,
+  selectedStaffDetails: n.selected_staff_details || [],
+  targetDepartment: n.target_department,
+  priority: n.priority || 'normal',
   status: n.status,
   submittedAt: n.submitted_at
 } : null;
@@ -415,8 +420,13 @@ export const AuthProvider = ({ children }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           staffId: data.staffId,
-          noticeTitle: data.noticeTitle,
-          noticeMessage: data.noticeMessage
+          title: data.title || data.noticeTitle,
+          content: data.content || data.noticeMessage,
+          noticeTitle: data.title || data.noticeTitle,
+          noticeMessage: data.content || data.noticeMessage,
+          priority: data.priority || 'normal',
+          targetAudience: data.targetAudience || 'all',
+          targetDepartment: data.targetDepartment || ''
         })
       });
       if (res.ok) {

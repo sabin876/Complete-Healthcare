@@ -260,27 +260,49 @@ class NoticeApplicationViewSet(viewsets.ModelViewSet):
         queryset = NoticeApplication.objects.all().order_by('-submitted_at')
         staff_id = self.request.query_params.get('staff_id', None)
         if staff_id is not None:
-            queryset = queryset.filter(staff__staff_id__iexact=staff_id.strip())
+            staff_id = staff_id.strip()
+            try:
+                profile = StaffProfile.objects.get(staff_id__iexact=staff_id)
+                dept = (profile.department or '').strip()
+                # Return notices targeted to all, targeted to this staff, targeted to this dept, or created by this staff
+                from django.db.models import Q
+                q = Q(target_audience='all') | Q(selected_staff=profile) | Q(staff=profile)
+                if dept:
+                    q |= Q(target_audience='specific_dept', target_department__iexact=dept)
+                queryset = queryset.filter(q).distinct()
+            except StaffProfile.DoesNotExist:
+                queryset = queryset.filter(target_audience='all')
         return queryset
 
     def create(self, request, *args, **kwargs):
-        staff_id = request.data.get('staffId')
-        try:
-            profile = StaffProfile.objects.get(staff_id__iexact=staff_id.strip())
-            data = {
-                'staff': profile.staff_id,
-                'staff_name': profile.full_name,
-                'notice_title': request.data.get('noticeTitle'),
-                'notice_message': request.data.get('noticeMessage'),
-                'status': 'Pending'
-            }
-            serializer = self.get_serializer(data=data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except StaffProfile.DoesNotExist:
-            return Response({'error': 'Staff profile not found.'}, status=status.HTTP_400_BAD_REQUEST)
+        staff_id = request.data.get('staffId', '').strip()
+        data = {
+            'title': request.data.get('title') or request.data.get('noticeTitle') or 'Staff Notice',
+            'content': request.data.get('content') or request.data.get('noticeMessage') or '',
+            'target_audience': request.data.get('targetAudience', 'all'),
+            'target_department': request.data.get('targetDepartment', ''),
+            'priority': request.data.get('priority', 'normal'),
+            'status': request.data.get('status', 'Published'),
+        }
+        if staff_id:
+            try:
+                profile = StaffProfile.objects.get(staff_id__iexact=staff_id)
+                data['staff'] = profile.staff_id
+                data['staff_name'] = profile.full_name
+            except StaffProfile.DoesNotExist:
+                data['staff_name'] = 'Administration / HR'
+        else:
+            data['staff_name'] = 'Administration / HR'
+
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            selected_staff_ids = request.data.get('selectedStaff', [])
+            if selected_staff_ids and isinstance(selected_staff_ids, list):
+                staff_objs = StaffProfile.objects.filter(staff_id__in=selected_staff_ids)
+                instance.selected_staff.set(staff_objs)
+            return Response(self.get_serializer(instance).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DutyApplicationViewSet(viewsets.ModelViewSet):
     queryset = DutyApplication.objects.all().order_by('-submitted_at')

@@ -46,12 +46,18 @@ class SalaryApplicationSerializer(serializers.ModelSerializer):
         ]
 
 class NoticeApplicationSerializer(serializers.ModelSerializer):
+    selected_staff_details = serializers.SerializerMethodField()
+
     class Meta:
         model = NoticeApplication
         fields = [
-            'id', 'staff', 'staff_name', 'notice_title', 'notice_message',
-            'status', 'submitted_at'
+            'id', 'title', 'content', 'target_audience', 'selected_staff',
+            'selected_staff_details', 'target_department', 'priority',
+            'staff', 'staff_name', 'status', 'submitted_at'
         ]
+
+    def get_selected_staff_details(self, obj):
+        return [{'id': s.staff_id, 'name': s.full_name, 'department': s.department} for s in obj.selected_staff.all()]
 
 class DutyApplicationSerializer(serializers.ModelSerializer):
     class Meta:

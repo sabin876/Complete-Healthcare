@@ -1,3 +1,4 @@
+import os
 import json
 from django.contrib import admin
 from django import forms
@@ -8,7 +9,34 @@ from .models import (
     BlogPost, Service, TeamMember
 )
 from django.utils.html import conditional_escape
-from django.utils.safestring import mark_safe
+
+# Ensure custom Notice submit_line template exists
+_tpl_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates', 'admin', 'api', 'noticeapplication')
+os.makedirs(_tpl_dir, exist_ok=True)
+_tpl_file = os.path.join(_tpl_dir, 'submit_line.html')
+with open(_tpl_file, 'w', encoding='utf-8') as _f:
+    _f.write("""{% load i18n admin_urls jazzmin %}
+{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+
+{% block submit-row %}
+<div class="d-flex flex-wrap gap-3 align-items-center mt-3 pt-3" style="border-top: 1.5px solid #e2e8f0; width: 100%;">
+    <button type="submit" name="_save" class="btn" style="background: linear-gradient(135deg, #08709d 0%, #0ea5e9 100%); color: #ffffff; font-weight: 800; font-size: 14px; padding: 12px 32px; border-radius: 12px; border: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 16px rgba(8, 112, 157, 0.35); text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;">
+        <i class="fas fa-paper-plane" style="font-size: 15px;"></i> Send Notice
+    </button>
+
+    <a href="{% url opts|admin_urlname:'changelist' %}" class="btn" style="background: #f1f5f9; color: #475569; font-weight: 700; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: 1px solid #cbd5e1; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+        <i class="fas fa-times"></i> Cancel
+    </a>
+
+    {% if show_delete_link and original %}
+        {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
+        <a href="{% add_preserved_filters delete_url %}" class="btn ms-auto" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 700; font-size: 13px; padding: 12px 20px; border-radius: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+            <i class="fas fa-trash-alt"></i> Delete Notice
+        </a>
+    {% endif %}
+</div>
+{% endblock %}
+""")
 
 # ----------------------------------------------------------------------
 # Helper functions for UI widgets
@@ -1845,10 +1873,14 @@ class StaffProfileForm(forms.ModelForm):
 
     class Meta:
         model = StaffProfile
-        fields = ['full_name', 'department', 'position', 'staff_id', 'password', 'confirm_password', 'photo', 'role']
+        fields = ['full_name', 'department', 'position', 'staff_id', 'password', 'confirm_password', 'photo']
         widgets = {
             'full_name': forms.TextInput(attrs={
                 'placeholder': 'e.g. Dr. Sarah Jenkins, RN',
+                'style': 'font-weight: 600;'
+            }),
+            'department': forms.TextInput(attrs={
+                'placeholder': 'Enter Department (e.g. Home Nursing, Doctor on Call, HR, Lab, etc.)',
                 'style': 'font-weight: 600;'
             }),
             'position': forms.TextInput(attrs={
@@ -1879,14 +1911,22 @@ class StaffProfileForm(forms.ModelForm):
 
         return cleaned_data
 
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if not instance.role:
+            instance.role = 'staff'
+        if commit:
+            instance.save()
+        return instance
+
 
 @admin.register(StaffProfile)
 class StaffProfileAdmin(admin.ModelAdmin):
     form = StaffProfileForm
-    list_display = ('passport_photo_thumbnail', 'full_name', 'staff_id_badge', 'department_badge', 'position', 'role_badge')
+    list_display = ('passport_photo_thumbnail', 'full_name', 'staff_id_badge', 'department_badge', 'position', 'actions_buttons')
     list_display_links = ('passport_photo_thumbnail', 'full_name')
     search_fields = ('staff_id', 'full_name', 'position', 'department')
-    list_filter = ('role', 'department')
+    list_filter = ('department',)
     list_per_page = 25
     readonly_fields = ('photo_preview',)
 
@@ -1894,15 +1934,16 @@ class StaffProfileAdmin(admin.ModelAdmin):
         ('👤 Staff Member Details', {
             'fields': (
                 'full_name',
-                ('department', 'position'),
+                'department',
+                'position',
             ),
             'description': 'Official medical registration name, healthcare specialty title, and clinical department.'
         }),
         ('🔒 Portal Login Credentials', {
             'fields': (
                 'staff_id',
-                ('password', 'confirm_password'),
-                'role',
+                'password',
+                'confirm_password',
             ),
             'description': mark_safe('<span style="color: #08709d; font-weight: 600;">ℹ️ These credentials allow the staff member to log into the frontend Staff Portal at <code>/portal</code>.</span>')
         }),
@@ -1946,15 +1987,24 @@ class StaffProfileAdmin(admin.ModelAdmin):
         """)
     staff_id_badge.short_description = "Username / Login ID"
 
-    def role_badge(self, obj):
-        if obj.role == 'admin':
-            return mark_safe('<span style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em;">🛡️ Admin</span>')
-        return mark_safe('<span style="background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em;">🩺 Medical Staff</span>')
-    role_badge.short_description = "Role / Access"
-
     def department_badge(self, obj):
         return mark_safe(f'<span style="background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 6px;">{obj.department}</span>')
     department_badge.short_description = "Department"
+
+    def actions_buttons(self, obj):
+        edit_url = f"/admin/api/staffprofile/{obj.id}/change/"
+        delete_url = f"/admin/api/staffprofile/{obj.id}/delete/"
+        return mark_safe(f"""
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <a href="{edit_url}" style="background: #08709d; color: #ffffff; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(8, 112, 157, 0.2);">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{delete_url}" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </a>
+            </div>
+        """)
+    actions_buttons.short_description = "Actions"
 
 
 
@@ -1966,11 +2016,307 @@ class TaskAdmin(admin.ModelAdmin):
     search_fields = ('title', 'assigned_to_name')
 
 
+from django.urls import path
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+
 @admin.register(LeaveApplication)
 class LeaveApplicationAdmin(admin.ModelAdmin):
-    list_display = ('staff_name', 'leave_type', 'leave_start', 'leave_end', 'status')
-    list_filter = ('status', 'leave_type')
-    search_fields = ('staff_name',)
+    list_display = (
+        'staff_card',
+        'submitted_at_fmt',
+        'quick_actions'
+    )
+    list_display_links = ('staff_card',)
+    list_filter = ('status', 'leave_type', 'submitted_at', 'staff_dep')
+    search_fields = ('staff_name', 'staff__staff_id', 'staff_dep', 'reason', 'leave_type')
+    list_per_page = 20
+    actions = ['approve_selected', 'reject_selected', 'reset_to_pending']
+
+    readonly_fields = ('leave_details_hero', 'submitted_at')
+    fieldsets = (
+        ('📋 Clinical Leave Application Overview', {
+            'fields': ('leave_details_hero',),
+            'description': mark_safe('<span style="color: #08709d; font-weight: 700;">Complete overview of staff leave request, duration, and cover arrangements.</span>')
+        }),
+        ('⚙️ Administrative Decision & Record Details', {
+            'fields': (
+                'status',
+                'leave_type',
+                ('leave_start', 'leave_end'),
+                'reason',
+                ('staff', 'staff_name'),
+                ('staff_dep', 'staff_position'),
+                'submitted_at',
+            ),
+        }),
+    )
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('<int:leave_id>/approve/', self.admin_site.admin_view(self.quick_approve_view), name='api_leave_approve'),
+            path('<int:leave_id>/reject/', self.admin_site.admin_view(self.quick_reject_view), name='api_leave_reject'),
+        ]
+        return custom_urls + urls
+
+    def quick_approve_view(self, request, leave_id):
+        try:
+            leave = LeaveApplication.objects.get(id=leave_id)
+            leave.status = 'Approved'
+            leave.save()
+            self.message_user(request, f"✅ Leave application for {leave.staff_name} has been APPROVED successfully.", level=messages.SUCCESS)
+        except LeaveApplication.DoesNotExist:
+            self.message_user(request, "Leave application not found.", level=messages.ERROR)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/admin/api/leaveapplication/'))
+
+    def quick_reject_view(self, request, leave_id):
+        try:
+            leave = LeaveApplication.objects.get(id=leave_id)
+            leave.status = 'Rejected'
+            leave.save()
+            self.message_user(request, f"❌ Leave application for {leave.staff_name} has been REJECTED.", level=messages.WARNING)
+        except LeaveApplication.DoesNotExist:
+            self.message_user(request, "Leave application not found.", level=messages.ERROR)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/admin/api/leaveapplication/'))
+
+    # ── Custom List Display Methods ──────────────────────────────────────────
+    def staff_card(self, obj):
+        profile = getattr(obj, 'staff', None)
+        photo_url = profile.photo.url if (profile and profile.photo) else None
+        initials = "".join([w[0].upper() for w in obj.staff_name.split() if w])[:2] if obj.staff_name else "??"
+        
+        avatar_html = (
+            f'<img src="{photo_url}" style="width: 38px; height: 38px; border-radius: 10px; object-fit: cover; border: 1.5px solid #08709d;" />'
+            if photo_url else
+            f'<div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #1a294a, #08709d); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">{initials}</div>'
+        )
+        
+        dept = obj.staff_dep or (profile.department if profile else '') or 'Clinical'
+        pos = obj.staff_position or (profile.position if profile else '') or 'Staff'
+        staff_id = profile.staff_id if profile else (obj.staff_id if hasattr(obj, 'staff_id') else '')
+
+        return mark_safe(f"""
+            <div style="display: flex; align-items: center; gap: 12px; font-family: system-ui, -apple-system, sans-serif;">
+                {avatar_html}
+                <div>
+                    <div style="font-weight: 800; font-size: 13.5px; color: #0f172a;">{obj.staff_name}</div>
+                    <div style="font-size: 11px; color: #64748b; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                        <span style="background: #f1f5f9; color: #08709d; padding: 1px 6px; border-radius: 4px; font-family: monospace; font-weight: 700;">{staff_id}</span>
+                        <span>• {pos} ({dept})</span>
+                    </div>
+                </div>
+            </div>
+        """)
+    staff_card.short_description = "Staff Member"
+
+    def leave_type_badge(self, obj):
+        colors = {
+            'Annual Leave': ('#0284c7', '#e0f2fe', '#bae6fd', '🌴'),
+            'Sick Leave': ('#dc2626', '#fee2e2', '#fca5a5', '🩺'),
+            'Casual Leave': ('#d97706', '#fef3c7', '#fde68a', '☕'),
+            'Emergency Leave': ('#b91c1c', '#fef2f2', '#fecaca', '🚨'),
+            'Unpaid Leave': ('#64748b', '#f1f5f9', '#cbd5e1', '📋'),
+        }
+        fg, bg, border, icon = colors.get(obj.leave_type, ('#08709d', '#f0f9ff', '#bae6fd', '📅'))
+        return mark_safe(f"""
+            <span style="background: {bg}; color: {fg}; border: 1px solid {border}; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
+                <span>{icon}</span> {obj.leave_type}
+            </span>
+        """)
+    leave_type_badge.short_description = "Leave Type"
+
+    def duration_and_dates(self, obj):
+        if obj.leave_start and obj.leave_end:
+            days = (obj.leave_end - obj.leave_start).days + 1
+            days_text = f"{days} Day{'s' if days != 1 else ''}"
+            start_fmt = obj.leave_start.strftime('%d %b %Y')
+            end_fmt = obj.leave_end.strftime('%d %b %Y')
+            return mark_safe(f"""
+                <div style="font-family: system-ui, -apple-system, sans-serif;">
+                    <div style="font-weight: 800; font-size: 13px; color: #08709d; display: flex; align-items: center; gap: 5px;">
+                        <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 6px; border: 1px solid #bae6fd; font-size: 11.5px;">⏳ {days_text}</span>
+                    </div>
+                    <div style="font-size: 11.5px; color: #475569; margin-top: 3px; font-weight: 600;">
+                        📅 {start_fmt} <span style="color: #94a3b8;">→</span> {end_fmt}
+                    </div>
+                </div>
+            """)
+        return "—"
+    duration_and_dates.short_description = "Duration & Date Range"
+
+    def reason_excerpt(self, obj):
+        if not obj.reason:
+            return mark_safe('<span style="color: #94a3b8; font-style: italic; font-size: 12px;">No reason specified</span>')
+        trimmed = obj.reason[:60] + ('...' if len(obj.reason) > 60 else '')
+        return mark_safe(f'<span style="font-size: 12px; color: #334155; font-weight: 500;" title="{obj.reason}">{trimmed}</span>')
+    reason_excerpt.short_description = "Reason / Plan"
+
+    def status_pill(self, obj):
+        cfg = {
+            'Approved': ('#16a34a', '#dcfce7', '#bbf7d0', '✓ Approved'),
+            'Pending': ('#d97706', '#fef3c7', '#fde68a', '⏳ Pending Approval'),
+            'Rejected': ('#dc2626', '#fee2e2', '#fecaca', '✕ Rejected'),
+        }
+        fg, bg, border, label = cfg.get(obj.status, ('#64748b', '#f1f5f9', '#cbd5e1', obj.status))
+        return mark_safe(f"""
+            <span style="background: {bg}; color: {fg}; border: 1px solid {border}; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 4px;">
+                {label}
+            </span>
+        """)
+    status_pill.short_description = "Status"
+
+    def submitted_at_fmt(self, obj):
+        if obj.submitted_at:
+            return mark_safe(f"""
+                <span style="font-size: 11.5px; color: #64748b; font-weight: 600;">
+                    {obj.submitted_at.strftime('%d %b %Y')}<br/>
+                    <small style="color: #94a3b8;">{obj.submitted_at.strftime('%I:%M %p')}</small>
+                </span>
+            """)
+        return "—"
+    submitted_at_fmt.short_description = "Submitted"
+
+    def quick_actions(self, obj):
+        approve_url = f"/admin/api/leaveapplication/{obj.id}/approve/"
+        reject_url = f"/admin/api/leaveapplication/{obj.id}/reject/"
+        edit_url = f"/admin/api/leaveapplication/{obj.id}/change/"
+
+        return mark_safe(f"""
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <a href="{edit_url}" style="background: #08709d; color: white; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(8,112,157,0.25);" title="View Full Leave Details">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+                <a href="{approve_url}" style="background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Quick Approve">
+                    <i class="fas fa-check"></i>
+                </a>
+                <a href="{reject_url}" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Quick Reject">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+        """)
+    quick_actions.short_description = "Actions"
+
+    # ── Custom Readonly Hero View on Change Page ────────────────────────────
+    def leave_details_hero(self, obj):
+        if not obj or not obj.pk:
+            return mark_safe('<div style="color: #64748b; font-style: italic;">Save the record first to view clinical details card.</div>')
+
+        profile = getattr(obj, 'staff', None)
+        photo_url = profile.photo.url if (profile and profile.photo) else None
+        initials = "".join([w[0].upper() for w in obj.staff_name.split() if w])[:2] if obj.staff_name else "??"
+        
+        avatar_html = (
+            f'<img src="{photo_url}" style="width: 56px; height: 56px; border-radius: 16px; object-fit: cover; border: 2.5px solid #08709d; box-shadow: 0 4px 12px rgba(8,112,157,0.2);" />'
+            if photo_url else
+            f'<div style="width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #1a294a, #08709d); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: 0 4px 12px rgba(8,112,157,0.2);">{initials}</div>'
+        )
+
+        days = (obj.leave_end - obj.leave_start).days + 1 if (obj.leave_start and obj.leave_end) else 0
+        start_str = obj.leave_start.strftime('%A, %d %B %Y') if obj.leave_start else '—'
+        end_str = obj.leave_end.strftime('%A, %d %B %Y') if obj.leave_end else '—'
+
+        cfg = {
+            'Approved': ('#16a34a', '#dcfce7', '#bbf7d0', '✓ APPROVED BY ADMINISTRATION'),
+            'Pending': ('#d97706', '#fef3c7', '#fde68a', '⏳ PENDING REVIEW & DECISION'),
+            'Rejected': ('#dc2626', '#fee2e2', '#fecaca', '✕ REJECTED'),
+        }
+        fg, bg, border, status_text = cfg.get(obj.status, ('#64748b', '#f1f5f9', '#cbd5e1', obj.status))
+        
+        approve_url = f"/admin/api/leaveapplication/{obj.id}/approve/"
+        reject_url = f"/admin/api/leaveapplication/{obj.id}/reject/"
+
+        return mark_safe(f"""
+        <div style="max-width: 950px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 18px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); font-family: system-ui, -apple-system, sans-serif;">
+            
+            <!-- Top Applicant Profile Bar -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 18px;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    {avatar_html}
+                    <div>
+                        <div style="font-weight: 800; font-size: 18px; color: #0f172a;">{obj.staff_name}</div>
+                        <div style="font-size: 12.5px; color: #64748b; font-weight: 600; margin-top: 3px; display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 6px; font-weight: 800; font-family: monospace;">{obj.staff_id or 'STF'}</span>
+                            <span>• {obj.staff_position or 'Healthcare Staff'}</span>
+                            <span>• Department: <strong style="color: #08709d;">{obj.staff_dep or 'Clinical'}</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+                    <span style="background: {bg}; color: {fg}; border: 1.5px solid {border}; font-weight: 800; font-size: 12px; padding: 6px 14px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em;">
+                        {status_text}
+                    </span>
+                    <span style="font-size: 11px; color: #94a3b8; font-weight: 500;">
+                        Submitted on {obj.submitted_at.strftime('%d %b %Y, %I:%M %p') if obj.submitted_at else 'Recently'}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Leave Dates & Duration Grid -->
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; margin: 20px 0; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 18px;">
+                <div style="text-align: center; background: white; padding: 14px; border-radius: 10px; border: 1px solid #cbd5e1;">
+                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">📅 Start Date</div>
+                    <div style="font-size: 15px; font-weight: 800; color: #0f172a;">{start_str}</div>
+                </div>
+
+                <div style="text-align: center; padding: 0 10px;">
+                    <div style="background: #08709d; color: white; font-size: 14px; font-weight: 800; padding: 8px 16px; border-radius: 999px; box-shadow: 0 4px 12px rgba(8,112,157,0.3); display: inline-block;">
+                        ⏳ {days} Day{'s' if days != 1 else ''} Leave
+                    </div>
+                </div>
+
+                <div style="text-align: center; background: white; padding: 14px; border-radius: 10px; border: 1px solid #cbd5e1;">
+                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">📅 End Date</div>
+                    <div style="font-size: 15px; font-weight: 800; color: #0f172a;">{end_str}</div>
+                </div>
+            </div>
+
+            <!-- Reason Box -->
+            <div style="margin-bottom: 20px;">
+                <div style="font-weight: 700; font-size: 12.5px; color: #475569; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.04em;">
+                    📝 Stated Reason & Clinical Cover Arrangements:
+                </div>
+                <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 16px; color: #166534; font-size: 13.5px; line-height: 1.6; font-weight: 500; white-space: pre-wrap;">
+                    {obj.reason or 'No additional cover notes provided by the applicant.'}
+                </div>
+            </div>
+
+            <!-- Quick Approval Toolbar -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; pt-3; border-top: 1.5px solid #f1f5f9; padding-top: 16px; flex-wrap: wrap;">
+                <div style="font-size: 12.5px; color: #64748b; font-weight: 600;">
+                    Quick Decision:
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <a href="{approve_url}" style="background: #16a34a; color: white; font-weight: 800; font-size: 12.5px; padding: 9px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(22,163,74,0.25);">
+                        <i class="fas fa-check-circle"></i> Approve Leave
+                    </a>
+                    <a href="{reject_url}" style="background: #dc2626; color: white; font-weight: 800; font-size: 12.5px; padding: 9px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(220,38,38,0.25);">
+                        <i class="fas fa-times-circle"></i> Reject Leave
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        """)
+    leave_details_hero.short_description = "Leave Application Summary"
+
+    # ── Bulk Admin Actions ───────────────────────────────────────────────────
+    def approve_selected(self, request, queryset):
+        count = queryset.update(status='Approved')
+        self.message_user(request, f"Successfully approved {count} leave application(s).", level=messages.SUCCESS)
+    approve_selected.short_description = "✓ Approve selected leave applications"
+
+    def reject_selected(self, request, queryset):
+        count = queryset.update(status='Rejected')
+        self.message_user(request, f"Successfully rejected {count} leave application(s).", level=messages.WARNING)
+    reject_selected.short_description = "✕ Reject selected leave applications"
+
+    def reset_to_pending(self, request, queryset):
+        count = queryset.update(status='Pending')
+        self.message_user(request, f"Reset {count} leave application(s) to Pending.", level=messages.INFO)
+    reset_to_pending.short_description = "⏳ Reset status to Pending"
+
 
 
 @admin.register(OtApplication)
@@ -1985,10 +2331,177 @@ class SalaryApplicationAdmin(admin.ModelAdmin):
     list_filter = ('status',)
 
 
+class StaffRecipientPickerWidget(forms.CheckboxSelectMultiple):
+    def render(self, name, value, attrs=None, renderer=None):
+        if value is None:
+            value = []
+        elif not isinstance(value, (list, tuple)):
+            value = [value]
+        value = [str(v) for v in value]
+
+        staff_list = StaffProfile.objects.all().order_by('full_name')
+        
+        output = ["""
+        <div class="staff-picker-container" style="max-width: 750px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1.5px solid #f1f5f9;">
+                <label style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 13px; color: #08709d; cursor: pointer; user-select: none; margin: 0;">
+                    <input type="checkbox" id="select-all-staff-toggle" style="width: 18px; height: 18px; cursor: pointer; accent-color: #08709d;" />
+                    <span>📢 Select All Available Staff (Send to All)</span>
+                </label>
+                <span id="staff-selected-count" style="font-size: 12px; font-weight: 700; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 999px; border: 1px solid #e2e8f0;">
+                    0 selected
+                </span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; max-height: 280px; overflow-y: auto; padding: 4px;">
+        """]
+
+        for s in staff_list:
+            is_checked = str(s.id) in value or str(s.staff_id) in value
+            checked_attr = 'checked' if is_checked else ''
+            initials = "".join([w[0].upper() for w in s.full_name.split() if w])[:2] if s.full_name else "??"
+            dept_str = f" • {s.department}" if s.department else ""
+            
+            photo_html = f'<img src="{s.photo.url}" style="width: 28px; height: 28px; border-radius: 6px; object-fit: cover;" />' if s.photo else f'<div style="width: 28px; height: 28px; border-radius: 6px; background: #08709d20; color: #08709d; font-weight: 800; font-size: 11px; display: flex; align-items: center; justify-content: center;">{initials}</div>'
+
+            output.append(f"""
+                <label class="staff-picker-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1.5px solid {'#08709d' if is_checked else '#e2e8f0'}; background: {'#f0f9ff' if is_checked else '#ffffff'}; border-radius: 10px; cursor: pointer; transition: all 0.15s ease; user-select: none;">
+                    <input type="checkbox" name="{name}" value="{s.id}" class="staff-checkbox" {checked_attr} style="width: 16px; height: 16px; accent-color: #08709d; cursor: pointer;" />
+                    {photo_html}
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 700; font-size: 12.5px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{s.full_name}</div>
+                        <div style="font-size: 11px; color: #64748b; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{s.staff_id}{dept_str}</div>
+                    </div>
+                </label>
+            """)
+
+        output.append("""
+            </div>
+            <script>
+            (function() {
+                function initPicker() {
+                    const selectAll = document.getElementById('select-all-staff-toggle');
+                    const checkboxes = document.querySelectorAll('.staff-checkbox');
+                    const countSpan = document.getElementById('staff-selected-count');
+                    if (!selectAll || !checkboxes.length) return;
+
+                    function updateCount() {
+                        const checked = document.querySelectorAll('.staff-checkbox:checked');
+                        if (countSpan) countSpan.textContent = checked.length + ' of ' + checkboxes.length + ' selected';
+                        selectAll.checked = (checked.length === checkboxes.length && checkboxes.length > 0);
+                        selectAll.indeterminate = (checked.length > 0 && checked.length < checkboxes.length);
+
+                        checkboxes.forEach(cb => {
+                            const parent = cb.closest('.staff-picker-item');
+                            if (parent) {
+                                parent.style.borderColor = cb.checked ? '#08709d' : '#e2e8f0';
+                                parent.style.background = cb.checked ? '#f0f9ff' : '#ffffff';
+                            }
+                        });
+                    }
+
+                    selectAll.addEventListener('change', function() {
+                        checkboxes.forEach(cb => { cb.checked = selectAll.checked; });
+                        updateCount();
+                    });
+
+                    checkboxes.forEach(cb => {
+                        cb.addEventListener('change', updateCount);
+                    });
+
+                    updateCount();
+                }
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', initPicker);
+                } else {
+                    setTimeout(initPicker, 100);
+                }
+            })();
+            </script>
+        </div>
+        """)
+        return mark_safe("".join(output))
+
+
+class NoticeApplicationForm(forms.ModelForm):
+    class Meta:
+        model = NoticeApplication
+        fields = ['title', 'content', 'selected_staff']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'placeholder': 'Enter notice headline (e.g. Mandatory Clinical Meeting, Holiday Schedule)',
+                'style': 'font-weight: 700; font-size: 14px;'
+            }),
+            'content': forms.Textarea(attrs={
+                'placeholder': 'Type full notice announcement details here...',
+                'rows': 5,
+                'style': 'font-size: 13.5px;'
+            }),
+            'selected_staff': StaffRecipientPickerWidget(),
+        }
+
+
 @admin.register(NoticeApplication)
 class NoticeApplicationAdmin(admin.ModelAdmin):
-    list_display = ('staff_name', 'notice_title', 'status', 'submitted_at')
-    list_filter = ('status',)
+    form = NoticeApplicationForm
+    list_display = ('title', 'recipients_badge', 'submitted_at', 'actions_buttons')
+    list_display_links = ('title',)
+    list_filter = ('submitted_at',)
+    search_fields = ('title', 'content')
+    list_per_page = 20
+
+    fieldsets = (
+        ('📢 Notice Information', {
+            'fields': (
+                'title',
+                'content',
+            ),
+            'description': 'Specify the notice title and write your announcement message.'
+        }),
+        ('👥 Select Recipients to Send Notice', {
+            'fields': (
+                'selected_staff',
+            ),
+            'description': mark_safe('<span style="color: #08709d; font-weight: 600;">Check "Select All" to broadcast to every staff member, or check specific staff members who should receive this notice.</span>')
+        }),
+    )
+
+    def save_model(self, request, obj, form, change):
+        if not obj.staff_name:
+            obj.staff_name = "Administration / Management"
+        super().save_model(request, obj, form, change)
+        # Update target_audience based on selection
+        total_staff_count = StaffProfile.objects.count()
+        selected_count = form.cleaned_data.get('selected_staff', []).count()
+        if selected_count == 0 or selected_count >= total_staff_count:
+            obj.target_audience = 'all'
+        else:
+            obj.target_audience = 'specific_staff'
+        obj.save()
+
+    def recipients_badge(self, obj):
+        total_staff = StaffProfile.objects.count()
+        count = obj.selected_staff.count()
+        if obj.target_audience == 'all' or count == 0 or count >= total_staff:
+            return mark_safe('<span style="background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 6px;">📢 All Staff Members</span>')
+        names = ", ".join([s.full_name for s in obj.selected_staff.all()[:2]])
+        extra = f" +{count - 2} more" if count > 2 else ""
+        return mark_safe(f'<span style="background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 6px;">👤 {names}{extra}</span>')
+    recipients_badge.short_description = "Recipients"
+
+    def actions_buttons(self, obj):
+        edit_url = f"/admin/api/noticeapplication/{obj.id}/change/"
+        delete_url = f"/admin/api/noticeapplication/{obj.id}/delete/"
+        return mark_safe(f"""
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <a href="{edit_url}" style="background: #08709d; color: #ffffff; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(8, 112, 157, 0.2);">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{delete_url}" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </a>
+            </div>
+        """)
+    actions_buttons.short_description = "Actions"
 
 
 @admin.register(DutyApplication)
@@ -2055,6 +2568,85 @@ class SitemapXmlAdmin(admin.ModelAdmin):
                 'style': 'font-family: Consolas, monospace; font-size: 13.5px; line-height: 1.5; background: #0b1329; color: #34d399; border: 1.5px solid #1e293b; padding: 14px; border-radius: 10px; width: 100%; max-width: 950px;'
             })
         return formfield
+
+
+# ----------------------------------------------------------------------
+# Monkeypatch admin.site.index to provide custom dashboard metrics context
+# ----------------------------------------------------------------------
+original_index = admin.site.index
+
+def custom_admin_index(request, extra_context=None):
+    if extra_context is None:
+        extra_context = {}
+    
+    try:
+        extra_context['staff_count'] = StaffProfile.objects.count()
+        extra_context['pending_leaves'] = LeaveApplication.objects.filter(status='Pending').count()
+        extra_context['active_tasks'] = Task.objects.filter(status='In Progress').count()
+        extra_context['service_count'] = Service.objects.count()
+        extra_context['blog_count'] = BlogPost.objects.count()
+        extra_context['team_count'] = TeamMember.objects.count()
+        
+        # Recent data for tables
+        extra_context['recent_tasks'] = Task.objects.order_by('-created_at')[:5]
+        extra_context['recent_leaves'] = LeaveApplication.objects.order_by('-submitted_at')[:5]
+    except Exception:
+        pass
+        
+    return original_index(request, extra_context=extra_context)
+
+admin.site.index = custom_admin_index
+
+
+# ----------------------------------------------------------------------
+# Monkeypatch jazzmin.utils.make_menu to support custom children dropdown links
+# ----------------------------------------------------------------------
+import jazzmin.utils
+
+original_make_menu = jazzmin.utils.make_menu
+
+def custom_make_menu(user, links, options, allow_appmenus=True, admin_site="admin"):
+    if not user:
+        return []
+        
+    menu = []
+    
+    for link in links:
+        if "permissions" in link and link["permissions"]:
+            perm_matches = [user.has_perm(perm) for perm in link["permissions"]]
+            if not all(perm_matches):
+                continue
+            
+        if "children" in link and isinstance(link["children"], list):
+            children_menu = []
+            for child in link["children"]:
+                if "permissions" in child and child["permissions"]:
+                    child_perms = [user.has_perm(p) for p in child["permissions"]]
+                    if not all(child_perms):
+                        continue
+                
+                children_menu.append({
+                    "name": child.get("name", "unspecified"),
+                    "url": jazzmin.utils.get_custom_url(child["url"], admin_site=admin_site),
+                    "children": None,
+                    "new_window": child.get("new_window", False),
+                    "icon": child.get("icon", options.get("default_icon_children", "fas fa-file")),
+                })
+            
+            if children_menu:
+                menu.append({
+                    "name": link.get("name", "unspecified"),
+                    "url": "#",
+                    "children": children_menu,
+                    "icon": link.get("icon", options.get("default_icon_children", "fas fa-file")),
+                    "new_window": False,
+                })
+        else:
+            menu.extend(original_make_menu(user, [link], options, allow_appmenus, admin_site))
+            
+    return menu
+
+jazzmin.utils.make_menu = custom_make_menu
 
 
 

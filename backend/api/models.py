@@ -29,10 +29,10 @@ class StaffProfile(models.Model):
     )
     department = models.CharField(
         max_length=100,
-        choices=DEPARTMENT_CHOICES,
-        default='Home Nursing',
+        blank=True,
+        default='',
         verbose_name="Department",
-        help_text="Clinical or administrative department"
+        help_text="Clinical or administrative department of your choice (e.g. Home Nursing, Doctor on Call, HR, Operations, etc.)"
     )
     position = models.CharField(
         max_length=100,
@@ -125,15 +125,87 @@ class SalaryApplication(models.Model):
         return f"{self.staff_name} - Salary Appraisal"
 
 class NoticeApplication(models.Model):
-    staff = models.ForeignKey(StaffProfile, on_delete=models.CASCADE, related_name='notices', to_field='staff_id')
-    staff_name = models.CharField(max_length=150)
-    notice_title = models.CharField(max_length=200)
-    notice_message = models.TextField()
-    status = models.CharField(max_length=30, default='Pending')
-    submitted_at = models.DateTimeField(auto_now_add=True)
+    TARGET_AUDIENCE_CHOICES = [
+        ('all', '📢 Broadcast to All Staff Members'),
+        ('specific_staff', '👤 Select Specific Staff Members'),
+        ('specific_dept', '🏢 Select by Department'),
+    ]
+    PRIORITY_CHOICES = [
+        ('normal', '🟢 Normal Notice'),
+        ('important', '🟡 Important Announcement'),
+        ('urgent', '🔴 Urgent / High Priority'),
+    ]
+
+    title = models.CharField(
+        max_length=250,
+        default="Official Notice",
+        verbose_name="Notice Title",
+        help_text="Enter the headline / subject of the notice (e.g. Mandatory Clinical Meeting, Holiday Schedule, Shift Update)"
+    )
+    content = models.TextField(
+        default="",
+        verbose_name="Notice Content",
+        help_text="Detailed description and announcement information for staff members"
+    )
+    target_audience = models.CharField(
+        max_length=30,
+        choices=TARGET_AUDIENCE_CHOICES,
+        default='all',
+        verbose_name="Send Notice To",
+        help_text="Select whether to send this notice to all staff, specific individuals, or a department."
+    )
+    selected_staff = models.ManyToManyField(
+        StaffProfile,
+        blank=True,
+        related_name='received_notices',
+        verbose_name="Select Specific Staff Members",
+        help_text="Choose one or more staff members who should receive this notice."
+    )
+    target_department = models.CharField(
+        max_length=100,
+        blank=True,
+        default='',
+        verbose_name="Target Department",
+        help_text="Enter department name (e.g. Home Nursing, Doctor on Call, HR) if sending by department."
+    )
+    priority = models.CharField(
+        max_length=20,
+        choices=PRIORITY_CHOICES,
+        default='normal',
+        verbose_name="Urgency / Priority"
+    )
+    staff = models.ForeignKey(
+        StaffProfile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='notices',
+        to_field='staff_id',
+        verbose_name="Issued By"
+    )
+    staff_name = models.CharField(
+        max_length=150,
+        blank=True,
+        default="Administration / HR",
+        verbose_name="Issuer Name"
+    )
+    status = models.CharField(
+        max_length=30,
+        default='Published',
+        verbose_name="Status"
+    )
+    submitted_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Date & Time"
+    )
+
+    class Meta:
+        verbose_name = "Notice & Announcement"
+        verbose_name_plural = "Notices & Announcements"
+        ordering = ['-submitted_at']
 
     def __str__(self):
-        return f"{self.staff_name} - Notice: {self.notice_title}"
+        return f"{self.title} ({self.get_target_audience_display()})"
 
 class DutyApplication(models.Model):
     staff = models.ForeignKey(StaffProfile, on_delete=models.CASCADE, related_name='duties', to_field='staff_id')

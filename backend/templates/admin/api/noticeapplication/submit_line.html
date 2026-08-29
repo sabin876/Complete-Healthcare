@@ -1,0 +1,21 @@
+{% load i18n admin_urls jazzmin %}
+{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+
+{% block submit-row %}
+<div class="d-flex flex-wrap gap-3 align-items-center mt-3 pt-3" style="border-top: 1.5px solid #e2e8f0; width: 100%;">
+    <button type="submit" name="_save" class="btn" style="background: linear-gradient(135deg, #08709d 0%, #0ea5e9 100%); color: #ffffff; font-weight: 800; font-size: 14px; padding: 12px 32px; border-radius: 12px; border: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 16px rgba(8, 112, 157, 0.35); text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;">
+        <i class="fas fa-paper-plane" style="font-size: 15px;"></i> Send Notice
+    </button>
+
+    <a href="{% url opts|admin_urlname:'changelist' %}" class="btn" style="background: #f1f5f9; color: #475569; font-weight: 700; font-size: 13px; padding: 12px 20px; border-radius: 12px; border: 1px solid #cbd5e1; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+        <i class="fas fa-times"></i> Cancel
+    </a>
+
+    {% if show_delete_link and original %}
+        {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
+        <a href="{% add_preserved_filters delete_url %}" class="btn ms-auto" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 700; font-size: 13px; padding: 12px 20px; border-radius: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+            <i class="fas fa-trash-alt"></i> Delete Notice
+        </a>
+    {% endif %}
+</div>
+{% endblock %}
