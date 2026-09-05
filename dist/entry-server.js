@@ -14877,7 +14877,7 @@ const SocialMedia = () => {
       link: "https://www.linkedin.com/company/corx-healthcare/"
     }
   ];
-  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen relative text-white flex flex-col items-center justify-between px-4 sm:px-6 py-8 sm:py-12 overflow-x-hidden font-['Poppins',sans-serif] select-none", children: [
+  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen relative text-white flex flex-col items-center justify-start px-4 sm:px-6 pt-2 sm:pt-3 pb-8 overflow-x-hidden font-['Poppins',sans-serif] select-none", children: [
     /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none", children: [
       /* @__PURE__ */ jsx(
         "video",
@@ -14893,15 +14893,15 @@ const SocialMedia = () => {
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-[1] bg-gradient-to-br from-[#0c2e56]/92 via-[#0b2848]/88 to-[#071f3b]/94 pointer-events-none" }),
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-[2] bg-gradient-to-t from-[#050e1d]/90 via-transparent to-[#050e1d]/70 pointer-events-none" })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "absolute top-12 left-1/2 -translate-x-1/2 w-[480px] h-[480px] bg-gradient-to-b from-[#08709d]/35 via-[#1a294a]/20 to-transparent rounded-full blur-[120px] pointer-events-none z-[3]" }),
-    /* @__PURE__ */ jsxs("div", { className: "w-full max-w-xl flex items-center justify-between relative z-20 mb-6 sm:mb-8", children: [
+    /* @__PURE__ */ jsx("div", { className: "absolute top-4 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-gradient-to-b from-[#08709d]/35 via-[#1a294a]/20 to-transparent rounded-full blur-[90px] pointer-events-none z-[3]" }),
+    /* @__PURE__ */ jsxs("div", { className: "w-full max-w-xl flex items-center justify-between relative z-20 mb-1.5 sm:mb-2", children: [
       /* @__PURE__ */ jsx(
         "button",
         {
           onClick: () => navigate(-1),
           "aria-label": "Go Back",
-          className: "w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer",
-          children: /* @__PURE__ */ jsx(ArrowLeft, { size: 18 })
+          className: "w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer",
+          children: /* @__PURE__ */ jsx(ArrowLeft, { size: 17 })
         }
       ),
       /* @__PURE__ */ jsx(
@@ -14909,8 +14909,8 @@ const SocialMedia = () => {
         {
           onClick: handleShare,
           "aria-label": "Share Page",
-          className: "w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer relative",
-          children: copied ? /* @__PURE__ */ jsx(Check, { size: 18, className: "text-[#5eb63b]" }) : /* @__PURE__ */ jsx(Share2, { size: 18 })
+          className: "w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer relative",
+          children: copied ? /* @__PURE__ */ jsx(Check, { size: 17, className: "text-[#5eb63b]" }) : /* @__PURE__ */ jsx(Share2, { size: 17 })
         }
       )
     ] }),
@@ -14920,24 +14920,24 @@ const SocialMedia = () => {
         initial: { opacity: 0, y: -20 },
         animate: { opacity: 1, y: 0 },
         exit: { opacity: 0, y: -20 },
-        className: "fixed top-6 z-50 bg-[#5eb63b] text-white px-4 py-2 rounded-full text-xs font-bold font-['Montserrat',sans-serif] shadow-xl flex items-center gap-1.5",
+        className: "fixed top-4 z-50 bg-[#5eb63b] text-white px-4 py-2 rounded-full text-xs font-bold font-['Montserrat',sans-serif] shadow-xl flex items-center gap-1.5",
         children: [
           /* @__PURE__ */ jsx(Check, { size: 14 }),
           " Link copied to clipboard!"
         ]
       }
     ) }),
-    /* @__PURE__ */ jsxs("div", { className: "w-full max-w-xl flex flex-col items-center text-center relative z-10 flex-grow justify-center", children: [
+    /* @__PURE__ */ jsxs("div", { className: "w-full max-w-xl flex flex-col items-center text-center relative z-10", children: [
       /* @__PURE__ */ jsxs(
         motion.div,
         {
           initial: { scale: 0.85, opacity: 0 },
           animate: { scale: 1, opacity: 1 },
           transition: { duration: 0.35 },
-          className: "relative mb-5",
+          className: "relative mb-2 sm:mb-2.5",
           children: [
-            /* @__PURE__ */ jsx("div", { className: "absolute -inset-2.5 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] rounded-full blur-md opacity-80 animate-pulse" }),
-            /* @__PURE__ */ jsx("div", { className: "relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-white p-3.5 shadow-2xl flex items-center justify-center border-2 border-white/90", children: /* @__PURE__ */ jsx(
+            /* @__PURE__ */ jsx("div", { className: "absolute -inset-1.5 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] rounded-full blur-md opacity-80 animate-pulse" }),
+            /* @__PURE__ */ jsx("div", { className: "relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white p-2.5 shadow-2xl flex items-center justify-center border-2 border-white/90", children: /* @__PURE__ */ jsx(
               "img",
               {
                 src: logo,
@@ -14954,33 +14954,57 @@ const SocialMedia = () => {
           initial: { opacity: 0, y: 8 },
           animate: { opacity: 1, y: 0 },
           transition: { delay: 0.1 },
-          className: "text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-8 font-['Montserrat',sans-serif]",
+          className: "text-lg sm:text-xl md:text-2xl font-extrabold text-white tracking-tight mb-3.5 sm:mb-4 font-['Montserrat',sans-serif]",
           children: "CORx Healthcare Dubai"
         }
       ),
-      /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-3 sm:gap-3.5 mb-8 sm:mb-10", children: [
-        /* @__PURE__ */ jsxs(
-          motion.a,
-          {
-            initial: { opacity: 0, y: 12 },
-            animate: { opacity: 1, y: 0 },
-            transition: { delay: 0.25 },
-            whileHover: { scale: 1.015 },
-            whileTap: { scale: 0.985 },
-            href: "tel:+97143320776",
-            className: "group w-full bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/30 transition-all text-left",
-            children: [
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 sm:gap-3.5 min-w-0", children: [
-                /* @__PURE__ */ jsx("div", { className: "w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner", children: /* @__PURE__ */ jsx(Phone, { size: 19 }) }),
-                /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
-                  /* @__PURE__ */ jsx("h2", { className: "font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif] truncate", children: "Call Dubai 24/7 Clinic" }),
-                  /* @__PURE__ */ jsx("p", { className: "text-sky-100 text-[11px] sm:text-xs font-mono truncate", children: "+971 4 332 0776 / +971 54 703 3311" })
-                ] })
-              ] }),
-              /* @__PURE__ */ jsx(DiagonalArrow, {})
-            ]
-          }
-        ),
+      /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-2 sm:gap-2.5 mb-4 sm:mb-5", children: [
+        /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full", children: [
+          /* @__PURE__ */ jsxs(
+            motion.a,
+            {
+              initial: { opacity: 0, y: 12 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: 0.2 },
+              whileHover: { scale: 1.02 },
+              whileTap: { scale: 0.98 },
+              href: "tel:+97143320776",
+              className: "group bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/25 transition-all text-left min-w-0",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-2.5 min-w-0", children: [
+                  /* @__PURE__ */ jsx("div", { className: "w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner", children: /* @__PURE__ */ jsx(Phone, { size: 17 }) }),
+                  /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+                    /* @__PURE__ */ jsx("h2", { className: "font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate", children: "Clinic Reception" }),
+                    /* @__PURE__ */ jsx("p", { className: "text-sky-100 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate", children: "+971 4 332 0776" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsx("div", { className: "shrink-0 hidden xs:block", children: /* @__PURE__ */ jsx(DiagonalArrow, {}) })
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxs(
+            motion.a,
+            {
+              initial: { opacity: 0, y: 12 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: 0.25 },
+              whileHover: { scale: 1.02 },
+              whileTap: { scale: 0.98 },
+              href: "tel:+971547033311",
+              className: "group bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/25 transition-all text-left min-w-0",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-2.5 min-w-0", children: [
+                  /* @__PURE__ */ jsx("div", { className: "w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner", children: /* @__PURE__ */ jsx(Phone, { size: 17 }) }),
+                  /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+                    /* @__PURE__ */ jsx("h2", { className: "font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate", children: "24/7 Helpline" }),
+                    /* @__PURE__ */ jsx("p", { className: "text-sky-100 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate", children: "+971 54 703 3311" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsx("div", { className: "shrink-0 hidden xs:block", children: /* @__PURE__ */ jsx(DiagonalArrow, {}) })
+              ]
+            }
+          )
+        ] }),
         /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full", children: [
           /* @__PURE__ */ jsxs(
             motion.a,
@@ -15034,6 +15058,58 @@ const SocialMedia = () => {
               )
             }
           )
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full", children: [
+          /* @__PURE__ */ jsxs(
+            motion.a,
+            {
+              initial: { opacity: 0, y: 12 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: 0.38 },
+              whileHover: { scale: 1.02 },
+              whileTap: { scale: 0.98 },
+              href: "mailto:info@corx.ae",
+              className: "group bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left min-w-0",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-2.5 min-w-0", children: [
+                  /* @__PURE__ */ jsx("div", { className: "w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner", children: /* @__PURE__ */ jsx(Mail, { size: 18 }) }),
+                  /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+                    /* @__PURE__ */ jsx("h2", { className: "font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate", children: "Email Inquiries" }),
+                    /* @__PURE__ */ jsx("p", { className: "text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate", children: "info@corx.ae" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsx("div", { className: "shrink-0 hidden xs:block", children: /* @__PURE__ */ jsx(DiagonalArrow, {}) })
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            motion.div,
+            {
+              initial: { opacity: 0, y: 12 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: 0.42 },
+              whileHover: { scale: 1.02 },
+              whileTap: { scale: 0.98 },
+              className: "min-w-0",
+              children: /* @__PURE__ */ jsxs(
+                Link,
+                {
+                  to: "/book-an-appointment",
+                  className: "group w-full h-full bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block min-w-0",
+                  children: [
+                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-2.5 min-w-0", children: [
+                      /* @__PURE__ */ jsx("div", { className: "w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner", children: /* @__PURE__ */ jsx(Calendar, { size: 18 }) }),
+                      /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+                        /* @__PURE__ */ jsx("h2", { className: "font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate", children: "Book Appointment" }),
+                        /* @__PURE__ */ jsx("p", { className: "text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-['Poppins',sans-serif] mt-0.5 truncate", children: "Online Booking" })
+                      ] })
+                    ] }),
+                    /* @__PURE__ */ jsx("div", { className: "shrink-0 hidden xs:block", children: /* @__PURE__ */ jsx(DiagonalArrow, {}) })
+                  ]
+                }
+              )
+            }
+          )
         ] })
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "w-full", children: [
@@ -15053,10 +15129,10 @@ const SocialMedia = () => {
             href: item.link,
             target: "_blank",
             rel: "noopener noreferrer",
-            className: "bg-[#1a294a]/80 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-[#38bdf8]/50 p-4 sm:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 text-white transition-all shadow-sm group",
+            className: "bg-[#08709d]/85 hover:bg-[#08709d] backdrop-blur-md border border-[#38bdf8]/35 hover:border-[#38bdf8]/70 p-3.5 sm:p-4 rounded-2xl flex flex-col items-center justify-center gap-2.5 text-white transition-all shadow-md shadow-[#08709d]/25 group",
             children: [
-              /* @__PURE__ */ jsx("div", { className: "text-white/85 group-hover:text-[#38bdf8] group-hover:scale-110 transition-transform", children: item.icon }),
-              /* @__PURE__ */ jsx("span", { className: "text-[11px] sm:text-xs font-semibold tracking-wide text-slate-200 group-hover:text-white font-['Montserrat',sans-serif]", children: item.name })
+              /* @__PURE__ */ jsx("div", { className: "w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 group-hover:bg-white/30 flex items-center justify-center text-white group-hover:scale-110 transition-all shadow-inner", children: item.icon }),
+              /* @__PURE__ */ jsx("span", { className: "text-[11px] sm:text-xs font-bold tracking-wide text-white font-['Montserrat',sans-serif]", children: item.name })
             ]
           },
           item.name
