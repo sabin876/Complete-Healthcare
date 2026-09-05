@@ -188,57 +188,66 @@ const SocialMedia = () => {
         {/* ── Primary Action Buttons Stack (Call on top, WhatsApp & Website in single row) ── */}
         <div className="w-full flex flex-col gap-2.5 sm:gap-3 mb-6 sm:mb-7">
           
-          {/* 1. Call Landline Clinic Button */}
-          <motion.a
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            whileHover={{ scale: 1.015 }}
-            whileTap={{ scale: 0.985 }}
-            href="tel:+97143320776"
-            className="group w-full bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/25 transition-all text-left"
-          >
-            <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
-                <Phone size={18} />
+          {/* Row 1: Two Call Clinic Buttons Side-by-Side */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+            
+            {/* 1. Call Landline Clinic Button */}
+            <motion.a
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href="tel:+97143320776"
+              className="group bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/25 transition-all text-left min-w-0"
+            >
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                  <Phone size={17} />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                    Clinic Reception
+                  </h2>
+                  <p className="text-sky-100 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate">
+                    +971 4 332 0776
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h2 className="font-extrabold text-white text-xs sm:text-sm leading-snug font-['Montserrat',sans-serif] truncate">
-                  Call Clinic Reception
-                </h2>
-                <p className="text-sky-100 text-[11px] sm:text-xs font-mono truncate">
-                  +971 4 332 0776
-                </p>
+              <div className="shrink-0 hidden xs:block">
+                <DiagonalArrow />
               </div>
-            </div>
-            <DiagonalArrow />
-          </motion.a>
+            </motion.a>
 
-          {/* 2. Call 24/7 Helpline Button */}
-          <motion.a
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            whileHover={{ scale: 1.015 }}
-            whileTap={{ scale: 0.985 }}
-            href="tel:+971547033311"
-            className="group w-full bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/25 transition-all text-left"
-          >
-            <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
-                <Phone size={18} />
+            {/* 2. Call 24/7 Helpline Button */}
+            <motion.a
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href="tel:+971547033311"
+              className="group bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/25 transition-all text-left min-w-0"
+            >
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                  <Phone size={17} />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                    24/7 Helpline
+                  </h2>
+                  <p className="text-sky-100 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate">
+                    +971 54 703 3311
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h2 className="font-extrabold text-white text-xs sm:text-sm leading-snug font-['Montserrat',sans-serif] truncate">
-                  Call 24/7 Helpline
-                </h2>
-                <p className="text-sky-100 text-[11px] sm:text-xs font-mono truncate">
-                  +971 54 703 3311
-                </p>
+              <div className="shrink-0 hidden xs:block">
+                <DiagonalArrow />
               </div>
-            </div>
-            <DiagonalArrow />
-          </motion.a>
+            </motion.a>
+
+          </div>
 
           {/* Single Row with WhatsApp & Visit Website Side-by-Side */}
           <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
