@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, Share2, Phone, Globe, Calendar, 
-  ExternalLink, CheckCircle2, MessageCircle, 
-  ShieldCheck, Copy, Check
+  ShieldCheck, Check
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import logo from '../assets/logo.webp';
+import heroVideo from '../assets/Hero.mp4';
 
 /* ── Social Media Icons ── */
 const InstagramIcon = ({ size = 24 }) => (
@@ -69,7 +69,7 @@ const SocialMedia = () => {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    document.title = "CORx Healthcare Dubai | Official Connect & Social Links";
+    document.title = "CORx Healthcare Dubai | Connect & Official Social Media";
     if (typeof window !== 'undefined') {
       window.scrollTo(0, 0);
     }
@@ -84,7 +84,6 @@ const SocialMedia = () => {
           url: window.location.href,
         });
       } catch {
-        // user cancelled or failed, fallback to copy
         copyToClipboard();
       }
     } else {
@@ -103,48 +102,63 @@ const SocialMedia = () => {
   const socialLinks = [
     {
       name: 'Instagram',
-      icon: <InstagramIcon size={26} />,
+      icon: <InstagramIcon size={24} />,
       link: 'https://www.instagram.com/corx_healthcare_dubai',
     },
     {
       name: 'YouTube',
-      icon: <YoutubeIcon size={26} />,
+      icon: <YoutubeIcon size={24} />,
       link: 'https://www.youtube.com/@corxhealthcare',
     },
     {
       name: 'TikTok',
-      icon: <TikTokIcon size={26} />,
+      icon: <TikTokIcon size={24} />,
       link: 'https://www.tiktok.com/@corxhealthcare',
     },
     {
       name: 'Facebook',
-      icon: <FacebookIcon size={26} />,
+      icon: <FacebookIcon size={24} />,
       link: 'https://www.facebook.com/CorxHealthcare',
     },
     {
       name: 'LinkedIn',
-      icon: <LinkedinIcon size={26} />,
+      icon: <LinkedinIcon size={24} />,
       link: 'https://www.linkedin.com/company/corx-healthcare',
     },
     {
       name: 'Twitter (X)',
-      icon: <TwitterXIcon size={26} />,
+      icon: <TwitterXIcon size={24} />,
       link: 'https://twitter.com/CorxDubai',
     }
   ];
 
   return (
-    <div className="min-h-screen bg-[#050e1d] text-white flex flex-col items-center justify-between px-4 sm:px-6 py-8 sm:py-12 relative overflow-hidden font-sans select-none">
+    <div className="min-h-screen relative text-white flex flex-col items-center justify-between px-4 sm:px-6 py-8 sm:py-12 overflow-x-hidden font-['Poppins',sans-serif] select-none">
       
-      {/* Background Soft Glow Aura */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[500px] bg-gradient-to-b from-[#0e3b66]/30 via-[#072445]/20 to-transparent rounded-full blur-[140px] pointer-events-none"></div>
+      {/* ── Background Hero Video (Hero.mp4) ── */}
+      <div className="fixed inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover opacity-70"
+        >
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+
+        {/* Deep Blue & Midnight Overlay Matching Main Site Theme */}
+        <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#0c2e56]/92 via-[#0b2848]/88 to-[#071f3b]/94 pointer-events-none"></div>
+        {/* Soft Vignettes */}
+        <div className="absolute inset-0 z-[2] bg-gradient-to-t from-[#050e1d]/90 via-transparent to-[#050e1d]/70 pointer-events-none"></div>
+      </div>
 
       {/* ── Top Bar with Back & Share Buttons ── */}
-      <div className="w-full max-w-xl flex items-center justify-between z-20 mb-6">
+      <div className="w-full max-w-xl flex items-center justify-between relative z-20 mb-6">
         <button
           onClick={() => navigate(-1)}
           aria-label="Go Back"
-          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#112338]/80 hover:bg-[#1b3452] border border-white/10 flex items-center justify-center text-white/80 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer"
+          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1a294a]/75 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer"
         >
           <ArrowLeft size={18} />
         </button>
@@ -152,9 +166,9 @@ const SocialMedia = () => {
         <button
           onClick={handleShare}
           aria-label="Share Page"
-          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#112338]/80 hover:bg-[#1b3452] border border-white/10 flex items-center justify-center text-white/80 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer relative"
+          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1a294a]/75 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer relative"
         >
-          {copied ? <Check size={18} className="text-emerald-400" /> : <Share2 size={18} />}
+          {copied ? <Check size={18} className="text-[#5eb63b]" /> : <Share2 size={18} />}
         </button>
       </div>
 
@@ -165,7 +179,7 @@ const SocialMedia = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-6 z-50 bg-[#2ebd6e] text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl flex items-center gap-1.5"
+            className="fixed top-6 z-50 bg-[#5eb63b] text-white px-4 py-2 rounded-full text-xs font-bold font-['Montserrat',sans-serif] shadow-xl flex items-center gap-1.5"
           >
             <Check size={14} /> Link copied to clipboard!
           </motion.div>
@@ -173,19 +187,19 @@ const SocialMedia = () => {
       </AnimatePresence>
 
       {/* ── Main Content Container ── */}
-      <div className="w-full max-w-xl flex flex-col items-center text-center z-10">
+      <div className="w-full max-w-xl flex flex-col items-center text-center relative z-10">
         
         {/* Profile Avatar / Logo with Glow */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="relative mb-6"
+          className="relative mb-5"
         >
-          {/* Circular Glow Ring */}
-          <div className="absolute -inset-2 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#2ebd6e] rounded-full blur-md opacity-70 animate-pulse"></div>
+          {/* Circular Glow Ring in Primary & Accent Colors */}
+          <div className="absolute -inset-2 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] rounded-full blur-md opacity-80 animate-pulse"></div>
           
-          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-white p-3.5 shadow-2xl flex items-center justify-center border-2 border-white/80">
+          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-white p-3.5 shadow-2xl flex items-center justify-center border-2 border-white/90">
             <img
               src={logo}
               alt="CORx Healthcare Logo"
@@ -199,7 +213,7 @@ const SocialMedia = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2.5"
+          className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2.5 font-['Montserrat',sans-serif]"
         >
           CORx Healthcare Dubai
         </motion.h1>
@@ -209,7 +223,7 @@ const SocialMedia = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#0a2744] border border-[#1b5387] text-[#38bdf8] text-[11px] font-black uppercase tracking-widest mb-4"
+          className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-[#08709d]/30 backdrop-blur-md border border-[#08709d]/60 text-[#38bdf8] text-[11px] font-bold font-['Montserrat',sans-serif] uppercase tracking-widest mb-4"
         >
           <span>HOME HEALTHCARE & MEDICAL CLINIC</span>
         </motion.div>
@@ -219,7 +233,7 @@ const SocialMedia = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-md mx-auto mb-8 font-normal"
+          className="text-slate-200 text-xs sm:text-sm leading-relaxed max-w-md mx-auto mb-8 font-normal"
         >
           Precise clinical care, 24/7 doctor on call, IV therapy, lab tests, and home nursing delivered with integrity and an evidence-based approach in Dubai, UAE.
         </motion.p>
@@ -227,7 +241,7 @@ const SocialMedia = () => {
         {/* ── Primary Action Buttons Stack ── */}
         <div className="w-full flex flex-col gap-3.5 mb-10">
           
-          {/* 1. Call Dubai Clinic Button (Blue) */}
+          {/* 1. Call Dubai Clinic Button (Primary Theme Blue #08709d) */}
           <motion.a
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -235,17 +249,17 @@ const SocialMedia = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             href="tel:+97143320776"
-            className="group w-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] hover:from-[#1d4ed8] hover:to-[#1e40af] p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-lg shadow-blue-900/30 border border-blue-400/20 transition-all text-left"
+            className="group w-full bg-gradient-to-r from-[#08709d] to-[#0a5676] hover:from-[#095f84] hover:to-[#074762] p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/30 border border-[#38bdf8]/30 backdrop-blur-md transition-all text-left"
           >
             <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center text-white shrink-0">
+              <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-xs">
                 <Phone size={20} />
               </div>
               <div>
-                <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug">
+                <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif]">
                   Call Dubai 24/7 Clinic
                 </h2>
-                <p className="text-blue-100 text-[11px] sm:text-xs font-mono">
+                <p className="text-sky-100 text-[11px] sm:text-xs font-mono">
                   +971 4 332 0776 / +971 54 703 3311
                 </p>
               </div>
@@ -253,7 +267,7 @@ const SocialMedia = () => {
             <DiagonalArrow />
           </motion.a>
 
-          {/* 2. WhatsApp Consultation Button (Green) */}
+          {/* 2. WhatsApp Consultation Button (Site Accent Green #5eb63b) */}
           <motion.a
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -263,17 +277,17 @@ const SocialMedia = () => {
             href="https://wa.me/971547033311?text=Hi%20CORx%20Healthcare,%20I%20would%20like%20to%20inquire%20about%20your%20services"
             target="_blank"
             rel="noopener noreferrer"
-            className="group w-full bg-gradient-to-r from-[#16a34a] to-[#15803d] hover:from-[#15803d] hover:to-[#166534] p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-lg shadow-green-900/30 border border-green-400/20 transition-all text-left"
+            className="group w-full bg-gradient-to-r from-[#5eb63b] to-[#48942b] hover:from-[#4ea12f] hover:to-[#3e7f24] p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#5eb63b]/30 border border-white/20 backdrop-blur-md transition-all text-left"
           >
             <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center text-white shrink-0">
+              <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-xs">
                 <WhatsAppIcon size={20} />
               </div>
               <div>
-                <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug">
+                <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif]">
                   WhatsApp Consultation
                 </h2>
-                <p className="text-green-100 text-[11px] sm:text-xs font-mono">
+                <p className="text-emerald-100 text-[11px] sm:text-xs font-mono">
                   +971 54 703 3311
                 </p>
               </div>
@@ -281,7 +295,7 @@ const SocialMedia = () => {
             <DiagonalArrow />
           </motion.a>
 
-          {/* 3. Visit Official Website Button (Dark Translucent Glass) */}
+          {/* 3. Visit Official Website Button (Site Secondary Navy Glass #1a294a) */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -291,17 +305,17 @@ const SocialMedia = () => {
           >
             <Link
               to="/"
-              className="group w-full bg-[#112338]/90 hover:bg-[#172d47] border border-white/10 hover:border-white/20 p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block"
+              className="group w-full bg-[#1a294a]/85 hover:bg-[#1f3258] backdrop-blur-md border border-white/15 hover:border-white/30 p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block"
             >
               <div className="flex items-center gap-3.5">
                 <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center text-white shrink-0">
                   <Globe size={20} />
                 </div>
                 <div>
-                  <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug">
+                  <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif]">
                     Visit Official Website
                   </h2>
-                  <p className="text-slate-400 text-[11px] sm:text-xs">
+                  <p className="text-slate-300 text-[11px] sm:text-xs">
                     Explore services & treatments
                   </p>
                 </div>
@@ -310,7 +324,7 @@ const SocialMedia = () => {
             </Link>
           </motion.div>
 
-          {/* 4. Book Appointment Online Button (Cyan/Teal) */}
+          {/* 4. Book Appointment Online Button (Primary-Accent Gradient) */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -320,14 +334,14 @@ const SocialMedia = () => {
           >
             <Link
               to="/book-an-appointment"
-              className="group w-full bg-gradient-to-r from-[#0284c7] to-[#08709d] hover:from-[#0369a1] hover:to-[#095b7f] p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-lg shadow-sky-900/30 border border-sky-400/20 transition-all text-left block"
+              className="group w-full bg-gradient-to-r from-[#08709d] via-[#0284c7] to-[#5eb63b] hover:brightness-105 backdrop-blur-md p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/30 border border-white/20 transition-all text-left block"
             >
               <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center text-white shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0">
                   <Calendar size={20} />
                 </div>
                 <div>
-                  <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug">
+                  <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif]">
                     Book An Appointment
                   </h2>
                   <p className="text-sky-100 text-[11px] sm:text-xs">
@@ -346,11 +360,11 @@ const SocialMedia = () => {
           
           {/* Section Divider */}
           <div className="flex items-center gap-4 mb-6">
-            <div className="flex-1 h-px bg-white/10"></div>
-            <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.25em] text-slate-400">
+            <div className="flex-1 h-px bg-white/15"></div>
+            <span className="text-[10px] sm:text-[11px] font-bold font-['Montserrat',sans-serif] uppercase tracking-[0.25em] text-slate-300">
               CONNECT SOCIALLY
             </span>
-            <div className="flex-1 h-px bg-white/10"></div>
+            <div className="flex-1 h-px bg-white/15"></div>
           </div>
 
           {/* 3-Column Social Icons Grid */}
@@ -366,12 +380,12 @@ const SocialMedia = () => {
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#112338]/80 hover:bg-[#19324e] border border-white/10 hover:border-white/20 p-4 sm:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 text-white/90 hover:text-white transition-all shadow-sm group"
+                className="bg-[#1a294a]/75 hover:bg-[#223963] backdrop-blur-md border border-white/12 hover:border-[#38bdf8]/40 p-4 sm:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 text-white/90 hover:text-white transition-all shadow-sm group"
               >
-                <div className="text-white/80 group-hover:text-white group-hover:scale-110 transition-transform">
+                <div className="text-white/80 group-hover:text-[#38bdf8] group-hover:scale-110 transition-transform">
                   {item.icon}
                 </div>
-                <span className="text-[11px] sm:text-xs font-semibold tracking-wide text-slate-300 group-hover:text-white">
+                <span className="text-[11px] sm:text-xs font-semibold tracking-wide text-slate-200 group-hover:text-white font-['Montserrat',sans-serif]">
                   {item.name}
                 </span>
               </motion.a>
@@ -383,12 +397,12 @@ const SocialMedia = () => {
       </div>
 
       {/* ── Footer Branding / DHA Badge ── */}
-      <div className="w-full max-w-xl text-center pt-6 border-t border-white/5 z-10 flex flex-col items-center gap-2">
-        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
-          <ShieldCheck size={14} className="text-[#2ebd6e]" />
+      <div className="w-full max-w-xl text-center pt-6 border-t border-white/10 relative z-10 flex flex-col items-center gap-2">
+        <div className="flex items-center gap-1.5 text-[11px] text-slate-300 font-medium">
+          <ShieldCheck size={14} className="text-[#5eb63b]" />
           <span>Licensed by Dubai Health Authority (DHA)</span>
         </div>
-        <p className="text-[10px] text-slate-500">
+        <p className="text-[10px] text-slate-400">
           © {new Date().getFullYear()} CORx Healthcare. All Rights Reserved.
         </p>
       </div>
