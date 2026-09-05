@@ -184,8 +184,8 @@ const SocialMedia = () => {
           CORx Healthcare Dubai
         </motion.h1>
 
-        {/* ── 3 Primary Action Buttons Stack (Exact Screenshot Layout & Site Color Palette) ── */}
-        <div className="w-full flex flex-col gap-3.5 mb-10">
+        {/* ── Primary Action Buttons Stack (Call on top, WhatsApp & Website in single row) ── */}
+        <div className="w-full flex flex-col gap-3 sm:gap-3.5 mb-8 sm:mb-10">
           
           {/* 1. Call Clinic Button (Primary Theme Blue #08709d) */}
           <motion.a
@@ -195,17 +195,17 @@ const SocialMedia = () => {
             whileHover={{ scale: 1.015 }}
             whileTap={{ scale: 0.985 }}
             href="tel:+97143320776"
-            className="group w-full bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/30 transition-all text-left"
+            className="group w-full bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/30 transition-all text-left"
           >
-            <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
-                <Phone size={20} />
+            <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                <Phone size={19} />
               </div>
-              <div>
-                <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif]">
+              <div className="min-w-0">
+                <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif] truncate">
                   Call Dubai 24/7 Clinic
                 </h2>
-                <p className="text-sky-100 text-[11px] sm:text-xs font-mono">
+                <p className="text-sky-100 text-[11px] sm:text-xs font-mono truncate">
                   +971 4 332 0776 / +971 54 703 3311
                 </p>
               </div>
@@ -213,62 +213,72 @@ const SocialMedia = () => {
             <DiagonalArrow />
           </motion.a>
 
-          {/* 2. WhatsApp Consultation Button (Accent Green Theme #5eb63b) */}
-          <motion.a
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            whileHover={{ scale: 1.015 }}
-            whileTap={{ scale: 0.985 }}
-            href="https://wa.me/971547033311?text=Hi%20CORx%20Healthcare,%20I%20would%20like%20to%20inquire%20about%20your%20services"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group w-full bg-[#5eb63b] hover:bg-[#4ea12f] border border-white/20 backdrop-blur-md p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#5eb63b]/30 transition-all text-left"
-          >
-            <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
-                <WhatsAppIcon size={20} />
-              </div>
-              <div>
-                <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif]">
-                  WhatsApp Consultation
-                </h2>
-                <p className="text-emerald-100 text-[11px] sm:text-xs font-mono">
-                  +971 54 703 3311
-                </p>
-              </div>
-            </div>
-            <DiagonalArrow />
-          </motion.a>
-
-          {/* 3. Visit Official Website Button (Secondary Navy Glass Theme #1a294a) */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            whileHover={{ scale: 1.015 }}
-            whileTap={{ scale: 0.985 }}
-          >
-            <Link
-              to="/"
-              className="group w-full bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block"
+          {/* Single Row with WhatsApp & Visit Website Side-by-Side */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+            
+            {/* 2. WhatsApp Consultation Button */}
+            <motion.a
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href="https://wa.me/971547033311?text=Hi%20CORx%20Healthcare,%20I%20would%20like%20to%20inquire%20about%20your%20services"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group bg-[#5eb63b] hover:bg-[#4ea12f] border border-white/20 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#5eb63b]/30 transition-all text-left min-w-0"
             >
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center text-white shrink-0">
-                  <Globe size={20} />
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                  <WhatsAppIcon size={18} />
                 </div>
-                <div>
-                  <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif]">
-                    Visit Official Website
+                <div className="min-w-0">
+                  <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                    WhatsApp Chat
                   </h2>
-                  <p className="text-slate-300 text-[11px] sm:text-xs font-['Poppins',sans-serif]">
-                    Explore services & treatments
+                  <p className="text-emerald-100 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate">
+                    +971 54 703 3311
                   </p>
                 </div>
               </div>
-              <DiagonalArrow />
-            </Link>
-          </motion.div>
+              <div className="shrink-0 hidden xs:block">
+                <DiagonalArrow />
+              </div>
+            </motion.a>
+
+            {/* 3. Visit Official Website Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="min-w-0"
+            >
+              <Link
+                to="/"
+                className="group w-full h-full bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block min-w-0"
+              >
+                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0">
+                    <Globe size={18} />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                      Official Website
+                    </h2>
+                    <p className="text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-['Poppins',sans-serif] mt-0.5 truncate">
+                      Explore services
+                    </p>
+                  </div>
+                </div>
+                <div className="shrink-0 hidden xs:block">
+                  <DiagonalArrow />
+                </div>
+              </Link>
+            </motion.div>
+
+          </div>
 
         </div>
 
