@@ -393,7 +393,7 @@ const SocialMedia = () => {
             <div className="flex-1 h-px bg-white/15"></div>
           </div>
 
-          {/* 3 Square/Rounded Cards: Instagram, YouTube, TikTok */}
+          {/* 3 Square/Rounded Cards: Facebook, Instagram, LinkedIn */}
           <div className="grid grid-cols-3 gap-3 sm:gap-4">
             {socialLinks.map((item, i) => (
               <motion.a
@@ -406,12 +406,12 @@ const SocialMedia = () => {
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#1a294a]/80 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-[#38bdf8]/50 p-4 sm:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 text-white transition-all shadow-sm group"
+                className="bg-[#08709d]/85 hover:bg-[#08709d] backdrop-blur-md border border-[#38bdf8]/35 hover:border-[#38bdf8]/70 p-3.5 sm:p-4 rounded-2xl flex flex-col items-center justify-center gap-2.5 text-white transition-all shadow-md shadow-[#08709d]/25 group"
               >
-                <div className="text-white/85 group-hover:text-[#38bdf8] group-hover:scale-110 transition-transform">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 group-hover:bg-white/30 flex items-center justify-center text-white group-hover:scale-110 transition-all shadow-inner">
                   {item.icon}
                 </div>
-                <span className="text-[11px] sm:text-xs font-semibold tracking-wide text-slate-200 group-hover:text-white font-['Montserrat',sans-serif]">
+                <span className="text-[11px] sm:text-xs font-bold tracking-wide text-white font-['Montserrat',sans-serif]">
                   {item.name}
                 </span>
               </motion.a>
