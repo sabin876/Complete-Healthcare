@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, Share2, Phone, Globe, Check
+  ArrowLeft, Share2, Phone, Globe, Check, Mail
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import logo from '../assets/logo.webp';
@@ -280,6 +280,32 @@ const SocialMedia = () => {
             </motion.div>
 
           </div>
+
+          {/* 4. Email Inquiries Button */}
+          <motion.a
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.38 }}
+            whileHover={{ scale: 1.015 }}
+            whileTap={{ scale: 0.985 }}
+            href="mailto:info@corx.ae"
+            className="group w-full bg-[#1a294a]/85 hover:bg-[#223963] border border-white/15 hover:border-white/25 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left"
+          >
+            <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
+                <Mail size={18} />
+              </div>
+              <div className="min-w-0">
+                <h2 className="font-extrabold text-white text-xs sm:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                  Email Inquiries
+                </h2>
+                <p className="text-slate-300 text-[10px] sm:text-xs font-mono mt-0.5 truncate">
+                  info@corx.ae
+                </p>
+              </div>
+            </div>
+            <DiagonalArrow />
+          </motion.a>
 
         </div>
 
