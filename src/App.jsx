@@ -130,7 +130,7 @@ const MainLayout = ({ children }) => {
   }
 
   if (isSocialMedia) {
-    return <div className="min-h-screen bg-[#050e1d]">{children}</div>;
+    return <div className="min-h-screen bg-[#061021]">{children}</div>;
   }
 
   return (
