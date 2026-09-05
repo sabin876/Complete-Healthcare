@@ -179,30 +179,10 @@ const SocialMedia = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2.5 font-['Montserrat',sans-serif]"
+          className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-8 font-['Montserrat',sans-serif]"
         >
           CORx Healthcare Dubai
         </motion.h1>
-
-        {/* Pill Badge (Brand Color Theme) */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="inline-flex items-center px-4 py-1 rounded-full bg-[#08709d]/30 backdrop-blur-md border border-[#08709d]/70 text-[#38bdf8] text-[11px] font-bold font-['Montserrat',sans-serif] uppercase tracking-widest mb-4 shadow-xs"
-        >
-          <span>HOME HEALTHCARE & MEDICAL CLINIC</span>
-        </motion.div>
-
-        {/* Bio Description (Poppins Font) */}
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-slate-200 text-xs sm:text-sm leading-relaxed max-w-md mx-auto mb-8 font-normal font-['Poppins',sans-serif]"
-        >
-          Precise clinical care, 24/7 doctor on call, IV therapy, lab tests, and home nursing delivered with integrity and an evidence-based approach in Dubai, UAE.
-        </motion.p>
 
         {/* ── 3 Primary Action Buttons Stack (Exact Screenshot Layout & Site Color Palette) ── */}
         <div className="w-full flex flex-col gap-3.5 mb-10">
