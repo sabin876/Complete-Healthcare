@@ -59,6 +59,7 @@ const Sitemap = () => {
     { name: "Careers", path: "/career", icon: Briefcase },
     { name: "Locations & Coverage", path: "/locations", icon: MapPin },
     { name: "Book An Appointment", path: "/book-an-appointment", icon: Calendar },
+    { name: "Social Media & Connect", path: "/social-media", icon: ExternalLink },
     { name: "Privacy Policy", path: "/privacy-policy", icon: ShieldCheck },
     { name: "Staff Dashboard", path: "/dashboard", icon: Code }
   ];

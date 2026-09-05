@@ -22,6 +22,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Career from './pages/Career';
 import NotFound from './pages/NotFound';
 import Sitemap from './pages/Sitemap';
+import SocialMedia from './pages/SocialMedia';
 
 const ServiceRedirect = () => {
   const { serviceSlug } = useParams();
@@ -95,7 +96,12 @@ const AnimatedRoutes = () => {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogDetails />} />
-        <Route path="/blog/:slug/" element={<BlogDetails />} />
+        <Route path="/social-media" element={<SocialMedia />} />
+        <Route path="/social-media/" element={<SocialMedia />} />
+        <Route path="/socials" element={<Navigate to="/social-media" replace />} />
+        <Route path="/socials/" element={<Navigate to="/social-media" replace />} />
+        <Route path="/connect" element={<Navigate to="/social-media" replace />} />
+        <Route path="/connect/" element={<Navigate to="/social-media" replace />} />
 
         {/* Legacy redirect handler */}
         <Route path="/service/:serviceSlug" element={<ServiceRedirect />} />

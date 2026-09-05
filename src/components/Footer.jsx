@@ -102,6 +102,7 @@ const Footer = () => {
                 { name: 'Our Team', path: '/team' },
                 { name: 'Careers', path: '/career' },
                 { name: 'Privacy Policy', path: '/privacy-policy' },
+                { name: 'Social Media & Connect', path: '/social-media' },
                 { name: 'HTML Sitemap', path: '/sitemap' },
                 { name: 'Contact Us', path: '/book-an-appointment' },
                 { name: 'Services Dashboard', path: '/dashboard' }
