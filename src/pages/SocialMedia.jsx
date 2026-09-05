@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, Share2, Phone, Globe, Calendar, 
-  ShieldCheck, Check
+  ArrowLeft, Share2, Phone, Globe, Check
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import logo from '../assets/logo.webp';
 import heroVideo from '../assets/Hero.mp4';
 
 /* ── Social Media Icons ── */
-const InstagramIcon = ({ size = 24 }) => (
+const InstagramIcon = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
@@ -17,41 +16,20 @@ const InstagramIcon = ({ size = 24 }) => (
   </svg>
 );
 
-const YoutubeIcon = ({ size = 24 }) => (
+const YoutubeIcon = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.56 49.56 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
     <path d="m10 15 5-3-5-3v6" />
   </svg>
 );
 
-const TikTokIcon = ({ size = 24 }) => (
+const TikTokIcon = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
   </svg>
 );
 
-const FacebookIcon = ({ size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-  </svg>
-);
-
-const LinkedinIcon = ({ size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-    <rect width="4" height="12" x="2" y="9" />
-    <circle cx="4" cy="4" r="2" />
-  </svg>
-);
-
-const TwitterXIcon = ({ size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
-    <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
-  </svg>
-);
-
-const WhatsAppIcon = ({ size = 24 }) => (
+const WhatsAppIcon = ({ size = 22 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
   </svg>
@@ -69,7 +47,7 @@ const SocialMedia = () => {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    document.title = "CORx Healthcare Dubai | Connect & Official Social Media";
+    document.title = "CORx Healthcare Dubai | Official Connect & Social Links";
     if (typeof window !== 'undefined') {
       window.scrollTo(0, 0);
     }
@@ -102,38 +80,23 @@ const SocialMedia = () => {
   const socialLinks = [
     {
       name: 'Instagram',
-      icon: <InstagramIcon size={24} />,
+      icon: <InstagramIcon size={26} />,
       link: 'https://www.instagram.com/corx_healthcare_dubai',
     },
     {
       name: 'YouTube',
-      icon: <YoutubeIcon size={24} />,
+      icon: <YoutubeIcon size={26} />,
       link: 'https://www.youtube.com/@corxhealthcare',
     },
     {
       name: 'TikTok',
-      icon: <TikTokIcon size={24} />,
+      icon: <TikTokIcon size={26} />,
       link: 'https://www.tiktok.com/@corxhealthcare',
-    },
-    {
-      name: 'Facebook',
-      icon: <FacebookIcon size={24} />,
-      link: 'https://www.facebook.com/CorxHealthcare',
-    },
-    {
-      name: 'LinkedIn',
-      icon: <LinkedinIcon size={24} />,
-      link: 'https://www.linkedin.com/company/corx-healthcare',
-    },
-    {
-      name: 'Twitter (X)',
-      icon: <TwitterXIcon size={24} />,
-      link: 'https://twitter.com/CorxDubai',
     }
   ];
 
   return (
-    <div className="min-h-screen relative text-white flex flex-col items-center justify-between px-4 sm:px-6 py-8 sm:py-12 overflow-x-hidden font-['Poppins',sans-serif] select-none">
+    <div className="min-h-screen relative text-white flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12 overflow-x-hidden font-['Poppins',sans-serif] select-none">
       
       {/* ── Background Hero Video (Hero.mp4) ── */}
       <div className="fixed inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none">
@@ -238,7 +201,7 @@ const SocialMedia = () => {
           Precise clinical care, 24/7 doctor on call, IV therapy, lab tests, and home nursing delivered with integrity and an evidence-based approach in Dubai, UAE.
         </motion.p>
 
-        {/* ── Primary Action Buttons Stack ── */}
+        {/* ── Primary Action Buttons Stack (Exactly 3 Buttons from Screenshot) ── */}
         <div className="w-full flex flex-col gap-3.5 mb-10">
           
           {/* 1. Call Dubai Clinic Button (Primary Theme Blue #08709d) */}
@@ -324,39 +287,10 @@ const SocialMedia = () => {
             </Link>
           </motion.div>
 
-          {/* 4. Book Appointment Online Button (Primary-Accent Gradient) */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Link
-              to="/book-an-appointment"
-              className="group w-full bg-gradient-to-r from-[#08709d] via-[#0284c7] to-[#5eb63b] hover:brightness-105 backdrop-blur-md p-4 sm:p-4.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/30 border border-white/20 transition-all text-left block"
-            >
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0">
-                  <Calendar size={20} />
-                </div>
-                <div>
-                  <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif]">
-                    Book An Appointment
-                  </h2>
-                  <p className="text-sky-100 text-[11px] sm:text-xs">
-                    Fast doctor & nurse doorstep visit
-                  </p>
-                </div>
-              </div>
-              <DiagonalArrow />
-            </Link>
-          </motion.div>
-
         </div>
 
-        {/* ── Connect Socially Section ── */}
-        <div className="w-full mb-8">
+        {/* ── Connect Socially Section (Exactly 3 Social Cards from Screenshot) ── */}
+        <div className="w-full">
           
           {/* Section Divider */}
           <div className="flex items-center gap-4 mb-6">
@@ -367,7 +301,7 @@ const SocialMedia = () => {
             <div className="flex-1 h-px bg-white/15"></div>
           </div>
 
-          {/* 3-Column Social Icons Grid */}
+          {/* 3-Column Social Icons Grid (Instagram, YouTube, TikTok) */}
           <div className="grid grid-cols-3 gap-3 sm:gap-4">
             {socialLinks.map((item, i) => (
               <motion.a
@@ -394,17 +328,6 @@ const SocialMedia = () => {
 
         </div>
 
-      </div>
-
-      {/* ── Footer Branding / DHA Badge ── */}
-      <div className="w-full max-w-xl text-center pt-6 border-t border-white/10 relative z-10 flex flex-col items-center gap-2">
-        <div className="flex items-center gap-1.5 text-[11px] text-slate-300 font-medium">
-          <ShieldCheck size={14} className="text-[#5eb63b]" />
-          <span>Licensed by Dubai Health Authority (DHA)</span>
-        </div>
-        <p className="text-[10px] text-slate-400">
-          © {new Date().getFullYear()} CORx Healthcare. All Rights Reserved.
-        </p>
       </div>
 
     </div>
