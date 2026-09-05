@@ -123,9 +123,14 @@ const AnimatedRoutes = () => {
 const MainLayout = ({ children }) => {
   const location = useLocation();
   const isPortal = location.pathname.startsWith('/portal') || location.pathname.startsWith('/dashboard');
+  const isSocialMedia = location.pathname.startsWith('/social-media') || location.pathname.startsWith('/socials') || location.pathname.startsWith('/connect');
 
   if (isPortal) {
     return <div className="min-h-screen bg-gray-50">{children}</div>;
+  }
+
+  if (isSocialMedia) {
+    return <div className="min-h-screen bg-[#050e1d]">{children}</div>;
   }
 
   return (
