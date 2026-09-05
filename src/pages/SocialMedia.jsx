@@ -8,6 +8,12 @@ import logo from '../assets/logo.webp';
 import heroVideo from '../assets/Hero.mp4';
 
 /* ── Custom Social Icons ── */
+const FacebookIcon = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
 const InstagramIcon = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
@@ -16,16 +22,11 @@ const InstagramIcon = ({ size = 26 }) => (
   </svg>
 );
 
-const YoutubeIcon = ({ size = 26 }) => (
+const LinkedinIcon = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.56 49.56 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-    <path d="m10 15 5-3-5-3v6" />
-  </svg>
-);
-
-const TikTokIcon = ({ size = 26 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" />
+    <circle cx="4" cy="4" r="2" />
   </svg>
 );
 
@@ -79,19 +80,19 @@ const SocialMedia = () => {
 
   const socialLinks = [
     {
+      name: 'Facebook',
+      icon: <FacebookIcon size={26} />,
+      link: 'https://www.facebook.com/corxhealthcare',
+    },
+    {
       name: 'Instagram',
       icon: <InstagramIcon size={26} />,
-      link: 'https://www.instagram.com/corx_healthcare_dubai',
+      link: 'https://www.instagram.com/corx_healthcare',
     },
     {
-      name: 'YouTube',
-      icon: <YoutubeIcon size={26} />,
-      link: 'https://www.youtube.com/@corxhealthcare',
-    },
-    {
-      name: 'TikTok',
-      icon: <TikTokIcon size={26} />,
-      link: 'https://www.tiktok.com/@corxhealthcare',
+      name: 'LinkedIn',
+      icon: <LinkedinIcon size={26} />,
+      link: 'https://www.linkedin.com/company/corx-healthcare/',
     }
   ];
 

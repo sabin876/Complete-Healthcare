@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, createContext, useContext } from "r
 import { renderToString } from "react-dom/server";
 import { Link, useNavigate, useParams, useLocation, Routes, Route, Navigate, StaticRouter } from "react-router";
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from "framer-motion";
-import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Shield, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Receipt, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save, UploadCloud, ExternalLink, ArrowLeft, Lock, LogOut, Car, Megaphone, Bell, ClipboardList, Sun, Zap, Moon, Paperclip, Briefcase, Code } from "lucide-react";
+import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Shield, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Receipt, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save, UploadCloud, ExternalLink, ArrowLeft, Lock, LogOut, Car, Megaphone, Bell, ClipboardList, Sun, Zap, Moon, Paperclip, Briefcase, Code, Share2 } from "lucide-react";
 const logo = "/assets/logo-u28QMOuL.webp";
 const tollfree = "/assets/tollfree-3acubKEx.png";
 const rawBaseUrl = "http://localhost:8000";
@@ -773,6 +773,7 @@ const Footer = () => {
                 { name: "Our Team", path: "/team" },
                 { name: "Careers", path: "/career" },
                 { name: "Privacy Policy", path: "/privacy-policy" },
+                { name: "Social Media & Connect", path: "/social-media" },
                 { name: "HTML Sitemap", path: "/sitemap" },
                 { name: "Contact Us", path: "/book-an-appointment" },
                 { name: "Services Dashboard", path: "/dashboard" }
@@ -1977,6 +1978,8 @@ const mapDuty = (d) => d ? {
   staffId: d.staff,
   staffName: d.staff_name,
   dutyDate: d.duty_date,
+  shiftTiming: d.shift_timing || d.shiftTiming || "Day",
+  shiftType: d.shift_type || d.shiftType || "8-hours",
   dutyReplacement: d.duty_replacement,
   dutyReason: d.duty_reason,
   status: d.status,
@@ -2005,12 +2008,10 @@ const AuthProvider = ({ children }) => {
     const query = isAd ? "" : `?staff_id=${user.id}`;
     const taskQuery = isAd ? "" : `?assigned_to=${user.id}`;
     try {
-      if (isAd) {
-        const staffRes = await fetch(`${API_BASE}/staff/`);
-        if (staffRes.ok) {
-          const list = await staffRes.json();
-          setStaffUsers(list.map(mapStaff));
-        }
+      const staffRes = await fetch(`${API_BASE}/staff/`);
+      if (staffRes.ok) {
+        const list = await staffRes.json();
+        setStaffUsers(list.map(mapStaff));
       }
       const tasksRes = await fetch(`${API_BASE}/tasks/${taskQuery}`);
       if (tasksRes.ok) {
@@ -2343,6 +2344,8 @@ const AuthProvider = ({ children }) => {
         body: JSON.stringify({
           staffId: data.staffId,
           dutyDate: data.dutyDate,
+          shiftTiming: data.shiftTiming || "Day",
+          shiftType: data.shiftType || "8-hours",
           dutyReplacement: data.dutyReplacement,
           dutyReason: data.dutyReason
         })
@@ -5008,7 +5011,7 @@ const SendIcon = () => /* @__PURE__ */ jsxs("svg", { width: "16", height: "16", 
   /* @__PURE__ */ jsx("polygon", { points: "22 2 15 22 11 13 2 9 22 2" })
 ] });
 const FacebookIcon = () => /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" }) });
-const InstagramIcon = () => /* @__PURE__ */ jsxs("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: [
+const InstagramIcon$1 = () => /* @__PURE__ */ jsxs("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: [
   /* @__PURE__ */ jsx("rect", { x: "2", y: "2", width: "20", height: "20", rx: "5", ry: "5" }),
   /* @__PURE__ */ jsx("path", { d: "M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" }),
   /* @__PURE__ */ jsx("line", { x1: "17.5", y1: "6.5", x2: "17.51", y2: "6.5" })
@@ -5271,7 +5274,7 @@ function Contact() {
           /* @__PURE__ */ jsx("div", { style: styles$1.socialIcons, children: [
             { Icon: FacebookIcon, url: "https://www.facebook.com/corxhealthcare", label: "Facebook" },
             { Icon: LinkedInIcon, url: "https://www.linkedin.com/company/corx-healthcare/", label: "LinkedIn" },
-            { Icon: InstagramIcon, url: "https://www.instagram.com/corx_healthcare", label: "Instagram" }
+            { Icon: InstagramIcon$1, url: "https://www.instagram.com/corx_healthcare", label: "Instagram" }
           ].map(({ Icon, url, label }, i) => /* @__PURE__ */ jsx(
             motion.a,
             {
@@ -12778,6 +12781,7 @@ const StaffDashboard = () => {
   const navigate = useNavigate();
   const {
     currentUser,
+    staffUsers,
     logout,
     getTasksForStaff,
     updateTaskStatus,
@@ -12841,6 +12845,8 @@ const StaffDashboard = () => {
   const [otFile, setOtFile] = useState(null);
   const otFileRef = useRef(null);
   const [dutyDate, setDutyDate] = useState("");
+  const [dutyShiftTiming, setDutyShiftTiming] = useState("Day");
+  const [dutyShiftType, setDutyShiftType] = useState("8-hours");
   const [dutyReplacement, setDutyReplacement] = useState("");
   const [dutyReason, setDutyReason] = useState("");
   const [noticeTitle, setNoticeTitle] = useState("");
@@ -12897,6 +12903,8 @@ const StaffDashboard = () => {
     setOtDescription("");
     setOtFile(null);
     setDutyDate("");
+    setDutyShiftTiming("Day");
+    setDutyShiftType("8-hours");
     setDutyReplacement("");
     setDutyReason("");
     setNoticeTitle("");
@@ -13243,19 +13251,25 @@ const StaffDashboard = () => {
               className: "border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 shadow-2xs",
               children: [
                 /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1.5", children: [
                     /* @__PURE__ */ jsxs("span", { className: "text-xs sm:text-sm font-bold text-[#1a294a]", children: [
                       "Date: ",
                       r.dutyDate
                     ] }),
-                    /* @__PURE__ */ jsx(Badge, { label: r.status })
+                    /* @__PURE__ */ jsx(Badge, { label: r.status }),
+                    r.shiftTiming && /* @__PURE__ */ jsx("span", { className: `text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full border ${r.shiftTiming === "Night" ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-amber-50 text-amber-800 border-amber-200"}`, children: r.shiftTiming === "Night" ? "🌙 Night Shift" : "☀️ Day Shift" }),
+                    r.shiftType && /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200", children: [
+                      "⏱️ ",
+                      r.shiftType === "live-in" ? "Live-In Duty" : r.shiftType
+                    ] })
                   ] }),
-                  /* @__PURE__ */ jsxs("p", { className: "text-[11px] sm:text-xs text-slate-600 font-medium mb-0.5", children: [
+                  /* @__PURE__ */ jsxs("p", { className: "text-[11px] sm:text-xs text-slate-600 font-medium mb-1", children: [
                     "👤 Covering Staff: ",
                     /* @__PURE__ */ jsx("span", { className: "font-bold text-[#08709d]", children: r.dutyReplacement })
                   ] }),
-                  r.dutyReason && /* @__PURE__ */ jsxs("p", { className: "text-[11px] sm:text-xs text-slate-500 line-clamp-1", children: [
-                    "Reason: ",
+                  r.dutyReason && /* @__PURE__ */ jsxs("p", { className: "text-[11px] sm:text-xs text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100 line-clamp-2", children: [
+                    /* @__PURE__ */ jsx("strong", { className: "text-slate-700", children: "Handover Notes / Reason:" }),
+                    " ",
                     r.dutyReason
                   ] })
                 ] }),
@@ -13948,28 +13962,113 @@ const StaffDashboard = () => {
                     staffId,
                     staffName,
                     dutyDate,
+                    shiftTiming: dutyShiftTiming,
+                    shiftType: dutyShiftType,
                     dutyReplacement,
                     dutyReason
                   }),
                   className: "flex flex-col gap-3.5 sm:gap-4 text-left",
                   children: [
-                    /* @__PURE__ */ jsx(ModalHeader, { title: "Duty Schedule Swap", icon: /* @__PURE__ */ jsx(CalendarDays, { size: 18 }), color: "#0284c7", onClose: closeModal }),
+                    /* @__PURE__ */ jsx(ModalHeader, { title: "Duty Schedule Swap Request", icon: /* @__PURE__ */ jsx(CalendarDays, { size: 18 }), color: "#0284c7", onClose: closeModal }),
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Applicant Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
+                    ] }),
                     /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
                       /* @__PURE__ */ jsx(Field, { label: "Scheduled Duty Date", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, required: true, value: dutyDate, onChange: (e) => setDutyDate(e.target.value) }) }),
-                      /* @__PURE__ */ jsx(Field, { label: "Replacement Staff Name", children: /* @__PURE__ */ jsx("input", { type: "text", className: inputCls, required: true, placeholder: "Name of covering nurse / doctor", value: dutyReplacement, onChange: (e) => setDutyReplacement(e.target.value) }) })
+                      /* @__PURE__ */ jsx(Field, { label: "Shift Timing", children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+                        /* @__PURE__ */ jsxs(
+                          "select",
+                          {
+                            className: `${inputCls} appearance-none pr-9 cursor-pointer`,
+                            value: dutyShiftTiming,
+                            onChange: (e) => setDutyShiftTiming(e.target.value),
+                            children: [
+                              /* @__PURE__ */ jsx("option", { value: "Day", children: "☀️ Day Shift" }),
+                              /* @__PURE__ */ jsx("option", { value: "Night", children: "🌙 Night Shift" })
+                            ]
+                          }
+                        ),
+                        /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
+                      ] }) })
                     ] }),
-                    /* @__PURE__ */ jsx(Field, { label: "Reason / Handover Details", children: /* @__PURE__ */ jsx(
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Shift Type", children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+                        /* @__PURE__ */ jsxs(
+                          "select",
+                          {
+                            className: `${inputCls} appearance-none pr-9 cursor-pointer`,
+                            value: dutyShiftType,
+                            onChange: (e) => setDutyShiftType(e.target.value),
+                            children: [
+                              /* @__PURE__ */ jsx("option", { value: "6-hours", children: "⏱️ 6-hours Shift" }),
+                              /* @__PURE__ */ jsx("option", { value: "8-hours", children: "⏱️ 8-hours Shift" }),
+                              /* @__PURE__ */ jsx("option", { value: "10-hours", children: "⏱️ 10-hours Shift" }),
+                              /* @__PURE__ */ jsx("option", { value: "12-hours", children: "⏱️ 12-hours Shift" }),
+                              /* @__PURE__ */ jsx("option", { value: "24-hours", children: "⏱️ 24-hours Shift" }),
+                              /* @__PURE__ */ jsx("option", { value: "live-in", children: "🏠 Live-In Duty" })
+                            ]
+                          }
+                        ),
+                        /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
+                      ] }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "Replacement Staff Name", children: /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                        /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+                          /* @__PURE__ */ jsxs(
+                            "select",
+                            {
+                              className: `${inputCls} appearance-none pr-9 cursor-pointer`,
+                              value: (staffUsers || []).some((s) => (s.name || s.full_name) === dutyReplacement) ? dutyReplacement : dutyReplacement ? "__custom__" : "",
+                              onChange: (e) => {
+                                if (e.target.value === "__custom__") {
+                                  setDutyReplacement("");
+                                } else {
+                                  setDutyReplacement(e.target.value);
+                                }
+                              },
+                              children: [
+                                /* @__PURE__ */ jsx("option", { value: "", children: "-- Select Staff Colleague --" }),
+                                (staffUsers || []).filter((s) => (s.id || s.staff_id) !== (currentUser == null ? void 0 : currentUser.id)).map((s, idx) => {
+                                  const name = s.name || s.full_name || s.username || `Staff #${s.id}`;
+                                  const role = s.position || s.department || s.role || "Staff";
+                                  return /* @__PURE__ */ jsxs("option", { value: name, children: [
+                                    name,
+                                    " (",
+                                    role,
+                                    ")"
+                                  ] }, s.id || idx);
+                                }),
+                                /* @__PURE__ */ jsx("option", { value: "__custom__", children: "✍️ Enter Custom / Outside Name..." })
+                              ]
+                            }
+                          ),
+                          /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
+                        ] }),
+                        (!(staffUsers || []).some((s) => (s.name || s.full_name) === dutyReplacement) || dutyReplacement === "") && /* @__PURE__ */ jsx(
+                          "input",
+                          {
+                            type: "text",
+                            className: inputCls,
+                            required: true,
+                            placeholder: "Or type replacement staff name here...",
+                            value: dutyReplacement,
+                            onChange: (e) => setDutyReplacement(e.target.value)
+                          }
+                        )
+                      ] }) })
+                    ] }),
+                    /* @__PURE__ */ jsx(Field, { label: "Reason / Handover Notes", children: /* @__PURE__ */ jsx(
                       "textarea",
                       {
                         className: inputCls,
                         required: true,
-                        placeholder: "Provide details for duty shift swap or replacement request…",
+                        placeholder: "Provide details for duty shift swap, tasks to handover, or supervisor notes…",
                         value: dutyReason,
                         onChange: (e) => setDutyReason(e.target.value),
                         rows: 3
                       }
                     ) }),
-                    /* @__PURE__ */ jsx(ModalFooter, { color: "#0284c7", label: "Submit Duty Request", onCancel: closeModal })
+                    /* @__PURE__ */ jsx(ModalFooter, { color: "#0284c7", label: "Submit Duty Swap Request", onCancel: closeModal })
                   ]
                 }
               ),
@@ -14486,6 +14585,7 @@ const Sitemap = () => {
     { name: "Careers", path: "/career", icon: Briefcase },
     { name: "Locations & Coverage", path: "/locations", icon: MapPin },
     { name: "Book An Appointment", path: "/book-an-appointment", icon: Calendar },
+    { name: "Social Media & Connect", path: "/social-media", icon: ExternalLink },
     { name: "Privacy Policy", path: "/privacy-policy", icon: ShieldCheck },
     { name: "Staff Dashboard", path: "/dashboard", icon: Code }
   ];
@@ -14713,6 +14813,257 @@ const Sitemap = () => {
     ] })
   ] }) });
 };
+const InstagramIcon = ({ size = 26 }) => /* @__PURE__ */ jsxs("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: [
+  /* @__PURE__ */ jsx("rect", { width: "20", height: "20", x: "2", y: "2", rx: "5", ry: "5" }),
+  /* @__PURE__ */ jsx("path", { d: "M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" }),
+  /* @__PURE__ */ jsx("line", { x1: "17.5", x2: "17.51", y1: "6.5", y2: "6.5" })
+] });
+const YoutubeIcon = ({ size = 26 }) => /* @__PURE__ */ jsxs("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: [
+  /* @__PURE__ */ jsx("path", { d: "M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.56 49.56 0 0 1-16.2 0A2 2 0 0 1 2.5 17" }),
+  /* @__PURE__ */ jsx("path", { d: "m10 15 5-3-5-3v6" })
+] });
+const TikTokIcon = ({ size = 26 }) => /* @__PURE__ */ jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsx("path", { d: "M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" }) });
+const WhatsAppIcon = ({ size = 22 }) => /* @__PURE__ */ jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsx("path", { d: "M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" }) });
+const DiagonalArrow = () => /* @__PURE__ */ jsxs("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round", className: "text-white/80 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all", children: [
+  /* @__PURE__ */ jsx("line", { x1: "7", y1: "17", x2: "17", y2: "7" }),
+  /* @__PURE__ */ jsx("polyline", { points: "7 7 17 7 17 17" })
+] });
+const SocialMedia = () => {
+  const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    document.title = "CORx Healthcare Dubai | Connect & Official Social Media";
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+  const handleShare = async () => {
+    if (typeof window !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: "CORx Healthcare Dubai - Connect & Social Media",
+          text: "Connect with CORx Healthcare Dubai across official platforms.",
+          url: window.location.href
+        });
+      } catch {
+        copyToClipboard();
+      }
+    } else {
+      copyToClipboard();
+    }
+  };
+  const copyToClipboard = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
+  const socialLinks = [
+    {
+      name: "Instagram",
+      icon: /* @__PURE__ */ jsx(InstagramIcon, { size: 26 }),
+      link: "https://www.instagram.com/corx_healthcare_dubai"
+    },
+    {
+      name: "YouTube",
+      icon: /* @__PURE__ */ jsx(YoutubeIcon, { size: 26 }),
+      link: "https://www.youtube.com/@corxhealthcare"
+    },
+    {
+      name: "TikTok",
+      icon: /* @__PURE__ */ jsx(TikTokIcon, { size: 26 }),
+      link: "https://www.tiktok.com/@corxhealthcare"
+    }
+  ];
+  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen relative text-white flex flex-col items-center justify-between px-4 sm:px-6 py-8 sm:py-12 overflow-x-hidden font-['Poppins',sans-serif] select-none", children: [
+    /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none", children: [
+      /* @__PURE__ */ jsx(
+        "video",
+        {
+          autoPlay: true,
+          loop: true,
+          muted: true,
+          playsInline: true,
+          className: "absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover opacity-75",
+          children: /* @__PURE__ */ jsx("source", { src: heroVideo, type: "video/mp4" })
+        }
+      ),
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-[1] bg-gradient-to-br from-[#0c2e56]/92 via-[#0b2848]/88 to-[#071f3b]/94 pointer-events-none" }),
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-[2] bg-gradient-to-t from-[#050e1d]/90 via-transparent to-[#050e1d]/70 pointer-events-none" })
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: "absolute top-12 left-1/2 -translate-x-1/2 w-[480px] h-[480px] bg-gradient-to-b from-[#08709d]/35 via-[#1a294a]/20 to-transparent rounded-full blur-[120px] pointer-events-none z-[3]" }),
+    /* @__PURE__ */ jsxs("div", { className: "w-full max-w-xl flex items-center justify-between relative z-20 mb-6 sm:mb-8", children: [
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          onClick: () => navigate(-1),
+          "aria-label": "Go Back",
+          className: "w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer",
+          children: /* @__PURE__ */ jsx(ArrowLeft, { size: 18 })
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          onClick: handleShare,
+          "aria-label": "Share Page",
+          className: "w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer relative",
+          children: copied ? /* @__PURE__ */ jsx(Check, { size: 18, className: "text-[#5eb63b]" }) : /* @__PURE__ */ jsx(Share2, { size: 18 })
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsx(AnimatePresence, { children: copied && /* @__PURE__ */ jsxs(
+      motion.div,
+      {
+        initial: { opacity: 0, y: -20 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -20 },
+        className: "fixed top-6 z-50 bg-[#5eb63b] text-white px-4 py-2 rounded-full text-xs font-bold font-['Montserrat',sans-serif] shadow-xl flex items-center gap-1.5",
+        children: [
+          /* @__PURE__ */ jsx(Check, { size: 14 }),
+          " Link copied to clipboard!"
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ jsxs("div", { className: "w-full max-w-xl flex flex-col items-center text-center relative z-10 flex-grow justify-center", children: [
+      /* @__PURE__ */ jsxs(
+        motion.div,
+        {
+          initial: { scale: 0.85, opacity: 0 },
+          animate: { scale: 1, opacity: 1 },
+          transition: { duration: 0.35 },
+          className: "relative mb-5",
+          children: [
+            /* @__PURE__ */ jsx("div", { className: "absolute -inset-2.5 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] rounded-full blur-md opacity-80 animate-pulse" }),
+            /* @__PURE__ */ jsx("div", { className: "relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-white p-3.5 shadow-2xl flex items-center justify-center border-2 border-white/90", children: /* @__PURE__ */ jsx(
+              "img",
+              {
+                src: logo,
+                alt: "CORx Healthcare Logo",
+                className: "w-full h-full object-contain"
+              }
+            ) })
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        motion.h1,
+        {
+          initial: { opacity: 0, y: 8 },
+          animate: { opacity: 1, y: 0 },
+          transition: { delay: 0.1 },
+          className: "text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-8 font-['Montserrat',sans-serif]",
+          children: "CORx Healthcare Dubai"
+        }
+      ),
+      /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-3 sm:gap-3.5 mb-8 sm:mb-10", children: [
+        /* @__PURE__ */ jsxs(
+          motion.a,
+          {
+            initial: { opacity: 0, y: 12 },
+            animate: { opacity: 1, y: 0 },
+            transition: { delay: 0.25 },
+            whileHover: { scale: 1.015 },
+            whileTap: { scale: 0.985 },
+            href: "tel:+97143320776",
+            className: "group w-full bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/30 transition-all text-left",
+            children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 sm:gap-3.5 min-w-0", children: [
+                /* @__PURE__ */ jsx("div", { className: "w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner", children: /* @__PURE__ */ jsx(Phone, { size: 19 }) }),
+                /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+                  /* @__PURE__ */ jsx("h2", { className: "font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif] truncate", children: "Call Dubai 24/7 Clinic" }),
+                  /* @__PURE__ */ jsx("p", { className: "text-sky-100 text-[11px] sm:text-xs font-mono truncate", children: "+971 4 332 0776 / +971 54 703 3311" })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsx(DiagonalArrow, {})
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full", children: [
+          /* @__PURE__ */ jsxs(
+            motion.a,
+            {
+              initial: { opacity: 0, y: 12 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: 0.3 },
+              whileHover: { scale: 1.02 },
+              whileTap: { scale: 0.98 },
+              href: "https://wa.me/971547033311?text=Hi%20CORx%20Healthcare,%20I%20would%20like%20to%20inquire%20about%20your%20services",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "group bg-[#5eb63b] hover:bg-[#4ea12f] border border-white/20 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#5eb63b]/30 transition-all text-left min-w-0",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-2.5 min-w-0", children: [
+                  /* @__PURE__ */ jsx("div", { className: "w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner", children: /* @__PURE__ */ jsx(WhatsAppIcon, { size: 18 }) }),
+                  /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+                    /* @__PURE__ */ jsx("h2", { className: "font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate", children: "WhatsApp Chat" }),
+                    /* @__PURE__ */ jsx("p", { className: "text-emerald-100 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate", children: "+971 54 703 3311" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsx("div", { className: "shrink-0 hidden xs:block", children: /* @__PURE__ */ jsx(DiagonalArrow, {}) })
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            motion.div,
+            {
+              initial: { opacity: 0, y: 12 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: 0.35 },
+              whileHover: { scale: 1.02 },
+              whileTap: { scale: 0.98 },
+              className: "min-w-0",
+              children: /* @__PURE__ */ jsxs(
+                Link,
+                {
+                  to: "/",
+                  className: "group w-full h-full bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block min-w-0",
+                  children: [
+                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-2.5 min-w-0", children: [
+                      /* @__PURE__ */ jsx("div", { className: "w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0", children: /* @__PURE__ */ jsx(Globe, { size: 18 }) }),
+                      /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+                        /* @__PURE__ */ jsx("h2", { className: "font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate", children: "Official Website" }),
+                        /* @__PURE__ */ jsx("p", { className: "text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-['Poppins',sans-serif] mt-0.5 truncate", children: "Explore services" })
+                      ] })
+                    ] }),
+                    /* @__PURE__ */ jsx("div", { className: "shrink-0 hidden xs:block", children: /* @__PURE__ */ jsx(DiagonalArrow, {}) })
+                  ]
+                }
+              )
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "w-full", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 mb-6", children: [
+          /* @__PURE__ */ jsx("div", { className: "flex-1 h-px bg-white/15" }),
+          /* @__PURE__ */ jsx("span", { className: "text-[10px] sm:text-[11px] font-bold font-['Montserrat',sans-serif] uppercase tracking-[0.25em] text-slate-300", children: "CONNECT SOCIALLY" }),
+          /* @__PURE__ */ jsx("div", { className: "flex-1 h-px bg-white/15" })
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-3 gap-3 sm:gap-4", children: socialLinks.map((item, i) => /* @__PURE__ */ jsxs(
+          motion.a,
+          {
+            initial: { opacity: 0, y: 12 },
+            animate: { opacity: 1, y: 0 },
+            transition: { delay: 0.4 + i * 0.05 },
+            whileHover: { y: -3, scale: 1.03 },
+            whileTap: { scale: 0.97 },
+            href: item.link,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            className: "bg-[#1a294a]/80 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-[#38bdf8]/50 p-4 sm:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 text-white transition-all shadow-sm group",
+            children: [
+              /* @__PURE__ */ jsx("div", { className: "text-white/85 group-hover:text-[#38bdf8] group-hover:scale-110 transition-transform", children: item.icon }),
+              /* @__PURE__ */ jsx("span", { className: "text-[11px] sm:text-xs font-semibold tracking-wide text-slate-200 group-hover:text-white font-['Montserrat',sans-serif]", children: item.name })
+            ]
+          },
+          item.name
+        )) })
+      ] })
+    ] })
+  ] });
+};
 const ServiceRedirect = () => {
   const { serviceSlug } = useParams();
   return /* @__PURE__ */ jsx(Navigate, { to: `/${serviceSlug || "lab-test-at-home"}`, replace: true });
@@ -14776,7 +15127,12 @@ const AnimatedRoutes = () => {
     /* @__PURE__ */ jsx(Route, { path: "/blog", element: /* @__PURE__ */ jsx(OrthopedicArticlesPage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/blog/", element: /* @__PURE__ */ jsx(OrthopedicArticlesPage, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/blog/:slug", element: /* @__PURE__ */ jsx(BlogDetails, {}) }),
-    /* @__PURE__ */ jsx(Route, { path: "/blog/:slug/", element: /* @__PURE__ */ jsx(BlogDetails, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/social-media", element: /* @__PURE__ */ jsx(SocialMedia, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/social-media/", element: /* @__PURE__ */ jsx(SocialMedia, {}) }),
+    /* @__PURE__ */ jsx(Route, { path: "/socials", element: /* @__PURE__ */ jsx(Navigate, { to: "/social-media", replace: true }) }),
+    /* @__PURE__ */ jsx(Route, { path: "/socials/", element: /* @__PURE__ */ jsx(Navigate, { to: "/social-media", replace: true }) }),
+    /* @__PURE__ */ jsx(Route, { path: "/connect", element: /* @__PURE__ */ jsx(Navigate, { to: "/social-media", replace: true }) }),
+    /* @__PURE__ */ jsx(Route, { path: "/connect/", element: /* @__PURE__ */ jsx(Navigate, { to: "/social-media", replace: true }) }),
     /* @__PURE__ */ jsx(Route, { path: "/service/:serviceSlug", element: /* @__PURE__ */ jsx(ServiceRedirect, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/service/:serviceSlug/", element: /* @__PURE__ */ jsx(ServiceRedirect, {}) }),
     /* @__PURE__ */ jsx(Route, { path: "/:slug", element: /* @__PURE__ */ jsx(ServicePage, {}) }),
@@ -14789,8 +15145,12 @@ const AnimatedRoutes = () => {
 const MainLayout = ({ children }) => {
   const location = useLocation();
   const isPortal = location.pathname.startsWith("/portal") || location.pathname.startsWith("/dashboard");
+  const isSocialMedia = location.pathname.startsWith("/social-media") || location.pathname.startsWith("/socials") || location.pathname.startsWith("/connect");
   if (isPortal) {
     return /* @__PURE__ */ jsx("div", { className: "min-h-screen bg-gray-50", children });
+  }
+  if (isSocialMedia) {
+    return /* @__PURE__ */ jsx("div", { className: "min-h-screen bg-[#061021]", children });
   }
   return /* @__PURE__ */ jsxs("div", { className: "flex flex-col min-h-screen overflow-x-hidden", children: [
     /* @__PURE__ */ jsx(Header, {}),
