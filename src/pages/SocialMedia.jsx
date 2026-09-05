@@ -97,7 +97,7 @@ const SocialMedia = () => {
   ];
 
   return (
-    <div className="min-h-screen relative text-white flex flex-col items-center justify-start px-4 sm:px-6 pt-4 sm:pt-6 pb-12 overflow-x-hidden font-['Poppins',sans-serif] select-none">
+    <div className="min-h-screen relative text-white flex flex-col items-center justify-start px-4 sm:px-6 pt-2 sm:pt-3 pb-8 overflow-x-hidden font-['Poppins',sans-serif] select-none">
       
       {/* ── Background Video as used in Hero Section (Hero.mp4) ── */}
       <div className="fixed inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none">
@@ -118,10 +118,10 @@ const SocialMedia = () => {
       </div>
 
       {/* ── Soft Radial Aura Glow behind Avatar in Brand Primary Colors ── */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[440px] h-[440px] bg-gradient-to-b from-[#08709d]/35 via-[#1a294a]/20 to-transparent rounded-full blur-[100px] pointer-events-none z-[3]"></div>
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-gradient-to-b from-[#08709d]/35 via-[#1a294a]/20 to-transparent rounded-full blur-[90px] pointer-events-none z-[3]"></div>
 
       {/* ── Top Bar with Back & Share Buttons ── */}
-      <div className="w-full max-w-xl flex items-center justify-between relative z-20 mb-3 sm:mb-4">
+      <div className="w-full max-w-xl flex items-center justify-between relative z-20 mb-1.5 sm:mb-2">
         <button
           onClick={() => navigate(-1)}
           aria-label="Go Back"
@@ -146,7 +146,7 @@ const SocialMedia = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-5 z-50 bg-[#5eb63b] text-white px-4 py-2 rounded-full text-xs font-bold font-['Montserrat',sans-serif] shadow-xl flex items-center gap-1.5"
+            className="fixed top-4 z-50 bg-[#5eb63b] text-white px-4 py-2 rounded-full text-xs font-bold font-['Montserrat',sans-serif] shadow-xl flex items-center gap-1.5"
           >
             <Check size={14} /> Link copied to clipboard!
           </motion.div>
@@ -161,12 +161,12 @@ const SocialMedia = () => {
           initial={{ scale: 0.85, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.35 }}
-          className="relative mb-3.5 sm:mb-4"
+          className="relative mb-2 sm:mb-2.5"
         >
           {/* Glowing Aura Ring in Brand Colors (#08709d & #5eb63b) */}
-          <div className="absolute -inset-2 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] rounded-full blur-md opacity-80 animate-pulse"></div>
+          <div className="absolute -inset-1.5 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] rounded-full blur-md opacity-80 animate-pulse"></div>
           
-          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white p-3 shadow-2xl flex items-center justify-center border-2 border-white/90">
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white p-2.5 shadow-2xl flex items-center justify-center border-2 border-white/90">
             <img
               src={logo}
               alt="CORx Healthcare Logo"
@@ -180,13 +180,13 @@ const SocialMedia = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-5 sm:mb-6 font-['Montserrat',sans-serif]"
+          className="text-lg sm:text-xl md:text-2xl font-extrabold text-white tracking-tight mb-3.5 sm:mb-4 font-['Montserrat',sans-serif]"
         >
           CORx Healthcare Dubai
         </motion.h1>
 
         {/* ── Primary Action Buttons Stack (Call on top, WhatsApp & Website in single row) ── */}
-        <div className="w-full flex flex-col gap-2.5 sm:gap-3 mb-6 sm:mb-7">
+        <div className="w-full flex flex-col gap-2 sm:gap-2.5 mb-4 sm:mb-5">
           
           {/* Row 1: Two Call Clinic Buttons Side-by-Side */}
           <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
