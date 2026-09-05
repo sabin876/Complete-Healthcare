@@ -97,7 +97,7 @@ const SocialMedia = () => {
   ];
 
   return (
-    <div className="min-h-screen relative text-white flex flex-col items-center justify-between px-4 sm:px-6 py-8 sm:py-12 overflow-x-hidden font-['Poppins',sans-serif] select-none">
+    <div className="min-h-screen relative text-white flex flex-col items-center justify-start px-4 sm:px-6 pt-4 sm:pt-6 pb-12 overflow-x-hidden font-['Poppins',sans-serif] select-none">
       
       {/* ── Background Video as used in Hero Section (Hero.mp4) ── */}
       <div className="fixed inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none">
@@ -118,24 +118,24 @@ const SocialMedia = () => {
       </div>
 
       {/* ── Soft Radial Aura Glow behind Avatar in Brand Primary Colors ── */}
-      <div className="absolute top-12 left-1/2 -translate-x-1/2 w-[480px] h-[480px] bg-gradient-to-b from-[#08709d]/35 via-[#1a294a]/20 to-transparent rounded-full blur-[120px] pointer-events-none z-[3]"></div>
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[440px] h-[440px] bg-gradient-to-b from-[#08709d]/35 via-[#1a294a]/20 to-transparent rounded-full blur-[100px] pointer-events-none z-[3]"></div>
 
       {/* ── Top Bar with Back & Share Buttons ── */}
-      <div className="w-full max-w-xl flex items-center justify-between relative z-20 mb-6 sm:mb-8">
+      <div className="w-full max-w-xl flex items-center justify-between relative z-20 mb-3 sm:mb-4">
         <button
           onClick={() => navigate(-1)}
           aria-label="Go Back"
-          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer"
+          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer"
         >
-          <ArrowLeft size={18} />
+          <ArrowLeft size={17} />
         </button>
 
         <button
           onClick={handleShare}
           aria-label="Share Page"
-          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer relative"
+          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer relative"
         >
-          {copied ? <Check size={18} className="text-[#5eb63b]" /> : <Share2 size={18} />}
+          {copied ? <Check size={17} className="text-[#5eb63b]" /> : <Share2 size={17} />}
         </button>
       </div>
 
@@ -146,7 +146,7 @@ const SocialMedia = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-6 z-50 bg-[#5eb63b] text-white px-4 py-2 rounded-full text-xs font-bold font-['Montserrat',sans-serif] shadow-xl flex items-center gap-1.5"
+            className="fixed top-5 z-50 bg-[#5eb63b] text-white px-4 py-2 rounded-full text-xs font-bold font-['Montserrat',sans-serif] shadow-xl flex items-center gap-1.5"
           >
             <Check size={14} /> Link copied to clipboard!
           </motion.div>
@@ -154,19 +154,19 @@ const SocialMedia = () => {
       </AnimatePresence>
 
       {/* ── Main Column Container ── */}
-      <div className="w-full max-w-xl flex flex-col items-center text-center relative z-10 flex-grow justify-center">
+      <div className="w-full max-w-xl flex flex-col items-center text-center relative z-10">
         
         {/* Profile Avatar / Logo with Bright Glowing Halo */}
         <motion.div
           initial={{ scale: 0.85, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.35 }}
-          className="relative mb-5"
+          className="relative mb-3.5 sm:mb-4"
         >
           {/* Glowing Aura Ring in Brand Colors (#08709d & #5eb63b) */}
-          <div className="absolute -inset-2.5 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] rounded-full blur-md opacity-80 animate-pulse"></div>
+          <div className="absolute -inset-2 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] rounded-full blur-md opacity-80 animate-pulse"></div>
           
-          <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-white p-3.5 shadow-2xl flex items-center justify-center border-2 border-white/90">
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white p-3 shadow-2xl flex items-center justify-center border-2 border-white/90">
             <img
               src={logo}
               alt="CORx Healthcare Logo"
@@ -180,13 +180,13 @@ const SocialMedia = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-8 font-['Montserrat',sans-serif]"
+          className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-5 sm:mb-6 font-['Montserrat',sans-serif]"
         >
           CORx Healthcare Dubai
         </motion.h1>
 
         {/* ── Primary Action Buttons Stack (Call on top, WhatsApp & Website in single row) ── */}
-        <div className="w-full flex flex-col gap-3 sm:gap-3.5 mb-8 sm:mb-10">
+        <div className="w-full flex flex-col gap-2.5 sm:gap-3 mb-6 sm:mb-7">
           
           {/* 1. Call Clinic Button (Primary Theme Blue #08709d) */}
           <motion.a
