@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, Share2, Phone, Globe, Check, Mail
+  ArrowLeft, Share2, Phone, Globe, Check, Mail, Calendar
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import logo from '../assets/logo.webp';
@@ -316,31 +316,70 @@ const SocialMedia = () => {
 
           </div>
 
-          {/* 4. Email Inquiries Button */}
-          <motion.a
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.38 }}
-            whileHover={{ scale: 1.015 }}
-            whileTap={{ scale: 0.985 }}
-            href="mailto:info@corx.ae"
-            className="group w-full bg-[#1a294a]/85 hover:bg-[#223963] border border-white/15 hover:border-white/25 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left"
-          >
-            <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
-                <Mail size={18} />
+          {/* Row 3: Email Inquiries & Book an Appointment Side-by-Side */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+            
+            {/* 4. Email Inquiries Button */}
+            <motion.a
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.38 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href="mailto:info@corx.ae"
+              className="group bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left min-w-0"
+            >
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
+                  <Mail size={18} />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                    Email Inquiries
+                  </h2>
+                  <p className="text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate">
+                    info@corx.ae
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h2 className="font-extrabold text-white text-xs sm:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
-                  Email Inquiries
-                </h2>
-                <p className="text-slate-300 text-[10px] sm:text-xs font-mono mt-0.5 truncate">
-                  info@corx.ae
-                </p>
+              <div className="shrink-0 hidden xs:block">
+                <DiagonalArrow />
               </div>
-            </div>
-            <DiagonalArrow />
-          </motion.a>
+            </motion.a>
+
+            {/* 5. Book an Appointment Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.42 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="min-w-0"
+            >
+              <Link
+                to="/book-an-appointment"
+                className="group w-full h-full bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block min-w-0"
+              >
+                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
+                    <Calendar size={18} />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                      Book Appointment
+                    </h2>
+                    <p className="text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-['Poppins',sans-serif] mt-0.5 truncate">
+                      Online Booking
+                    </p>
+                  </div>
+                </div>
+                <div className="shrink-0 hidden xs:block">
+                  <DiagonalArrow />
+                </div>
+              </Link>
+            </motion.div>
+
+          </div>
 
         </div>
 
