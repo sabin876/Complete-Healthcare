@@ -65,10 +65,13 @@ const mapSalary = (s) => s ? {
   staffName: s.staff_name,
   staffDep: s.staff_dep,
   staffPosition: s.staff_position,
-  incType: s.inc_type,
-  status: s.status,
+  description: s.description || '',
+  image: s.image || s.slip_document || '',
+  status: s.status || 'Issued',
   submittedAt: s.submitted_at
 } : null;
+
+
 
 const mapNotice = (n) => n ? {
   id: n.id,
@@ -381,22 +384,35 @@ export const AuthProvider = ({ children }) => {
 
   const createSalaryApplication = async (data) => {
     try {
-      const res = await fetch(`${API_BASE}/salaries/`, {
+      const isFormData = typeof FormData !== 'undefined' && data instanceof FormData;
+      const options = isFormData ? {
+        method: 'POST',
+        body: data
+      } : {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          staffId: data.staffId,
-          incType: data.incType
+          staffId: data.staffId || data.staff,
+          description: data.description || '',
+          status: data.status || 'Issued'
         })
-      });
+      };
+
+      const res = await fetch(`${API_BASE}/salaries/`, options);
       if (res.ok) {
         await fetchData(currentUser);
         return mapSalary(await res.json());
+      } else {
+        const err = await res.json();
+        console.error('Failed to send salary slip:', err);
+        return null;
       }
     } catch (err) {
-      console.error('Error applying for salary increment:', err);
+      console.error('Error sending salary slip:', err);
+      return null;
     }
   };
+
 
   const updateSalaryStatus = async (id, status) => {
     try {
@@ -412,6 +428,22 @@ export const AuthProvider = ({ children }) => {
       console.error('Error updating salary status:', err);
     }
   };
+
+  const deleteSalaryApplication = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE}/salaries/${id}/`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+        return true;
+      }
+    } catch (err) {
+      console.error('Error deleting salary record:', err);
+    }
+    return false;
+  };
+
 
   const createNoticeApplication = async (data) => {
     try {
@@ -497,7 +529,7 @@ export const AuthProvider = ({ children }) => {
         tasks, createTask, updateTaskStatus, deleteTask, getTasksForStaff,
         leaveApplications, createLeaveApplication, updateLeaveStatus,
         otApplications, createOtApplication, updateOtStatus,
-        salaryApplications, createSalaryApplication, updateSalaryStatus,
+        salaryApplications, createSalaryApplication, updateSalaryStatus, deleteSalaryApplication,
         noticeApplications, createNoticeApplication, updateNoticeStatus,
         dutyApplications, createDutyApplication, updateDutyStatus,
       }}

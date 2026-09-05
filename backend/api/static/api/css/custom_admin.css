@@ -477,14 +477,18 @@ textarea:focus {
   letter-spacing: 0.05em !important;
 }
 
-/* Fix Form Row & Field Alignment in Change Forms */
+/* Fix Form Row & Field Alignment in Change Forms with Modern Responsive Multi-Column Row Layout */
 .form-row,
 .change-form .form-group {
-  display: block !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 20px 24px !important;
   width: 100% !important;
-  padding: 16px 24px !important;
+  padding: 18px 24px !important;
   border-bottom: 1px solid #f1f5f9 !important;
   margin-bottom: 0 !important;
+  align-items: flex-start !important;
+  box-sizing: border-box !important;
 }
 
 .form-row:last-child {
@@ -493,8 +497,10 @@ textarea:focus {
 
 .form-row > div,
 .form-row .fieldBox {
-  display: block !important;
-  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 280px !important;
+  min-width: 220px !important;
   float: none !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -506,11 +512,11 @@ textarea:focus {
   display: block !important;
   float: none !important;
   width: 100% !important;
-  font-size: 12.5px !important;
+  font-size: 12px !important;
   font-weight: 700 !important;
-  color: #334155 !important;
+  color: #1e293b !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.04em !important;
+  letter-spacing: 0.05em !important;
   margin-bottom: 8px !important;
 }
 
@@ -518,12 +524,35 @@ textarea:focus {
 .form-row input[type="password"],
 .form-row input[type="email"],
 .form-row input[type="number"],
+.form-row input[type="date"],
+.form-row input[type="time"],
 .form-row select,
 .form-row textarea {
   display: block !important;
   width: 100% !important;
-  max-width: 680px !important;
+  max-width: 100% !important;
   box-sizing: border-box !important;
+  padding: 11px 14px !important;
+  font-size: 13.5px !important;
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 9px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.form-row input[type="text"]:focus,
+.form-row input[type="password"]:focus,
+.form-row input[type="email"]:focus,
+.form-row input[type="number"]:focus,
+.form-row input[type="date"]:focus,
+.form-row input[type="time"]:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  border-color: #08709d !important;
+  box-shadow: 0 0 0 3px rgba(8, 112, 157, 0.15) !important;
+  outline: none !important;
 }
 
 .form-row .help,
@@ -531,8 +560,35 @@ textarea:focus {
 .form-row .form-text {
   display: block !important;
   margin-top: 6px !important;
-  font-size: 12px !important;
+  font-size: 11.5px !important;
   color: #64748b !important;
-  max-width: 680px !important;
+  line-height: 1.4 !important;
 }
+
+/* Date and Time Pickers / Shortcuts */
+.datetimeshortcuts {
+  font-size: 12px !important;
+  color: #08709d !important;
+  margin-top: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-weight: 600 !important;
+}
+
+.datetimeshortcuts a {
+  color: #08709d !important;
+  text-decoration: none !important;
+  padding: 2px 8px !important;
+  border-radius: 6px !important;
+  background: #f0f9ff !important;
+  border: 1px solid #bae6fd !important;
+  transition: all 0.15s ease !important;
+}
+
+.datetimeshortcuts a:hover {
+  background: #08709d !important;
+  color: #ffffff !important;
+}
+
 

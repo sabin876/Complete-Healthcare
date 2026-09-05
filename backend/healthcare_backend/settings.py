@@ -236,6 +236,7 @@ JAZZMIN_SETTINGS = {
         "api.salaryapplication": "fas fa-money-check-alt",
         "api.noticeapplication": "fas fa-bullhorn",
         "api.dutyapplication": "fas fa-exchange-alt",
+        "api.driverschedule": "fas fa-route",
         "api.blogpost": "fas fa-newspaper",
         "api.service": "fas fa-briefcase-medical",
         "api.teammember": "fas fa-user-nurse",

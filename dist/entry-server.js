@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, createContext, useContext } from "r
 import { renderToString } from "react-dom/server";
 import { Link, useNavigate, useParams, useLocation, Routes, Route, Navigate, StaticRouter } from "react-router";
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from "framer-motion";
-import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Shield, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save, ArrowLeft, Lock, LogOut, Megaphone, Bell, ClipboardList, Sun, Zap, Moon, Paperclip, Briefcase, Code, ExternalLink } from "lucide-react";
+import { Droplets, HeartPulse, Clock, CheckCircle2, Activity, Stethoscope, Sparkles, HeartHandshake, TestTube, ArrowRight, Phone, Shield, Mail, X, Menu, Home as Home$1, Users, FileText, Calendar, Globe, ChevronDown, ChevronRight, MessageSquare, MapPin, MessageCircle, Bot, Settings, UserCheck, User, Send, CalendarDays, ChevronLeft, HandHeart, ThumbsUp, Award, ShieldCheck, Heart, Eye, Compass, Target, Building2, Navigation, BookOpen, Tag, Check, PhoneCall, AlertCircle, LayoutDashboard, CornerDownRight, ListChecks, Layers, PenLine, Receipt, Server, RefreshCw, TrendingUp, ArrowUpRight, Edit3, Plus, Filter, Search, Trash2, Sliders, EyeOff, Image, ArrowUp, ArrowDown, Hash, Link2, AlignLeft, Save, UploadCloud, ExternalLink, ArrowLeft, Lock, LogOut, Car, Megaphone, Bell, ClipboardList, Sun, Zap, Moon, Paperclip, Briefcase, Code } from "lucide-react";
 const logo = "/assets/logo-u28QMOuL.webp";
 const tollfree = "/assets/tollfree-3acubKEx.png";
 const rawBaseUrl = "http://localhost:8000";
@@ -1953,8 +1953,9 @@ const mapSalary = (s) => s ? {
   staffName: s.staff_name,
   staffDep: s.staff_dep,
   staffPosition: s.staff_position,
-  incType: s.inc_type,
-  status: s.status,
+  description: s.description || "",
+  image: s.image || s.slip_document || "",
+  status: s.status || "Issued",
   submittedAt: s.submitted_at
 } : null;
 const mapNotice = (n) => n ? {
@@ -2241,20 +2242,31 @@ const AuthProvider = ({ children }) => {
   };
   const createSalaryApplication = async (data) => {
     try {
-      const res = await fetch(`${API_BASE}/salaries/`, {
+      const isFormData = typeof FormData !== "undefined" && data instanceof FormData;
+      const options = isFormData ? {
+        method: "POST",
+        body: data
+      } : {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          staffId: data.staffId,
-          incType: data.incType
+          staffId: data.staffId || data.staff,
+          description: data.description || "",
+          status: data.status || "Issued"
         })
-      });
+      };
+      const res = await fetch(`${API_BASE}/salaries/`, options);
       if (res.ok) {
         await fetchData(currentUser);
         return mapSalary(await res.json());
+      } else {
+        const err = await res.json();
+        console.error("Failed to send salary slip:", err);
+        return null;
       }
     } catch (err) {
-      console.error("Error applying for salary increment:", err);
+      console.error("Error sending salary slip:", err);
+      return null;
     }
   };
   const updateSalaryStatus = async (id, status) => {
@@ -2270,6 +2282,20 @@ const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Error updating salary status:", err);
     }
+  };
+  const deleteSalaryApplication = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE}/salaries/${id}/`, {
+        method: "DELETE"
+      });
+      if (res.ok) {
+        await fetchData(currentUser);
+        return true;
+      }
+    } catch (err) {
+      console.error("Error deleting salary record:", err);
+    }
+    return false;
   };
   const createNoticeApplication = async (data) => {
     try {
@@ -2369,6 +2395,7 @@ const AuthProvider = ({ children }) => {
         salaryApplications,
         createSalaryApplication,
         updateSalaryStatus,
+        deleteSalaryApplication,
         noticeApplications,
         createNoticeApplication,
         updateNoticeStatus,
@@ -3007,7 +3034,7 @@ const faqs = [
     a: "We accept various payment methods including cash, credit/debit cards, and bank transfers. We also work with insurance providers for direct billing whenever possible. Our team will provide you with detailed payment options and assist you with any billing inquiries."
   }
 ];
-const styles$1 = `
+const styles$2 = `
   @keyframes fadeSlideIn {
     from { opacity: 0; transform: translateY(18px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -3214,7 +3241,7 @@ function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
   return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsxs("section", { className: "faq-section", children: [
-    /* @__PURE__ */ jsx("style", { children: styles$1 }),
+    /* @__PURE__ */ jsx("style", { children: styles$2 }),
     /* @__PURE__ */ jsxs("div", { className: "faq-wrap", children: [
       /* @__PURE__ */ jsx("div", { className: "faq-eyebrow", children: "⊙ Common Questions" }),
       /* @__PURE__ */ jsx("h2", { className: "faq-title", children: "Frequently Asked Questions" }),
@@ -5154,25 +5181,25 @@ function Contact() {
   const toggleFaq = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
-  return /* @__PURE__ */ jsxs("div", { style: styles.page, children: [
-    /* @__PURE__ */ jsxs("div", { style: styles.header, children: [
-      /* @__PURE__ */ jsx("p", { style: styles.tagline, children: "GET IN TOUCH" }),
-      /* @__PURE__ */ jsx("h1", { style: styles.title, children: "We're Here for You" }),
-      /* @__PURE__ */ jsxs("p", { style: styles.subtitle, children: [
+  return /* @__PURE__ */ jsxs("div", { style: styles$1.page, children: [
+    /* @__PURE__ */ jsxs("div", { style: styles$1.header, children: [
+      /* @__PURE__ */ jsx("p", { style: styles$1.tagline, children: "GET IN TOUCH" }),
+      /* @__PURE__ */ jsx("h1", { style: styles$1.title, children: "We're Here for You" }),
+      /* @__PURE__ */ jsxs("p", { style: styles$1.subtitle, children: [
         "Whether you need a consultation or have a question about our orthopedic services,",
         /* @__PURE__ */ jsx("br", {}),
         "reach out to us."
       ] })
     ] }),
-    /* @__PURE__ */ jsxs("div", { style: styles.content, children: [
-      /* @__PURE__ */ jsxs("div", { style: styles.leftPanel, children: [
-        /* @__PURE__ */ jsxs("div", { style: styles.contactCard, children: [
-          /* @__PURE__ */ jsx("div", { style: styles.iconWrap, children: /* @__PURE__ */ jsx(PhoneIcon, {}) }),
+    /* @__PURE__ */ jsxs("div", { style: styles$1.content, children: [
+      /* @__PURE__ */ jsxs("div", { style: styles$1.leftPanel, children: [
+        /* @__PURE__ */ jsxs("div", { style: styles$1.contactCard, children: [
+          /* @__PURE__ */ jsx("div", { style: styles$1.iconWrap, children: /* @__PURE__ */ jsx(PhoneIcon, {}) }),
           /* @__PURE__ */ jsxs("div", { children: [
-            /* @__PURE__ */ jsx("p", { style: styles.cardLabel, children: "Emergency" }),
+            /* @__PURE__ */ jsx("p", { style: styles$1.cardLabel, children: "Emergency" }),
             /* @__PURE__ */ jsxs("div", { style: { display: "flex", flexDirection: "column", gap: "8px", marginTop: "8px" }, children: [
               /* @__PURE__ */ jsxs("div", { style: { display: "flex", gap: "8px", alignItems: "center" }, children: [
-                /* @__PURE__ */ jsx("a", { href: "tel:+97143320776", style: styles.cardLink, children: "☎️ +971 4 332 0776" }),
+                /* @__PURE__ */ jsx("a", { href: "tel:+97143320776", style: styles$1.cardLink, children: "☎️ +971 4 332 0776" }),
                 /* @__PURE__ */ jsxs(
                   "a",
                   {
@@ -5208,40 +5235,40 @@ function Contact() {
                   }
                 )
               ] }),
-              /* @__PURE__ */ jsx("a", { href: "tel:+971547033311", style: styles.cardLink, children: "📱 +971 54 703 3311" }),
-              /* @__PURE__ */ jsx("a", { href: "tel:+971502785990", style: styles.cardLink, children: "📱 +971 50 278 5990" })
+              /* @__PURE__ */ jsx("a", { href: "tel:+971547033311", style: styles$1.cardLink, children: "📱 +971 54 703 3311" }),
+              /* @__PURE__ */ jsx("a", { href: "tel:+971502785990", style: styles$1.cardLink, children: "📱 +971 50 278 5990" })
             ] }),
-            /* @__PURE__ */ jsx("p", { style: styles.cardSub, children: "Call us 24/7 for immediate medical aid" })
+            /* @__PURE__ */ jsx("p", { style: styles$1.cardSub, children: "Call us 24/7 for immediate medical aid" })
           ] })
         ] }),
-        /* @__PURE__ */ jsxs("div", { style: styles.contactCard, children: [
-          /* @__PURE__ */ jsx("div", { style: { ...styles.iconWrap, color: "#5eb63b" }, children: /* @__PURE__ */ jsx(LocationIcon, {}) }),
+        /* @__PURE__ */ jsxs("div", { style: styles$1.contactCard, children: [
+          /* @__PURE__ */ jsx("div", { style: { ...styles$1.iconWrap, color: "#5eb63b" }, children: /* @__PURE__ */ jsx(LocationIcon, {}) }),
           /* @__PURE__ */ jsxs("div", { children: [
-            /* @__PURE__ */ jsx("p", { style: styles.cardLabel, children: "Address" }),
-            /* @__PURE__ */ jsx("p", { style: styles.cardText, children: "Office 303, Royal Class Building" }),
-            /* @__PURE__ */ jsx("p", { style: styles.cardSub, children: "DIP, Dubai, United Arab Emirates" })
+            /* @__PURE__ */ jsx("p", { style: styles$1.cardLabel, children: "Address" }),
+            /* @__PURE__ */ jsx("p", { style: styles$1.cardText, children: "Office 303, Royal Class Building" }),
+            /* @__PURE__ */ jsx("p", { style: styles$1.cardSub, children: "DIP, Dubai, United Arab Emirates" })
           ] })
         ] }),
-        /* @__PURE__ */ jsxs("div", { style: styles.contactCard, children: [
-          /* @__PURE__ */ jsx("div", { style: styles.iconWrap, children: /* @__PURE__ */ jsx(EmailIcon, {}) }),
+        /* @__PURE__ */ jsxs("div", { style: styles$1.contactCard, children: [
+          /* @__PURE__ */ jsx("div", { style: styles$1.iconWrap, children: /* @__PURE__ */ jsx(EmailIcon, {}) }),
           /* @__PURE__ */ jsxs("div", { children: [
-            /* @__PURE__ */ jsx("p", { style: styles.cardLabel, children: "Email & Website" }),
-            /* @__PURE__ */ jsx("a", { href: "mailto:info@corx.ae", style: styles.cardLink, children: "info@corx.ae" }),
-            /* @__PURE__ */ jsx("a", { href: "https://www.corx.ae", target: "_blank", rel: "noopener noreferrer", style: { ...styles.cardLink, display: "block" }, children: "www.corx.ae" }),
-            /* @__PURE__ */ jsx("p", { style: styles.cardSub, children: "Online support & information" })
+            /* @__PURE__ */ jsx("p", { style: styles$1.cardLabel, children: "Email & Website" }),
+            /* @__PURE__ */ jsx("a", { href: "mailto:info@corx.ae", style: styles$1.cardLink, children: "info@corx.ae" }),
+            /* @__PURE__ */ jsx("a", { href: "https://www.corx.ae", target: "_blank", rel: "noopener noreferrer", style: { ...styles$1.cardLink, display: "block" }, children: "www.corx.ae" }),
+            /* @__PURE__ */ jsx("p", { style: styles$1.cardSub, children: "Online support & information" })
           ] })
         ] }),
-        /* @__PURE__ */ jsxs("div", { style: styles.contactCard, children: [
-          /* @__PURE__ */ jsx("div", { style: styles.iconWrap, children: /* @__PURE__ */ jsx(ClockIcon, {}) }),
+        /* @__PURE__ */ jsxs("div", { style: styles$1.contactCard, children: [
+          /* @__PURE__ */ jsx("div", { style: styles$1.iconWrap, children: /* @__PURE__ */ jsx(ClockIcon, {}) }),
           /* @__PURE__ */ jsxs("div", { children: [
-            /* @__PURE__ */ jsx("p", { style: styles.cardLabel, children: "Working Hours" }),
-            /* @__PURE__ */ jsx("p", { style: styles.cardText, children: "Mon-Sat: 8:00 - 17:00" }),
-            /* @__PURE__ */ jsx("p", { style: { ...styles.cardSub, color: "#dc2626", fontWeight: "700" }, children: "Sunday: Emergency Only" })
+            /* @__PURE__ */ jsx("p", { style: styles$1.cardLabel, children: "Working Hours" }),
+            /* @__PURE__ */ jsx("p", { style: styles$1.cardText, children: "Mon-Sat: 8:00 - 17:00" }),
+            /* @__PURE__ */ jsx("p", { style: { ...styles$1.cardSub, color: "#dc2626", fontWeight: "700" }, children: "Sunday: Emergency Only" })
           ] })
         ] }),
-        /* @__PURE__ */ jsxs("div", { style: styles.socialSection, children: [
-          /* @__PURE__ */ jsx("p", { style: styles.socialLabel, children: "Connect with Us" }),
-          /* @__PURE__ */ jsx("div", { style: styles.socialIcons, children: [
+        /* @__PURE__ */ jsxs("div", { style: styles$1.socialSection, children: [
+          /* @__PURE__ */ jsx("p", { style: styles$1.socialLabel, children: "Connect with Us" }),
+          /* @__PURE__ */ jsx("div", { style: styles$1.socialIcons, children: [
             { Icon: FacebookIcon, url: "https://www.facebook.com/corxhealthcare", label: "Facebook" },
             { Icon: LinkedInIcon, url: "https://www.linkedin.com/company/corx-healthcare/", label: "LinkedIn" },
             { Icon: InstagramIcon, url: "https://www.instagram.com/corx_healthcare", label: "Instagram" }
@@ -5251,7 +5278,7 @@ function Contact() {
               href: url,
               target: "_blank",
               rel: "noopener noreferrer",
-              style: styles.socialBtn,
+              style: styles$1.socialBtn,
               whileHover: { y: -4, scale: 1.12, borderColor: "#08709d", color: "#08709d" },
               whileTap: { scale: 0.95 },
               "aria-label": label,
@@ -5261,8 +5288,8 @@ function Contact() {
           )) })
         ] })
       ] }),
-      /* @__PURE__ */ jsxs("div", { style: styles.formCard, children: [
-        /* @__PURE__ */ jsx("h2", { style: styles.formTitle, children: "Send Us a Message" }),
+      /* @__PURE__ */ jsxs("div", { style: styles$1.formCard, children: [
+        /* @__PURE__ */ jsx("h2", { style: styles$1.formTitle, children: "Send Us a Message" }),
         statusMessage && /* @__PURE__ */ jsx(
           motion.div,
           {
@@ -5283,13 +5310,13 @@ function Contact() {
             children: statusMessage.text
           }
         ),
-        /* @__PURE__ */ jsxs("div", { style: styles.formRow, children: [
-          /* @__PURE__ */ jsxs("div", { style: styles.formGroup, children: [
-            /* @__PURE__ */ jsx("label", { style: styles.label, children: "Full Name *" }),
+        /* @__PURE__ */ jsxs("div", { style: styles$1.formRow, children: [
+          /* @__PURE__ */ jsxs("div", { style: styles$1.formGroup, children: [
+            /* @__PURE__ */ jsx("label", { style: styles$1.label, children: "Full Name *" }),
             /* @__PURE__ */ jsx(
               "input",
               {
-                style: styles.input,
+                style: styles$1.input,
                 name: "fullName",
                 placeholder: "John Doe",
                 value: formData.fullName,
@@ -5299,12 +5326,12 @@ function Contact() {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxs("div", { style: styles.formGroup, children: [
-            /* @__PURE__ */ jsx("label", { style: styles.label, children: "Email Address *" }),
+          /* @__PURE__ */ jsxs("div", { style: styles$1.formGroup, children: [
+            /* @__PURE__ */ jsx("label", { style: styles$1.label, children: "Email Address *" }),
             /* @__PURE__ */ jsx(
               "input",
               {
-                style: styles.input,
+                style: styles$1.input,
                 name: "email",
                 type: "email",
                 placeholder: "john@example.com",
@@ -5316,13 +5343,13 @@ function Contact() {
             )
           ] })
         ] }),
-        /* @__PURE__ */ jsxs("div", { style: styles.formRow, children: [
-          /* @__PURE__ */ jsxs("div", { style: styles.formGroup, children: [
-            /* @__PURE__ */ jsx("label", { style: styles.label, children: "City" }),
+        /* @__PURE__ */ jsxs("div", { style: styles$1.formRow, children: [
+          /* @__PURE__ */ jsxs("div", { style: styles$1.formGroup, children: [
+            /* @__PURE__ */ jsx("label", { style: styles$1.label, children: "City" }),
             /* @__PURE__ */ jsx(
               "input",
               {
-                style: styles.input,
+                style: styles$1.input,
                 name: "city",
                 placeholder: "Dubai",
                 value: formData.city,
@@ -5331,12 +5358,12 @@ function Contact() {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxs("div", { style: styles.formGroup, children: [
-            /* @__PURE__ */ jsx("label", { style: styles.label, children: "Phone Number" }),
+          /* @__PURE__ */ jsxs("div", { style: styles$1.formGroup, children: [
+            /* @__PURE__ */ jsx("label", { style: styles$1.label, children: "Phone Number" }),
             /* @__PURE__ */ jsx(
               "input",
               {
-                style: styles.input,
+                style: styles$1.input,
                 name: "phone",
                 placeholder: "+971 55 000 0000",
                 value: formData.phone,
@@ -5346,12 +5373,12 @@ function Contact() {
             )
           ] })
         ] }),
-        /* @__PURE__ */ jsxs("div", { style: styles.formGroupFull, children: [
-          /* @__PURE__ */ jsx("label", { style: styles.label, children: "Service Type" }),
+        /* @__PURE__ */ jsxs("div", { style: styles$1.formGroupFull, children: [
+          /* @__PURE__ */ jsx("label", { style: styles$1.label, children: "Service Type" }),
           /* @__PURE__ */ jsxs(
             "select",
             {
-              style: styles.input,
+              style: styles$1.input,
               name: "serviceType",
               value: formData.serviceType,
               onChange: handleChange,
@@ -5363,12 +5390,12 @@ function Contact() {
             }
           )
         ] }),
-        /* @__PURE__ */ jsxs("div", { style: styles.formGroupFull, children: [
-          /* @__PURE__ */ jsx("label", { style: styles.label, children: "Message *" }),
+        /* @__PURE__ */ jsxs("div", { style: styles$1.formGroupFull, children: [
+          /* @__PURE__ */ jsx("label", { style: styles$1.label, children: "Message *" }),
           /* @__PURE__ */ jsx(
             "textarea",
             {
-              style: { ...styles.input, height: "110px", resize: "vertical" },
+              style: { ...styles$1.input, height: "110px", resize: "vertical" },
               name: "message",
               placeholder: "How can we help you?",
               value: formData.message,
@@ -5382,7 +5409,7 @@ function Contact() {
           motion.button,
           {
             style: {
-              ...styles.submitBtn,
+              ...styles$1.submitBtn,
               opacity: submitting ? 0.7 : 1,
               cursor: submitting ? "not-allowed" : "pointer"
             },
@@ -5398,11 +5425,11 @@ function Contact() {
         )
       ] })
     ] }),
-    /* @__PURE__ */ jsxs("div", { style: styles.faqSection, children: [
-      /* @__PURE__ */ jsx("div", { style: styles.faqEyebrow, children: "⊙ Common Questions" }),
-      /* @__PURE__ */ jsx("h2", { style: styles.faqTitle, children: "Frequently Asked Questions" }),
-      /* @__PURE__ */ jsx("p", { style: styles.faqSub, children: "Find answers to the most common questions about booking your appointments and home healthcare visits in Dubai." }),
-      /* @__PURE__ */ jsx("div", { style: styles.faqList, children: faqData.map((item, index) => {
+    /* @__PURE__ */ jsxs("div", { style: styles$1.faqSection, children: [
+      /* @__PURE__ */ jsx("div", { style: styles$1.faqEyebrow, children: "⊙ Common Questions" }),
+      /* @__PURE__ */ jsx("h2", { style: styles$1.faqTitle, children: "Frequently Asked Questions" }),
+      /* @__PURE__ */ jsx("p", { style: styles$1.faqSub, children: "Find answers to the most common questions about booking your appointments and home healthcare visits in Dubai." }),
+      /* @__PURE__ */ jsx("div", { style: styles$1.faqList, children: faqData.map((item, index) => {
         const isOpen = activeIndex === index;
         return /* @__PURE__ */ jsxs(
           motion.div,
@@ -5486,7 +5513,7 @@ function Contact() {
     ] })
   ] });
 }
-const styles = {
+const styles$1 = {
   page: {
     minHeight: "100vh",
     background: "#f8fafc",
@@ -7337,14 +7364,7 @@ function EditableText$1({
   multiline = false
 }) {
   const storageKey = `corx_editable_${slug}_${fieldKey}`;
-  const [text, setText] = useState(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
-      return saved !== null ? saved : defaultText;
-    } catch (e) {
-      return defaultText;
-    }
-  });
+  const [text, setText] = useState(defaultText);
   useEffect(() => {
     try {
       const saved = localStorage.getItem(storageKey);
@@ -8283,6 +8303,13 @@ servicesData["physiotherapy-at-home-in-dubai"] = servicesData["physiotherapy"];
 servicesData["nurse-at-home-for-injection"] = servicesData["injection-at-home"];
 servicesData["wound-care-service"] = servicesData["wound-care"];
 servicesData["oxygen-theraphy"] = servicesData["oxygen-therapy"];
+const SSRDataContext = createContext(null);
+function SSRDataProvider({ initialData, children }) {
+  return /* @__PURE__ */ jsx(SSRDataContext.Provider, { value: initialData || null, children });
+}
+function useSSRData() {
+  return useContext(SSRDataContext);
+}
 const NotFound = () => {
   useEffect(() => {
     document.title = "Page Not Found | CORx Healthcare Dubai";
@@ -8352,14 +8379,7 @@ function EditableText({
   multiline = false
 }) {
   const storageKey = `corx_editable_${slug}_${fieldKey}`;
-  const [text, setText] = useState(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
-      return saved !== null ? saved : defaultText;
-    } catch (e) {
-      return defaultText;
-    }
-  });
+  const [text, setText] = useState(defaultText);
   useEffect(() => {
     try {
       const saved = localStorage.getItem(storageKey);
@@ -8607,10 +8627,16 @@ function HeroBackgroundAnimation() {
   ] });
 }
 function LabServicesLanding({ slug = "lab-services" }) {
+  const rawParts = (slug || "").toLowerCase().split("/").filter(Boolean);
+  const validParts = rawParts.filter((p) => p !== "services");
+  const targetSlug = validParts.length > 0 ? validParts[validParts.length - 1] : "lab-test-at-home";
+  const cleanSlug = targetSlug;
+  const ssrData = useSSRData();
+  const initialForThisSlug = ssrData && ssrData.slug === cleanSlug && ssrData.serviceData ? ssrData.serviceData : null;
   const [visible, setVisible] = useState(false);
   const [condVisible, setCondVisible] = useState(false);
-  const [serviceData, setServiceData] = useState(null);
-  const [apiChecked, setApiChecked] = useState(false);
+  const [serviceData, setServiceData] = useState(() => initialForThisSlug);
+  const [apiChecked, setApiChecked] = useState(() => Boolean(initialForThisSlug));
   const [isEditMode, setIsEditMode] = useState(false);
   const defaultLabColumns = [
     {
@@ -8686,10 +8712,6 @@ function LabServicesLanding({ slug = "lab-services" }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
-  const rawParts = (slug || "").toLowerCase().split("/").filter(Boolean);
-  const validParts = rawParts.filter((p) => p !== "services");
-  const targetSlug = validParts.length > 0 ? validParts[validParts.length - 1] : "lab-test-at-home";
-  const cleanSlug = targetSlug;
   const altSlug = cleanSlug.replace(/docotor/g, "doctor");
   const altSlug2 = cleanSlug.replace(/doctor/g, "docotor");
   const staticFallback = servicesData[cleanSlug] || servicesData[altSlug] || servicesData[altSlug2] || servicesData[cleanSlug.replace(/-/g, "")] || (cleanSlug.includes("nurs") ? servicesData["nursing"] : null) || (cleanSlug.includes("iv") ? servicesData["iv-therapy"] : null) || (cleanSlug.includes("doctor") ? servicesData["doctor-on-call"] : null) || (cleanSlug.includes("elder") ? servicesData["elderly-care"] : null) || (cleanSlug.includes("lab") ? servicesData["lab-services"] : null) || {};
@@ -9803,6 +9825,12 @@ function ServicePage({ serviceId }) {
 }
 function Dashboard() {
   var _a;
+  const {
+    staffUsers = [],
+    salaryApplications = [],
+    createSalaryApplication,
+    deleteSalaryApplication
+  } = (useAuth == null ? void 0 : useAuth()) || {};
   const [activeTab, setActiveTab] = useState("overview");
   const [servicesData2, setServicesData] = useState([]);
   const [parentServices, setParentServices] = useState([]);
@@ -9956,6 +9984,76 @@ function Dashboard() {
       loadBlogs();
     } catch (err) {
       showToast("error", "Delete Failed", err.message);
+    }
+  };
+  const [salaryStep, setSalaryStep] = useState(1);
+  const [selectedSalaryStaffId, setSelectedSalaryStaffId] = useState("");
+  const [salaryDescription, setSalaryDescription] = useState("");
+  const [salaryImageFile, setSalaryImageFile] = useState(null);
+  const [salaryImagePreview, setSalaryImagePreview] = useState("");
+  const [salarySubmitting, setSalarySubmitting] = useState(false);
+  const [salaryStaffSearch, setSalaryStaffSearch] = useState("");
+  const [salaryHistorySearch, setSalaryHistorySearch] = useState("");
+  const [salarySlipDeleteConfirm, setSalarySlipDeleteConfirm] = useState(null);
+  const [viewingSlipImage, setViewingSlipImage] = useState(null);
+  const handleSalaryImageChange = (e) => {
+    var _a2;
+    const file = (_a2 = e.target.files) == null ? void 0 : _a2[0];
+    if (file) {
+      setSalaryImageFile(file);
+      setSalaryImagePreview(URL.createObjectURL(file));
+    }
+  };
+  const clearSalaryImage = () => {
+    setSalaryImageFile(null);
+    setSalaryImagePreview("");
+  };
+  const resetSalaryForm = () => {
+    setSalaryStep(1);
+    setSelectedSalaryStaffId("");
+    setSalaryDescription("");
+    clearSalaryImage();
+  };
+  const handleSendSalarySlip = async (e) => {
+    e == null ? void 0 : e.preventDefault();
+    if (!selectedSalaryStaffId) {
+      showToast("error", "Staff Required", "Please choose a staff member to send the salary slip to.");
+      return;
+    }
+    setSalarySubmitting(true);
+    try {
+      const formData = new FormData();
+      formData.append("staffId", selectedSalaryStaffId);
+      formData.append("description", salaryDescription);
+      formData.append("status", "Issued");
+      if (salaryImageFile) {
+        formData.append("image", salaryImageFile);
+      }
+      const res = await (createSalaryApplication == null ? void 0 : createSalaryApplication(formData));
+      if (res) {
+        showToast("success", "Salary Slip Sent!", `Monthly salary slip successfully sent to ${res.staffName || "staff member"}.`);
+        resetSalaryForm();
+      } else {
+        showToast("error", "Failed to Send", "Could not send salary slip. Please check your connection.");
+      }
+    } catch (err) {
+      console.error("Error sending salary slip:", err);
+      showToast("error", "Error", "An error occurred while sending the salary slip.");
+    } finally {
+      setSalarySubmitting(false);
+    }
+  };
+  const handleDeleteSalarySlip = async (id) => {
+    try {
+      const ok = await (deleteSalaryApplication == null ? void 0 : deleteSalaryApplication(id));
+      if (ok) {
+        showToast("success", "Slip Deleted", "Salary slip record removed.");
+      } else {
+        showToast("error", "Delete Failed", "Could not delete salary slip.");
+      }
+      setSalarySlipDeleteConfirm(null);
+    } catch (err) {
+      showToast("error", "Error", "Error deleting salary slip.");
     }
   };
   useEffect(() => {
@@ -10383,7 +10481,7 @@ function Dashboard() {
               }
             ),
             /* @__PURE__ */ jsxs("div", { className: "pt-3 mt-1 border-t border-slate-800/80", children: [
-              /* @__PURE__ */ jsx("p", { className: "text-[9px] font-mono font-bold uppercase tracking-widest text-slate-600 px-2 mb-2", children: "Content" }),
+              /* @__PURE__ */ jsx("p", { className: "text-[9px] font-mono font-bold uppercase tracking-widest text-slate-600 px-2 mb-2", children: "Content & HR" }),
               /* @__PURE__ */ jsxs(
                 "button",
                 {
@@ -10395,6 +10493,20 @@ function Dashboard() {
                       /* @__PURE__ */ jsx("span", { children: "Blog Manager" })
                     ] }),
                     /* @__PURE__ */ jsx("span", { className: "px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-mono font-bold", children: blogsData.length })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  onClick: () => setActiveTab("salary"),
+                  className: `w-full flex items-center justify-between px-4 py-3.5 mt-1.5 rounded-2xl font-bold text-xs transition-all duration-200 cursor-pointer ${activeTab === "salary" ? "bg-gradient-to-r from-emerald-500/20 to-teal-500/10 text-emerald-300 border border-emerald-500/40 shadow-lg shadow-emerald-500/10" : "text-slate-400 hover:text-white hover:bg-slate-800/50"}`,
+                  children: [
+                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+                      /* @__PURE__ */ jsx(Receipt, { size: 18, className: activeTab === "salary" ? "text-emerald-400" : "" }),
+                      /* @__PURE__ */ jsx("span", { children: "Monthly Salary Slips" })
+                    ] }),
+                    /* @__PURE__ */ jsx("span", { className: "px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold", children: salaryApplications.length })
                   ]
                 }
               )
@@ -11557,9 +11669,389 @@ function Dashboard() {
               ] })
             ] }) })
           ] })
+        ] }),
+        activeTab === "salary" && /* @__PURE__ */ jsxs("div", { className: "space-y-6", children: [
+          /* @__PURE__ */ jsx("div", { className: "p-6 rounded-3xl bg-gradient-to-r from-emerald-900/30 via-teal-900/20 to-slate-900/40 border border-emerald-500/30 relative overflow-hidden backdrop-blur-xl", children: /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4", children: [
+            /* @__PURE__ */ jsxs("div", { children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 mb-2", children: [
+                /* @__PURE__ */ jsxs("span", { className: "px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold tracking-wider uppercase border border-emerald-500/30 flex items-center gap-1.5", children: [
+                  /* @__PURE__ */ jsx(Receipt, { size: 12 }),
+                  " HR & Payroll"
+                ] }),
+                /* @__PURE__ */ jsx("span", { className: "text-slate-500 text-xs", children: "•" }),
+                /* @__PURE__ */ jsx("span", { className: "text-slate-400 text-xs font-mono", children: "3-Step Dispatch" })
+              ] }),
+              /* @__PURE__ */ jsx("h2", { className: "text-2xl font-black text-white font-montserrat tracking-tight", children: "Monthly Salary Slip Application" }),
+              /* @__PURE__ */ jsx("p", { className: "text-slate-400 text-xs mt-1 max-w-xl", children: "Choose a staff member, enter the description / period details, attach the salary slip image, and send it directly to the staff portal." })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+              /* @__PURE__ */ jsxs("div", { className: "px-4 py-3 rounded-2xl bg-slate-900/80 border border-slate-800 text-right", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-[10px] font-mono text-slate-500 uppercase", children: "Total Issued" }),
+                /* @__PURE__ */ jsx("div", { className: "text-xl font-mono font-black text-emerald-400", children: salaryApplications.length })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "px-4 py-3 rounded-2xl bg-slate-900/80 border border-slate-800 text-right", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-[10px] font-mono text-slate-500 uppercase", children: "Total Staff" }),
+                /* @__PURE__ */ jsx("div", { className: "text-xl font-mono font-black text-cyan-400", children: staffUsers.length })
+              ] })
+            ] })
+          ] }) }),
+          /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-6", children: [
+            /* @__PURE__ */ jsx("div", { className: "lg:col-span-5", children: /* @__PURE__ */ jsxs("div", { className: "p-6 rounded-3xl bg-[#0c1527] border border-[#1b2742] shadow-2xl relative", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between pb-4 mb-4 border-b border-slate-800/80", children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5", children: [
+                  /* @__PURE__ */ jsx("div", { className: "w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30", children: /* @__PURE__ */ jsx(Send, { size: 15 }) }),
+                  /* @__PURE__ */ jsxs("div", { children: [
+                    /* @__PURE__ */ jsx("h3", { className: "text-sm font-extrabold text-white font-montserrat", children: "Send Salary Slip" }),
+                    /* @__PURE__ */ jsx("p", { className: "text-[10px] text-slate-500 font-mono", children: "3-Step Dispatch Wizard" })
+                  ] })
+                ] }),
+                selectedSalaryStaffId && /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: resetSalaryForm,
+                    className: "text-[11px] text-slate-400 hover:text-red-400 font-bold transition-colors cursor-pointer",
+                    children: "Reset"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs("form", { onSubmit: handleSendSalarySlip, className: "space-y-5", children: [
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-2", children: [
+                    /* @__PURE__ */ jsxs("label", { className: "text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5", children: [
+                      /* @__PURE__ */ jsx("span", { children: "1." }),
+                      " Choose Staff Member ",
+                      /* @__PURE__ */ jsx("span", { className: "text-red-400", children: "*" })
+                    ] }),
+                    /* @__PURE__ */ jsx("span", { className: "text-[10px] text-slate-500 font-mono", children: selectedSalaryStaffId ? "✓ Staff selected" : "Required" })
+                  ] }),
+                  (() => {
+                    const selObj = staffUsers.find((s) => s.staffId === selectedSalaryStaffId);
+                    if (!selObj) return null;
+                    const initials = (selObj.fullName || "??").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+                    return /* @__PURE__ */ jsxs("div", { className: "mb-3 p-3 rounded-2xl bg-emerald-500/15 border-2 border-emerald-500 flex items-center justify-between gap-3 shadow-md shadow-emerald-500/10", children: [
+                      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 min-w-0", children: [
+                        /* @__PURE__ */ jsx("div", { className: "w-10 h-10 rounded-xl bg-emerald-500 text-white font-extrabold text-sm flex items-center justify-center shrink-0", children: initials }),
+                        /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+                          /* @__PURE__ */ jsx("div", { className: "text-xs font-black text-white truncate", children: selObj.fullName }),
+                          /* @__PURE__ */ jsxs("div", { className: "text-[11px] text-emerald-300 font-mono truncate", children: [
+                            "ID: ",
+                            /* @__PURE__ */ jsx("span", { className: "font-bold", children: selObj.staffId }),
+                            " • ",
+                            selObj.position || selObj.department || "Staff"
+                          ] })
+                        ] })
+                      ] }),
+                      /* @__PURE__ */ jsx("span", { className: "px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider shrink-0", children: "Selected" })
+                    ] });
+                  })(),
+                  /* @__PURE__ */ jsxs("div", { className: "relative mb-2.5", children: [
+                    /* @__PURE__ */ jsx(Search, { size: 13, className: "absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" }),
+                    /* @__PURE__ */ jsx(
+                      "input",
+                      {
+                        type: "text",
+                        value: salaryStaffSearch,
+                        onChange: (e) => setSalaryStaffSearch(e.target.value),
+                        placeholder: "Search staff name, ID, department...",
+                        className: "w-full pl-9 pr-3 py-2 rounded-xl bg-[#060c19] border border-[#1b2742] text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500/50"
+                      }
+                    )
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "max-h-52 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar", children: [
+                    staffUsers.filter((s) => {
+                      const q = salaryStaffSearch.toLowerCase().trim();
+                      return !q || (s.fullName || "").toLowerCase().includes(q) || (s.staffId || "").toLowerCase().includes(q) || (s.department || "").toLowerCase().includes(q) || (s.position || "").toLowerCase().includes(q);
+                    }).map((s) => {
+                      const isSelected = selectedSalaryStaffId === s.staffId;
+                      const initials = (s.fullName || "??").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+                      return /* @__PURE__ */ jsxs(
+                        "div",
+                        {
+                          onClick: () => setSelectedSalaryStaffId(s.staffId),
+                          className: `flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all duration-150 border ${isSelected ? "bg-emerald-500/20 border-emerald-500 shadow-md shadow-emerald-500/10 text-white" : "bg-[#060c19]/60 border-[#1b2742] hover:border-slate-700 text-slate-300"}`,
+                          children: [
+                            /* @__PURE__ */ jsx("div", { className: `w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-xs shrink-0 ${isSelected ? "bg-emerald-500 text-white" : "bg-slate-800 text-emerald-400"}`, children: initials }),
+                            /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                              /* @__PURE__ */ jsx("div", { className: "text-xs font-bold truncate", children: s.fullName }),
+                              /* @__PURE__ */ jsxs("div", { className: "text-[10px] text-slate-400 font-mono truncate flex items-center gap-1.5", children: [
+                                /* @__PURE__ */ jsx("span", { className: "text-cyan-400 font-bold", children: s.staffId }),
+                                s.department && /* @__PURE__ */ jsxs("span", { children: [
+                                  "• ",
+                                  s.department
+                                ] }),
+                                s.position && /* @__PURE__ */ jsxs("span", { className: "text-slate-500", children: [
+                                  "(",
+                                  s.position,
+                                  ")"
+                                ] })
+                              ] })
+                            ] }),
+                            isSelected ? /* @__PURE__ */ jsx("div", { className: "w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0", children: /* @__PURE__ */ jsx(Check, { size: 12, strokeWidth: 3 }) }) : /* @__PURE__ */ jsx("div", { className: "w-4 h-4 rounded-full border border-slate-700 shrink-0" })
+                          ]
+                        },
+                        s.id || s.staffId
+                      );
+                    }),
+                    staffUsers.length === 0 && /* @__PURE__ */ jsx("div", { className: "p-4 text-center text-slate-500 text-xs font-mono", children: "No staff members found in the directory." })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsxs("label", { className: "block text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-400 mb-1.5 flex items-center gap-1.5", children: [
+                    /* @__PURE__ */ jsx("span", { children: "2." }),
+                    " Description / Notes"
+                  ] }),
+                  /* @__PURE__ */ jsx(
+                    "textarea",
+                    {
+                      rows: 3,
+                      value: salaryDescription,
+                      onChange: (e) => setSalaryDescription(e.target.value),
+                      placeholder: "e.g. Monthly Salary Slip for August 2026 - Transferred to your registered bank account via WPS.",
+                      className: "w-full px-3.5 py-2.5 rounded-xl bg-[#060c19] border border-[#1b2742] text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500/50 resize-none font-medium"
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsxs("label", { className: "block text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-400 mb-1.5 flex items-center gap-1.5", children: [
+                    /* @__PURE__ */ jsx("span", { children: "3." }),
+                    " Salary Slip Image / Document"
+                  ] }),
+                  !salaryImagePreview ? /* @__PURE__ */ jsxs("label", { className: "flex flex-col items-center justify-center p-5 rounded-2xl border-2 border-dashed border-[#1b2742] hover:border-emerald-500/50 bg-[#060c19]/50 cursor-pointer transition-colors group", children: [
+                    /* @__PURE__ */ jsx(UploadCloud, { size: 24, className: "text-slate-500 group-hover:text-emerald-400 mb-1.5 transition-colors" }),
+                    /* @__PURE__ */ jsx("span", { className: "text-xs font-bold text-slate-300 group-hover:text-white", children: "Click to attach slip image" }),
+                    /* @__PURE__ */ jsx("span", { className: "text-[10px] text-slate-500 font-mono mt-0.5", children: "PNG, JPG, WEBP, or PDF" }),
+                    /* @__PURE__ */ jsx(
+                      "input",
+                      {
+                        type: "file",
+                        accept: "image/*,.pdf",
+                        onChange: handleSalaryImageChange,
+                        className: "hidden"
+                      }
+                    )
+                  ] }) : /* @__PURE__ */ jsxs("div", { className: "relative rounded-2xl overflow-hidden border border-emerald-500/40 bg-[#060c19] p-3 flex items-center gap-3", children: [
+                    /* @__PURE__ */ jsx(
+                      "img",
+                      {
+                        src: salaryImagePreview,
+                        alt: "Salary Slip Preview",
+                        className: "w-16 h-16 rounded-xl object-cover border border-slate-700 shrink-0"
+                      }
+                    ),
+                    /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                      /* @__PURE__ */ jsx("p", { className: "text-xs font-bold text-white truncate", children: (salaryImageFile == null ? void 0 : salaryImageFile.name) || "Attached Slip" }),
+                      /* @__PURE__ */ jsx("p", { className: "text-[10px] text-emerald-400 font-mono", children: "Ready to dispatch" })
+                    ] }),
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: clearSalaryImage,
+                        className: "p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors cursor-pointer",
+                        title: "Remove image",
+                        children: /* @__PURE__ */ jsx(X, { size: 14 })
+                      }
+                    )
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "submit",
+                    disabled: salarySubmitting || !selectedSalaryStaffId,
+                    className: `w-full py-3.5 px-6 rounded-2xl font-black text-xs uppercase tracking-wider font-montserrat flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg ${salarySubmitting || !selectedSalaryStaffId ? "bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed" : "bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-[1.01] active:scale-[0.99]"}`,
+                    children: salarySubmitting ? /* @__PURE__ */ jsxs(Fragment, { children: [
+                      /* @__PURE__ */ jsx(RefreshCw, { size: 15, className: "animate-spin" }),
+                      /* @__PURE__ */ jsx("span", { children: "Sending Slip..." })
+                    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+                      /* @__PURE__ */ jsx(Send, { size: 15 }),
+                      /* @__PURE__ */ jsx("span", { children: "Send Monthly Salary Slip to Staff" })
+                    ] })
+                  }
+                )
+              ] })
+            ] }) }),
+            /* @__PURE__ */ jsx("div", { className: "lg:col-span-7", children: /* @__PURE__ */ jsxs("div", { className: "p-6 rounded-3xl bg-[#0c1527] border border-[#1b2742] shadow-2xl h-full flex flex-col", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-800/80", children: [
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsx("h3", { className: "text-sm font-extrabold text-white font-montserrat", children: "Issued Salary Slips Directory" }),
+                  /* @__PURE__ */ jsx("p", { className: "text-[10px] text-slate-500 font-mono", children: "All monthly slips sent to staff members" })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "relative min-w-[200px]", children: [
+                  /* @__PURE__ */ jsx(Search, { size: 13, className: "absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" }),
+                  /* @__PURE__ */ jsx(
+                    "input",
+                    {
+                      type: "text",
+                      value: salaryHistorySearch,
+                      onChange: (e) => setSalaryHistorySearch(e.target.value),
+                      placeholder: "Filter slips...",
+                      className: "w-full pl-8 pr-3 py-1.5 rounded-xl bg-[#060c19] border border-[#1b2742] text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500/50"
+                    }
+                  )
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto space-y-3 pr-1 max-h-[580px] custom-scrollbar", children: [
+                salaryApplications.filter((slip) => {
+                  const q = salaryHistorySearch.toLowerCase().trim();
+                  return !q || (slip.staffName || "").toLowerCase().includes(q) || (slip.staffId || "").toLowerCase().includes(q) || (slip.description || "").toLowerCase().includes(q) || (slip.staffDep || "").toLowerCase().includes(q);
+                }).map((slip) => {
+                  const initials = (slip.staffName || "??").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+                  const imgUrl = slip.image ? slip.image.startsWith("http") ? slip.image : `${API_BASE_URL}${slip.image.startsWith("/") ? "" : "/"}${slip.image}` : null;
+                  return /* @__PURE__ */ jsxs(
+                    "div",
+                    {
+                      className: "p-4 rounded-2xl bg-[#060c19]/80 border border-[#1b2742] hover:border-slate-700 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4",
+                      children: [
+                        /* @__PURE__ */ jsxs("div", { className: "flex items-start gap-3 flex-1 min-w-0", children: [
+                          /* @__PURE__ */ jsx("div", { className: "w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-extrabold text-xs shrink-0 mt-0.5", children: initials }),
+                          /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0 space-y-1", children: [
+                            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [
+                              /* @__PURE__ */ jsx("span", { className: "text-xs font-black text-white", children: slip.staffName }),
+                              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-mono text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-md", children: slip.staffId }),
+                              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-mono text-slate-500", children: slip.staffDep })
+                            ] }),
+                            /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-300 font-medium leading-relaxed break-words", children: slip.description || /* @__PURE__ */ jsx("span", { className: "text-slate-600 italic", children: "No description provided" }) }),
+                            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-[10px] text-slate-500 font-mono", children: [
+                              /* @__PURE__ */ jsx(Clock, { size: 11 }),
+                              /* @__PURE__ */ jsxs("span", { children: [
+                                "Issued: ",
+                                new Date(slip.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+                              ] })
+                            ] })
+                          ] })
+                        ] }),
+                        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 shrink-0 self-end sm:self-center", children: [
+                          imgUrl && /* @__PURE__ */ jsxs(
+                            "button",
+                            {
+                              type: "button",
+                              onClick: () => setViewingSlipImage(imgUrl),
+                              className: "flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 text-xs font-bold transition-all cursor-pointer",
+                              children: [
+                                /* @__PURE__ */ jsx("img", { src: imgUrl, alt: "thumbnail", className: "w-5 h-5 rounded object-cover" }),
+                                /* @__PURE__ */ jsx("span", { children: "View Slip" })
+                              ]
+                            }
+                          ),
+                          /* @__PURE__ */ jsx(
+                            "button",
+                            {
+                              type: "button",
+                              onClick: () => setSalarySlipDeleteConfirm(slip.id),
+                              className: "p-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 transition-all cursor-pointer",
+                              title: "Delete Salary Slip",
+                              children: /* @__PURE__ */ jsx(Trash2, { size: 15 })
+                            }
+                          )
+                        ] })
+                      ]
+                    },
+                    slip.id
+                  );
+                }),
+                salaryApplications.length === 0 && /* @__PURE__ */ jsxs("div", { className: "py-20 text-center", children: [
+                  /* @__PURE__ */ jsx(Receipt, { size: 36, className: "text-slate-700 mx-auto mb-3" }),
+                  /* @__PURE__ */ jsx("p", { className: "text-slate-400 font-bold text-xs", children: "No salary slips issued yet." }),
+                  /* @__PURE__ */ jsx("p", { className: "text-slate-600 text-[11px] font-mono mt-1", children: "Use the form on the left to send the first salary slip." })
+                ] })
+              ] })
+            ] }) })
+          ] })
         ] })
       ] })
-    ] })
+    ] }),
+    /* @__PURE__ */ jsx(AnimatePresence, { children: viewingSlipImage && /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: "fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4",
+        onClick: () => setViewingSlipImage(null),
+        children: /* @__PURE__ */ jsxs(
+          "div",
+          {
+            className: "relative max-w-3xl max-h-[90vh] bg-[#0c1527] border border-slate-700 rounded-3xl p-4 shadow-2xl overflow-hidden flex flex-col",
+            onClick: (e) => e.stopPropagation(),
+            children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between pb-3 mb-3 border-b border-slate-800", children: [
+                /* @__PURE__ */ jsx("span", { className: "text-xs font-mono font-bold text-emerald-400", children: "Salary Slip Attachment" }),
+                /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    onClick: () => setViewingSlipImage(null),
+                    className: "p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white cursor-pointer",
+                    children: /* @__PURE__ */ jsx(X, { size: 16 })
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-auto rounded-2xl flex items-center justify-center bg-black/40 p-2", children: /* @__PURE__ */ jsx(
+                "img",
+                {
+                  src: viewingSlipImage,
+                  alt: "Full Salary Slip",
+                  className: "max-h-[75vh] w-auto rounded-xl object-contain shadow-lg"
+                }
+              ) }),
+              /* @__PURE__ */ jsx("div", { className: "pt-3 mt-2 flex justify-end gap-2", children: /* @__PURE__ */ jsxs(
+                "a",
+                {
+                  href: viewingSlipImage,
+                  target: "_blank",
+                  rel: "noreferrer",
+                  download: true,
+                  className: "px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 hover:bg-emerald-500 transition-colors",
+                  children: [
+                    /* @__PURE__ */ jsx(ExternalLink, { size: 13 }),
+                    " Open in New Tab"
+                  ]
+                }
+              ) })
+            ]
+          }
+        )
+      }
+    ) }),
+    /* @__PURE__ */ jsx(AnimatePresence, { children: salarySlipDeleteConfirm && /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: "fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4",
+        onClick: () => setSalarySlipDeleteConfirm(null),
+        children: /* @__PURE__ */ jsxs(
+          "div",
+          {
+            className: "max-w-md w-full bg-[#0c1527] border border-slate-700 rounded-3xl p-6 shadow-2xl space-y-4",
+            onClick: (e) => e.stopPropagation(),
+            children: [
+              /* @__PURE__ */ jsx("div", { className: "w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center border border-red-500/30", children: /* @__PURE__ */ jsx(Trash2, { size: 22 }) }),
+              /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("h3", { className: "text-base font-extrabold text-white", children: "Delete Salary Slip?" }),
+                /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-400 mt-1", children: "This will permanently delete this issued salary slip from the staff portal." })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-end gap-3 pt-2", children: [
+                /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => setSalarySlipDeleteConfirm(null),
+                    className: "px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-bold text-xs cursor-pointer",
+                    children: "Cancel"
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => handleDeleteSalarySlip(salarySlipDeleteConfirm),
+                    className: "px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs cursor-pointer shadow-lg shadow-red-600/30",
+                    children: "Confirm Delete"
+                  }
+                )
+              ] })
+            ]
+          }
+        )
+      }
+    ) })
   ] });
 }
 const loginHero = "/assets/portal_login_hero-HQtaEiDL.png";
@@ -11874,6 +12366,314 @@ const PortalLogin = () => {
     ] })
   ] });
 };
+const ROSTER = ["Sita Rai", "Anil Gurung", "Maya Tamang", "Kiran Thapa"];
+const styles = `
+  .sdc-root {
+    --ink: #16213A;
+    --muted: #647082;
+    --paper: #E1EBF0;
+    --card: #FFFFFF;
+    --pickup: #2E7D5B;
+    --drop: #B3541E;
+    --route: #065B80;
+    --staff: #5B4B8A;
+    --line: #E3E7E6;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 0;
+    width: 100%;
+  }
+
+  @keyframes sdc-card-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.985); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes sdc-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes sdc-dash-flow {
+    to { stroke-dashoffset: -64; }
+  }
+  @keyframes sdc-pulse-pickup {
+    0%   { transform: scale(0.9); opacity: 0.55; }
+    70%  { transform: scale(2.6); opacity: 0; }
+    100% { opacity: 0; }
+  }
+  @keyframes sdc-pulse-drop {
+    0%   { transform: scale(0.9); opacity: 0.55; }
+    70%  { transform: scale(2.6); opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  .sdc-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(22,33,58,0.06), 0 12px 28px rgba(22,33,58,0.10);
+    overflow: hidden;
+    animation: sdc-card-in 0.5s ease both;
+    margin: 0 auto;
+  }
+  .sdc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+  }
+  .sdc-who { display: flex; gap: 12px; }
+  .sdc-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--route); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 14px; flex-shrink: 0;
+  }
+  .sdc-name { font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .sdc-line { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .sdc-date { font-size: 12.5px; color: var(--muted); white-space: nowrap; padding-top: 2px; text-align: right; }
+
+  .sdc-route-panel {
+    position: relative;
+    height: 460px;
+    background:
+      radial-gradient(circle, #BFD6E0 1px, transparent 1px) 0 0/16px 16px,
+      var(--paper);
+    overflow: hidden;
+  }
+  .sdc-route-panel svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sdc-route-line { animation: sdc-dash-flow 2.6s linear infinite; }
+
+  .sdc-stop {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    opacity: 0;
+    animation: sdc-fade-in 0.5s ease both;
+    z-index: 5;
+  }
+  .sdc-dot-wrap { position: relative; width: 11px; height: 11px; flex-shrink: 0; }
+  .sdc-dot {
+    position: relative;
+    width: 11px; height: 11px; border-radius: 50%;
+    border: 2.5px solid #fff;
+    box-shadow: 0 0 0 1px rgba(22,33,58,0.12);
+    z-index: 1;
+  }
+  .sdc-dot.pickup { background: var(--pickup); }
+  .sdc-dot.drop { background: var(--drop); }
+  .sdc-ping {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transform-origin: center;
+  }
+  .sdc-ping.pickup { background: var(--pickup); animation: sdc-pulse-pickup 2.2s ease-out infinite; }
+  .sdc-ping.drop { background: var(--drop); animation: sdc-pulse-drop 2.2s ease-out infinite; animation-delay: 1.1s; }
+  .sdc-kind { font-size: 13.5px; font-weight: 700; }
+  .sdc-kind.pickup { color: var(--pickup); }
+  .sdc-kind.drop { color: var(--drop); }
+  .sdc-place { font-size: 14px; font-weight: 600; color: var(--ink); }
+
+  .sdc-roster {
+    position: absolute;
+    background: var(--card);
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(22,33,58,0.06), 0 6px 16px rgba(22,33,58,0.10);
+    padding: 9px 12px;
+    width: 148px;
+    opacity: 0;
+    animation: sdc-fade-in 0.5s ease both;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 4;
+  }
+  .sdc-roster:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(22,33,58,0.08), 0 10px 22px rgba(22,33,58,0.14);
+  }
+  .sdc-roster-count { font-size: 11px; font-weight: 600; color: var(--staff); margin-bottom: 5px; }
+  .sdc-roster ul { list-style: none; margin: 0; padding: 0; }
+  .sdc-roster li { font-size: 12px; color: var(--ink); line-height: 1.55; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+
+  .sdc-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #fff;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    gap: 8px;
+  }
+`;
+function Roster({ names = [], style, delay = 0 }) {
+  const staffList = Array.isArray(names) ? names : [];
+  if (staffList.length === 0) return null;
+  return /* @__PURE__ */ jsxs("div", { className: "sdc-roster", style: { ...style, animationDelay: `${delay}s` }, children: [
+    /* @__PURE__ */ jsxs("div", { className: "sdc-roster-count", children: [
+      "Staff · ",
+      staffList.length
+    ] }),
+    /* @__PURE__ */ jsx("ul", { children: staffList.map((item, idx) => {
+      const nameStr = typeof item === "string" ? item : (item == null ? void 0 : item.full_name) || (item == null ? void 0 : item.name) || (item == null ? void 0 : item.staff_name) || "Staff";
+      return /* @__PURE__ */ jsx("li", { children: nameStr }, idx);
+    }) })
+  ] });
+}
+function Stop({ type, time, place, style, delay = 0 }) {
+  const label = type === "pickup" ? "Pickup" : "Drop";
+  return /* @__PURE__ */ jsxs("div", { className: "sdc-stop", style: { ...style, animationDelay: `${delay}s` }, children: [
+    /* @__PURE__ */ jsxs("div", { className: "sdc-dot-wrap", children: [
+      /* @__PURE__ */ jsx("div", { className: `sdc-ping ${type}` }),
+      /* @__PURE__ */ jsx("div", { className: `sdc-dot ${type}` })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { children: [
+      /* @__PURE__ */ jsxs("div", { className: `sdc-kind ${type}`, children: [
+        label,
+        " ",
+        time ? `· ${time}` : ""
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: "sdc-place", children: place || (type === "pickup" ? "Baneshwor" : "Bouddha") })
+    ] })
+  ] });
+}
+function ShuttleDispatchCard({
+  driverName = "Rajesh Shrestha",
+  vehicleNumber = "BA 2 KHA 3456",
+  phoneNumber = "+977 98XXXXXXXX",
+  date = "Sat, 5 Sep 2026",
+  pickup = { place: "Baneshwor", time: "9:15 AM" },
+  drop = { place: "Bouddha", time: "9:52 AM" },
+  pickupStaff = ROSTER,
+  dropStaff = ROSTER,
+  status = "Scheduled",
+  isDriver = false,
+  onViewDetails
+}) {
+  const initials = driverName ? driverName.split(" ").filter(Boolean).map((part) => part[0]).join("").slice(0, 2).toUpperCase() : "RS";
+  const pStaff = Array.isArray(pickupStaff) && pickupStaff.length > 0 ? pickupStaff : ROSTER;
+  const dStaff = Array.isArray(dropStaff) && dropStaff.length > 0 ? dropStaff : pStaff;
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent((pickup == null ? void 0 : pickup.place) || "Baneshwor")}&destination=${encodeURIComponent((drop == null ? void 0 : drop.place) || "Bouddha")}`;
+  return /* @__PURE__ */ jsxs("div", { className: "sdc-root", children: [
+    /* @__PURE__ */ jsx("style", { children: styles }),
+    /* @__PURE__ */ jsxs("div", { className: "sdc-card", children: [
+      /* @__PURE__ */ jsxs("div", { className: "sdc-header", children: [
+        /* @__PURE__ */ jsxs("div", { className: "sdc-who", children: [
+          /* @__PURE__ */ jsx("div", { className: "sdc-avatar", children: initials }),
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx("div", { className: "sdc-name", children: driverName }),
+            /* @__PURE__ */ jsx("div", { className: "sdc-line", children: vehicleNumber }),
+            /* @__PURE__ */ jsx("div", { className: "sdc-line", children: phoneNumber })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "sdc-date", children: [
+          /* @__PURE__ */ jsx("div", { children: date }),
+          isDriver ? /* @__PURE__ */ jsx("span", { style: { fontSize: "10.5px", fontWeight: 700, color: "#4338ca", background: "#eef2ff", padding: "2px 6px", borderRadius: "4px", display: "inline-block", marginTop: "4px" }, children: "🚗 Assigned Driver" }) : /* @__PURE__ */ jsx("span", { style: { fontSize: "10.5px", fontWeight: 700, color: "#15803d", background: "#f0fdf4", padding: "2px 6px", borderRadius: "4px", display: "inline-block", marginTop: "4px" }, children: "👥 Passenger" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "sdc-route-panel", children: [
+        /* @__PURE__ */ jsx("svg", { viewBox: "0 0 400 460", preserveAspectRatio: "none", children: /* @__PURE__ */ jsx(
+          "path",
+          {
+            className: "sdc-route-line",
+            d: "M104 52 C 170 110, 210 260, 274 350",
+            fill: "none",
+            stroke: "#065B80",
+            strokeWidth: "2.5",
+            strokeDasharray: "5 6",
+            strokeLinecap: "round"
+          }
+        ) }),
+        /* @__PURE__ */ jsx(
+          Stop,
+          {
+            type: "pickup",
+            time: pickup == null ? void 0 : pickup.time,
+            place: pickup == null ? void 0 : pickup.place,
+            style: { left: 88, top: 34 },
+            delay: 0.05
+          }
+        ),
+        /* @__PURE__ */ jsx(Roster, { names: pStaff, style: { left: 14, top: 90 }, delay: 0.15 }),
+        /* @__PURE__ */ jsx(Roster, { names: dStaff, style: { left: 240, top: 190 }, delay: 0.25 }),
+        /* @__PURE__ */ jsx(
+          Stop,
+          {
+            type: "drop",
+            time: drop == null ? void 0 : drop.time,
+            place: drop == null ? void 0 : drop.place,
+            style: { left: 250, top: 340 },
+            delay: 0.35
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "sdc-footer", children: [
+        /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "6px" }, children: [
+          /* @__PURE__ */ jsx("span", { style: { color: "var(--muted)" }, children: "Status:" }),
+          /* @__PURE__ */ jsx("strong", { style: { color: "var(--ink)", fontWeight: 700 }, children: status })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: "6px" }, children: [
+          onViewDetails && /* @__PURE__ */ jsxs(
+            "button",
+            {
+              type: "button",
+              onClick: onViewDetails,
+              style: {
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+                padding: "6px 10px",
+                borderRadius: "8px",
+                border: "1px solid #cbd5e1",
+                background: "#fff",
+                fontSize: "11.5px",
+                fontWeight: 600,
+                cursor: "pointer",
+                color: "#334155"
+              },
+              children: [
+                /* @__PURE__ */ jsx(Eye, { size: 13 }),
+                "Details"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxs(
+            "a",
+            {
+              href: mapsUrl,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              style: {
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+                padding: "6px 12px",
+                borderRadius: "8px",
+                background: "#08709d",
+                color: "#fff",
+                fontSize: "11.5px",
+                fontWeight: 600,
+                textDecoration: "none"
+              },
+              children: [
+                /* @__PURE__ */ jsx(Navigation, { size: 12 }),
+                "Directions",
+                /* @__PURE__ */ jsx(ExternalLink, { size: 10 })
+              ]
+            }
+          )
+        ] })
+      ] })
+    ] })
+  ] });
+}
 const B = {
   primary: "#08709d"
 };
@@ -11899,6 +12699,16 @@ const calculateDays = (start, end) => {
   if (isNaN(s) || isNaN(e)) return "—";
   const d = Math.ceil((e - s) / 864e5) + 1;
   return d > 0 ? `${d} day${d !== 1 ? "s" : ""}` : "0 days";
+};
+const formatScheduleDate = (dateStr) => {
+  if (!dateStr) return "Sat, 5 Sep 2026";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+  } catch {
+    return dateStr;
+  }
 };
 const inputCls = "w-full border border-slate-200 focus:border-[#08709d] focus:outline-none focus:ring-2 focus:ring-[#08709d]/15 transition-all px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white text-slate-800 text-xs sm:text-sm placeholder:text-slate-400 font-medium";
 const Field = ({ label, children }) => /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1.5 text-left", children: [
@@ -11978,13 +12788,19 @@ const StaffDashboard = () => {
     salaryApplications,
     createSalaryApplication,
     noticeApplications,
-    createNoticeApplication
+    createNoticeApplication,
+    dutyApplications,
+    createDutyApplication
   } = useAuth();
   const [activeTab, setActiveTab] = useState("leave");
   const [activeModal, setActiveModal] = useState(null);
   const [selectedNotice, setSelectedNotice] = useState(null);
   const [selectedLeave, setSelectedLeave] = useState(null);
+  const [selectedSalarySlip, setSelectedSalarySlip] = useState(null);
+  const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
+  const [driverSchedules, setDriverSchedules] = useState([]);
+  const [loadingSchedules, setLoadingSchedules] = useState(false);
   const [noticeFilter, setNoticeFilter] = useState("all");
   const [acknowledgedNotices, setAcknowledgedNotices] = useState(() => {
     try {
@@ -11994,6 +12810,24 @@ const StaffDashboard = () => {
       return [];
     }
   });
+  const fetchSchedules = async () => {
+    try {
+      setLoadingSchedules(true);
+      const res = await fetch(`${API_BASE_URL}/api/driver-schedules/`);
+      if (res.ok) {
+        const data = await res.json();
+        const list = Array.isArray(data) ? data : data.results || [];
+        setDriverSchedules(list);
+      }
+    } catch (err) {
+      console.error("Failed to fetch driver schedules:", err);
+    } finally {
+      setLoadingSchedules(false);
+    }
+  };
+  useEffect(() => {
+    fetchSchedules();
+  }, [currentUser]);
   const [leaveType, setLeaveType] = useState("Annual Leave");
   const [leaveStart, setLeaveStart] = useState("");
   const [leaveEnd, setLeaveEnd] = useState("");
@@ -12006,6 +12840,9 @@ const StaffDashboard = () => {
   const [otDescription, setOtDescription] = useState("");
   const [otFile, setOtFile] = useState(null);
   const otFileRef = useRef(null);
+  const [dutyDate, setDutyDate] = useState("");
+  const [dutyReplacement, setDutyReplacement] = useState("");
+  const [dutyReason, setDutyReason] = useState("");
   const [noticeTitle, setNoticeTitle] = useState("");
   const [noticeCategory, setNoticeCategory] = useState("Internal Staff Notice");
   const [noticePriority, setNoticePriority] = useState("normal");
@@ -12038,6 +12875,10 @@ const StaffDashboard = () => {
       setSelectedNotice(data);
     } else if (type === "viewLeave") {
       setSelectedLeave(data);
+    } else if (type === "viewSalarySlip") {
+      setSelectedSalarySlip(data);
+    } else if (type === "viewSchedule") {
+      setSelectedSchedule(data);
     }
     setActiveModal(type);
   };
@@ -12045,6 +12886,8 @@ const StaffDashboard = () => {
     setActiveModal(null);
     setSelectedNotice(null);
     setSelectedLeave(null);
+    setSelectedSalarySlip(null);
+    setSelectedSchedule(null);
     setLeaveStart("");
     setLeaveEnd("");
     setLeaveReason("");
@@ -12053,6 +12896,9 @@ const StaffDashboard = () => {
     setOtHours("");
     setOtDescription("");
     setOtFile(null);
+    setDutyDate("");
+    setDutyReplacement("");
+    setDutyReason("");
     setNoticeTitle("");
     setNoticeMessage("");
     setNoticeFile(null);
@@ -12078,6 +12924,9 @@ const StaffDashboard = () => {
     } else if (type === "ot") {
       await createOtApplication(record);
       setSuccessMsg("Overtime claim submitted successfully.");
+    } else if (type === "duty") {
+      await createDutyApplication(record);
+      setSuccessMsg("Duty replacement schedule request submitted successfully.");
     } else if (type === "notice") {
       await createNoticeApplication(record);
       setSuccessMsg("Staff Notice submitted and published successfully.");
@@ -12096,6 +12945,10 @@ const StaffDashboard = () => {
     var _a2, _b;
     return ((_a2 = r.staffId) == null ? void 0 : _a2.trim().toLowerCase()) === ((_b = currentUser == null ? void 0 : currentUser.id) == null ? void 0 : _b.trim().toLowerCase());
   });
+  const myDuties = (dutyApplications || []).filter((r) => {
+    var _a2, _b;
+    return ((_a2 = r.staffId) == null ? void 0 : _a2.trim().toLowerCase()) === ((_b = currentUser == null ? void 0 : currentUser.id) == null ? void 0 : _b.trim().toLowerCase());
+  });
   const mySalaries = (salaryApplications || []).filter((r) => {
     var _a2, _b;
     return ((_a2 = r.staffId) == null ? void 0 : _a2.trim().toLowerCase()) === ((_b = currentUser == null ? void 0 : currentUser.id) == null ? void 0 : _b.trim().toLowerCase());
@@ -12105,6 +12958,27 @@ const StaffDashboard = () => {
     var _a2, _b;
     return ((_a2 = r.staffId) == null ? void 0 : _a2.trim().toLowerCase()) === ((_b = currentUser == null ? void 0 : currentUser.id) == null ? void 0 : _b.trim().toLowerCase());
   });
+  const mySchedules = (driverSchedules || []).filter((sch) => {
+    if (!currentUser) return false;
+    const uid = (currentUser.id || currentUser.staff_id || "").toString().trim().toLowerCase();
+    const uname = (currentUser.name || currentUser.full_name || "").toString().trim().toLowerCase();
+    const isDriver = sch.driver_staff_id && sch.driver_staff_id.toString().trim().toLowerCase() === uid || sch.driver && sch.driver.toString().trim().toLowerCase() === uid || sch.driver_name && uname && sch.driver_name.toLowerCase().includes(uname);
+    const isPassengerInStop = (sch.route_stops || []).some((stop) => {
+      const pList = stop.staff_passengers_details || [];
+      const dList = stop.staff_dropoffs_details || [];
+      const matchP = pList.some(
+        (p) => p.staff_id && p.staff_id.toString().trim().toLowerCase() === uid || p.id && p.id.toString().trim().toLowerCase() === uid || p.full_name && uname && p.full_name.toLowerCase().includes(uname) || p.name && uname && p.name.toLowerCase().includes(uname)
+      );
+      const matchD = dList.some(
+        (d) => d.staff_id && d.staff_id.toString().trim().toLowerCase() === uid || d.id && d.id.toString().trim().toLowerCase() === uid || d.full_name && uname && d.full_name.toLowerCase().includes(uname) || d.name && uname && d.name.toLowerCase().includes(uname)
+      );
+      const matchLegacy = stop.staff_passenger_name && uname && stop.staff_passenger_name.toLowerCase().includes(uname);
+      return matchP || matchD || matchLegacy;
+    });
+    const isDirectPassenger = sch.staff_passenger && sch.staff_passenger.toString().trim().toLowerCase() === uid || sch.staff_passenger_name && uname && sch.staff_passenger_name.toLowerCase().includes(uname);
+    return isDriver || isPassengerInStop || isDirectPassenger;
+  });
+  const displayedSchedules = mySchedules.length > 0 ? mySchedules : (currentUser == null ? void 0 : currentUser.role) === "admin" ? driverSchedules : driverSchedules || [];
   const filteredNotices = allNotices.filter((n) => {
     if (noticeFilter === "urgent") return n.priority === "urgent" || n.priority === "important";
     if (noticeFilter === "broadcast") return n.targetAudience === "all";
@@ -12115,14 +12989,14 @@ const StaffDashboard = () => {
   const myTasks = getTasksForStaff ? getTasksForStaff(currentUser == null ? void 0 : currentUser.id) : [];
   return /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-['Poppins']", children: [
     /* @__PURE__ */ jsx("div", { className: "h-1 bg-gradient-to-r from-[#1a294a] via-[#08709d] to-[#5eb63b] w-full shrink-0" }),
-    /* @__PURE__ */ jsx("header", { className: "sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 px-3.5 sm:px-6 lg:px-8 py-3 shadow-xs", children: /* @__PURE__ */ jsxs("div", { className: "max-w-7xl mx-auto flex items-center justify-between gap-3", children: [
-      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 sm:gap-4 min-w-0", children: [
-        /* @__PURE__ */ jsx(Link, { to: "/", className: "shrink-0 flex items-center", children: /* @__PURE__ */ jsx("img", { src: logo, alt: "Corx Logo", className: "h-8 sm:h-9 w-auto object-contain" }) }),
-        /* @__PURE__ */ jsx("div", { className: "h-5 w-px bg-slate-200 hidden sm:block shrink-0" }),
+    /* @__PURE__ */ jsx("header", { className: "sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-3.5 sm:px-6 lg:px-8 py-2.5 sm:py-3 shadow-xs", children: /* @__PURE__ */ jsxs("div", { className: "max-w-7xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-3.5 min-w-0", children: [
+        /* @__PURE__ */ jsx(Link, { to: "/", className: "shrink-0 flex items-center", children: /* @__PURE__ */ jsx("img", { src: logo, alt: "Corx Logo", className: "h-7 sm:h-9 w-auto object-contain" }) }),
+        /* @__PURE__ */ jsx("div", { className: "h-4 sm:h-5 w-px bg-slate-200 shrink-0" }),
         /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-            /* @__PURE__ */ jsx("h1", { className: "text-xs sm:text-sm font-bold text-[#1a294a] truncate", children: "Staff Portal" }),
-            /* @__PURE__ */ jsxs("span", { className: "hidden md:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 sm:gap-2", children: [
+            /* @__PURE__ */ jsx("h1", { className: "text-xs sm:text-sm font-extrabold text-[#1a294a] truncate", children: "Staff Portal" }),
+            /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center gap-1 text-[9.5px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80", children: [
               /* @__PURE__ */ jsx("span", { className: "w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" }),
               "Active"
             ] })
@@ -12130,9 +13004,9 @@ const StaffDashboard = () => {
           /* @__PURE__ */ jsx("p", { className: "text-[10px] sm:text-xs text-slate-400 font-medium hidden xs:block truncate", children: formatDate() })
         ] })
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-3 shrink-0", children: [
-        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 bg-sky-50/80 border border-sky-100 py-1 px-2 sm:px-3 rounded-full", children: [
-          /* @__PURE__ */ jsxs("div", { className: "relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-[#1a294a] to-[#08709d] flex items-center justify-center text-white text-[11px] font-extrabold shrink-0 overflow-hidden shadow-xs", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 sm:gap-3 shrink-0", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 sm:gap-2 bg-sky-50/80 border border-sky-100/80 py-1 px-1.5 sm:px-3 rounded-full", children: [
+          /* @__PURE__ */ jsxs("div", { className: "relative w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-[#1a294a] to-[#08709d] flex items-center justify-center text-white text-[10px] sm:text-[11px] font-extrabold shrink-0 overflow-hidden shadow-xs", children: [
             (currentUser == null ? void 0 : currentUser.photo) ? /* @__PURE__ */ jsx("img", { src: currentUser.photo, alt: currentUser.name, className: "w-full h-full object-cover" }) : initials,
             /* @__PURE__ */ jsx("span", { className: "absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white" })
           ] }),
@@ -12145,100 +13019,397 @@ const StaffDashboard = () => {
           "button",
           {
             onClick: handleLogout,
-            className: "flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200/60 text-xs font-bold transition-all cursor-pointer active:scale-95 shadow-2xs",
+            className: "flex items-center justify-center gap-1 p-2 sm:px-3 sm:py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200/60 text-xs font-bold transition-all cursor-pointer active:scale-95 shadow-2xs",
             title: "Sign Out of Portal",
             children: [
-              /* @__PURE__ */ jsx(LogOut, { size: 14 }),
+              /* @__PURE__ */ jsx(LogOut, { size: 15 }),
               /* @__PURE__ */ jsx("span", { className: "hidden sm:inline", children: "Sign Out" })
             ]
           }
         )
       ] })
     ] }) }),
-    /* @__PURE__ */ jsxs("main", { className: "flex-1 px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 max-w-7xl w-full mx-auto flex flex-col gap-6 sm:gap-8", children: [
+    /* @__PURE__ */ jsxs("main", { className: "flex-1 px-3 sm:px-6 lg:px-8 py-4 sm:py-8 max-w-7xl w-full mx-auto flex flex-col gap-4 sm:gap-7 pb-20 sm:pb-8", children: [
       /* @__PURE__ */ jsx(AnimatePresence, { children: successMsg && /* @__PURE__ */ jsxs(
         motion.div,
         {
           initial: { opacity: 0, y: -10, scale: 0.95 },
           animate: { opacity: 1, y: 0, scale: 1 },
           exit: { opacity: 0, y: -10 },
-          className: "bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-2xl flex items-center justify-between gap-3 text-xs sm:text-sm font-semibold shadow-sm",
+          className: "bg-emerald-50 border border-emerald-200 text-emerald-800 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl flex items-center justify-between gap-3 text-xs sm:text-sm font-semibold shadow-sm",
           children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5", children: [
-              /* @__PURE__ */ jsx(CheckCircle2, { size: 18, className: "text-emerald-600 shrink-0" }),
-              /* @__PURE__ */ jsx("span", { children: successMsg })
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsx(CheckCircle2, { size: 17, className: "text-emerald-600 shrink-0" }),
+              /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm", children: successMsg })
             ] }),
-            /* @__PURE__ */ jsx("button", { onClick: () => setSuccessMsg(null), className: "text-emerald-500 hover:text-emerald-800 p-1", children: /* @__PURE__ */ jsx(X, { size: 14 }) })
+            /* @__PURE__ */ jsx("button", { onClick: () => setSuccessMsg(null), className: "text-emerald-500 hover:text-emerald-800 p-1 cursor-pointer", children: /* @__PURE__ */ jsx(X, { size: 14 }) })
           ]
         }
       ) }),
-      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-xs relative overflow-hidden", children: [
-        /* @__PURE__ */ jsx("div", { className: "absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-sky-100/60 via-emerald-50/40 to-transparent rounded-full blur-3xl pointer-events-none -z-0" }),
-        /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6", children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 sm:gap-5 flex-wrap sm:flex-nowrap", children: [
-            /* @__PURE__ */ jsxs("div", { className: "relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl p-1 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] shadow-md shrink-0", children: [
+      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-7 shadow-xs relative overflow-hidden", children: [
+        /* @__PURE__ */ jsx("div", { className: "absolute top-0 right-0 w-64 sm:w-80 h-64 sm:h-80 bg-gradient-to-bl from-sky-100/60 via-emerald-50/40 to-transparent rounded-full blur-3xl pointer-events-none -z-0" }),
+        /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3.5 sm:gap-5 w-full sm:w-auto", children: [
+            /* @__PURE__ */ jsxs("div", { className: "relative w-14 h-14 sm:w-20 sm:h-20 rounded-2xl p-1 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] shadow-md shrink-0", children: [
               (currentUser == null ? void 0 : currentUser.photo) ? /* @__PURE__ */ jsx(
                 "img",
                 {
                   src: currentUser.photo,
                   alt: currentUser.name,
-                  className: "w-full h-full object-cover rounded-[14px] bg-white"
+                  className: "w-full h-full object-cover rounded-[12px] sm:rounded-[14px] bg-white"
                 }
-              ) : /* @__PURE__ */ jsx("div", { className: "w-full h-full rounded-[14px] bg-gradient-to-br from-[#1a294a] to-[#08709d] flex items-center justify-center text-white text-xl sm:text-2xl font-black", children: initials }),
-              /* @__PURE__ */ jsx("span", { className: "absolute -bottom-1 -right-1 w-4.5 h-4.5 bg-emerald-500 border-2 border-white rounded-full shadow-xs" })
+              ) : /* @__PURE__ */ jsx("div", { className: "w-full h-full rounded-[12px] sm:rounded-[14px] bg-gradient-to-br from-[#1a294a] to-[#08709d] flex items-center justify-center text-white text-lg sm:text-2xl font-black", children: initials }),
+              /* @__PURE__ */ jsx("span", { className: "absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 bg-emerald-500 border-2 border-white rounded-full shadow-xs" })
             ] }),
-            /* @__PURE__ */ jsxs("div", { children: [
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-xs font-semibold text-sky-700 mb-1", children: [
-                /* @__PURE__ */ jsx(greeting.Icon, { size: 14, className: "text-[#08709d]" }),
+            /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold text-sky-700 mb-0.5 sm:mb-1", children: [
+                /* @__PURE__ */ jsx(greeting.Icon, { size: 13, className: "text-[#08709d] shrink-0" }),
                 /* @__PURE__ */ jsx("span", { children: greeting.text }),
                 /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: "•" }),
-                /* @__PURE__ */ jsx("span", { className: "text-slate-500 font-mono text-[11px]", children: currentUser == null ? void 0 : currentUser.id })
+                /* @__PURE__ */ jsx("span", { className: "text-slate-500 font-mono text-[10px] sm:text-[11px]", children: currentUser == null ? void 0 : currentUser.id })
               ] }),
-              /* @__PURE__ */ jsxs("h2", { className: "text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#1a294a] tracking-tight", children: [
-                "Welcome back, ",
+              /* @__PURE__ */ jsxs("h2", { className: "text-base sm:text-2xl lg:text-3xl font-black text-[#1a294a] tracking-tight leading-snug truncate", children: [
                 (currentUser == null ? void 0 : currentUser.name) || "Staff Member",
-                "! 👋"
+                " 👋"
               ] }),
-              /* @__PURE__ */ jsxs("p", { className: "text-xs sm:text-sm text-slate-500 mt-1 font-medium", children: [
+              /* @__PURE__ */ jsxs("p", { className: "text-[11px] sm:text-sm text-slate-500 mt-0.5 font-medium truncate", children: [
                 (currentUser == null ? void 0 : currentUser.position) || "Healthcare Professional",
                 " ",
                 (currentUser == null ? void 0 : currentUser.department) ? `• ${currentUser.department}` : ""
               ] })
             ] })
           ] }),
-          /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 w-full lg:w-auto shrink-0", children: [
-            /* @__PURE__ */ jsxs("div", { className: "bg-sky-50/70 border border-sky-100 p-3 sm:p-3.5 rounded-2xl text-center", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold text-sky-700 uppercase tracking-wider block", children: "My Tasks" }),
-              /* @__PURE__ */ jsx("span", { className: "text-lg sm:text-xl font-black text-[#08709d] block", children: myTasks.length })
+          /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-4 gap-2 sm:gap-3 w-full lg:w-auto shrink-0 pt-1 sm:pt-0", children: [
+            /* @__PURE__ */ jsxs("div", { className: "bg-sky-50/80 border border-sky-100/80 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] sm:text-[10px] font-bold text-sky-700 uppercase tracking-wider block truncate", children: "Tasks" }),
+              /* @__PURE__ */ jsx("span", { className: "text-base sm:text-xl font-black text-[#08709d] block mt-0.5", children: myTasks.length })
             ] }),
-            /* @__PURE__ */ jsxs("div", { className: "bg-amber-50/70 border border-amber-100 p-3 sm:p-3.5 rounded-2xl text-center", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold text-amber-700 uppercase tracking-wider block", children: "Notices" }),
-              /* @__PURE__ */ jsx("span", { className: "text-lg sm:text-xl font-black text-amber-600 block", children: allNotices.length })
+            /* @__PURE__ */ jsxs("div", { className: "bg-amber-50/80 border border-amber-100/80 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] sm:text-[10px] font-bold text-amber-700 uppercase tracking-wider block truncate", children: "Notices" }),
+              /* @__PURE__ */ jsx("span", { className: "text-base sm:text-xl font-black text-amber-600 block mt-0.5", children: allNotices.length })
             ] }),
-            /* @__PURE__ */ jsxs("div", { className: "bg-emerald-50/70 border border-emerald-100 p-3 sm:p-3.5 rounded-2xl text-center", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold text-emerald-700 uppercase tracking-wider block", children: "My Leaves" }),
-              /* @__PURE__ */ jsx("span", { className: "text-lg sm:text-xl font-black text-emerald-600 block", children: myLeaves.length })
+            /* @__PURE__ */ jsxs("div", { className: "bg-emerald-50/80 border border-emerald-100/80 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] sm:text-[10px] font-bold text-emerald-700 uppercase tracking-wider block truncate", children: "Leaves" }),
+              /* @__PURE__ */ jsx("span", { className: "text-base sm:text-xl font-black text-emerald-600 block mt-0.5", children: myLeaves.length })
             ] }),
-            /* @__PURE__ */ jsxs("div", { className: "bg-indigo-50/70 border border-indigo-100 p-3 sm:p-3.5 rounded-2xl text-center", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold text-indigo-700 uppercase tracking-wider block", children: "Total Claims" }),
-              /* @__PURE__ */ jsx("span", { className: "text-lg sm:text-xl font-black text-indigo-600 block", children: myLeaves.length + myOts.length + mySalaries.length })
+            /* @__PURE__ */ jsxs("div", { className: "bg-indigo-50/80 border border-indigo-100/80 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] sm:text-[10px] font-bold text-indigo-700 uppercase tracking-wider block truncate", children: "Claims" }),
+              /* @__PURE__ */ jsx("span", { className: "text-base sm:text-xl font-black text-indigo-600 block mt-0.5", children: myLeaves.length + myOts.length + mySalaries.length })
             ] })
           ] })
         ] })
       ] }),
+      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 shadow-xs", children: [
+        /* @__PURE__ */ jsx("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-3 mb-3.5 sm:mb-5", children: /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsx("h3", { className: "text-sm sm:text-lg font-black text-[#1a294a]", children: "Applications & Request History" }),
+          /* @__PURE__ */ jsx("p", { className: "text-[11px] sm:text-xs text-slate-400 font-medium", children: "Track status and approval lifecycle of your submitted forms" })
+        ] }) }),
+        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-3 sm:grid-cols-6 gap-1.5 sm:gap-2 border-b border-slate-100 pb-3 mb-4 sm:mb-5", children: [
+          { id: "leave", label: "Leaves", count: myLeaves.length, icon: Calendar },
+          { id: "ot", label: "OT Claims", count: myOts.length, icon: Clock },
+          { id: "duty", label: "Duty Swap", count: myDuties.length, icon: CalendarDays },
+          { id: "schedule", label: "Schedules", count: displayedSchedules.length, icon: Car },
+          { id: "notice", label: "My Notices", count: mySubmittedNotices.length, icon: Megaphone },
+          { id: "salary", label: "Salary Slips", count: mySalaries.length, icon: Receipt }
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const active = activeTab === tab.id;
+          return /* @__PURE__ */ jsxs(
+            "button",
+            {
+              onClick: () => setActiveTab(tab.id),
+              className: `flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3.5 py-2 sm:py-2.5 rounded-xl text-[11px] sm:text-sm font-bold transition-all cursor-pointer active:scale-95 ${active ? "bg-sky-50 text-[#08709d] shadow-2xs border border-sky-200" : "text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-transparent"}`,
+              children: [
+                /* @__PURE__ */ jsx(Icon, { size: 13, className: "shrink-0 sm:w-4 sm:h-4" }),
+                /* @__PURE__ */ jsx("span", { className: "truncate", children: tab.label }),
+                /* @__PURE__ */ jsx(
+                  "span",
+                  {
+                    className: `text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.2 rounded-full font-bold shrink-0 ${active ? "bg-[#08709d] text-white" : "bg-slate-100 text-slate-500"}`,
+                    children: tab.count
+                  }
+                )
+              ]
+            },
+            tab.id
+          );
+        }) }),
+        /* @__PURE__ */ jsxs("div", { children: [
+          activeTab === "leave" && (myLeaves.length === 0 ? /* @__PURE__ */ jsx(
+            EmptyState,
+            {
+              icon: Calendar,
+              text: "No leave applications submitted yet. Tap 'Apply for Leave' below to submit a request."
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2.5 sm:gap-3.5", children: myLeaves.map((r, i) => {
+            const statusInfo = STATUS_CFG[r.status] || STATUS_CFG.Pending;
+            const durationText = calculateDays(r.leaveStart, r.leaveEnd);
+            return /* @__PURE__ */ jsxs(
+              motion.div,
+              {
+                initial: { opacity: 0, y: 6 },
+                animate: { opacity: 1, y: 0 },
+                transition: { delay: i * 0.03 },
+                className: "border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 relative overflow-hidden group",
+                children: [
+                  /* @__PURE__ */ jsx(
+                    "div",
+                    {
+                      className: "absolute left-0 top-2.5 bottom-2.5 w-1 rounded-r-full",
+                      style: { backgroundColor: statusInfo.color }
+                    }
+                  ),
+                  /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0 pl-1.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
+                      /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-base font-bold text-[#1a294a]", children: r.leaveType }),
+                      /* @__PURE__ */ jsx(Badge, { label: r.status, cfg: statusInfo }),
+                      /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-[#08709d] border border-sky-100", children: [
+                        "⏳ ",
+                        durationText
+                      ] })
+                    ] }),
+                    r.reason ? /* @__PURE__ */ jsx("p", { className: "text-[11px] sm:text-xs text-slate-500 font-medium truncate max-w-xl mb-1", children: r.reason }) : /* @__PURE__ */ jsx("p", { className: "text-[11px] sm:text-xs text-slate-400 font-medium italic mb-1", children: "Standard Leave Application" }),
+                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-[10px] sm:text-[11px] text-slate-400 font-medium", children: [
+                      /* @__PURE__ */ jsx("span", { children: new Date(r.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) }),
+                      /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: "•" }),
+                      /* @__PURE__ */ jsxs("span", { className: "text-slate-500 font-mono", children: [
+                        "ID: ",
+                        r.staffId || (currentUser == null ? void 0 : currentUser.id)
+                      ] })
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 shrink-0 pt-1 sm:pt-0 sm:self-center border-t sm:border-t-0 border-slate-100", children: /* @__PURE__ */ jsxs(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => openModal("viewLeave", r),
+                      className: "w-full sm:w-auto justify-center px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-50 hover:bg-sky-100 text-[#08709d] border border-sky-200/70 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95",
+                      children: [
+                        /* @__PURE__ */ jsx(Eye, { size: 14, className: "text-[#08709d]" }),
+                        /* @__PURE__ */ jsx("span", { children: "View Full Details" })
+                      ]
+                    }
+                  ) })
+                ]
+              },
+              r.id || i
+            );
+          }) })),
+          activeTab === "ot" && (myOts.length === 0 ? /* @__PURE__ */ jsx(
+            EmptyState,
+            {
+              icon: Clock,
+              text: "No OT claims recorded. Tap 'Apply for OT' below to log your extra shift duty hours."
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2.5 sm:gap-3", children: myOts.map((r, i) => /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: "border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 shadow-2xs",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm font-bold text-[#1a294a]", children: r.otType }),
+                    /* @__PURE__ */ jsx(Badge, { label: r.status })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 text-[11px] sm:text-xs text-slate-500 font-medium flex-wrap", children: [
+                    /* @__PURE__ */ jsxs("span", { children: [
+                      "📅 ",
+                      r.otDate
+                    ] }),
+                    /* @__PURE__ */ jsxs("span", { className: "text-emerald-700 font-bold font-mono", children: [
+                      "⏱️ ",
+                      r.otHours,
+                      "h Claimed"
+                    ] })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-[11px] text-slate-400 font-mono shrink-0", children: [
+                  "Submitted: ",
+                  new Date(r.submittedAt).toLocaleDateString("en-GB")
+                ] })
+              ]
+            },
+            r.id || i
+          )) })),
+          activeTab === "duty" && (myDuties.length === 0 ? /* @__PURE__ */ jsx(
+            EmptyState,
+            {
+              icon: CalendarDays,
+              text: "No duty replacement requests logged. Tap 'Duty Schedule' below to request a shift swap."
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2.5 sm:gap-3", children: myDuties.map((r, i) => /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: "border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 shadow-2xs",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
+                    /* @__PURE__ */ jsxs("span", { className: "text-xs sm:text-sm font-bold text-[#1a294a]", children: [
+                      "Date: ",
+                      r.dutyDate
+                    ] }),
+                    /* @__PURE__ */ jsx(Badge, { label: r.status })
+                  ] }),
+                  /* @__PURE__ */ jsxs("p", { className: "text-[11px] sm:text-xs text-slate-600 font-medium mb-0.5", children: [
+                    "👤 Covering Staff: ",
+                    /* @__PURE__ */ jsx("span", { className: "font-bold text-[#08709d]", children: r.dutyReplacement })
+                  ] }),
+                  r.dutyReason && /* @__PURE__ */ jsxs("p", { className: "text-[11px] sm:text-xs text-slate-500 line-clamp-1", children: [
+                    "Reason: ",
+                    r.dutyReason
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-[11px] text-slate-400 font-mono shrink-0", children: [
+                  "Submitted: ",
+                  new Date(r.submittedAt).toLocaleDateString("en-GB")
+                ] })
+              ]
+            },
+            r.id || i
+          )) })),
+          activeTab === "schedule" && (displayedSchedules.length === 0 ? /* @__PURE__ */ jsx(
+            EmptyState,
+            {
+              icon: Car,
+              text: "No driver or trip schedules assigned yet. When administration or dispatch schedules a trip, it will appear here."
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-6 sm:gap-8 items-center w-full", children: displayedSchedules.map((sch, i) => {
+            const formattedDate = formatScheduleDate(sch.schedule_date);
+            const uid = ((currentUser == null ? void 0 : currentUser.id) || (currentUser == null ? void 0 : currentUser.staff_id) || "").toString().trim().toLowerCase();
+            const isDriver = sch.driver_staff_id && sch.driver_staff_id.toString().trim().toLowerCase() === uid || sch.driver && sch.driver.toString().trim().toLowerCase() === uid;
+            const stopsList = sch.route_stops && sch.route_stops.length > 0 ? sch.route_stops : [
+              {
+                stop_order: 1,
+                source_location: sch.pickup_location || "Baneshwor",
+                source_time: sch.pickup_time || "9:15 AM",
+                destination_location: sch.drop_location || "Bouddha",
+                destination_time: sch.drop_time || "9:52 AM",
+                staff_passengers_details: sch.staff_passenger_name ? [{ id: "p1", full_name: sch.staff_passenger_name }] : ["Sita Rai", "Anil Gurung", "Maya Tamang", "Kiran Thapa"],
+                staff_dropoffs_details: sch.staff_passenger_name ? [{ id: "d1", full_name: sch.staff_passenger_name }] : ["Sita Rai", "Anil Gurung", "Maya Tamang", "Kiran Thapa"]
+              }
+            ];
+            return stopsList.map((stop, sIdx) => {
+              const rawPickups = stop.staff_passengers_details && stop.staff_passengers_details.length > 0 ? stop.staff_passengers_details : stop.staff_passenger_name ? [stop.staff_passenger_name] : stop.staff_passenger ? [stop.staff_passenger] : ["Sita Rai", "Anil Gurung", "Maya Tamang", "Kiran Thapa"];
+              const rawDropoffs = stop.staff_dropoffs_details && stop.staff_dropoffs_details.length > 0 ? stop.staff_dropoffs_details : stop.staff_passenger_name ? [stop.staff_passenger_name] : rawPickups;
+              return /* @__PURE__ */ jsx(
+                ShuttleDispatchCard,
+                {
+                  driverName: sch.driver_name || "Rajesh Shrestha",
+                  vehicleNumber: sch.vehicle_info || "BA 2 KHA 3456",
+                  phoneNumber: sch.driver_phone || "+977 98XXXXXXXX",
+                  date: formattedDate,
+                  pickup: {
+                    place: stop.source_location || "Baneshwor",
+                    time: stop.source_time || "9:15 AM"
+                  },
+                  drop: {
+                    place: stop.destination_location || "Bouddha",
+                    time: stop.destination_time || "9:52 AM"
+                  },
+                  pickupStaff: rawPickups,
+                  dropStaff: rawDropoffs,
+                  status: stop.status || sch.status || "Scheduled",
+                  isDriver,
+                  onViewDetails: () => openModal("viewSchedule", sch)
+                },
+                `${sch.id || i}-${stop.id || sIdx}`
+              );
+            });
+          }) })),
+          activeTab === "notice" && (mySubmittedNotices.length === 0 ? /* @__PURE__ */ jsx(
+            EmptyState,
+            {
+              icon: Megaphone,
+              text: "You haven't posted any staff notices yet. Tap 'Submit Staff Notice' below to post."
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2.5 sm:gap-3", children: mySubmittedNotices.map((r, i) => /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: "border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 shadow-2xs",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm font-bold text-[#1a294a]", children: r.title }),
+                    /* @__PURE__ */ jsx(Badge, { label: r.status || "Published" }),
+                    /* @__PURE__ */ jsx("span", { className: "text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600", children: r.priority })
+                  ] }),
+                  /* @__PURE__ */ jsx("p", { className: "text-[11px] sm:text-xs text-slate-500 font-normal line-clamp-1", children: r.content })
+                ] }),
+                /* @__PURE__ */ jsxs(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => openModal("viewNotice", r),
+                    className: "w-full sm:w-auto justify-center px-3.5 py-1.5 rounded-xl text-xs font-bold bg-sky-50 text-[#08709d] hover:bg-sky-100 transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
+                    children: [
+                      /* @__PURE__ */ jsx(Eye, { size: 13 }),
+                      /* @__PURE__ */ jsx("span", { children: "View Details" })
+                    ]
+                  }
+                )
+              ]
+            },
+            r.id || i
+          )) })),
+          activeTab === "salary" && (mySalaries.length === 0 ? /* @__PURE__ */ jsx(
+            EmptyState,
+            {
+              icon: Receipt,
+              text: "No monthly salary slips issued yet. When administration sends your salary slip, it will appear here."
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2.5 sm:gap-3.5", children: mySalaries.map((r, i) => {
+            const imgUrl = r.image ? r.image.startsWith("http") ? r.image : `${API_BASE_URL}${r.image.startsWith("/") ? "" : "/"}${r.image}` : null;
+            return /* @__PURE__ */ jsxs(
+              "div",
+              {
+                className: "border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 shadow-2xs",
+                children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-start gap-3 flex-1 min-w-0", children: [
+                    /* @__PURE__ */ jsx("div", { className: "w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 border border-emerald-100", children: /* @__PURE__ */ jsx(Receipt, { size: 18 }) }),
+                    /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0 space-y-0.5 sm:space-y-1", children: [
+                      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 sm:gap-2 flex-wrap", children: [
+                        /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm font-bold text-[#1a294a]", children: "Monthly Salary Slip" }),
+                        /* @__PURE__ */ jsx("span", { className: "inline-flex items-center text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200", children: r.status || "Issued" })
+                      ] }),
+                      /* @__PURE__ */ jsx("p", { className: "text-[11px] sm:text-xs text-slate-600 font-medium leading-relaxed break-words", children: r.description || /* @__PURE__ */ jsx("span", { className: "text-slate-400 italic", children: "No description provided" }) }),
+                      /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 text-[10px] sm:text-[11px] text-slate-400 font-mono pt-0.5", children: /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1", children: [
+                        /* @__PURE__ */ jsx(Clock, { size: 11 }),
+                        new Date(r.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
+                      ] }) })
+                    ] })
+                  ] }),
+                  imgUrl && /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 shrink-0 pt-1 sm:pt-0 sm:self-center border-t sm:border-t-0 border-slate-100", children: /* @__PURE__ */ jsxs(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => openModal("viewSalarySlip", r),
+                      className: "w-full sm:w-auto justify-center flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-all cursor-pointer shadow-2xs",
+                      children: [
+                        /* @__PURE__ */ jsx("img", { src: imgUrl, alt: "Slip thumb", className: "w-4 h-4 rounded object-cover" }),
+                        /* @__PURE__ */ jsx("span", { children: "View Slip" })
+                      ]
+                    }
+                  ) })
+                ]
+              },
+              r.id || i
+            );
+          }) }))
+        ] })
+      ] }),
       /* @__PURE__ */ jsxs("section", { children: [
-        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-3.5", children: [
-          /* @__PURE__ */ jsxs("h3", { className: "text-xs sm:text-sm font-extrabold text-slate-500 uppercase tracking-wider flex items-center gap-2", children: [
-            /* @__PURE__ */ jsx(Sparkles, { size: 15, className: "text-[#08709d]" }),
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-2.5 sm:mb-3.5", children: [
+          /* @__PURE__ */ jsxs("h3", { className: "text-xs sm:text-sm font-black text-slate-500 uppercase tracking-wider flex items-center gap-1.5 sm:gap-2", children: [
+            /* @__PURE__ */ jsx(Sparkles, { size: 14, className: "text-[#08709d]" }),
             "Quick Actions & Applications"
           ] }),
           /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-400 font-medium hidden sm:inline", children: "Instant HR & Administration Submissions" })
         ] }),
-        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4", children: [
+        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-4", children: [
           {
             id: "leave",
-            title: "Apply for Leave",
-            sub: "Submit annual, sick, or casual leave",
+            title: "Apply Leave",
+            sub: "Annual, sick or casual",
             icon: Calendar,
             color: "#08709d",
             bg: "bg-sky-50 text-[#08709d]",
@@ -12249,18 +13420,29 @@ const StaffDashboard = () => {
           {
             id: "ot",
             title: "Apply for OT",
-            sub: "Log shift hours & overtime claims",
+            sub: "Log shift & overtime",
             icon: Clock,
             color: "#5eb63b",
             bg: "bg-emerald-50 text-[#5eb63b]",
             gradient: "from-[#5eb63b] to-[#10b981]",
             border: "hover:border-[#5eb63b]/50",
-            actionLabel: "Log OT Hours"
+            actionLabel: "Log OT"
+          },
+          {
+            id: "duty",
+            title: "Duty Swap",
+            sub: "Shift replacement",
+            icon: CalendarDays,
+            color: "#0284c7",
+            bg: "bg-cyan-50 text-[#0284c7]",
+            gradient: "from-[#0284c7] to-[#38bdf8]",
+            border: "hover:border-[#0284c7]/50",
+            actionLabel: "Duty Request"
           },
           {
             id: "notice",
-            title: "Submit Staff Notice",
-            sub: "Post shift handover, duty note or request",
+            title: "Post Notice",
+            sub: "Shift handover & notes",
             icon: Megaphone,
             color: "#6366f1",
             bg: "bg-indigo-50 text-[#6366f1]",
@@ -12271,39 +13453,38 @@ const StaffDashboard = () => {
           {
             id: "salary",
             title: "Salary Review",
-            sub: "Submit merit increment or appraisal",
+            sub: "Merit or appraisal",
             icon: TrendingUp,
             color: "#1a294a",
             bg: "bg-slate-100 text-[#1a294a]",
             gradient: "from-[#1a294a] to-[#334155]",
             border: "hover:border-[#1a294a]/50",
-            actionLabel: "Request Review"
+            actionLabel: "Review Request"
           }
         ].map((card) => {
           const Icon = card.icon;
           return /* @__PURE__ */ jsxs(
             motion.div,
             {
-              whileHover: { y: -3, transition: { duration: 0.2 } },
-              whileTap: { scale: 0.98 },
+              whileTap: { scale: 0.96 },
               onClick: () => openModal(card.id),
-              className: `bg-white border border-slate-200 ${card.border} rounded-2xl p-4 sm:p-5 cursor-pointer relative overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group`,
+              className: `bg-white border border-slate-200/90 ${card.border} rounded-2xl p-3 sm:p-5 cursor-pointer relative overflow-hidden shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group active:bg-slate-50/60`,
               children: [
                 /* @__PURE__ */ jsx("div", { className: `absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient}` }),
                 /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-3", children: [
-                    /* @__PURE__ */ jsx("div", { className: `w-10 h-10 sm:w-11 sm:h-11 rounded-xl ${card.bg} flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform`, children: /* @__PURE__ */ jsx(Icon, { size: 20 }) }),
-                    /* @__PURE__ */ jsxs("span", { className: "text-[11px] font-bold text-slate-400 group-hover:text-slate-700 transition-colors flex items-center gap-0.5", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-2 sm:mb-3", children: [
+                    /* @__PURE__ */ jsx("div", { className: `w-8 h-8 sm:w-11 sm:h-11 rounded-xl ${card.bg} flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform`, children: /* @__PURE__ */ jsx(Icon, { size: 16, className: "sm:w-5 sm:h-5" }) }),
+                    /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-[11px] font-bold text-slate-400 group-hover:text-slate-700 transition-colors flex items-center gap-0.5", children: [
                       "Open ",
-                      /* @__PURE__ */ jsx(ArrowUpRight, { size: 13 })
+                      /* @__PURE__ */ jsx(ArrowUpRight, { size: 12 })
                     ] })
                   ] }),
-                  /* @__PURE__ */ jsx("h4", { className: "text-sm sm:text-base font-bold text-[#1a294a] mb-1", children: card.title }),
-                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500 font-medium leading-relaxed mb-4", children: card.sub })
+                  /* @__PURE__ */ jsx("h4", { className: "text-xs sm:text-base font-extrabold text-[#1a294a] mb-0.5 sm:mb-1 truncate", children: card.title }),
+                  /* @__PURE__ */ jsx("p", { className: "text-[10px] sm:text-xs text-slate-500 font-medium leading-tight mb-2 sm:mb-4 line-clamp-2", children: card.sub })
                 ] }),
-                /* @__PURE__ */ jsxs("div", { className: "pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold", style: { color: card.color }, children: [
+                /* @__PURE__ */ jsxs("div", { className: "pt-1.5 sm:pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] sm:text-xs font-bold", style: { color: card.color }, children: [
                   /* @__PURE__ */ jsx("span", { children: card.actionLabel }),
-                  /* @__PURE__ */ jsx(ArrowUpRight, { size: 14, className: "group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" })
+                  /* @__PURE__ */ jsx(ArrowUpRight, { size: 13 })
                 ] })
               ]
             },
@@ -12311,17 +13492,17 @@ const StaffDashboard = () => {
           );
         }) })
       ] }),
-      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-xs", children: [
-        /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100", children: [
-          /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5", children: [
-            /* @__PURE__ */ jsx("div", { className: "w-8 h-8 rounded-xl bg-gradient-to-tr from-[#08709d] to-[#0ea5e9] text-white flex items-center justify-center shadow-xs", children: /* @__PURE__ */ jsx(Megaphone, { size: 16 }) }),
+      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 shadow-xs", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 sm:pb-5 border-b border-slate-100", children: [
+          /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-2.5", children: [
+            /* @__PURE__ */ jsx("div", { className: "w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-tr from-[#08709d] to-[#0ea5e9] text-white flex items-center justify-center shadow-xs shrink-0", children: /* @__PURE__ */ jsx(Megaphone, { size: 14, className: "sm:w-4 sm:h-4" }) }),
             /* @__PURE__ */ jsxs("div", { children: [
-              /* @__PURE__ */ jsx("h3", { className: "text-base sm:text-lg font-bold text-[#1a294a]", children: "Notice Board & Announcements" }),
-              /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-400 font-medium", children: "Official hospital communications, clinical guidelines, and updates" })
+              /* @__PURE__ */ jsx("h3", { className: "text-sm sm:text-lg font-black text-[#1a294a]", children: "Notice Board & Announcements" }),
+              /* @__PURE__ */ jsx("p", { className: "text-[11px] sm:text-xs text-slate-400 font-medium", children: "Official communications & updates" })
             ] })
           ] }) }),
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [
-            /* @__PURE__ */ jsx("div", { className: "flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between sm:justify-end gap-2 flex-wrap", children: [
+            /* @__PURE__ */ jsx("div", { className: "flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200", children: [
               { id: "all", label: "All" },
               { id: "urgent", label: "Urgent" },
               { id: "broadcast", label: "Broadcasts" }
@@ -12329,7 +13510,7 @@ const StaffDashboard = () => {
               "button",
               {
                 onClick: () => setNoticeFilter(f.id),
-                className: `px-3 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${noticeFilter === f.id ? "bg-white text-[#08709d] shadow-2xs" : "text-slate-500 hover:text-slate-800"}`,
+                className: `px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-bold rounded-lg transition-all cursor-pointer ${noticeFilter === f.id ? "bg-white text-[#08709d] shadow-2xs" : "text-slate-500 hover:text-slate-800"}`,
                 children: f.label
               },
               f.id
@@ -12338,22 +13519,22 @@ const StaffDashboard = () => {
               "button",
               {
                 onClick: () => openModal("notice"),
-                className: "flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#08709d] hover:bg-[#065679] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-95",
+                className: "flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#08709d] hover:bg-[#065679] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-95 ml-auto sm:ml-0",
                 children: [
-                  /* @__PURE__ */ jsx(Send, { size: 13 }),
+                  /* @__PURE__ */ jsx(Send, { size: 12 }),
                   /* @__PURE__ */ jsx("span", { children: "Post Notice" })
                 ]
               }
             )
           ] })
         ] }),
-        /* @__PURE__ */ jsx("div", { className: "mt-5", children: filteredNotices.length === 0 ? /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsx("div", { className: "mt-3.5 sm:mt-5", children: filteredNotices.length === 0 ? /* @__PURE__ */ jsx(
           EmptyState,
           {
             icon: Bell,
             text: "No announcements matching your filter. You are all caught up on official hospital notices."
           }
-        ) : /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: filteredNotices.map((notice, idx) => {
+        ) : /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4", children: filteredNotices.map((notice, idx) => {
           const isUrgent = notice.priority === "urgent";
           const isImportant = notice.priority === "important";
           const isAck = acknowledgedNotices.includes(notice.id);
@@ -12365,50 +13546,50 @@ const StaffDashboard = () => {
               initial: { opacity: 0, y: 8 },
               animate: { opacity: 1, y: 0 },
               transition: { delay: idx * 0.04 },
-              className: `border ${borderClass} rounded-2xl p-4 sm:p-5 shadow-2xs hover:shadow-sm transition-all flex flex-col justify-between relative group`,
+              className: `border ${borderClass} rounded-2xl p-3.5 sm:p-5 shadow-2xs hover:shadow-sm transition-all flex flex-col justify-between relative group`,
               children: [
                 /* @__PURE__ */ jsx(
                   "div",
                   {
-                    className: "absolute left-0 top-3 bottom-3 w-1 rounded-r-full",
+                    className: "absolute left-0 top-2.5 bottom-2.5 w-1 rounded-r-full",
                     style: {
                       backgroundColor: isUrgent ? "#dc2626" : isImportant ? "#d97706" : "#08709d"
                     }
                   }
                 ),
                 /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-3 mb-2.5 pl-1.5", children: [
-                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-2 mb-2 pl-1.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 flex-wrap", children: [
                       /* @__PURE__ */ jsx(Badge, { label: badgeCfg.label, cfg: badgeCfg }),
-                      notice.targetAudience === "all" ? /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200", children: "📢 All Staff" }) : /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200", children: "🎯 Targeted" })
+                      notice.targetAudience === "all" ? /* @__PURE__ */ jsx("span", { className: "text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200", children: "📢 All Staff" }) : /* @__PURE__ */ jsx("span", { className: "text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200", children: "🎯 Targeted" })
                     ] }),
-                    /* @__PURE__ */ jsxs("span", { className: "text-[11px] text-slate-400 font-medium flex items-center gap-1 shrink-0", children: [
-                      /* @__PURE__ */ jsx(Clock, { size: 12 }),
+                    /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-[11px] text-slate-400 font-medium flex items-center gap-1 shrink-0", children: [
+                      /* @__PURE__ */ jsx(Clock, { size: 11 }),
                       notice.submittedAt ? new Date(notice.submittedAt).toLocaleDateString("en-GB", {
                         day: "numeric",
                         month: "short"
                       }) : "Recently"
                     ] })
                   ] }),
-                  /* @__PURE__ */ jsx("h4", { className: "text-sm sm:text-base font-bold text-[#1a294a] mb-2 pl-1.5 line-clamp-1 group-hover:text-[#08709d] transition-colors", children: notice.title }),
-                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-600 leading-relaxed pl-1.5 line-clamp-3 mb-4 font-normal", children: notice.content })
+                  /* @__PURE__ */ jsx("h4", { className: "text-xs sm:text-base font-bold text-[#1a294a] mb-1.5 pl-1.5 line-clamp-1 group-hover:text-[#08709d] transition-colors", children: notice.title }),
+                  /* @__PURE__ */ jsx("p", { className: "text-[11px] sm:text-xs text-slate-600 leading-relaxed pl-1.5 line-clamp-2 sm:line-clamp-3 mb-3 font-normal", children: notice.content })
                 ] }),
-                /* @__PURE__ */ jsxs("div", { className: "pt-3 border-t border-slate-100 flex items-center justify-between gap-2 pl-1.5 flex-wrap", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 text-[11px] font-semibold text-slate-500", children: [
-                    /* @__PURE__ */ jsx(User, { size: 12, className: "text-[#08709d]" }),
-                    /* @__PURE__ */ jsx("span", { className: "truncate max-w-[130px]", children: notice.staffName || "Administration" })
+                /* @__PURE__ */ jsxs("div", { className: "pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 pl-1.5", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold text-slate-500 min-w-0", children: [
+                    /* @__PURE__ */ jsx(User, { size: 11, className: "text-[#08709d] shrink-0" }),
+                    /* @__PURE__ */ jsx("span", { className: "truncate max-w-[90px] sm:max-w-[130px]", children: notice.staffName || "Admin" })
                   ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 shrink-0", children: [
                     /* @__PURE__ */ jsxs(
                       "button",
                       {
                         type: "button",
                         onClick: () => toggleAcknowledgeNotice(notice.id),
-                        className: `px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${isAck ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`,
+                        className: `px-2 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${isAck ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`,
                         title: "Mark as Acknowledged",
                         children: [
-                          /* @__PURE__ */ jsx(Check, { size: 12 }),
-                          /* @__PURE__ */ jsx("span", { children: isAck ? "Read" : "Acknowledge" })
+                          /* @__PURE__ */ jsx(Check, { size: 11 }),
+                          /* @__PURE__ */ jsx("span", { children: isAck ? "Read" : "Ack" })
                         ]
                       }
                     ),
@@ -12417,10 +13598,10 @@ const StaffDashboard = () => {
                       {
                         type: "button",
                         onClick: () => openModal("viewNotice", notice),
-                        className: "px-2.5 py-1 rounded-lg text-[11px] font-bold bg-sky-50 text-[#08709d] hover:bg-sky-100 transition-all cursor-pointer flex items-center gap-1",
+                        className: "px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold bg-sky-50 text-[#08709d] hover:bg-sky-100 transition-all cursor-pointer flex items-center gap-1",
                         children: [
-                          /* @__PURE__ */ jsx(Eye, { size: 12 }),
-                          /* @__PURE__ */ jsx("span", { children: "Details" })
+                          /* @__PURE__ */ jsx(Eye, { size: 11 }),
+                          /* @__PURE__ */ jsx("span", { children: "View" })
                         ]
                       }
                     )
@@ -12432,16 +13613,16 @@ const StaffDashboard = () => {
           );
         }) }) })
       ] }),
-      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-xs", children: [
-        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-4", children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5", children: [
-            /* @__PURE__ */ jsx("div", { className: "w-8 h-8 rounded-xl bg-gradient-to-tr from-[#5eb63b] to-[#10b981] text-white flex items-center justify-center shadow-xs", children: /* @__PURE__ */ jsx(ClipboardList, { size: 16 }) }),
+      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 shadow-xs", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-3.5 sm:mb-4", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 sm:gap-2.5", children: [
+            /* @__PURE__ */ jsx("div", { className: "w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-tr from-[#5eb63b] to-[#10b981] text-white flex items-center justify-center shadow-xs shrink-0", children: /* @__PURE__ */ jsx(ClipboardList, { size: 14, className: "sm:w-4 sm:h-4" }) }),
             /* @__PURE__ */ jsxs("div", { children: [
-              /* @__PURE__ */ jsx("h3", { className: "text-base sm:text-lg font-bold text-[#1a294a]", children: "My Assigned Tasks" }),
-              /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-400 font-medium", children: "Clinical duties, patient follow-ups, and departmental assignments" })
+              /* @__PURE__ */ jsx("h3", { className: "text-sm sm:text-lg font-black text-[#1a294a]", children: "My Assigned Tasks" }),
+              /* @__PURE__ */ jsx("p", { className: "text-[11px] sm:text-xs text-slate-400 font-medium", children: "Clinical duties & department assignments" })
             ] })
           ] }),
-          /* @__PURE__ */ jsxs("span", { className: "text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full", children: [
+          /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full shrink-0", children: [
             myTasks.length,
             " Task",
             myTasks.length !== 1 ? "s" : ""
@@ -12453,7 +13634,7 @@ const StaffDashboard = () => {
             icon: ClipboardList,
             text: "No tasks currently assigned to you. Your supervisor will assign clinical items here."
           }
-        ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3", children: myTasks.map((task, i) => {
+        ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2.5 sm:gap-3", children: myTasks.map((task, i) => {
           const pc = PRIORITY_CFG[task.priority] || PRIORITY_CFG.Medium;
           const sc = STATUS_CFG[task.status] || STATUS_CFG.Pending;
           return /* @__PURE__ */ jsxs(
@@ -12462,34 +13643,34 @@ const StaffDashboard = () => {
               initial: { opacity: 0, y: 6 },
               animate: { opacity: 1, y: 0 },
               transition: { delay: i * 0.04 },
-              className: "border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs",
+              className: "border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 shadow-2xs",
               children: [
                 /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 flex-wrap mb-1.5", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-sm sm:text-base font-bold text-[#1a294a]", children: task.title }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
+                    /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-base font-bold text-[#1a294a]", children: task.title }),
                     /* @__PURE__ */ jsx(Badge, { label: pc.label, cfg: pc })
                   ] }),
-                  task.description && /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500 font-medium mb-3 leading-relaxed", children: task.description }),
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 text-[11px] text-slate-400 font-medium flex-wrap", children: [
+                  task.description && /* @__PURE__ */ jsx("p", { className: "text-[11px] sm:text-xs text-slate-500 font-medium mb-2 leading-relaxed", children: task.description }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 text-[10px] sm:text-[11px] text-slate-400 font-medium flex-wrap", children: [
                     task.dueDate && /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1 text-slate-500", children: [
-                      /* @__PURE__ */ jsx(CalendarDays, { size: 12, className: "text-[#08709d]" }),
+                      /* @__PURE__ */ jsx(CalendarDays, { size: 11, className: "text-[#08709d]" }),
                       "Due: ",
                       new Date(task.dueDate).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
                     ] }),
                     /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1 text-slate-500", children: [
-                      /* @__PURE__ */ jsx(User, { size: 12, className: "text-[#08709d]" }),
-                      "Assigned by: ",
+                      /* @__PURE__ */ jsx(User, { size: 11, className: "text-[#08709d]" }),
+                      "By: ",
                       task.assignedByName || "Supervisor"
                     ] })
                   ] })
                 ] }),
-                /* @__PURE__ */ jsxs("div", { className: "relative shrink-0 w-full sm:w-auto", children: [
+                /* @__PURE__ */ jsxs("div", { className: "relative shrink-0 w-full sm:w-auto pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100", children: [
                   /* @__PURE__ */ jsxs(
                     "select",
                     {
                       value: task.status,
                       onChange: (e) => updateTaskStatus(task.id, e.target.value),
-                      className: "w-full sm:w-auto appearance-none font-bold text-xs px-4 py-2.5 pr-8 rounded-xl border transition-all cursor-pointer outline-none",
+                      className: "w-full sm:w-auto appearance-none font-bold text-xs px-3.5 py-2 sm:py-2.5 pr-8 rounded-xl border transition-all cursor-pointer outline-none shadow-2xs",
                       style: {
                         color: sc.color,
                         backgroundColor: sc.bg,
@@ -12516,208 +13697,59 @@ const StaffDashboard = () => {
             task.id || i
           );
         }) })
-      ] }),
-      /* @__PURE__ */ jsxs("section", { className: "bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-xs", children: [
-        /* @__PURE__ */ jsx("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5", children: /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsx("h3", { className: "text-base sm:text-lg font-bold text-[#1a294a]", children: "Applications & Request History" }),
-          /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-400 font-medium", children: "Track status and approval lifecycle of your submitted forms" })
-        ] }) }),
-        /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 border-b border-slate-200 pb-3 mb-5 overflow-x-auto no-scrollbar", children: [
-          { id: "leave", label: "Leaves", count: myLeaves.length, icon: Calendar },
-          { id: "ot", label: "OT Claims", count: myOts.length, icon: Clock },
-          { id: "notice", label: "My Notices", count: mySubmittedNotices.length, icon: Megaphone },
-          { id: "salary", label: "Salary Reviews", count: mySalaries.length, icon: TrendingUp }
-        ].map((tab) => {
-          const Icon = tab.icon;
-          const active = activeTab === tab.id;
-          return /* @__PURE__ */ jsxs(
-            "button",
-            {
-              onClick: () => setActiveTab(tab.id),
-              className: `flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${active ? "bg-sky-50 text-[#08709d] shadow-2xs border border-sky-200" : "text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-transparent"}`,
-              children: [
-                /* @__PURE__ */ jsx(Icon, { size: 15 }),
-                /* @__PURE__ */ jsx("span", { children: tab.label }),
-                /* @__PURE__ */ jsx(
-                  "span",
-                  {
-                    className: `text-[10.5px] px-2 py-0.5 rounded-full font-bold ${active ? "bg-[#08709d] text-white" : "bg-slate-100 text-slate-500"}`,
-                    children: tab.count
-                  }
-                )
-              ]
-            },
-            tab.id
-          );
-        }) }),
-        /* @__PURE__ */ jsxs("div", { children: [
-          activeTab === "leave" && (myLeaves.length === 0 ? /* @__PURE__ */ jsx(
-            EmptyState,
-            {
-              icon: Calendar,
-              text: "No leave applications submitted yet. Click 'Apply for Leave' to create your first request."
-            }
-          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3.5", children: myLeaves.map((r, i) => {
-            const statusInfo = STATUS_CFG[r.status] || STATUS_CFG.Pending;
-            const durationText = calculateDays(r.leaveStart, r.leaveEnd);
-            return /* @__PURE__ */ jsxs(
-              motion.div,
-              {
-                initial: { opacity: 0, y: 6 },
-                animate: { opacity: 1, y: 0 },
-                transition: { delay: i * 0.03 },
-                className: "border border-slate-200/90 rounded-2xl p-4 sm:p-5 bg-white hover:border-slate-300 hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden group",
-                children: [
-                  /* @__PURE__ */ jsx(
-                    "div",
-                    {
-                      className: "absolute left-0 top-3 bottom-3 w-1 rounded-r-full",
-                      style: { backgroundColor: statusInfo.color }
-                    }
-                  ),
-                  /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0 pl-1.5", children: [
-                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 flex-wrap mb-1.5", children: [
-                      /* @__PURE__ */ jsx("span", { className: "text-sm sm:text-base font-bold text-[#1a294a]", children: r.leaveType }),
-                      /* @__PURE__ */ jsx(Badge, { label: r.status, cfg: statusInfo }),
-                      /* @__PURE__ */ jsxs("span", { className: "text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-50 text-[#08709d] border border-sky-100", children: [
-                        "⏳ ",
-                        durationText
-                      ] })
-                    ] }),
-                    r.reason ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500 font-medium truncate max-w-xl mb-1.5", children: r.reason }) : /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-400 font-medium italic mb-1.5", children: "Standard Leave Application" }),
-                    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 text-[11px] text-slate-400 font-medium", children: [
-                      /* @__PURE__ */ jsxs("span", { children: [
-                        "Submitted: ",
-                        new Date(r.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
-                      ] }),
-                      /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: "•" }),
-                      /* @__PURE__ */ jsxs("span", { className: "text-slate-500 font-mono", children: [
-                        "ID: ",
-                        r.staffId || (currentUser == null ? void 0 : currentUser.id)
-                      ] })
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 shrink-0 self-end sm:self-center", children: /* @__PURE__ */ jsxs(
-                    "button",
-                    {
-                      type: "button",
-                      onClick: () => openModal("viewLeave", r),
-                      className: "px-4 py-2 rounded-xl text-xs font-bold bg-sky-50 hover:bg-sky-100 text-[#08709d] border border-sky-200/70 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95 group-hover:border-[#08709d]/40",
-                      children: [
-                        /* @__PURE__ */ jsx(Eye, { size: 14, className: "text-[#08709d]" }),
-                        /* @__PURE__ */ jsx("span", { children: "View Details" })
-                      ]
-                    }
-                  ) })
-                ]
-              },
-              r.id || i
-            );
-          }) })),
-          activeTab === "ot" && (myOts.length === 0 ? /* @__PURE__ */ jsx(
-            EmptyState,
-            {
-              icon: Clock,
-              text: "No OT claims recorded. Click 'Apply for OT' to log your extra shift duty hours."
-            }
-          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3", children: myOts.map((r, i) => /* @__PURE__ */ jsxs(
-            "div",
-            {
-              className: "border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs",
-              children: [
-                /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-[#1a294a]", children: r.otType }),
-                    /* @__PURE__ */ jsx(Badge, { label: r.status })
-                  ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 text-xs text-slate-500 font-medium flex-wrap", children: [
-                    /* @__PURE__ */ jsxs("span", { children: [
-                      "📅 Duty Date: ",
-                      r.otDate
-                    ] }),
-                    /* @__PURE__ */ jsxs("span", { className: "text-emerald-700 font-bold font-mono", children: [
-                      "⏱️ ",
-                      r.otHours,
-                      " Hours Claimed"
-                    ] })
-                  ] })
-                ] }),
-                /* @__PURE__ */ jsxs("span", { className: "text-[11px] text-slate-400 font-mono shrink-0", children: [
-                  "Submitted: ",
-                  new Date(r.submittedAt).toLocaleDateString("en-GB")
-                ] })
-              ]
-            },
-            r.id || i
-          )) })),
-          activeTab === "notice" && (mySubmittedNotices.length === 0 ? /* @__PURE__ */ jsx(
-            EmptyState,
-            {
-              icon: Megaphone,
-              text: "You haven't posted any staff notices yet. Click 'Submit Staff Notice' above to create one."
-            }
-          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3", children: mySubmittedNotices.map((r, i) => /* @__PURE__ */ jsxs(
-            "div",
-            {
-              className: "border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs",
-              children: [
-                /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-[#1a294a]", children: r.title }),
-                    /* @__PURE__ */ jsx(Badge, { label: r.status || "Published" }),
-                    /* @__PURE__ */ jsxs("span", { className: "text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600", children: [
-                      "Priority: ",
-                      r.priority
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500 font-normal line-clamp-1", children: r.content })
-                ] }),
-                /* @__PURE__ */ jsxs(
-                  "button",
-                  {
-                    type: "button",
-                    onClick: () => openModal("viewNotice", r),
-                    className: "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-sky-50 text-[#08709d] hover:bg-sky-100 transition-all shrink-0 cursor-pointer flex items-center gap-1.5",
-                    children: [
-                      /* @__PURE__ */ jsx(Eye, { size: 13 }),
-                      /* @__PURE__ */ jsx("span", { children: "View Details" })
-                    ]
-                  }
-                )
-              ]
-            },
-            r.id || i
-          )) })),
-          activeTab === "salary" && (mySalaries.length === 0 ? /* @__PURE__ */ jsx(
-            EmptyState,
-            {
-              icon: TrendingUp,
-              text: "No salary appraisals submitted. Click 'Salary Review' above to request an evaluation."
-            }
-          ) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3", children: mySalaries.map((r, i) => /* @__PURE__ */ jsxs(
-            "div",
-            {
-              className: "border border-slate-200 rounded-2xl p-4 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs",
-              children: [
-                /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap mb-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-[#1a294a]", children: r.incType }),
-                    /* @__PURE__ */ jsx(Badge, { label: r.status })
-                  ] }),
-                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500 font-medium", children: "Annual Clinical Appraisal & Performance Review" })
-                ] }),
-                /* @__PURE__ */ jsxs("span", { className: "text-[11px] text-slate-400 font-mono shrink-0", children: [
-                  "Submitted: ",
-                  new Date(r.submittedAt).toLocaleDateString("en-GB")
-                ] })
-              ]
-            },
-            r.id || i
-          )) }))
-        ] })
       ] })
     ] }),
-    /* @__PURE__ */ jsx(AnimatePresence, { children: activeModal && /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-6 overflow-y-auto", children: [
+    /* @__PURE__ */ jsxs("div", { className: "sm:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-4 py-2.5 z-40 flex items-center justify-between gap-2 shadow-lg", children: [
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => openModal("leave"),
+          className: "flex-1 flex flex-col items-center justify-center gap-0.5 py-1 text-[#08709d] active:scale-95 transition-transform",
+          children: [
+            /* @__PURE__ */ jsx(Calendar, { size: 18 }),
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold", children: "Leave" })
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => openModal("ot"),
+          className: "flex-1 flex flex-col items-center justify-center gap-0.5 py-1 text-[#5eb63b] active:scale-95 transition-transform",
+          children: [
+            /* @__PURE__ */ jsx(Clock, { size: 18 }),
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold", children: "OT Claim" })
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => openModal("duty"),
+          className: "flex-1 flex flex-col items-center justify-center gap-0.5 py-1 text-[#0284c7] active:scale-95 transition-transform",
+          children: [
+            /* @__PURE__ */ jsx(CalendarDays, { size: 18 }),
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold", children: "Swap" })
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => openModal("notice"),
+          className: "flex-1 flex flex-col items-center justify-center gap-0.5 py-1 text-[#6366f1] active:scale-95 transition-transform",
+          children: [
+            /* @__PURE__ */ jsx(Megaphone, { size: 18 }),
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold", children: "Notice" })
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsx(AnimatePresence, { children: activeModal && /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6 overflow-y-auto", children: [
       /* @__PURE__ */ jsx(
         motion.div,
         {
@@ -12731,14 +13763,15 @@ const StaffDashboard = () => {
       /* @__PURE__ */ jsxs(
         motion.div,
         {
-          initial: { opacity: 0, scale: 0.94, y: 15 },
-          animate: { opacity: 1, scale: 1, y: 0 },
-          exit: { opacity: 0, scale: 0.94, y: 15 },
-          transition: { type: "spring", stiffness: 300, damping: 26 },
-          className: "relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-10 my-auto max-h-[92vh] flex flex-col",
+          initial: { opacity: 0, y: 50, scale: 0.96 },
+          animate: { opacity: 1, y: 0, scale: 1 },
+          exit: { opacity: 0, y: 50, scale: 0.96 },
+          transition: { type: "spring", stiffness: 320, damping: 28 },
+          className: "relative w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-10 max-h-[92vh] sm:max-h-[88vh] flex flex-col",
           children: [
-            /* @__PURE__ */ jsx("div", { className: "h-1.5 bg-gradient-to-r from-[#1a294a] via-[#08709d] to-[#5eb63b] shrink-0" }),
-            /* @__PURE__ */ jsxs("div", { className: "overflow-y-auto p-5 sm:p-7 flex flex-col gap-5", children: [
+            /* @__PURE__ */ jsx("div", { className: "sm:hidden flex justify-center pt-2 pb-1 bg-white", children: /* @__PURE__ */ jsx("div", { className: "w-10 h-1.5 bg-slate-300 rounded-full" }) }),
+            /* @__PURE__ */ jsx("div", { className: "h-1 sm:h-1.5 bg-gradient-to-r from-[#1a294a] via-[#08709d] to-[#5eb63b] shrink-0" }),
+            /* @__PURE__ */ jsxs("div", { className: "overflow-y-auto p-4 sm:p-7 flex flex-col gap-4 sm:gap-5", children: [
               activeModal === "leave" && /* @__PURE__ */ jsxs(
                 "form",
                 {
@@ -12752,14 +13785,14 @@ const StaffDashboard = () => {
                     leaveEnd,
                     reason: leaveReason
                   }),
-                  className: "flex flex-col gap-4 text-left",
+                  className: "flex flex-col gap-3.5 sm:gap-4 text-left",
                   children: [
                     /* @__PURE__ */ jsx(ModalHeader, { title: "Apply for Leave", icon: /* @__PURE__ */ jsx(Calendar, { size: 18 }), color: "#08709d", onClose: closeModal }),
-                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
                       /* @__PURE__ */ jsx(Field, { label: "Full Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
                       /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
                     ] }),
-                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
                       /* @__PURE__ */ jsx(Field, { label: "Department", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffDep, onChange: (e) => setStaffDep(e.target.value) }) }),
                       /* @__PURE__ */ jsx(Field, { label: "Position", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffPosition, onChange: (e) => setStaffPosition(e.target.value) }) })
                     ] }),
@@ -12767,11 +13800,11 @@ const StaffDashboard = () => {
                       /* @__PURE__ */ jsx("select", { className: `${inputCls} appearance-none pr-9 cursor-pointer`, value: leaveType, onChange: (e) => setLeaveType(e.target.value), children: ["Annual Leave", "Sick Leave", "Casual Leave", "Emergency Leave", "Unpaid Leave", "Maternity/Paternity Leave"].map((o) => /* @__PURE__ */ jsx("option", { value: o, children: o }, o)) }),
                       /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
                     ] }) }),
-                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
                       /* @__PURE__ */ jsx(Field, { label: "Start Date", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, required: true, value: leaveStart, onChange: (e) => setLeaveStart(e.target.value) }) }),
                       /* @__PURE__ */ jsx(Field, { label: "End Date", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, required: true, value: leaveEnd, onChange: (e) => setLeaveEnd(e.target.value) }) })
                     ] }),
-                    leaveStart && leaveEnd && /* @__PURE__ */ jsxs("div", { className: "bg-sky-50 border border-sky-200 rounded-xl p-3 text-center text-xs text-sky-800 font-semibold", children: [
+                    leaveStart && leaveEnd && /* @__PURE__ */ jsxs("div", { className: "bg-sky-50 border border-sky-200 rounded-xl p-2.5 sm:p-3 text-center text-xs text-sky-800 font-semibold", children: [
                       "Total leave duration: ",
                       /* @__PURE__ */ jsx("span", { className: "font-extrabold text-[#08709d]", children: calculateDays(leaveStart, leaveEnd) })
                     ] }),
@@ -12792,69 +13825,69 @@ const StaffDashboard = () => {
                   ]
                 }
               ),
-              activeModal === "viewLeave" && selectedLeave && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 text-left", children: [
+              activeModal === "viewLeave" && selectedLeave && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3.5 sm:gap-4 text-left", children: [
                 /* @__PURE__ */ jsx(ModalHeader, { title: "Leave Application Details", icon: /* @__PURE__ */ jsx(Calendar, { size: 18 }), color: "#08709d", onClose: closeModal }),
-                /* @__PURE__ */ jsxs("div", { className: "bg-gradient-to-r from-sky-50 via-white to-sky-50/50 border border-sky-100 rounded-2xl p-4 flex items-center justify-between gap-3 flex-wrap shadow-2xs", children: [
+                /* @__PURE__ */ jsxs("div", { className: "bg-gradient-to-r from-sky-50 via-white to-sky-50/50 border border-sky-100 rounded-2xl p-3.5 sm:p-4 flex items-center justify-between gap-3 flex-wrap shadow-2xs", children: [
                   /* @__PURE__ */ jsxs("div", { children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1", children: "Current Status" }),
+                    /* @__PURE__ */ jsx("span", { className: "text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1", children: "Current Status" }),
                     /* @__PURE__ */ jsx(Badge, { label: selectedLeave.status || "Pending" })
                   ] }),
                   /* @__PURE__ */ jsxs("div", { className: "text-right", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1", children: "Duration" }),
-                    /* @__PURE__ */ jsx("span", { className: "text-sm sm:text-base font-extrabold text-[#08709d] bg-white px-3 py-1 rounded-xl border border-sky-100 shadow-2xs", children: calculateDays(selectedLeave.leaveStart, selectedLeave.leaveEnd) })
+                    /* @__PURE__ */ jsx("span", { className: "text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1", children: "Duration" }),
+                    /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-base font-extrabold text-[#08709d] bg-white px-2.5 sm:px-3 py-1 rounded-xl border border-sky-100 shadow-2xs", children: calculateDays(selectedLeave.leaveStart, selectedLeave.leaveEnd) })
                   ] })
                 ] }),
-                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5", children: [
-                    /* @__PURE__ */ jsxs("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1", children: [
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5", children: [
+                    /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1", children: [
                       /* @__PURE__ */ jsx(CalendarDays, { size: 13, className: "text-[#08709d]" }),
                       " Start Date"
                     ] }),
-                    /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-[#1a294a] block", children: selectedLeave.leaveStart ? new Date(selectedLeave.leaveStart).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "long", year: "numeric" }) : "—" })
+                    /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm font-bold text-[#1a294a] block", children: selectedLeave.leaveStart ? new Date(selectedLeave.leaveStart).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "long", year: "numeric" }) : "—" })
                   ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5", children: [
-                    /* @__PURE__ */ jsxs("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5", children: [
+                    /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1", children: [
                       /* @__PURE__ */ jsx(CalendarDays, { size: 13, className: "text-[#08709d]" }),
                       " End Date"
                     ] }),
-                    /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-[#1a294a] block", children: selectedLeave.leaveEnd ? new Date(selectedLeave.leaveEnd).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "long", year: "numeric" }) : "—" })
+                    /* @__PURE__ */ jsx("span", { className: "text-xs sm:text-sm font-bold text-[#1a294a] block", children: selectedLeave.leaveEnd ? new Date(selectedLeave.leaveEnd).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "long", year: "numeric" }) : "—" })
                   ] })
                 ] }),
-                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3 text-xs bg-white border border-slate-200 rounded-2xl p-3.5", children: [
+                /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-2.5 sm:gap-3 text-xs bg-white border border-slate-200 rounded-2xl p-3 sm:p-3.5", children: [
                   /* @__PURE__ */ jsxs("div", { children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Staff Name" }),
-                    /* @__PURE__ */ jsx("span", { className: "font-bold text-slate-700", children: selectedLeave.staffName || (currentUser == null ? void 0 : currentUser.name) })
+                    /* @__PURE__ */ jsx("span", { className: "text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Staff Name" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-bold text-slate-700 text-xs sm:text-sm", children: selectedLeave.staffName || (currentUser == null ? void 0 : currentUser.name) })
                   ] }),
                   /* @__PURE__ */ jsxs("div", { children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Staff ID" }),
-                    /* @__PURE__ */ jsx("span", { className: "font-bold font-mono text-[#08709d]", children: selectedLeave.staffId || (currentUser == null ? void 0 : currentUser.id) })
+                    /* @__PURE__ */ jsx("span", { className: "text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Staff ID" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-bold font-mono text-[#08709d] text-xs sm:text-sm", children: selectedLeave.staffId || (currentUser == null ? void 0 : currentUser.id) })
                   ] }),
                   /* @__PURE__ */ jsxs("div", { className: "mt-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Department" }),
-                    /* @__PURE__ */ jsx("span", { className: "font-bold text-slate-700", children: selectedLeave.staffDep || (currentUser == null ? void 0 : currentUser.department) || "Clinical" })
+                    /* @__PURE__ */ jsx("span", { className: "text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Department" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-bold text-slate-700 text-xs", children: selectedLeave.staffDep || (currentUser == null ? void 0 : currentUser.department) || "Clinical" })
                   ] }),
                   /* @__PURE__ */ jsxs("div", { className: "mt-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Leave Category" }),
-                    /* @__PURE__ */ jsx("span", { className: "font-bold text-slate-700", children: selectedLeave.leaveType })
+                    /* @__PURE__ */ jsx("span", { className: "text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block", children: "Leave Category" }),
+                    /* @__PURE__ */ jsx("span", { className: "font-bold text-slate-700 text-xs", children: selectedLeave.leaveType })
                   ] })
                 ] }),
                 /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsx("span", { className: "text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5", children: "Reason & Handover Cover Plan" }),
-                  /* @__PURE__ */ jsx("div", { className: "bg-slate-50 rounded-2xl p-4 border border-slate-200 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium", children: selectedLeave.reason || "No additional notes provided with this application." })
+                  /* @__PURE__ */ jsx("span", { className: "text-[10.5px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1", children: "Reason & Handover Cover Plan" }),
+                  /* @__PURE__ */ jsx("div", { className: "bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-200 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium", children: selectedLeave.reason || "No additional notes provided with this application." })
                 ] }),
-                /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-100 pt-3", children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-100 pt-2.5", children: [
                   /* @__PURE__ */ jsxs("span", { children: [
-                    "Submitted on: ",
-                    new Date(selectedLeave.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+                    "Submitted: ",
+                    new Date(selectedLeave.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
                   ] }),
-                  /* @__PURE__ */ jsx("span", { className: "text-slate-500 font-semibold", children: "Corx HR & Clinical Approval" })
+                  /* @__PURE__ */ jsx("span", { className: "text-slate-500 font-semibold", children: "Corx HR" })
                 ] }),
                 /* @__PURE__ */ jsx("div", { className: "flex items-center justify-end gap-3 pt-1", children: /* @__PURE__ */ jsx(
                   "button",
                   {
                     type: "button",
                     onClick: closeModal,
-                    className: "px-5 py-2.5 rounded-xl bg-[#08709d] text-white text-xs font-bold cursor-pointer hover:bg-[#065679] transition-all shadow-xs",
+                    className: "w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#08709d] text-white text-xs font-bold cursor-pointer hover:bg-[#065679] transition-all shadow-xs",
                     children: "Close Details"
                   }
                 ) })
@@ -12872,14 +13905,14 @@ const StaffDashboard = () => {
                     otHours,
                     description: otDescription
                   }),
-                  className: "flex flex-col gap-4 text-left",
+                  className: "flex flex-col gap-3.5 sm:gap-4 text-left",
                   children: [
                     /* @__PURE__ */ jsx(ModalHeader, { title: "Apply for OT", icon: /* @__PURE__ */ jsx(Clock, { size: 18 }), color: "#5eb63b", onClose: closeModal }),
-                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
                       /* @__PURE__ */ jsx(Field, { label: "Full Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
                       /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
                     ] }),
-                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
                       /* @__PURE__ */ jsx(Field, { label: "Department", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffDep, onChange: (e) => setStaffDep(e.target.value) }) }),
                       /* @__PURE__ */ jsx(Field, { label: "Position", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffPosition, onChange: (e) => setStaffPosition(e.target.value) }) })
                     ] }),
@@ -12887,7 +13920,7 @@ const StaffDashboard = () => {
                       /* @__PURE__ */ jsx("select", { className: `${inputCls} appearance-none pr-9 cursor-pointer`, value: otType, onChange: (e) => setOtType(e.target.value), children: ["Day Shift Extension", "Night Shift", "Weekend Clinical Duty", "Emergency On-Call Duty", "Home Visit Overtime"].map((o) => /* @__PURE__ */ jsx("option", { value: o, children: o }, o)) }),
                       /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
                     ] }) }),
-                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
                       /* @__PURE__ */ jsx(Field, { label: "Date of Duty", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, required: true, value: otDate, onChange: (e) => setOtDate(e.target.value) }) }),
                       /* @__PURE__ */ jsx(Field, { label: "Hours Worked", children: /* @__PURE__ */ jsx("input", { type: "number", step: "0.5", min: "0.5", max: "24", placeholder: "e.g. 4.5", className: inputCls, required: true, value: otHours, onChange: (e) => setOtHours(e.target.value) }) })
                     ] }),
@@ -12908,6 +13941,38 @@ const StaffDashboard = () => {
                   ]
                 }
               ),
+              activeModal === "duty" && /* @__PURE__ */ jsxs(
+                "form",
+                {
+                  onSubmit: (e) => submitForm(e, "duty", {
+                    staffId,
+                    staffName,
+                    dutyDate,
+                    dutyReplacement,
+                    dutyReason
+                  }),
+                  className: "flex flex-col gap-3.5 sm:gap-4 text-left",
+                  children: [
+                    /* @__PURE__ */ jsx(ModalHeader, { title: "Duty Schedule Swap", icon: /* @__PURE__ */ jsx(CalendarDays, { size: 18 }), color: "#0284c7", onClose: closeModal }),
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
+                      /* @__PURE__ */ jsx(Field, { label: "Scheduled Duty Date", children: /* @__PURE__ */ jsx("input", { type: "date", className: inputCls, required: true, value: dutyDate, onChange: (e) => setDutyDate(e.target.value) }) }),
+                      /* @__PURE__ */ jsx(Field, { label: "Replacement Staff Name", children: /* @__PURE__ */ jsx("input", { type: "text", className: inputCls, required: true, placeholder: "Name of covering nurse / doctor", value: dutyReplacement, onChange: (e) => setDutyReplacement(e.target.value) }) })
+                    ] }),
+                    /* @__PURE__ */ jsx(Field, { label: "Reason / Handover Details", children: /* @__PURE__ */ jsx(
+                      "textarea",
+                      {
+                        className: inputCls,
+                        required: true,
+                        placeholder: "Provide details for duty shift swap or replacement request…",
+                        value: dutyReason,
+                        onChange: (e) => setDutyReason(e.target.value),
+                        rows: 3
+                      }
+                    ) }),
+                    /* @__PURE__ */ jsx(ModalFooter, { color: "#0284c7", label: "Submit Duty Request", onCancel: closeModal })
+                  ]
+                }
+              ),
               activeModal === "notice" && /* @__PURE__ */ jsxs(
                 "form",
                 {
@@ -12919,10 +13984,10 @@ const StaffDashboard = () => {
                     priority: noticePriority,
                     targetAudience: noticeTargetAudience
                   }),
-                  className: "flex flex-col gap-4 text-left",
+                  className: "flex flex-col gap-3.5 sm:gap-4 text-left",
                   children: [
                     /* @__PURE__ */ jsx(ModalHeader, { title: "Submit Staff Notice", icon: /* @__PURE__ */ jsx(Megaphone, { size: 18 }), color: "#6366f1", onClose: closeModal }),
-                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
                       /* @__PURE__ */ jsx(Field, { label: "Notice Category", children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
                         /* @__PURE__ */ jsx("select", { className: `${inputCls} appearance-none pr-9 cursor-pointer`, value: noticeCategory, onChange: (e) => setNoticeCategory(e.target.value), children: ["Internal Staff Notice", "Clinical Shift Handover", "Duty Replacement Note", "Departmental Update", "General Request"].map((o) => /* @__PURE__ */ jsx("option", { value: o, children: o }, o)) }),
                         /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
@@ -12941,7 +14006,7 @@ const StaffDashboard = () => {
                       {
                         className: inputCls,
                         required: true,
-                        placeholder: "e.g. Duty Handover for ICU Patient, Shift Swap Request",
+                        placeholder: "e.g. Shift Handover for ICU, Duty Swap Request",
                         value: noticeTitle,
                         onChange: (e) => setNoticeTitle(e.target.value)
                       }
@@ -12961,7 +14026,7 @@ const StaffDashboard = () => {
                         placeholder: "Write your notice details clearly for colleagues and administration…",
                         value: noticeMessage,
                         onChange: (e) => setNoticeMessage(e.target.value),
-                        rows: 4
+                        rows: 3
                       }
                     ) }),
                     /* @__PURE__ */ jsx(FileUpload, { label: "Attachment (Optional)", file: noticeFile, onFile: () => noticeFileRef.current.click(), onClear: () => setNoticeFile(null), accentColor: "#6366f1" }),
@@ -12981,10 +14046,10 @@ const StaffDashboard = () => {
                     incType,
                     justification: incJustification
                   }),
-                  className: "flex flex-col gap-4 text-left",
+                  className: "flex flex-col gap-3.5 sm:gap-4 text-left",
                   children: [
                     /* @__PURE__ */ jsx(ModalHeader, { title: "Salary Increment Review", icon: /* @__PURE__ */ jsx(TrendingUp, { size: 18 }), color: "#1a294a", onClose: closeModal }),
-                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3.5", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5", children: [
                       /* @__PURE__ */ jsx(Field, { label: "Full Name", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffName, onChange: (e) => setStaffName(e.target.value) }) }),
                       /* @__PURE__ */ jsx(Field, { label: "Staff ID", children: /* @__PURE__ */ jsx("input", { className: inputCls, required: true, value: staffId, onChange: (e) => setStaffId(e.target.value) }) })
                     ] }),
@@ -12992,12 +14057,12 @@ const StaffDashboard = () => {
                       /* @__PURE__ */ jsx("select", { className: `${inputCls} appearance-none pr-9 cursor-pointer`, value: incType, onChange: (e) => setIncType(e.target.value), children: ["Merit-Based Performance Review", "DHA License Upgrade Alignment", "Senior Position Promotion", "Market Adjustment Alignment"].map((o) => /* @__PURE__ */ jsx("option", { value: o, children: o }, o)) }),
                       /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" })
                     ] }) }),
-                    /* @__PURE__ */ jsx(Field, { label: "Key Accomplishments & Justification", children: /* @__PURE__ */ jsx(
+                    /* @__PURE__ */ jsx(Field, { label: "Key Accomplishments", children: /* @__PURE__ */ jsx(
                       "textarea",
                       {
                         className: inputCls,
                         required: true,
-                        placeholder: "Detail your clinical milestones, patient satisfaction feedback, and certifications…",
+                        placeholder: "Detail your clinical milestones, patient feedback, and achievements…",
                         value: incJustification,
                         onChange: (e) => setIncJustification(e.target.value),
                         rows: 3
@@ -13009,28 +14074,28 @@ const StaffDashboard = () => {
                   ]
                 }
               ),
-              activeModal === "viewNotice" && selectedNotice && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 text-left", children: [
+              activeModal === "viewNotice" && selectedNotice && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3.5 sm:gap-4 text-left", children: [
                 /* @__PURE__ */ jsx(ModalHeader, { title: "Notice Details", icon: /* @__PURE__ */ jsx(Megaphone, { size: 18 }), color: "#08709d", onClose: closeModal }),
                 /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [
                   /* @__PURE__ */ jsx(Badge, { label: selectedNotice.priority || "Normal" }),
-                  /* @__PURE__ */ jsx("span", { className: "text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full", children: selectedNotice.targetAudience === "all" ? "📢 All Staff" : "🏢 Departmental" })
+                  /* @__PURE__ */ jsx("span", { className: "text-[10px] sm:text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full", children: selectedNotice.targetAudience === "all" ? "📢 All Staff" : "🏢 Departmental" })
                 ] }),
                 /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-[#1a294a] mb-2", children: selectedNotice.title }),
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 text-xs text-slate-400 pb-3 border-b border-slate-100 font-medium", children: [
+                  /* @__PURE__ */ jsx("h3", { className: "text-sm sm:text-lg font-black text-[#1a294a] mb-1.5", children: selectedNotice.title }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 text-[10px] sm:text-xs text-slate-400 pb-2.5 border-b border-slate-100 font-medium", children: [
                     /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1", children: [
-                      /* @__PURE__ */ jsx(User, { size: 13, className: "text-[#08709d]" }),
-                      "Issued by: ",
-                      /* @__PURE__ */ jsx("strong", { className: "text-slate-700", children: selectedNotice.staffName || "Administration" })
+                      /* @__PURE__ */ jsx(User, { size: 12, className: "text-[#08709d]" }),
+                      "By: ",
+                      /* @__PURE__ */ jsx("strong", { className: "text-slate-700", children: selectedNotice.staffName || "Admin" })
                     ] }),
                     /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1", children: [
-                      /* @__PURE__ */ jsx(Clock, { size: 13, className: "text-[#08709d]" }),
-                      selectedNotice.submittedAt ? new Date(selectedNotice.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : "Recently"
+                      /* @__PURE__ */ jsx(Clock, { size: 12, className: "text-[#08709d]" }),
+                      selectedNotice.submittedAt ? new Date(selectedNotice.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : "Recently"
                     ] })
                   ] })
                 ] }),
-                /* @__PURE__ */ jsx("div", { className: "bg-slate-50 rounded-2xl p-4 border border-slate-100 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium", children: selectedNotice.content }),
-                /* @__PURE__ */ jsx("div", { className: "flex items-center justify-end gap-3 pt-2", children: /* @__PURE__ */ jsx(
+                /* @__PURE__ */ jsx("div", { className: "bg-slate-50 rounded-2xl p-3.5 sm:p-4 border border-slate-100 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium", children: selectedNotice.content }),
+                /* @__PURE__ */ jsx("div", { className: "flex items-center justify-end gap-3 pt-1", children: /* @__PURE__ */ jsx(
                   "button",
                   {
                     type: "button",
@@ -13038,8 +14103,148 @@ const StaffDashboard = () => {
                       toggleAcknowledgeNotice(selectedNotice.id);
                       closeModal();
                     },
-                    className: "px-5 py-2.5 rounded-xl bg-[#08709d] text-white text-xs font-bold cursor-pointer hover:bg-[#065679] transition-all shadow-xs",
+                    className: "w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#08709d] text-white text-xs font-bold cursor-pointer hover:bg-[#065679] transition-all shadow-xs",
                     children: "Acknowledge & Close"
+                  }
+                ) })
+              ] }),
+              activeModal === "viewSalarySlip" && selectedSalarySlip && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3.5 sm:gap-4 text-left", children: [
+                /* @__PURE__ */ jsx(ModalHeader, { title: "Monthly Salary Slip", icon: /* @__PURE__ */ jsx(Receipt, { size: 18 }), color: "#059669", onClose: closeModal }),
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-2 flex-wrap", children: [
+                  /* @__PURE__ */ jsx("span", { className: "text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider", children: "Official Monthly Slip" }),
+                  /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-xs text-slate-400 font-mono", children: [
+                    "Issued: ",
+                    selectedSalarySlip.submittedAt ? new Date(selectedSalarySlip.submittedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : "Recently"
+                  ] })
+                ] }),
+                selectedSalarySlip.description && /* @__PURE__ */ jsx("div", { className: "bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-100 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium", children: selectedSalarySlip.description }),
+                selectedSalarySlip.image && /* @__PURE__ */ jsx("div", { className: "rounded-2xl border border-slate-200 overflow-hidden bg-slate-900/5 p-1.5 flex flex-col items-center justify-center", children: /* @__PURE__ */ jsx(
+                  "img",
+                  {
+                    src: selectedSalarySlip.image.startsWith("http") ? selectedSalarySlip.image : `${API_BASE_URL}${selectedSalarySlip.image.startsWith("/") ? "" : "/"}${selectedSalarySlip.image}`,
+                    alt: "Monthly Salary Slip",
+                    className: "max-h-[55vh] sm:max-h-[65vh] w-auto rounded-xl object-contain shadow-sm"
+                  }
+                ) }),
+                /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-1", children: [
+                  selectedSalarySlip.image && /* @__PURE__ */ jsxs(
+                    "a",
+                    {
+                      href: selectedSalarySlip.image.startsWith("http") ? selectedSalarySlip.image : `${API_BASE_URL}${selectedSalarySlip.image.startsWith("/") ? "" : "/"}${selectedSalarySlip.image}`,
+                      target: "_blank",
+                      rel: "noreferrer",
+                      download: true,
+                      className: "w-full sm:w-auto justify-center px-4 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5",
+                      children: [
+                        /* @__PURE__ */ jsx(ExternalLink, { size: 14 }),
+                        " Open Full Size / Download"
+                      ]
+                    }
+                  ),
+                  /* @__PURE__ */ jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: closeModal,
+                      className: "w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 text-white text-xs font-bold cursor-pointer hover:bg-slate-700 transition-all shadow-xs",
+                      children: "Close"
+                    }
+                  )
+                ] })
+              ] }),
+              activeModal === "viewSchedule" && selectedSchedule && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3.5 sm:gap-4 text-left", children: [
+                /* @__PURE__ */ jsx(ModalHeader, { title: "Trip & Driver Schedule", icon: /* @__PURE__ */ jsx(Car, { size: 18 }), color: "#08709d", onClose: closeModal }),
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-2 flex-wrap bg-sky-50/80 p-3 rounded-2xl border border-sky-100", children: [
+                  /* @__PURE__ */ jsxs("div", { children: [
+                    /* @__PURE__ */ jsx("div", { className: "text-[10px] font-bold text-sky-800 uppercase tracking-wider", children: "Assigned Driver" }),
+                    /* @__PURE__ */ jsx("div", { className: "text-sm font-black text-[#1a294a]", children: selectedSchedule.driver_name || "Driver" }),
+                    selectedSchedule.driver_phone && /* @__PURE__ */ jsxs("div", { className: "text-xs text-slate-500 font-medium", children: [
+                      "📞 ",
+                      selectedSchedule.driver_phone
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "text-right", children: [
+                    /* @__PURE__ */ jsx("div", { className: "text-[10px] font-bold text-sky-800 uppercase tracking-wider", children: "Vehicle & Date" }),
+                    /* @__PURE__ */ jsx("div", { className: "text-xs font-bold text-slate-700", children: selectedSchedule.vehicle_info || "Standard Vehicle" }),
+                    /* @__PURE__ */ jsxs("div", { className: "text-xs font-bold font-mono text-[#08709d]", children: [
+                      "📅 ",
+                      selectedSchedule.schedule_date || "Date TBD"
+                    ] })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [
+                  /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-xs font-bold text-[#08709d] bg-sky-50 border border-sky-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider", children: [
+                    "Status: ",
+                    selectedSchedule.status || "Scheduled"
+                  ] }),
+                  /* @__PURE__ */ jsxs("span", { className: "text-[10px] sm:text-xs text-slate-500 font-medium", children: [
+                    "Total ",
+                    selectedSchedule.route_stops ? selectedSchedule.route_stops.length : 0,
+                    " Trip Legs / Stops"
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-3 max-h-[50vh] overflow-y-auto pr-1", children: selectedSchedule.route_stops && selectedSchedule.route_stops.length > 0 ? selectedSchedule.route_stops.map((st, idx) => /* @__PURE__ */ jsxs("div", { className: "bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex flex-col gap-2.5", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between border-b border-slate-200/60 pb-1.5", children: [
+                    /* @__PURE__ */ jsxs("span", { className: "text-xs font-black text-[#08709d]", children: [
+                      "Stop #",
+                      st.stop_order || idx + 1
+                    ] }),
+                    /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-700", children: st.status || "Scheduled" })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs", children: [
+                    /* @__PURE__ */ jsxs("div", { className: "bg-sky-50/80 border border-sky-100/90 p-2.5 rounded-xl", children: [
+                      /* @__PURE__ */ jsxs("div", { className: "font-bold text-sky-900", children: [
+                        "🛫 Pick-up: ",
+                        st.source_location
+                      ] }),
+                      st.source_time && /* @__PURE__ */ jsxs("div", { className: "text-[11px] text-sky-700 font-semibold mt-0.5", children: [
+                        "⏰ Departure: ",
+                        st.source_time
+                      ] }),
+                      (st.staff_passengers_details && st.staff_passengers_details.length > 0 || st.staff_passenger_name) && /* @__PURE__ */ jsxs("div", { className: "mt-2", children: [
+                        /* @__PURE__ */ jsx("div", { className: "text-[10px] font-bold uppercase tracking-wider text-sky-800 mb-1", children: "👥 Staff to Pick Up:" }),
+                        /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1", children: (st.staff_passengers_details && st.staff_passengers_details.length > 0 ? st.staff_passengers_details : [{ id: "p", name: st.staff_passenger_name }]).map((p, pIdx) => /* @__PURE__ */ jsxs("span", { className: "bg-white border border-sky-200 text-sky-900 px-1.5 py-0.5 rounded text-[10px] font-bold shadow-2xs", children: [
+                          "👤 ",
+                          p.full_name || p.name || p.staff_name,
+                          " ",
+                          p.department ? `(${p.department})` : ""
+                        ] }, p.id || p.staff_id || pIdx)) })
+                      ] })
+                    ] }),
+                    /* @__PURE__ */ jsxs("div", { className: "bg-emerald-50/80 border border-emerald-100/90 p-2.5 rounded-xl", children: [
+                      /* @__PURE__ */ jsxs("div", { className: "font-bold text-emerald-900", children: [
+                        "🛬 Drop-off: ",
+                        st.destination_location
+                      ] }),
+                      st.destination_time && /* @__PURE__ */ jsxs("div", { className: "text-[11px] text-emerald-700 font-semibold mt-0.5", children: [
+                        "⏰ Arrival: ",
+                        st.destination_time
+                      ] }),
+                      (st.staff_dropoffs_details && st.staff_dropoffs_details.length > 0 || st.staff_passengers_details && st.staff_passengers_details.length > 0 || st.staff_passenger_name) && /* @__PURE__ */ jsxs("div", { className: "mt-2", children: [
+                        /* @__PURE__ */ jsx("div", { className: "text-[10px] font-bold uppercase tracking-wider text-emerald-800 mb-1", children: "👥 Staff to Drop Off:" }),
+                        /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1", children: (st.staff_dropoffs_details && st.staff_dropoffs_details.length > 0 ? st.staff_dropoffs_details : st.staff_passengers_details && st.staff_passengers_details.length > 0 ? st.staff_passengers_details : [{ id: "d", name: st.staff_passenger_name }]).map((d, dIdx) => /* @__PURE__ */ jsxs("span", { className: "bg-white border border-emerald-200 text-emerald-900 px-1.5 py-0.5 rounded text-[10px] font-bold shadow-2xs", children: [
+                          "👥 ",
+                          d.full_name || d.name || d.staff_name,
+                          " ",
+                          d.department ? `(${d.department})` : ""
+                        ] }, d.id || d.staff_id || dIdx)) })
+                      ] })
+                    ] })
+                  ] }),
+                  st.notes && /* @__PURE__ */ jsxs("div", { className: "text-[11px] text-slate-600 bg-white p-2 rounded-xl border border-slate-100", children: [
+                    "📝 ",
+                    /* @__PURE__ */ jsx("strong", { children: "Instructions:" }),
+                    " ",
+                    st.notes
+                  ] })
+                ] }, st.id || idx)) : /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-400 italic p-3 text-center", children: "No route stops configured." }) }),
+                /* @__PURE__ */ jsx("div", { className: "flex items-center justify-end pt-1", children: /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: closeModal,
+                    className: "w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#08709d] text-white text-xs font-bold cursor-pointer hover:bg-[#065679] transition-all shadow-xs",
+                    children: "Close Details"
                   }
                 ) })
               ] })
@@ -13385,6 +14590,11 @@ const Sitemap = () => {
       name: "Staff Management API",
       url: `${API_BASE_URL}/api/staff/`,
       desc: "Staff profiles, duties, and task endpoints"
+    },
+    {
+      name: "Duty Schedule API",
+      url: `${API_BASE_URL}/api/duties/`,
+      desc: "Duty shift schedules, replacements, and on-call rosters"
     }
   ];
   return /* @__PURE__ */ jsx("div", { className: "pt-28 pb-24 bg-slate-50 min-h-screen text-slate-800 font-sans", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl", children: [
@@ -13645,11 +14855,11 @@ function App() {
     /* @__PURE__ */ jsx(MainLayout, { children: /* @__PURE__ */ jsx(AnimatedRoutes, {}) })
   ] }) });
 }
-function render(url) {
+function render(url, initialData = null) {
   const html = renderToString(
-    /* @__PURE__ */ jsx(React.StrictMode, { children: /* @__PURE__ */ jsx(StaticRouter, { location: url, children: /* @__PURE__ */ jsx(App, {}) }) })
+    /* @__PURE__ */ jsx(React.StrictMode, { children: /* @__PURE__ */ jsx(SSRDataProvider, { initialData, children: /* @__PURE__ */ jsx(StaticRouter, { location: url, children: /* @__PURE__ */ jsx(App, {}) }) }) })
   );
-  return { html };
+  return { html, initialData };
 }
 export {
   render

@@ -10,14 +10,7 @@ export default function EditableText({
   multiline = false
 }) {
   const storageKey = `corx_editable_${slug}_${fieldKey}`;
-  const [text, setText] = useState(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
-      return saved !== null ? saved : defaultText;
-    } catch (e) {
-      return defaultText;
-    }
-  });
+  const [text, setText] = useState(defaultText);
 
   useEffect(() => {
     try {

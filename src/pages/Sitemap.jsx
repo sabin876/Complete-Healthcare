@@ -175,6 +175,11 @@ const Sitemap = () => {
       name: "Staff Management API", 
       url: `${API_BASE_URL}/api/staff/`, 
       desc: "Staff profiles, duties, and task endpoints" 
+    },
+    { 
+      name: "Duty Schedule API", 
+      url: `${API_BASE_URL}/api/duties/`, 
+      desc: "Duty shift schedules, replacements, and on-call rosters" 
     }
   ];
 

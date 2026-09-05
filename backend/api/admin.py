@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 from .models import (
     StaffProfile, Task, LeaveApplication, OtApplication,
     SalaryApplication, NoticeApplication, DutyApplication,
-    BlogPost, Service, TeamMember
+    BlogPost, Service, TeamMember, DriverSchedule, DriverRouteStop
 )
 from django.utils.html import conditional_escape
 
@@ -41,6 +41,7 @@ with open(_tpl_file, 'w', encoding='utf-8') as _f:
 # ----------------------------------------------------------------------
 # Helper functions for UI widgets
 # ----------------------------------------------------------------------
+
 def escape_json_for_attr(val):
     if val is None:
         val = []
@@ -2325,10 +2326,323 @@ class OtApplicationAdmin(admin.ModelAdmin):
     list_filter = ('status', 'ot_type')
 
 
+# ----------------------------------------------------------------------
+# Staff Single Recipient Picker Widget (For Salary Slip)
+# ----------------------------------------------------------------------
+class StaffSingleRecipientPickerWidget(forms.Widget):
+    def render(self, name, value, attrs=None, renderer=None):
+        selected_val = str(value) if value is not None else ""
+        staff_list = list(StaffProfile.objects.all().order_by('full_name'))
+
+        # Find selected staff object if any
+        selected_staff_obj = None
+        for s in staff_list:
+            if selected_val == str(s.id) or selected_val == str(s.staff_id):
+                selected_staff_obj = s
+                selected_val = str(s.staff_id)
+                break
+
+        # Extract unique departments for filter chips
+        departments = sorted(list(set([s.department for s in staff_list if s.department])))
+
+        dept_chips_html = '<button type="button" class="salary-dept-filter active" data-dept="all" style="padding: 5px 14px; font-size: 12px; font-weight: 700; border-radius: 20px; border: 1.5px solid #08709d; background: #08709d; color: #ffffff; cursor: pointer; transition: all 0.15s ease;">All Staff</button>'
+        for d in departments:
+            dept_chips_html += f'<button type="button" class="salary-dept-filter" data-dept="{d.lower()}" style="padding: 5px 14px; font-size: 12px; font-weight: 700; border-radius: 20px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #475569; cursor: pointer; transition: all 0.15s ease;">{d}</button>'
+
+        selected_banner_html = ""
+        if selected_staff_obj:
+            s_init = "".join([w[0].upper() for w in selected_staff_obj.full_name.split() if w])[:2] if selected_staff_obj.full_name else "??"
+            s_photo = f'<img src="{selected_staff_obj.photo.url}" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover; border: 2px solid #059669; box-shadow: 0 2px 8px rgba(5,150,105,0.2);" />' if selected_staff_obj.photo else f'<div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(5,150,105,0.2);">{s_init}</div>'
+            selected_banner_html = f"""
+            <div id="salary-staff-selected-banner" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: #ecfdf5; border: 2px solid #059669; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(5,150,105,0.08);">
+                {s_photo}
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 10.5px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">✓ Selected Recipient</div>
+                    <div style="font-size: 15px; font-weight: 800; color: #0f172a;">{selected_staff_obj.full_name} <span style="font-size: 12px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 2px 8px; border-radius: 8px; margin-left: 4px;">ID: {selected_staff_obj.staff_id}</span></div>
+                    <div style="font-size: 12px; color: #475569; font-weight: 600; margin-top: 2px;">{selected_staff_obj.position or 'Staff'} • {selected_staff_obj.department or 'General'}</div>
+                </div>
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 15px;">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+            """
+        else:
+            selected_banner_html = f"""
+            <div id="salary-staff-selected-banner" style="display: none; align-items: center; gap: 14px; padding: 14px 18px; background: #ecfdf5; border: 2px solid #059669; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(5,150,105,0.08);">
+                <div id="salary-banner-avatar"></div>
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 10.5px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">✓ Selected Recipient</div>
+                    <div id="salary-banner-name" style="font-size: 15px; font-weight: 800; color: #0f172a;"></div>
+                    <div id="salary-banner-dept" style="font-size: 12px; color: #475569; font-weight: 600; margin-top: 2px;"></div>
+                </div>
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 15px;">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+            """
+
+        output = [f"""
+        <style>
+            .field-staff .related-widget-wrapper-link {{ display: none !important; }}
+            .field-staff .related-widget-wrapper {{ width: 100% !important; max-width: 100% !important; display: block !important; }}
+            .salary-staff-card:hover {{
+                border-color: #08709d !important;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(8, 112, 157, 0.12) !important;
+            }}
+            .salary-dept-filter:hover {{
+                border-color: #08709d !important;
+                color: #08709d !important;
+            }}
+            .salary-dept-filter.active {{
+                background: #08709d !important;
+                border-color: #08709d !important;
+                color: #ffffff !important;
+            }}
+        </style>
+        <div class="salary-staff-picker" style="max-width: 950px; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 22px; box-shadow: 0 4px 24px rgba(0,0,0,0.04);">
+            <input type="hidden" name="{name}" id="id_{name}_selected" value="{selected_val}" />
+            
+            {selected_banner_html}
+
+            <!-- Top Search & Header Bar -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 14px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: #e0f2fe; color: #08709d; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 800; font-size: 14px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.04em;">Choose Staff Member</div>
+                        <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">{len(staff_list)} active employees available</div>
+                    </div>
+                </div>
+
+                <div style="position: relative; min-width: 260px; flex: 1; max-width: 340px;">
+                    <input type="text" id="salary-staff-search" placeholder="Search by name, ID, position..." style="width: 100%; padding: 9px 14px 9px 36px; font-size: 13px; border-radius: 12px; border: 1.5px solid #cbd5e1; outline: none; background: #f8fafc; transition: all 0.2s;" />
+                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 13px;"></i>
+                </div>
+            </div>
+
+            <!-- Department Filter Chips -->
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px;">
+                {dept_chips_html}
+            </div>
+
+            <!-- Staff Grid -->
+            <div id="salary-staff-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; max-height: 380px; overflow-y: auto; padding: 4px;">
+        """]
+
+        for s in staff_list:
+            is_selected = (selected_val == str(s.id) or selected_val == str(s.staff_id))
+            border_col = "#059669" if is_selected else "#e2e8f0"
+            bg_col = "#ecfdf5" if is_selected else "#ffffff"
+            initials = "".join([w[0].upper() for w in s.full_name.split() if w])[:2] if s.full_name else "??"
+            dept_str = s.department if s.department else "General"
+            dept_lower = dept_str.lower()
+
+            photo_html = f'<img src="{s.photo.url}" style="width: 46px; height: 46px; border-radius: 12px; object-fit: cover; flex-shrink: 0; border: 1.5px solid #cbd5e1;" />' if s.photo else f'<div style="width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); color: #08709d; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1.5px solid #bae6fd;">{initials}</div>'
+
+            output.append(f"""
+                <div class="salary-staff-card" data-staff-id="{s.staff_id}" data-name="{s.full_name}" data-dept="{s.position or 'Staff'} • {dept_str}" data-dept-raw="{dept_lower}" data-initials="{initials}" data-photo="{s.photo.url if s.photo else ''}" data-search-text="{s.full_name.lower()} {s.staff_id.lower()} {s.department.lower()} {s.position.lower()}" style="display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 2px solid {border_col}; background: {bg_col}; border-radius: 16px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); user-select: none; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                    {photo_html}
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 800; font-size: 14px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{s.full_name}</div>
+                        <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px; flex-wrap: wrap;">
+                            <span style="font-size: 11px; color: #08709d; font-weight: 700; background: #e0f2fe; padding: 1px 7px; border-radius: 6px; font-family: monospace;">{s.staff_id}</span>
+                            <span style="font-size: 11px; color: #64748b; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{dept_str}</span>
+                        </div>
+                        <div style="font-size: 11.5px; color: #059669; font-weight: 600; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{s.position or 'Staff'}</div>
+                    </div>
+                    <div class="check-circle-wrapper" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid {'#059669' if is_selected else '#cbd5e1'}; background: {'#059669' if is_selected else '#ffffff'}; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; transition: all 0.2s;">
+                        <i class="fas fa-check" style="display: {'block' if is_selected else 'none'};"></i>
+                    </div>
+                </div>
+            """)
+
+        output.append(f"""
+            </div>
+            <script>
+            (function() {{
+                const hiddenInput = document.getElementById('id_{name}_selected');
+                const cards = document.querySelectorAll('.salary-staff-card');
+                const searchInput = document.getElementById('salary-staff-search');
+                const deptFilters = document.querySelectorAll('.salary-dept-filter');
+                const banner = document.getElementById('salary-staff-selected-banner');
+                const bannerAvatar = document.getElementById('salary-banner-avatar');
+                const bannerName = document.getElementById('salary-banner-name');
+                const bannerDept = document.getElementById('salary-banner-dept');
+
+                let currentDeptFilter = 'all';
+
+                function filterCards() {{
+                    const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+                    cards.forEach(card => {{
+                        const text = card.getAttribute('data-search-text') || '';
+                        const cardDept = card.getAttribute('data-dept-raw') || '';
+                        const matchesQuery = !query || text.includes(query);
+                        const matchesDept = (currentDeptFilter === 'all') || (cardDept === currentDeptFilter);
+                        card.style.display = (matchesQuery && matchesDept) ? 'flex' : 'none';
+                    }});
+                }}
+
+                cards.forEach(card => {{
+                    card.addEventListener('click', function() {{
+                        const sId = this.getAttribute('data-staff-id');
+                        const sName = this.getAttribute('data-name');
+                        const sDept = this.getAttribute('data-dept');
+                        const sInit = this.getAttribute('data-initials');
+                        const sPhoto = this.getAttribute('data-photo');
+
+                        hiddenInput.value = sId;
+                        
+                        cards.forEach(c => {{
+                            c.style.borderColor = '#e2e8f0';
+                            c.style.background = '#ffffff';
+                            const chk = c.querySelector('.check-circle-wrapper');
+                            if (chk) {{
+                                chk.style.borderColor = '#cbd5e1';
+                                chk.style.background = '#ffffff';
+                                const icon = chk.querySelector('i');
+                                if (icon) icon.style.display = 'none';
+                            }}
+                        }});
+
+                        this.style.borderColor = '#059669';
+                        this.style.background = '#ecfdf5';
+                        const myChk = this.querySelector('.check-circle-wrapper');
+                        if (myChk) {{
+                            myChk.style.borderColor = '#059669';
+                            myChk.style.background = '#059669';
+                            const icon = myChk.querySelector('i');
+                            if (icon) icon.style.display = 'block';
+                        }}
+
+                        if (banner) {{
+                            banner.style.display = 'flex';
+                            if (bannerAvatar) {{
+                                if (sPhoto) {{
+                                    bannerAvatar.innerHTML = '<img src="' + sPhoto + '" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover; border: 2px solid #059669;" />';
+                                }} else {{
+                                    bannerAvatar.innerHTML = '<div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center;">' + sInit + '</div>';
+                                }}
+                            }}
+                            if (bannerName) bannerName.innerHTML = sName + ' <span style="font-size: 12px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 2px 8px; border-radius: 8px; margin-left: 4px;">ID: ' + sId + '</span>';
+                            if (bannerDept) bannerDept.innerText = sDept;
+                        }}
+                    }});
+                }});
+
+                deptFilters.forEach(btn => {{
+                    btn.addEventListener('click', function() {{
+                        deptFilters.forEach(b => {{
+                            b.classList.remove('active');
+                            b.style.background = '#f8fafc';
+                            b.style.borderColor = '#cbd5e1';
+                            b.style.color = '#475569';
+                        }});
+                        this.classList.add('active');
+                        this.style.background = '#08709d';
+                        this.style.borderColor = '#08709d';
+                        this.style.color = '#ffffff';
+
+                        currentDeptFilter = this.getAttribute('data-dept');
+                        filterCards();
+                    }});
+                }});
+
+                if (searchInput) {{
+                    searchInput.addEventListener('input', filterCards);
+                }}
+            }})();
+            </script>
+        </div>
+        """)
+        return mark_safe("".join(output))
+
+
+
+
+class SalarySlipAdminForm(forms.ModelForm):
+    class Meta:
+        model = SalaryApplication
+        fields = ['staff', 'description', 'image']
+        widgets = {
+            'staff': StaffSingleRecipientPickerWidget(),
+            'description': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Enter monthly salary slip description (e.g. Salary Slip for August 2026 - Transferred via WPS)...',
+                'style': 'font-size: 13.5px; max-width: 850px;'
+            }),
+        }
+
+
 @admin.register(SalaryApplication)
 class SalaryApplicationAdmin(admin.ModelAdmin):
-    list_display = ('staff_name', 'inc_type', 'status', 'submitted_at')
-    list_filter = ('status',)
+    form = SalarySlipAdminForm
+    list_display = ('staff_badge', 'description_summary', 'image_preview', 'status_badge', 'submitted_at')
+    list_display_links = ('staff_badge',)
+    list_filter = ('submitted_at', 'status')
+    search_fields = ('staff_name', 'staff__staff_id', 'description', 'staff_dep', 'staff_position')
+    list_per_page = 20
+
+    fieldsets = (
+        ('👤 1. Choose Staff Member', {
+            'fields': ('staff',),
+            'description': mark_safe('<span style="color: #08709d; font-weight: 700; font-size: 13.5px;">Select the staff member who will receive this Monthly Salary Slip.</span>')
+        }),
+        ('📝 2. Description / Note', {
+            'fields': ('description',),
+            'description': 'Enter description, period notes, or remarks for this salary slip.'
+        }),
+        ('📄 3. Upload Salary Slip Image / Document', {
+            'fields': ('image',),
+            'description': mark_safe('<span style="color: #059669; font-weight: 700; font-size: 13px;">Attach the monthly salary slip image or document for the staff.</span>')
+        }),
+    )
+
+    def save_model(self, request, obj, form, change):
+        if obj.staff:
+            obj.staff_name = obj.staff.full_name
+            obj.staff_dep = obj.staff.department or ''
+            obj.staff_position = obj.staff.position or ''
+        obj.status = 'Issued'
+        super().save_model(request, obj, form, change)
+
+    def staff_badge(self, obj):
+        initials = "".join([w[0].upper() for w in obj.staff_name.split() if w])[:2] if obj.staff_name else "??"
+        dept = f" • {obj.staff_dep}" if obj.staff_dep else ""
+        return mark_safe(f"""
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 30px; height: 30px; border-radius: 6px; background: #05966920; color: #059669; font-weight: 800; font-size: 11px; display: flex; align-items: center; justify-content: center;">
+                {initials}
+            </div>
+            <div>
+                <div style="font-weight: 700; font-size: 13px; color: #0f172a;">{obj.staff_name}</div>
+                <div style="font-size: 11px; color: #64748b;">{obj.staff_id}{dept}</div>
+            </div>
+        </div>
+        """)
+    staff_badge.short_description = "Staff Member"
+
+    def description_summary(self, obj):
+        desc = obj.description or "—"
+        if len(desc) > 80:
+            desc = desc[:77] + "..."
+        return mark_safe(f"<span style='font-size: 12.5px; color: #334155;'>{desc}</span>")
+    description_summary.short_description = "Description"
+
+    def image_preview(self, obj):
+        if obj.image:
+            url = obj.image.url
+            return mark_safe(f'<a href="{url}" target="_blank" style="display: inline-flex; align-items: center; gap: 5px; color: #08709d; font-weight: 700; font-size: 12px; text-decoration: none;"><img src="{url}" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover; border: 1px solid #cbd5e1;" /> <span>View Slip</span></a>')
+        return mark_safe('<span style="color: #94a3b8; font-size: 11.5px;">No image</span>')
+    image_preview.short_description = "Salary Slip"
+
+    def status_badge(self, obj):
+        return mark_safe('<span style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; text-transform: uppercase;">Issued</span>')
+    status_badge.short_description = "Status"
+
+
 
 
 class StaffRecipientPickerWidget(forms.CheckboxSelectMultiple):
@@ -2508,6 +2822,230 @@ class NoticeApplicationAdmin(admin.ModelAdmin):
 class DutyApplicationAdmin(admin.ModelAdmin):
     list_display = ('staff_name', 'duty_date', 'duty_replacement', 'status')
     list_filter = ('status',)
+
+
+class DriverScheduleForm(forms.ModelForm):
+    class Meta:
+        model = DriverSchedule
+        fields = '__all__'
+        widgets = {
+            'driver_phone': forms.TextInput(attrs={
+                'placeholder': 'e.g. +971 50 123 4567',
+            }),
+            'vehicle_info': forms.TextInput(attrs={
+                'placeholder': 'e.g. Toyota HiAce - DXB 45921',
+            }),
+        }
+
+
+class StaffDropdownMultiSelectWidget(forms.CheckboxSelectMultiple):
+    def __init__(self, placeholder="Select staff...", attrs=None):
+        super().__init__(attrs)
+        self.placeholder = placeholder
+
+    def render(self, name, value, attrs=None, renderer=None):
+        if value is None:
+            value = []
+        elif isinstance(value, (str, int)):
+            value = [str(value)]
+        else:
+            value = [str(v.id if hasattr(v, 'id') else (v.pk if hasattr(v, 'pk') else v)) for v in value]
+
+        staff_list = StaffProfile.objects.all().order_by('full_name')
+
+        output = [f"""
+        <div class="staff-multiselect-dropdown" data-field-name="{name}" data-placeholder="{conditional_escape(self.placeholder)}">
+            <div class="staff-dropdown-trigger" tabindex="0">
+                <div class="staff-dropdown-tags-wrapper">
+                    <span class="staff-dropdown-placeholder">{conditional_escape(self.placeholder)}</span>
+                </div>
+                <div class="staff-dropdown-actions">
+                    <span class="staff-dropdown-count-badge" style="display: none;">0</span>
+                    <i class="fas fa-chevron-down staff-dropdown-chevron"></i>
+                </div>
+            </div>
+
+            <div class="staff-dropdown-panel" style="display: none;">
+                <div class="staff-dropdown-search-header">
+                    <div style="position: relative; flex: 1;">
+                        <input type="text" class="staff-dropdown-search-input" placeholder="🔍 Search staff by name or department..." autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="staff-dropdown-options-list">
+        """]
+
+        for s in staff_list:
+            is_checked = str(s.id) in value or str(s.staff_id) in value
+            checked_attr = 'checked' if is_checked else ''
+            initials = "".join([w[0].upper() for w in s.full_name.split() if w])[:2] if s.full_name else "??"
+            dept_str = f" • {s.department}" if s.department else ""
+
+            photo_html = f'<img src="{s.photo.url}" style="width: 26px; height: 26px; border-radius: 6px; object-fit: cover;" />' if s.photo else f'<div style="width: 26px; height: 26px; border-radius: 6px; background: #0284c720; color: #0284c7; font-weight: 800; font-size: 11px; display: flex; align-items: center; justify-content: center;">{initials}</div>'
+
+            output.append(f"""
+                <label class="staff-dropdown-option-item {'selected' if is_checked else ''}" data-staff-id="{s.id}" data-staff-name="{s.full_name}" data-search-text="{s.full_name.lower()} {s.staff_id.lower()} {(s.department or '').lower()}">
+                    <input type="checkbox" name="{name}" value="{s.id}" class="staff-dropdown-checkbox" {checked_attr} />
+                    {photo_html}
+                    <div class="staff-option-text">
+                        <div class="staff-option-name">{s.full_name}</div>
+                        <div class="staff-option-sub">{s.staff_id}{dept_str}</div>
+                    </div>
+                    <span class="staff-option-checkmark"><i class="fas fa-check"></i></span>
+                </label>
+            """)
+
+        output.append("""
+                </div>
+            </div>
+        </div>
+        """)
+        return mark_safe("".join(output))
+
+
+class DriverRouteStopForm(forms.ModelForm):
+    class Meta:
+        model = DriverRouteStop
+        fields = '__all__'
+        widgets = {
+            'stop_order': forms.NumberInput(attrs={
+                'min': '1',
+                'placeholder': '1',
+            }),
+            'staff_passengers': StaffDropdownMultiSelectWidget(placeholder="Select staff to pick up..."),
+            'staff_dropoffs': StaffDropdownMultiSelectWidget(placeholder="Select staff to drop off..."),
+            'source_location': forms.TextInput(attrs={
+                'placeholder': 'e.g. Dubai Marina / Clinic Headquarters',
+            }),
+            'source_time': forms.TextInput(attrs={
+                'type': 'time',
+            }),
+            'destination_location': forms.TextInput(attrs={
+                'placeholder': 'e.g. Kings College Hospital / Patient Home',
+            }),
+            'destination_time': forms.TextInput(attrs={
+                'type': 'time',
+            }),
+        }
+
+
+class DriverRouteStopInline(admin.StackedInline):
+    model = DriverRouteStop
+    form = DriverRouteStopForm
+    extra = 1
+    verbose_name = "Route Leg / Stop"
+    verbose_name_plural = "📍 Multi-Stop Trip Schedule & Routes"
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('stop_order', 'status'),
+                ('source_location', 'source_time'),
+                'staff_passengers',
+                ('destination_location', 'destination_time'),
+                'staff_dropoffs',
+            )
+        }),
+    )
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_foreignkey(db_field, request, **kwargs)
+        if formfield and hasattr(formfield, 'widget'):
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+            formfield.widget.can_delete_related = False
+            formfield.widget.can_view_related = False
+        return formfield
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_manytomany(db_field, request, **kwargs)
+        if formfield and hasattr(formfield, 'widget'):
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+            formfield.widget.can_delete_related = False
+            formfield.widget.can_view_related = False
+        return formfield
+
+
+@admin.register(DriverSchedule)
+class DriverScheduleAdmin(admin.ModelAdmin):
+    form = DriverScheduleForm
+    inlines = [DriverRouteStopInline]
+    change_form_template = "admin/api/driverschedule/change_form.html"
+    list_display = (
+        'get_driver_display',
+        'driver_phone',
+        'vehicle_info',
+        'schedule_date',
+        'get_route_summary',
+        'status'
+    )
+    list_filter = ('status', 'schedule_date')
+    search_fields = (
+        'driver_name',
+        'driver__full_name',
+        'driver__staff_id',
+        'driver_phone',
+        'vehicle_info',
+        'route_stops__source_location',
+        'route_stops__destination_location',
+        'route_stops__staff_passenger_name'
+    )
+    ordering = ('-schedule_date', '-created_at')
+    fieldsets = (
+        ('Driver & Vehicle Details', {
+            'fields': (
+                ('driver', 'driver_phone', 'vehicle_info'),
+            )
+        }),
+        ('Schedule Date & Status', {
+            'fields': (
+                ('schedule_date', 'status'),
+            )
+        }),
+    )
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_foreignkey(db_field, request, **kwargs)
+        if formfield and hasattr(formfield, 'widget'):
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+            formfield.widget.can_delete_related = False
+            formfield.widget.can_view_related = False
+        return formfield
+
+    def get_driver_display(self, obj):
+        if obj.driver:
+            return f"{obj.driver.full_name} ({obj.driver.staff_id})"
+        return obj.driver_name or "Unassigned"
+    get_driver_display.short_description = "Assigned Driver"
+
+    def get_route_summary(self, obj):
+        stops = obj.route_stops.all().order_by('stop_order', 'id')
+        if stops.exists():
+            html_parts = []
+            for s in stops:
+                s_t = f" <small style='color: #64748b;'>({s.source_time})</small>" if s.source_time else ""
+                d_t = f" <small style='color: #64748b;'>({s.destination_time})</small>" if s.destination_time else ""
+                st_badge = ""
+                if s.status == 'Completed':
+                    st_badge = " <span style='background:#dcfce7;color:#15803d;padding:1px 6px;border-radius:6px;font-size:10px;'>✓ Done</span>"
+                elif s.status == 'In Progress':
+                    st_badge = " <span style='background:#fef3c7;color:#b45309;padding:1px 6px;border-radius:6px;font-size:10px;'>⚡ Active</span>"
+                
+                pass_names = s.get_passengers_display()
+                pass_label = f" <span style='background:#e0f2fe;color:#0369a1;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;'>👥 {pass_names}</span>" if pass_names else ""
+
+                html_parts.append(f"<div style='margin-bottom: 4px;'><strong>Leg #{s.stop_order}:</strong> {s.source_location}{s_t} ➔ {s.destination_location}{d_t}{pass_label}{st_badge}</div>")
+            return mark_safe("".join(html_parts))
+        return mark_safe("<span style='color: #94a3b8; font-style: italic;'>No routes defined</span>")
+    get_route_summary.short_description = "Trip Routes & Stops"
+
+
+
+
+
+
+
 
 
 from django.shortcuts import redirect

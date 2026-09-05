@@ -1,0 +1,634 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* ================================================================
+   1. CUSTOM MULTI-SELECT DROPDOWN STYLING
+   ================================================================ */
+.staff-multiselect-dropdown {
+    position: relative !important;
+    width: 100% !important;
+    font-family: inherit !important;
+}
+
+.staff-dropdown-trigger {
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    padding: 6px 14px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+}
+
+.staff-dropdown-trigger:hover,
+.staff-dropdown-trigger:focus,
+.staff-multiselect-dropdown.open .staff-dropdown-trigger {
+    border-color: #0284c7 !important;
+    box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.15) !important;
+    outline: none !important;
+}
+
+.staff-dropdown-tags-wrapper {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    flex: 1 !important;
+}
+
+.staff-dropdown-placeholder {
+    color: #94a3b8 !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+}
+
+.staff-selected-tag {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    background: #e0f2fe !important;
+    color: #0369a1 !important;
+    border: 1px solid #bae6fd !important;
+    padding: 3px 10px !important;
+    border-radius: 999px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 1px 2px rgba(3, 105, 161, 0.08) !important;
+}
+
+.staff-tag-remove {
+    cursor: pointer !important;
+    color: #0284c7 !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    border-radius: 50% !important;
+    padding: 0 2px !important;
+}
+
+.staff-tag-remove:hover {
+    color: #ef4444 !important;
+}
+
+.staff-dropdown-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-left: 8px !important;
+}
+
+.staff-dropdown-count-badge {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    padding: 2px 7px !important;
+    border-radius: 999px !important;
+}
+
+.staff-dropdown-chevron {
+    color: #64748b !important;
+    font-size: 12px !important;
+    transition: transform 0.2s ease !important;
+}
+
+.staff-multiselect-dropdown.open .staff-dropdown-chevron {
+    transform: rotate(180deg) !important;
+    color: #0284c7 !important;
+}
+
+/* Floating Dropdown Panel */
+.staff-multiselect-dropdown {
+    position: relative !important;
+    width: 100% !important;
+    font-family: inherit !important;
+    z-index: 10;
+}
+
+.staff-multiselect-dropdown.open {
+    z-index: 9999 !important;
+}
+
+.staff-dropdown-panel {
+    position: absolute !important;
+    top: calc(100% + 6px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 99999 !important;
+    background: #ffffff !important;
+    border: 1.5px solid #0284c7 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.2) !important;
+    padding: 12px !important;
+    animation: fadeInDropdown 0.15s ease-out !important;
+}
+
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.staff-dropdown-search-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1.5px solid #f1f5f9 !important;
+}
+
+.staff-dropdown-search-input {
+    width: 100% !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    background: #f8fafc !important;
+    box-sizing: border-box !important;
+}
+
+.staff-dropdown-search-input:focus {
+    border-color: #0284c7 !important;
+    background: #ffffff !important;
+    outline: none !important;
+}
+
+.staff-dropdown-options-list {
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    padding-right: 4px !important;
+}
+
+.staff-dropdown-option-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid transparent !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    transition: all 0.15s ease !important;
+    margin: 0 !important;
+}
+
+.staff-dropdown-option-item:hover {
+    background: #f1f5f9 !important;
+}
+
+.staff-dropdown-option-item.selected {
+    background: #f0f9ff !important;
+    border-color: #bae6fd !important;
+}
+
+.staff-dropdown-option-item.staff-hidden {
+    display: none !important;
+}
+
+.staff-dropdown-checkbox {
+    width: 16px !important;
+    height: 16px !important;
+    accent-color: #0284c7 !important;
+    cursor: pointer !important;
+}
+
+.staff-option-text {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.staff-option-name {
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    color: #0f172a !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.staff-option-sub {
+    font-size: 11px !important;
+    color: #64748b !important;
+    font-weight: 500 !important;
+}
+
+.staff-option-checkmark {
+    color: #0284c7 !important;
+    font-size: 12px !important;
+    display: none !important;
+}
+
+.staff-dropdown-option-item.selected .staff-option-checkmark {
+    display: inline-block !important;
+}
+
+/* ================================================================
+   2. MAIN INLINE CONTAINER & CARDS
+   ================================================================ */
+#route_stops-group,
+.inline-group[id*="route_stops"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin-top: 20px !important;
+    margin-bottom: 30px !important;
+    overflow: visible !important;
+}
+
+#route_stops-group > h2,
+.inline-group[id*="route_stops"] > h2 {
+    background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%) !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    padding: 16px 24px !important;
+    border-radius: 16px 16px 0 0 !important;
+    margin: 0 !important;
+    letter-spacing: -0.01em !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-shadow: 0 4px 14px rgba(3, 105, 161, 0.2) !important;
+}
+
+#route_stops-group .inline-related,
+.inline-group[id*="route_stops"] .inline-related {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    margin-bottom: 20px !important;
+    padding: 22px 24px !important;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04) !important;
+    transition: all 0.2s ease-in-out !important;
+    position: relative !important;
+    overflow: visible !important;
+}
+
+#route_stops-group .inline-related:hover {
+    border-color: #38bdf8 !important;
+    box-shadow: 0 8px 26px rgba(14, 165, 233, 0.09) !important;
+}
+
+#route_stops-group .inline-related > h3 {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
+    padding: 12px 18px !important;
+    margin: -22px -24px 20px -24px !important;
+    border-bottom: 1.5px solid #e2e8f0 !important;
+    border-radius: 14px 14px 0 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+#route_stops-group .inline-related > h3 span.delete {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #ef4444 !important;
+}
+
+#route_stops-group .inline-related > h3 span.delete input[type="checkbox"] {
+    accent-color: #ef4444 !important;
+    width: 16px !important;
+    height: 16px !important;
+    cursor: pointer !important;
+}
+
+/* Row 1: Stop #, Status */
+#route_stops-group .form-row:has(.field-stop_order) {
+    display: grid !important;
+    grid-template-columns: 140px 180px !important;
+    gap: 16px !important;
+    background: #f8fafc !important;
+    padding: 14px 16px !important;
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+    margin-bottom: 16px !important;
+    overflow: visible !important;
+}
+
+/* Row 2 & 3: Departure / Source Box (Light Blue Accent) */
+#route_stops-group .form-row:has(.field-source_location) {
+    display: grid !important;
+    grid-template-columns: 2fr 1fr !important;
+    gap: 16px !important;
+    background: #f0f9ff !important;
+    padding: 16px 16px 8px 16px !important;
+    border-radius: 12px 12px 0 0 !important;
+    border: 1.5px solid #bae6fd !important;
+    border-bottom: 1px dashed #bae6fd !important;
+    margin-bottom: 0 !important;
+    overflow: visible !important;
+}
+
+#route_stops-group .form-row:has(.field-staff_passengers) {
+    display: block !important;
+    background: #f0f9ff !important;
+    padding: 0 16px 16px 16px !important;
+    border-radius: 0 0 12px 12px !important;
+    border: 1.5px solid #bae6fd !important;
+    border-top: none !important;
+    margin-bottom: 16px !important;
+    overflow: visible !important;
+}
+
+/* Row 4 & 5: Arrival / Destination Box (Light Emerald Accent) */
+#route_stops-group .form-row:has(.field-destination_location) {
+    display: grid !important;
+    grid-template-columns: 2fr 1fr !important;
+    gap: 16px !important;
+    background: #f0fdf4 !important;
+    padding: 16px 16px 8px 16px !important;
+    border-radius: 12px 12px 0 0 !important;
+    border: 1.5px solid #bbf7d0 !important;
+    border-bottom: 1px dashed #bbf7d0 !important;
+    margin-bottom: 0 !important;
+    overflow: visible !important;
+}
+
+#route_stops-group .form-row:has(.field-staff_dropoffs) {
+    display: block !important;
+    background: #f0fdf4 !important;
+    padding: 0 16px 16px 16px !important;
+    border-radius: 0 0 12px 12px !important;
+    border: 1.5px solid #bbf7d0 !important;
+    border-top: none !important;
+    margin-bottom: 16px !important;
+    overflow: visible !important;
+}
+
+#route_stops-group .field-staff_passengers,
+#route_stops-group .field-staff_dropoffs,
+#route_stops-group .related-widget-wrapper {
+    overflow: visible !important;
+}
+
+#route_stops-group label {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: #475569 !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+}
+
+#route_stops-group .field-source_location label:before { content: "🛫 "; }
+#route_stops-group .field-source_time label:before { content: "⏰ "; }
+#route_stops-group .field-staff_passengers label:before { content: "👥 "; }
+
+#route_stops-group .field-destination_location label:before { content: "🛬 "; }
+#route_stops-group .field-destination_time label:before { content: "⏰ "; }
+#route_stops-group .field-staff_dropoffs label:before { content: "👥 "; }
+
+#route_stops-group input[type="text"],
+#route_stops-group input[type="number"],
+#route_stops-group input[type="time"],
+#route_stops-group select {
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    padding: 9px 12px !important;
+    font-size: 13.5px !important;
+    color: #0f172a !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease !important;
+}
+
+#route_stops-group input[type="text"]:focus,
+#route_stops-group input[type="number"]:focus,
+#route_stops-group input[type="time"]:focus,
+#route_stops-group select:focus {
+    border-color: #0284c7 !important;
+    box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.18) !important;
+    outline: none !important;
+}
+
+#route_stops-group .field-stop_order input {
+    font-weight: 800 !important;
+    text-align: center !important;
+    color: #0369a1 !important;
+    background: #e0f2fe !important;
+    border-color: #7dd3fc !important;
+}
+
+/* Add Row Button */
+#route_stops-group .add-row {
+    margin-top: 10px !important;
+    text-align: center !important;
+}
+
+#route_stops-group .add-row a {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    padding: 14px 28px !important;
+    border-radius: 12px !important;
+    text-decoration: none !important;
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+}
+
+#route_stops-group .add-row a:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(2, 132, 199, 0.45) !important;
+    color: #ffffff !important;
+}
+
+/* Hide unwanted Django related icons */
+.related-widget-wrapper-link,
+a.related-widget-wrapper-link {
+    display: none !important;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    #route_stops-group .form-row:has(.field-stop_order),
+    #route_stops-group .form-row:has(.field-source_location),
+    #route_stops-group .form-row:has(.field-destination_location) {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+<script>
+(function() {
+    function setupStaffDropdown(wrapper) {
+        if (!wrapper || wrapper.closest('.empty-form') || wrapper.closest('.grp-empty-form')) return;
+        if (wrapper.dataset.fieldName && wrapper.dataset.fieldName.includes('__prefix__')) return;
+
+        if (wrapper.dataset.initialized === 'true') return;
+        wrapper.dataset.initialized = 'true';
+
+        const defaultPlaceholder = wrapper.dataset.placeholder || 'Select staff...';
+        const trigger = wrapper.querySelector('.staff-dropdown-trigger');
+        const panel = wrapper.querySelector('.staff-dropdown-panel');
+        const tagsWrapper = wrapper.querySelector('.staff-dropdown-tags-wrapper');
+        const countBadge = wrapper.querySelector('.staff-dropdown-count-badge');
+        const searchInput = wrapper.querySelector('.staff-dropdown-search-input');
+        const optionItems = wrapper.querySelectorAll('.staff-dropdown-option-item');
+
+        function updateSelectedTags() {
+            tagsWrapper.innerHTML = '';
+            let count = 0;
+
+            optionItems.forEach(item => {
+                const cb = item.querySelector('.staff-dropdown-checkbox');
+                if (cb && cb.checked) {
+                    count++;
+                    item.classList.add('selected');
+
+                    const name = item.dataset.staffName || 'Staff';
+
+                    const tag = document.createElement('span');
+                    tag.className = 'staff-selected-tag';
+                    tag.innerHTML = `<span>👤 ${name}</span><span class="staff-tag-remove" title="Remove">&times;</span>`;
+
+                    tag.querySelector('.staff-tag-remove').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        cb.checked = false;
+                        item.classList.remove('selected');
+                        updateSelectedTags();
+                    });
+
+                    tagsWrapper.appendChild(tag);
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+
+            if (count === 0) {
+                tagsWrapper.innerHTML = `<span class="staff-dropdown-placeholder">${defaultPlaceholder}</span>`;
+                countBadge.style.display = 'none';
+            } else {
+                countBadge.textContent = count;
+                countBadge.style.display = 'inline-block';
+            }
+        }
+
+        // Toggle open/close
+        if (trigger && panel) {
+            trigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isOpen = wrapper.classList.contains('open');
+                // Close all other open dropdowns first
+                document.querySelectorAll('.staff-multiselect-dropdown.open').forEach(d => {
+                    if (d !== wrapper) {
+                        d.classList.remove('open');
+                        const p = d.querySelector('.staff-dropdown-panel');
+                        if (p) p.style.display = 'none';
+                    }
+                });
+
+                if (isOpen) {
+                    wrapper.classList.remove('open');
+                    panel.style.display = 'none';
+                } else {
+                    wrapper.classList.add('open');
+                    panel.style.display = 'block';
+                    if (searchInput) searchInput.focus();
+                }
+            });
+        }
+
+        // Search filtering
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                optionItems.forEach(item => {
+                    const text = (item.dataset.searchText || '').toLowerCase();
+                    if (!query || text.includes(query)) {
+                        item.classList.remove('staff-hidden');
+                    } else {
+                        item.classList.add('staff-hidden');
+                    }
+                });
+            });
+            searchInput.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+        // Option checkbox click
+        optionItems.forEach(item => {
+            const cb = item.querySelector('.staff-dropdown-checkbox');
+            if (cb) {
+                cb.addEventListener('change', function() {
+                    updateSelectedTags();
+                });
+            }
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+
+        updateSelectedTags();
+    }
+
+    function initAllDropdowns() {
+        document.querySelectorAll('.staff-multiselect-dropdown').forEach(wrapper => {
+            if (wrapper.closest('.empty-form') || wrapper.closest('.grp-empty-form') || (wrapper.dataset.fieldName && wrapper.dataset.fieldName.includes('__prefix__'))) {
+                return;
+            }
+            setupStaffDropdown(wrapper);
+        });
+    }
+
+    // Close on outside click
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.staff-multiselect-dropdown')) {
+            document.querySelectorAll('.staff-multiselect-dropdown.open').forEach(wrapper => {
+                wrapper.classList.remove('open');
+                const panel = wrapper.querySelector('.staff-dropdown-panel');
+                if (panel) panel.style.display = 'none';
+            });
+        }
+    });
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAllDropdowns);
+    } else {
+        setTimeout(initAllDropdowns, 100);
+    }
+
+    const observer = new MutationObserver(function() {
+        initAllDropdowns();
+    });
+    const target = document.getElementById('route_stops-group') || document.body;
+    observer.observe(target, { childList: true, subtree: true });
+
+    if (window.django && window.django.jQuery) {
+        window.django.jQuery(document).on('formset:added', function() {
+            setTimeout(initAllDropdowns, 50);
+        });
+    }
+})();
+</script>
+{% endblock %}
