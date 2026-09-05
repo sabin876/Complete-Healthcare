@@ -93,6 +93,8 @@ const mapDuty = (d) => d ? {
   staffId: d.staff,
   staffName: d.staff_name,
   dutyDate: d.duty_date,
+  shiftTiming: d.shift_timing || d.shiftTiming || 'Day',
+  shiftType: d.shift_type || d.shiftType || '8-hours',
   dutyReplacement: d.duty_replacement,
   dutyReason: d.duty_reason,
   status: d.status,
@@ -124,12 +126,10 @@ export const AuthProvider = ({ children }) => {
     const taskQuery = isAd ? '' : `?assigned_to=${user.id}`;
 
     try {
-      if (isAd) {
-        const staffRes = await fetch(`${API_BASE}/staff/`);
-        if (staffRes.ok) {
-          const list = await staffRes.json();
-          setStaffUsers(list.map(mapStaff));
-        }
+      const staffRes = await fetch(`${API_BASE}/staff/`);
+      if (staffRes.ok) {
+        const list = await staffRes.json();
+        setStaffUsers(list.map(mapStaff));
       }
 
       const tasksRes = await fetch(`${API_BASE}/tasks/${taskQuery}`);
@@ -493,6 +493,8 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({
           staffId: data.staffId,
           dutyDate: data.dutyDate,
+          shiftTiming: data.shiftTiming || 'Day',
+          shiftType: data.shiftType || '8-hours',
           dutyReplacement: data.dutyReplacement,
           dutyReason: data.dutyReason
         })

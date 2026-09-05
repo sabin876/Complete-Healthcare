@@ -155,7 +155,7 @@ const EmptyState = ({ icon: Icon, text }) => (
 const StaffDashboard = () => {
   const navigate = useNavigate();
   const {
-    currentUser, logout, getTasksForStaff, updateTaskStatus,
+    currentUser, staffUsers, logout, getTasksForStaff, updateTaskStatus,
     leaveApplications, createLeaveApplication,
     otApplications, createOtApplication,
     salaryApplications, createSalaryApplication,
@@ -221,6 +221,8 @@ const StaffDashboard = () => {
 
   /* ── Duty Schedule form state ── */
   const [dutyDate, setDutyDate] = useState('');
+  const [dutyShiftTiming, setDutyShiftTiming] = useState('Day');
+  const [dutyShiftType, setDutyShiftType] = useState('8-hours');
   const [dutyReplacement, setDutyReplacement] = useState('');
   const [dutyReason, setDutyReason] = useState('');
 
@@ -282,7 +284,7 @@ const StaffDashboard = () => {
     setSelectedSchedule(null);
     setLeaveStart(''); setLeaveEnd(''); setLeaveReason(''); setLeaveFile(null);
     setOtDate(''); setOtHours(''); setOtDescription(''); setOtFile(null);
-    setDutyDate(''); setDutyReplacement(''); setDutyReason('');
+    setDutyDate(''); setDutyShiftTiming('Day'); setDutyShiftType('8-hours'); setDutyReplacement(''); setDutyReason('');
     setNoticeTitle(''); setNoticeMessage(''); setNoticeFile(null);
     setIncJustification(''); setIncFile(null);
   };
@@ -706,16 +708,30 @@ const StaffDashboard = () => {
                       className="border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 shadow-2xs"
                     >
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <div className="flex items-center gap-2 flex-wrap mb-1.5">
                           <span className="text-xs sm:text-sm font-bold text-[#1a294a]">Date: {r.dutyDate}</span>
                           <Badge label={r.status} />
+                          {r.shiftTiming && (
+                            <span className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full border ${
+                              r.shiftTiming === 'Night'
+                                ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                : 'bg-amber-50 text-amber-800 border-amber-200'
+                            }`}>
+                              {r.shiftTiming === 'Night' ? '🌙 Night Shift' : '☀️ Day Shift'}
+                            </span>
+                          )}
+                          {r.shiftType && (
+                            <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+                              ⏱️ {r.shiftType === 'live-in' ? 'Live-In Duty' : r.shiftType}
+                            </span>
+                          )}
                         </div>
-                        <p className="text-[11px] sm:text-xs text-slate-600 font-medium mb-0.5">
+                        <p className="text-[11px] sm:text-xs text-slate-600 font-medium mb-1">
                           👤 Covering Staff: <span className="font-bold text-[#08709d]">{r.dutyReplacement}</span>
                         </p>
                         {r.dutyReason && (
-                          <p className="text-[11px] sm:text-xs text-slate-500 line-clamp-1">
-                            Reason: {r.dutyReason}
+                          <p className="text-[11px] sm:text-xs text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100 line-clamp-2">
+                            <strong className="text-slate-700">Handover Notes / Reason:</strong> {r.dutyReason}
                           </p>
                         )}
                       </div>
@@ -1575,33 +1591,124 @@ const StaffDashboard = () => {
                   <form
                     onSubmit={e => submitForm(e, 'duty', {
                       staffId, staffName,
-                      dutyDate, dutyReplacement, dutyReason
+                      dutyDate,
+                      shiftTiming: dutyShiftTiming,
+                      shiftType: dutyShiftType,
+                      dutyReplacement,
+                      dutyReason
                     })}
                     className="flex flex-col gap-3.5 sm:gap-4 text-left"
                   >
-                    <ModalHeader title="Duty Schedule Swap" icon={<CalendarDays size={18} />} color="#0284c7" onClose={closeModal} />
+                    <ModalHeader title="Duty Schedule Swap Request" icon={<CalendarDays size={18} />} color="#0284c7" onClose={closeModal} />
 
+                    {/* Applicant details */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Applicant Name">
+                        <input className={inputCls} required value={staffName} onChange={e => setStaffName(e.target.value)} />
+                      </Field>
+                      <Field label="Staff ID">
+                        <input className={inputCls} required value={staffId} onChange={e => setStaffId(e.target.value)} />
+                      </Field>
+                    </div>
+
+                    {/* Scheduled Duty Date & Shift Timing */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
                       <Field label="Scheduled Duty Date">
                         <input type="date" className={inputCls} required value={dutyDate} onChange={e => setDutyDate(e.target.value)} />
                       </Field>
-                      <Field label="Replacement Staff Name">
-                        <input type="text" className={inputCls} required placeholder="Name of covering nurse / doctor" value={dutyReplacement} onChange={e => setDutyReplacement(e.target.value)} />
+                      <Field label="Shift Timing">
+                        <div className="relative">
+                          <select
+                            className={`${inputCls} appearance-none pr-9 cursor-pointer`}
+                            value={dutyShiftTiming}
+                            onChange={e => setDutyShiftTiming(e.target.value)}
+                          >
+                            <option value="Day">☀️ Day Shift</option>
+                            <option value="Night">🌙 Night Shift</option>
+                          </select>
+                          <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                        </div>
                       </Field>
                     </div>
 
-                    <Field label="Reason / Handover Details">
+                    {/* Shift Type & Replacement Staff Name */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Shift Type">
+                        <div className="relative">
+                          <select
+                            className={`${inputCls} appearance-none pr-9 cursor-pointer`}
+                            value={dutyShiftType}
+                            onChange={e => setDutyShiftType(e.target.value)}
+                          >
+                            <option value="6-hours">⏱️ 6-hours Shift</option>
+                            <option value="8-hours">⏱️ 8-hours Shift</option>
+                            <option value="10-hours">⏱️ 10-hours Shift</option>
+                            <option value="12-hours">⏱️ 12-hours Shift</option>
+                            <option value="24-hours">⏱️ 24-hours Shift</option>
+                            <option value="live-in">🏠 Live-In Duty</option>
+                          </select>
+                          <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                        </div>
+                      </Field>
+
+                      <Field label="Replacement Staff Name">
+                        <div className="space-y-1.5">
+                          <div className="relative">
+                            <select
+                              className={`${inputCls} appearance-none pr-9 cursor-pointer`}
+                              value={
+                                (staffUsers || []).some(s => (s.name || s.full_name) === dutyReplacement)
+                                  ? dutyReplacement
+                                  : (dutyReplacement ? '__custom__' : '')
+                              }
+                              onChange={e => {
+                                if (e.target.value === '__custom__') {
+                                  setDutyReplacement('');
+                                } else {
+                                  setDutyReplacement(e.target.value);
+                                }
+                              }}
+                            >
+                              <option value="">-- Select Staff Colleague --</option>
+                              {(staffUsers || []).filter(s => (s.id || s.staff_id) !== currentUser?.id).map((s, idx) => {
+                                const name = s.name || s.full_name || s.username || `Staff #${s.id}`;
+                                const role = s.position || s.department || s.role || 'Staff';
+                                return (
+                                  <option key={s.id || idx} value={name}>
+                                    {name} ({role})
+                                  </option>
+                                );
+                              })}
+                              <option value="__custom__">✍️ Enter Custom / Outside Name...</option>
+                            </select>
+                            <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                          </div>
+                          {(!((staffUsers || []).some(s => (s.name || s.full_name) === dutyReplacement)) || dutyReplacement === '') && (
+                            <input
+                              type="text"
+                              className={inputCls}
+                              required
+                              placeholder="Or type replacement staff name here..."
+                              value={dutyReplacement}
+                              onChange={e => setDutyReplacement(e.target.value)}
+                            />
+                          )}
+                        </div>
+                      </Field>
+                    </div>
+
+                    <Field label="Reason / Handover Notes">
                       <textarea
                         className={inputCls}
                         required
-                        placeholder="Provide details for duty shift swap or replacement request…"
+                        placeholder="Provide details for duty shift swap, tasks to handover, or supervisor notes…"
                         value={dutyReason}
                         onChange={e => setDutyReason(e.target.value)}
                         rows={3}
                       />
                     </Field>
 
-                    <ModalFooter color="#0284c7" label="Submit Duty Request" onCancel={closeModal} />
+                    <ModalFooter color="#0284c7" label="Submit Duty Swap Request" onCancel={closeModal} />
                   </form>
                 )}
 

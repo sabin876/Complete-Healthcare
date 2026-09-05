@@ -223,16 +223,49 @@ class NoticeApplication(models.Model):
         return f"{self.title} ({self.get_target_audience_display()})"
 
 class DutyApplication(models.Model):
+    SHIFT_TIMING_CHOICES = [
+        ('Day', 'Day Shift'),
+        ('Night', 'Night Shift'),
+    ]
+
+    SHIFT_TYPE_CHOICES = [
+        ('6-hours', '6 Hours'),
+        ('8-hours', '8 Hours'),
+        ('10-hours', '10 Hours'),
+        ('12-hours', '12 Hours'),
+        ('24-hours', '24 Hours'),
+        ('live-in', 'Live In'),
+    ]
+
     staff = models.ForeignKey(StaffProfile, on_delete=models.CASCADE, related_name='duties', to_field='staff_id')
-    staff_name = models.CharField(max_length=150)
-    duty_date = models.DateField()
-    duty_replacement = models.CharField(max_length=150)
-    duty_reason = models.TextField()
+    staff_name = models.CharField(max_length=150, verbose_name="Staff Name")
+    duty_date = models.DateField(verbose_name="Scheduled Duty Date")
+    shift_timing = models.CharField(
+        max_length=50,
+        choices=SHIFT_TIMING_CHOICES,
+        default='Day',
+        verbose_name="Shift Timing",
+        help_text="Select Shift Timing: Day or Night"
+    )
+    shift_type = models.CharField(
+        max_length=50,
+        choices=SHIFT_TYPE_CHOICES,
+        default='8-hours',
+        verbose_name="Shift Type",
+        help_text="Select Shift Duration: 6, 8, 10, 12, 24 Hours or Live In"
+    )
+    duty_replacement = models.CharField(max_length=150, verbose_name="Replacement Staff Name")
+    duty_reason = models.TextField(verbose_name="Reason / Handover Notes")
     status = models.CharField(max_length=30, default='Pending')
     submitted_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Duty Schedule Swap"
+        verbose_name_plural = "Duty Schedule Swaps"
+        ordering = ['-submitted_at']
+
     def __str__(self):
-        return f"{self.staff_name} - Duty Replacement for {self.duty_date}"
+        return f"{self.staff_name} - Duty Swap for {self.duty_date} ({self.shift_timing}, {self.shift_type}) -> {self.duty_replacement}"
 
 
 class BlogPost(models.Model):

@@ -348,15 +348,17 @@ class DutyApplicationViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        staff_id = request.data.get('staffId')
+        staff_id = request.data.get('staffId') or request.data.get('staff')
         try:
-            profile = StaffProfile.objects.get(staff_id__iexact=staff_id.strip())
+            profile = StaffProfile.objects.get(staff_id__iexact=str(staff_id).strip())
             data = {
                 'staff': profile.staff_id,
                 'staff_name': profile.full_name,
-                'duty_date': request.data.get('dutyDate'),
-                'duty_replacement': request.data.get('dutyReplacement'),
-                'duty_reason': request.data.get('dutyReason'),
+                'duty_date': request.data.get('dutyDate') or request.data.get('duty_date'),
+                'shift_timing': request.data.get('shiftTiming') or request.data.get('shift_timing') or 'Day',
+                'shift_type': request.data.get('shiftType') or request.data.get('shift_type') or '8-hours',
+                'duty_replacement': request.data.get('dutyReplacement') or request.data.get('duty_replacement'),
+                'duty_reason': request.data.get('dutyReason') or request.data.get('duty_reason') or '',
                 'status': 'Pending'
             }
             serializer = self.get_serializer(data=data)

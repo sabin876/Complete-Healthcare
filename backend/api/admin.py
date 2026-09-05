@@ -2820,8 +2820,27 @@ class NoticeApplicationAdmin(admin.ModelAdmin):
 
 @admin.register(DutyApplication)
 class DutyApplicationAdmin(admin.ModelAdmin):
-    list_display = ('staff_name', 'duty_date', 'duty_replacement', 'status')
-    list_filter = ('status',)
+    list_display = ('staff_name', 'duty_date', 'shift_timing', 'shift_type', 'duty_replacement', 'status', 'submitted_at')
+    list_filter = ('status', 'shift_timing', 'shift_type', 'duty_date')
+    search_fields = ('staff_name', 'staff__staff_id', 'duty_replacement', 'duty_reason')
+    ordering = ('-submitted_at',)
+    fieldsets = (
+        ('Applicant Details', {
+            'fields': (('staff', 'staff_name'),)
+        }),
+        ('Duty & Shift Information', {
+            'fields': (
+                ('duty_date', 'shift_timing', 'shift_type'),
+                'duty_replacement',
+            )
+        }),
+        ('Reason / Handover Notes & Status', {
+            'fields': (
+                'duty_reason',
+                'status',
+            )
+        }),
+    )
 
 
 class DriverScheduleForm(forms.ModelForm):

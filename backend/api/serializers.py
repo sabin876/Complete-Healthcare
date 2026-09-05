@@ -65,8 +65,9 @@ class DutyApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = DutyApplication
         fields = [
-            'id', 'staff', 'staff_name', 'duty_date', 'duty_replacement',
-            'duty_reason', 'status', 'submitted_at'
+            'id', 'staff', 'staff_name', 'duty_date',
+            'shift_timing', 'shift_type',
+            'duty_replacement', 'duty_reason', 'status', 'submitted_at'
         ]
 
 
