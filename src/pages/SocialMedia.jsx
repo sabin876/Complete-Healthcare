@@ -188,26 +188,52 @@ const SocialMedia = () => {
         {/* ── Primary Action Buttons Stack (Call on top, WhatsApp & Website in single row) ── */}
         <div className="w-full flex flex-col gap-2.5 sm:gap-3 mb-6 sm:mb-7">
           
-          {/* 1. Call Clinic Button (Primary Theme Blue #08709d) */}
+          {/* 1. Call Landline Clinic Button */}
+          <motion.a
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            whileHover={{ scale: 1.015 }}
+            whileTap={{ scale: 0.985 }}
+            href="tel:+97143320776"
+            className="group w-full bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/25 transition-all text-left"
+          >
+            <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                <Phone size={18} />
+              </div>
+              <div className="min-w-0">
+                <h2 className="font-extrabold text-white text-xs sm:text-sm leading-snug font-['Montserrat',sans-serif] truncate">
+                  Call Clinic Reception
+                </h2>
+                <p className="text-sky-100 text-[11px] sm:text-xs font-mono truncate">
+                  +971 4 332 0776
+                </p>
+              </div>
+            </div>
+            <DiagonalArrow />
+          </motion.a>
+
+          {/* 2. Call 24/7 Helpline Button */}
           <motion.a
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
             whileHover={{ scale: 1.015 }}
             whileTap={{ scale: 0.985 }}
-            href="tel:+97143320776"
-            className="group w-full bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/30 transition-all text-left"
+            href="tel:+971547033311"
+            className="group w-full bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/25 transition-all text-left"
           >
             <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
-                <Phone size={19} />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                <Phone size={18} />
               </div>
               <div className="min-w-0">
-                <h2 className="font-extrabold text-white text-sm sm:text-base leading-snug font-['Montserrat',sans-serif] truncate">
-                  Call Dubai 24/7 Clinic
+                <h2 className="font-extrabold text-white text-xs sm:text-sm leading-snug font-['Montserrat',sans-serif] truncate">
+                  Call 24/7 Helpline
                 </h2>
                 <p className="text-sky-100 text-[11px] sm:text-xs font-mono truncate">
-                  +971 4 332 0776 / +971 54 703 3311
+                  +971 54 703 3311
                 </p>
               </div>
             </div>
