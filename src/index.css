@@ -233,4 +233,93 @@ img {
   transform: scale(1.2) rotate(15deg) !important;
 }
 
+/* ── Driver Schedule Map Animations ── */
+@keyframes routeFlow {
+  from {
+    stroke-dashoffset: 48;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.anim-route-flow {
+  stroke-dasharray: 6 6;
+  animation: routeFlow 2s linear infinite;
+}
+
+@keyframes radarExpand {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.anim-radar-pickup {
+  animation: radarExpand 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.anim-radar-drop {
+  animation: radarExpand 2.2s cubic-bezier(0, 0, 0.2, 1) infinite 1.1s;
+}
+
+@keyframes carTravelRoute {
+  0% {
+    left: 26%;
+    top: 18%;
+    transform: translate(-50%, -50%) rotate(42deg) scale(0.9);
+    opacity: 0.2;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: 74%;
+    top: 82%;
+    transform: translate(-50%, -50%) rotate(42deg) scale(1);
+    opacity: 0.2;
+  }
+}
+
+.anim-traveling-car {
+  position: absolute;
+  animation: carTravelRoute 4.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  pointer-events: none;
+}
+
+@keyframes waveDrift {
+  0%, 100% {
+    transform: translateY(0px) scaleY(1);
+  }
+  50% {
+    transform: translateY(3px) scaleY(1.04);
+  }
+}
+
+.anim-wave-drift {
+  animation: waveDrift 5s ease-in-out infinite;
+}
+
+@keyframes ripplePulse {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scaleX(1.15);
+  }
+}
+
+.anim-ripple-pulse {
+  animation: ripplePulse 3.5s ease-in-out infinite;
+}
+
 

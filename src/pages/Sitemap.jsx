@@ -59,6 +59,7 @@ const Sitemap = () => {
     { name: "Careers", path: "/career", icon: Briefcase },
     { name: "Locations & Coverage", path: "/locations", icon: MapPin },
     { name: "Book An Appointment", path: "/book-an-appointment", icon: Calendar },
+    { name: "Social Media & Connect", path: "/social-media", icon: ExternalLink },
     { name: "Privacy Policy", path: "/privacy-policy", icon: ShieldCheck },
     { name: "Staff Dashboard", path: "/dashboard", icon: Code }
   ];
@@ -175,6 +176,11 @@ const Sitemap = () => {
       name: "Staff Management API", 
       url: `${API_BASE_URL}/api/staff/`, 
       desc: "Staff profiles, duties, and task endpoints" 
+    },
+    { 
+      name: "Duty Schedule API", 
+      url: `${API_BASE_URL}/api/duties/`, 
+      desc: "Duty shift schedules, replacements, and on-call rosters" 
     }
   ];
 

@@ -84,6 +84,61 @@ h1, h2, h3, h4, h5, h6, .brand-text, .main-header .navbar-brand {
   color: #38bdf8 !important;
 }
 
+/* Sidebar Treeview Dropdown Accordion */
+.nav-sidebar .has-treeview > .nav-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  cursor: pointer !important;
+}
+
+.nav-sidebar .has-treeview > .nav-link p {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.nav-sidebar .has-treeview > .nav-link .nav-arrow {
+  transition: transform 0.25s ease !important;
+  margin-left: auto !important;
+  font-size: 11px !important;
+  color: #64748b !important;
+}
+
+.nav-sidebar .has-treeview.menu-open > .nav-link .nav-arrow {
+  transform: rotate(90deg) !important;
+  color: #38bdf8 !important;
+}
+
+.nav-sidebar .has-treeview > .nav-treeview {
+  display: none;
+  list-style: none !important;
+  padding-left: 12px !important;
+  margin: 4px 0 !important;
+  background: rgba(15, 23, 42, 0.4) !important;
+  border-radius: 8px !important;
+  border-left: 2px solid rgba(56, 189, 248, 0.25) !important;
+}
+
+.nav-sidebar .has-treeview.menu-open > .nav-treeview {
+  display: block;
+}
+
+.nav-sidebar .nav-treeview .nav-link {
+  font-size: 12.5px !important;
+  padding: 6px 12px !important;
+  margin: 2px 0 !important;
+  color: #cbd5e1 !important;
+}
+
+.nav-sidebar .nav-treeview .nav-link:hover,
+.nav-sidebar .nav-treeview .nav-link.active {
+  color: #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.12) !important;
+}
+
 /* Dashboard Content Header & Breadcrumbs */
 .content-header {
   padding: 24px 20px 12px 20px !important;
@@ -291,3 +346,249 @@ div.col-md-9:has(+ div.col-md-3) {
   flex: 0 0 100% !important;
   max-width: 100% !important;
 }
+
+/* ==========================================================================
+   Modern Input Field & Staff Profile Form System
+   ========================================================================== */
+.card {
+  border-radius: 16px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+  margin-bottom: 24px !important;
+}
+
+.card-header {
+  background: #f8fafc !important;
+  border-bottom: 1.5px solid #e2e8f0 !important;
+  padding: 16px 22px !important;
+  font-weight: 700 !important;
+}
+
+.card-title {
+  font-weight: 800 !important;
+  font-size: 15px !important;
+  color: #0f172a !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Inputs, Selects, and Textareas */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="url"],
+input[type="date"],
+select,
+textarea {
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  font-size: 13.5px !important;
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  border-color: #08709d !important;
+  box-shadow: 0 0 0 3.5px rgba(8, 112, 157, 0.15) !important;
+  outline: none !important;
+  background-color: #ffffff !important;
+}
+
+.form-group label {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: #334155 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  margin-bottom: 6px !important;
+}
+
+.help-block, .form-text {
+  font-size: 12px !important;
+  color: #64748b !important;
+  margin-top: 5px !important;
+  line-height: 1.4 !important;
+}
+
+/* Save Buttons and Action Bar */
+.submit-row {
+  background: #f8fafc !important;
+  border-top: 1.5px solid #e2e8f0 !important;
+  padding: 18px 24px !important;
+  border-radius: 0 0 16px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.submit-row input[type="submit"],
+.btn-primary, .btn-success {
+  border-radius: 10px !important;
+  padding: 10px 22px !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  box-shadow: 0 4px 14px rgba(8, 112, 157, 0.25) !important;
+  transition: all 0.2s ease !important;
+}
+
+.submit-row input[type="submit"]:hover,
+.btn-primary:hover, .btn-success:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(8, 112, 157, 0.35) !important;
+}
+
+/* Remove "Save and add another" and "Save and continue editing" buttons */
+.submit-row input[name="_addanother"],
+.submit-row input[name="_continue"],
+.submit-row button[name="_addanother"],
+.submit-row button[name="_continue"],
+.submit-row .btn[name="_addanother"],
+.submit-row .btn[name="_continue"],
+.submit-row a[name="_addanother"],
+.submit-row a[name="_continue"] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Primary Send Notice Button Styling */
+.model-noticeapplication .submit-row input[name="_save"],
+.model-noticeapplication .submit-row button[name="_save"] {
+  background: linear-gradient(135deg, #08709d, #0ea5e9) !important;
+  color: #ffffff !important;
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  padding: 12px 30px !important;
+  border-radius: 12px !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(8, 112, 157, 0.35) !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Fix Form Row & Field Alignment in Change Forms with Modern Responsive Multi-Column Row Layout */
+.form-row,
+.change-form .form-group {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 20px 24px !important;
+  width: 100% !important;
+  padding: 18px 24px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  margin-bottom: 0 !important;
+  align-items: flex-start !important;
+  box-sizing: border-box !important;
+}
+
+.form-row:last-child {
+  border-bottom: none !important;
+}
+
+.form-row > div,
+.form-row .fieldBox {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 280px !important;
+  min-width: 220px !important;
+  float: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.form-row label,
+.form-row .fieldBox label,
+.change-form label {
+  display: block !important;
+  float: none !important;
+  width: 100% !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  margin-bottom: 8px !important;
+}
+
+.form-row input[type="text"],
+.form-row input[type="password"],
+.form-row input[type="email"],
+.form-row input[type="number"],
+.form-row input[type="date"],
+.form-row input[type="time"],
+.form-row select,
+.form-row textarea {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 11px 14px !important;
+  font-size: 13.5px !important;
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 9px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.form-row input[type="text"]:focus,
+.form-row input[type="password"]:focus,
+.form-row input[type="email"]:focus,
+.form-row input[type="number"]:focus,
+.form-row input[type="date"]:focus,
+.form-row input[type="time"]:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  border-color: #08709d !important;
+  box-shadow: 0 0 0 3px rgba(8, 112, 157, 0.15) !important;
+  outline: none !important;
+}
+
+.form-row .help,
+.form-row .help-block,
+.form-row .form-text {
+  display: block !important;
+  margin-top: 6px !important;
+  font-size: 11.5px !important;
+  color: #64748b !important;
+  line-height: 1.4 !important;
+}
+
+/* Date and Time Pickers / Shortcuts */
+.datetimeshortcuts {
+  font-size: 12px !important;
+  color: #08709d !important;
+  margin-top: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-weight: 600 !important;
+}
+
+.datetimeshortcuts a {
+  color: #08709d !important;
+  text-decoration: none !important;
+  padding: 2px 8px !important;
+  border-radius: 6px !important;
+  background: #f0f9ff !important;
+  border: 1px solid #bae6fd !important;
+  transition: all 0.15s ease !important;
+}
+
+.datetimeshortcuts a:hover {
+  background: #08709d !important;
+  color: #ffffff !important;
+}
+
+

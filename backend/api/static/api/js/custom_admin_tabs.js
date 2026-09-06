@@ -77,6 +77,41 @@
             setTimeout(handleHash, 300);
             setTimeout(handleHash, 750);
         }
+        // Sidebar Treeview Dropdown Toggler
+        $(document).off('click.sidebarTreeview').on('click.sidebarTreeview', '.nav-sidebar .has-treeview > a', function(e) {
+            e.preventDefault();
+            const $parentLi = $(this).closest('.has-treeview');
+            const $submenu = $parentLi.children('.nav-treeview');
+            
+            if ($parentLi.hasClass('menu-open')) {
+                $parentLi.removeClass('menu-open');
+                $submenu.slideUp(200);
+            } else {
+                $parentLi.addClass('menu-open');
+                $submenu.slideDown(200);
+            }
+        });
+
+        // Automatically expand the active treeview on load (e.g. if URL matches any sub-link)
+        const currentPath = window.location.pathname;
+        $('.nav-sidebar .nav-treeview a').each(function() {
+            const href = $(this).attr('href');
+            if (href && href !== '#' && currentPath.startsWith(href)) {
+                $(this).addClass('active');
+                const $parentTree = $(this).closest('.has-treeview');
+                $parentTree.addClass('menu-open');
+                $parentTree.children('.nav-treeview').show();
+            }
+        });
+
+        // Customize Notice Save button text
+        if (window.location.pathname.includes('/noticeapplication/')) {
+            const $saveBtn = $('.submit-row input[name="_save"], .submit-row button[name="_save"]');
+            if ($saveBtn.length) {
+                $saveBtn.val('📢 Send Notice');
+                $saveBtn.text('📢 Send Notice');
+            }
+        }
     }
 
     if (document.readyState === 'loading') {

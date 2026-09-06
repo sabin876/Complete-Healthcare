@@ -61,10 +61,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rest_framework',
     'corsheaders',
     'api.apps.ApiConfig',
 ]
+
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,7 +87,7 @@ ROOT_URLCONF = 'healthcare_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -182,19 +186,49 @@ JAZZMIN_SETTINGS = {
     "custom_js": "api/js/custom_admin_tabs.js",
     "topmenu_links": [
         {"name": "Home Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "Services Manager", "url": "/admin/api/service/", "permissions": ["api.view_service"]},
+        {
+            "name": "CMS",
+            "icon": "fas fa-folder-open",
+            "children": [
+                {"name": "Blog Posts", "url": "/admin/api/blogpost/", "permissions": ["api.view_blogpost"]},
+                {"name": "Services", "url": "/admin/api/service/", "permissions": ["api.view_service"]},
+                {"name": "Team Members", "url": "/admin/api/teammember/", "permissions": ["api.view_teammember"]},
+                {"name": "Robots.txt Setting", "url": "/admin/api/robotstxt/", "permissions": ["api.view_robotstxt"]},
+                {"name": "Sitemap.xml Setting", "url": "/admin/api/sitemapxml/", "permissions": ["api.view_sitemapxml"]},
+            ]
+        },
         {"name": "Staff Directory", "url": "/admin/api/staffprofile/", "permissions": ["api.view_staffprofile"]},
-        {"name": "Blog Posts", "url": "/admin/api/blogpost/", "permissions": ["api.view_blogpost"]},
         {"name": "React Frontend Dashboard", "url": "/dashboard", "new_window": True},
         {"name": "Live Web App", "url": "/", "new_window": True},
     ],
     "show_sidebar": True,
-    "navigation_expanded": True,
-    "order_with_respect_to": ["api", "auth"],
+    "navigation_expanded": False,
+    "order_with_respect_to": ["cms", "api", "auth"],
+    "custom_links": {
+        "CMS": [
+            {"name": "Blog Posts", "url": "/admin/api/blogpost/", "icon": "fas fa-newspaper", "permissions": ["api.view_blogpost"]},
+            {"name": "Services", "url": "/admin/api/service/", "icon": "fas fa-briefcase-medical", "permissions": ["api.view_service"]},
+            {"name": "Team Members", "url": "/admin/api/teammember/", "icon": "fas fa-user-nurse", "permissions": ["api.view_teammember"]},
+            {"name": "Robots.txt Setting", "url": "/admin/api/robotstxt/", "icon": "fas fa-robot", "permissions": ["api.view_robotstxt"]},
+            {"name": "Sitemap.xml Setting", "url": "/admin/api/sitemapxml/", "icon": "fas fa-sitemap", "permissions": ["api.view_sitemapxml"]},
+        ]
+    },
+    "hide_models": [
+        "api.blogpost",
+        "api.service",
+        "api.teammember",
+        "api.robotstxt",
+        "api.sitemapxml",
+    ],
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user-shield",
         "auth.group": "fas fa-users",
+        "api": "fas fa-hospital",
+        "cms": "fas fa-layer-group",
+        "CMS": "fas fa-layer-group",
+        "notice": "fas fa-bullhorn",
+        "Notice": "fas fa-bullhorn",
         "api.staffprofile": "fas fa-user-md",
         "api.task": "fas fa-tasks",
         "api.leaveapplication": "fas fa-calendar-times",
@@ -202,9 +236,12 @@ JAZZMIN_SETTINGS = {
         "api.salaryapplication": "fas fa-money-check-alt",
         "api.noticeapplication": "fas fa-bullhorn",
         "api.dutyapplication": "fas fa-exchange-alt",
+        "api.driverschedule": "fas fa-route",
         "api.blogpost": "fas fa-newspaper",
         "api.service": "fas fa-briefcase-medical",
         "api.teammember": "fas fa-user-nurse",
+        "api.robotstxt": "fas fa-robot",
+        "api.sitemapxml": "fas fa-sitemap",
     },
     "default_icon_parents": "fas fa-folder",
     "default_icon_children": "fas fa-file-medical",

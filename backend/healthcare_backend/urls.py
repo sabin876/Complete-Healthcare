@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import redirect
 from django.views.static import serve
-from api.views import send_email
+from api.views import send_email, robots_txt_view, sitemap_xml_view
 
 urlpatterns = [
     path('', lambda request: redirect('admin:index'), name='root_redirect'),
@@ -28,6 +28,8 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('send-email/', send_email, name='root_send_email'),
     path('send-email', send_email, name='root_send_email_noslash'),
+    path('robots.txt', robots_txt_view, name='robots_txt'),
+    path('sitemap.xml', sitemap_xml_view, name='sitemap_xml'),
 ]
 
 # Unconditionally serve media files to support production environments where the front-end server is not configured to serve them directly

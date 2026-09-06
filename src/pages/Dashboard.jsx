@@ -7,15 +7,25 @@ import {
   ListChecks, Image as ImageIcon, BookOpen, ArrowUp, ArrowDown, 
   Search, Eye, EyeOff, Zap, Sliders, AlertCircle,
   TrendingUp, ArrowUpRight, Server, Globe, Filter, ChevronRight, FileText,
-  PenLine, Tag, Clock, User, Hash, AlignLeft, Link2, Save
+  PenLine, Tag, Clock, User, Hash, AlignLeft, Link2, Save,
+  Receipt, DollarSign, UploadCloud, Users, Check, Send
 } from 'lucide-react';
 import { Link } from 'react-router';
 import logo from '../assets/logo.webp';
 import { API_BASE_URL } from '../config/api';
 import { Container } from '../components/ui';
+import { useAuth } from '../context/AuthContext';
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'subservices' | 'understanding' | 'benefits' | 'parents' | 'hierarchy' | 'blogs'
+  const { 
+    staffUsers = [], 
+    salaryApplications = [], 
+    createSalaryApplication, 
+    deleteSalaryApplication 
+  } = useAuth?.() || {};
+
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'subservices' | 'understanding' | 'benefits' | 'parents' | 'hierarchy' | 'blogs' | 'salary'
+
   const [servicesData, setServicesData] = useState([]);
   const [parentServices, setParentServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -197,9 +207,88 @@ export default function Dashboard() {
     }
   };
 
+  // ── Salary Slip Management State (3 Things: Staff, Description, Image) ─────
+  const [salaryStep, setSalaryStep] = useState(1); // 1: Staff, 2: Description, 3: Upload & Send
+  const [selectedSalaryStaffId, setSelectedSalaryStaffId] = useState('');
+  const [salaryDescription, setSalaryDescription] = useState('');
+  const [salaryImageFile, setSalaryImageFile] = useState(null);
+  const [salaryImagePreview, setSalaryImagePreview] = useState('');
+  const [salarySubmitting, setSalarySubmitting] = useState(false);
+  const [salaryStaffSearch, setSalaryStaffSearch] = useState('');
+  const [salaryHistorySearch, setSalaryHistorySearch] = useState('');
+  const [salarySlipDeleteConfirm, setSalarySlipDeleteConfirm] = useState(null);
+  const [viewingSlipImage, setViewingSlipImage] = useState(null);
+
+  const handleSalaryImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSalaryImageFile(file);
+      setSalaryImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const clearSalaryImage = () => {
+    setSalaryImageFile(null);
+    setSalaryImagePreview('');
+  };
+
+  const resetSalaryForm = () => {
+    setSalaryStep(1);
+    setSelectedSalaryStaffId('');
+    setSalaryDescription('');
+    clearSalaryImage();
+  };
+
+
+  const handleSendSalarySlip = async (e) => {
+    e?.preventDefault();
+    if (!selectedSalaryStaffId) {
+      showToast('error', 'Staff Required', 'Please choose a staff member to send the salary slip to.');
+      return;
+    }
+    setSalarySubmitting(true);
+    try {
+      const formData = new FormData();
+      formData.append('staffId', selectedSalaryStaffId);
+      formData.append('description', salaryDescription);
+      formData.append('status', 'Issued');
+      if (salaryImageFile) {
+        formData.append('image', salaryImageFile);
+      }
+
+      const res = await createSalaryApplication?.(formData);
+      if (res) {
+        showToast('success', 'Salary Slip Sent!', `Monthly salary slip successfully sent to ${res.staffName || 'staff member'}.`);
+        resetSalaryForm();
+      } else {
+        showToast('error', 'Failed to Send', 'Could not send salary slip. Please check your connection.');
+      }
+    } catch (err) {
+      console.error('Error sending salary slip:', err);
+      showToast('error', 'Error', 'An error occurred while sending the salary slip.');
+    } finally {
+      setSalarySubmitting(false);
+    }
+  };
+
+  const handleDeleteSalarySlip = async (id) => {
+    try {
+      const ok = await deleteSalaryApplication?.(id);
+      if (ok) {
+        showToast('success', 'Slip Deleted', 'Salary slip record removed.');
+      } else {
+        showToast('error', 'Delete Failed', 'Could not delete salary slip.');
+      }
+      setSalarySlipDeleteConfirm(null);
+    } catch (err) {
+      showToast('error', 'Error', 'Error deleting salary slip.');
+    }
+  };
+
   useEffect(() => {
     if (activeTab === 'blogs') loadBlogs();
   }, [activeTab]);
+
 
   // Fetch all services from Django API
   const loadServices = async () => {
@@ -710,7 +799,8 @@ export default function Dashboard() {
 
               {/* Blog Management */}
               <div className="pt-3 mt-1 border-t border-slate-800/80">
-                <p className="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-600 px-2 mb-2">Content</p>
+                <p className="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-600 px-2 mb-2">Content & HR</p>
+                
                 <button
                   onClick={() => setActiveTab('blogs')}
                   className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-xs transition-all duration-200 cursor-pointer ${
@@ -727,9 +817,27 @@ export default function Dashboard() {
                     {blogsData.length}
                   </span>
                 </button>
+
+                <button
+                  onClick={() => setActiveTab('salary')}
+                  className={`w-full flex items-center justify-between px-4 py-3.5 mt-1.5 rounded-2xl font-bold text-xs transition-all duration-200 cursor-pointer ${
+                    activeTab === 'salary'
+                      ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/10 text-emerald-300 border border-emerald-500/40 shadow-lg shadow-emerald-500/10'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Receipt size={18} className={activeTab === 'salary' ? 'text-emerald-400' : ''} />
+                    <span>Monthly Salary Slips</span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold">
+                    {salaryApplications.length}
+                  </span>
+                </button>
               </div>
             </nav>
           </div>
+
 
           {/* System Health Widget */}
           <div className="p-4 rounded-2xl bg-[#0c1527] border border-slate-800 text-xs space-y-3">
@@ -2034,9 +2142,467 @@ export default function Dashboard() {
             </div>
           )}
 
+          {/* ══════════════════════════════════════════════════════════════════
+              SALARY SLIPS MANAGEMENT TAB
+             ══════════════════════════════════════════════════════════════════ */}
+          {activeTab === 'salary' && (
+
+            <div className="space-y-6">
+              {/* Header Banner */}
+              <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-900/30 via-teal-900/20 to-slate-900/40 border border-emerald-500/30 relative overflow-hidden backdrop-blur-xl">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold tracking-wider uppercase border border-emerald-500/30 flex items-center gap-1.5">
+                        <Receipt size={12} /> HR & Payroll
+                      </span>
+                      <span className="text-slate-500 text-xs">•</span>
+                      <span className="text-slate-400 text-xs font-mono">3-Step Dispatch</span>
+                    </div>
+                    <h2 className="text-2xl font-black text-white font-montserrat tracking-tight">
+                      Monthly Salary Slip Application
+                    </h2>
+                    <p className="text-slate-400 text-xs mt-1 max-w-xl">
+                      Choose a staff member, enter the description / period details, attach the salary slip image, and send it directly to the staff portal.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="px-4 py-3 rounded-2xl bg-slate-900/80 border border-slate-800 text-right">
+                      <div className="text-[10px] font-mono text-slate-500 uppercase">Total Issued</div>
+                      <div className="text-xl font-mono font-black text-emerald-400">{salaryApplications.length}</div>
+                    </div>
+                    <div className="px-4 py-3 rounded-2xl bg-slate-900/80 border border-slate-800 text-right">
+                      <div className="text-[10px] font-mono text-slate-500 uppercase">Total Staff</div>
+                      <div className="text-xl font-mono font-black text-cyan-400">{staffUsers.length}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Grid: Left Form, Right History */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                {/* ── LEFT: The 3-Step Send Form Wizard (5 cols) ────────────────────── */}
+                <div className="lg:col-span-5">
+                  <div className="p-6 rounded-3xl bg-[#0c1527] border border-[#1b2742] shadow-2xl relative">
+                    
+                    {/* Header */}
+                    <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-800/80">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+                          <Send size={15} />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-extrabold text-white font-montserrat">Send Salary Slip</h3>
+                          <p className="text-[10px] text-slate-500 font-mono">3-Step Dispatch Wizard</p>
+                        </div>
+                      </div>
+
+                      {selectedSalaryStaffId && (
+                        <button
+                          type="button"
+                          onClick={resetSalaryForm}
+                          className="text-[11px] text-slate-400 hover:text-red-400 font-bold transition-colors cursor-pointer"
+                        >
+                          Reset
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Step Progress Stepper Bar */}
+                    <form onSubmit={handleSendSalarySlip} className="space-y-5">
+
+                      {/* 1. CHOOSE STAFF */}
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                            <span>1.</span> Choose Staff Member <span className="text-red-400">*</span>
+                          </label>
+                          <span className="text-[10px] text-slate-500 font-mono">
+                            {selectedSalaryStaffId ? '✓ Staff selected' : 'Required'}
+                          </span>
+                        </div>
+
+                        {/* Selected Staff Spotlight Banner */}
+                        {(() => {
+                          const selObj = staffUsers.find(s => s.staffId === selectedSalaryStaffId);
+                          if (!selObj) return null;
+                          const initials = (selObj.fullName || '??').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+                          return (
+                            <div className="mb-3 p-3 rounded-2xl bg-emerald-500/15 border-2 border-emerald-500 flex items-center justify-between gap-3 shadow-md shadow-emerald-500/10">
+                              <div className="flex items-center gap-3 min-w-0">
+                                <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white font-extrabold text-sm flex items-center justify-center shrink-0">
+                                  {initials}
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="text-xs font-black text-white truncate">{selObj.fullName}</div>
+                                  <div className="text-[11px] text-emerald-300 font-mono truncate">
+                                    ID: <span className="font-bold">{selObj.staffId}</span> • {selObj.position || selObj.department || 'Staff'}
+                                  </div>
+                                </div>
+                              </div>
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider shrink-0">
+                                Selected
+                              </span>
+                            </div>
+                          );
+                        })()}
+
+                        {/* Search staff */}
+                        <div className="relative mb-2.5">
+                          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                          <input
+                            type="text"
+                            value={salaryStaffSearch}
+                            onChange={(e) => setSalaryStaffSearch(e.target.value)}
+                            placeholder="Search staff name, ID, department..."
+                            className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#060c19] border border-[#1b2742] text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500/50"
+                          />
+                        </div>
+
+                        {/* Staff Cards Grid */}
+                        <div className="max-h-52 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
+                          {staffUsers
+                            .filter(s => {
+                              const q = salaryStaffSearch.toLowerCase().trim();
+                              return !q || (s.fullName || '').toLowerCase().includes(q) || (s.staffId || '').toLowerCase().includes(q) || (s.department || '').toLowerCase().includes(q) || (s.position || '').toLowerCase().includes(q);
+                            })
+                            .map((s) => {
+                              const isSelected = selectedSalaryStaffId === s.staffId;
+                              const initials = (s.fullName || '??').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+                              return (
+                                <div
+                                  key={s.id || s.staffId}
+                                  onClick={() => setSelectedSalaryStaffId(s.staffId)}
+                                  className={`flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all duration-150 border ${
+                                    isSelected
+                                      ? 'bg-emerald-500/20 border-emerald-500 shadow-md shadow-emerald-500/10 text-white'
+                                      : 'bg-[#060c19]/60 border-[#1b2742] hover:border-slate-700 text-slate-300'
+                                  }`}
+                                >
+                                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-xs shrink-0 ${
+                                    isSelected ? 'bg-emerald-500 text-white' : 'bg-slate-800 text-emerald-400'
+                                  }`}>
+                                    {initials}
+                                  </div>
+
+                                  <div className="flex-1 min-w-0">
+                                    <div className="text-xs font-bold truncate">{s.fullName}</div>
+                                    <div className="text-[10px] text-slate-400 font-mono truncate flex items-center gap-1.5">
+                                      <span className="text-cyan-400 font-bold">{s.staffId}</span>
+                                      {s.department && <span>• {s.department}</span>}
+                                      {s.position && <span className="text-slate-500">({s.position})</span>}
+                                    </div>
+                                  </div>
+
+                                  {isSelected ? (
+                                    <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                                      <Check size={12} strokeWidth={3} />
+                                    </div>
+                                  ) : (
+                                    <div className="w-4 h-4 rounded-full border border-slate-700 shrink-0" />
+                                  )}
+                                </div>
+                              );
+                            })}
+
+                          {staffUsers.length === 0 && (
+                            <div className="p-4 text-center text-slate-500 text-xs font-mono">
+                              No staff members found in the directory.
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* 2. DESCRIPTION */}
+                      <div>
+                        <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-400 mb-1.5 flex items-center gap-1.5">
+                          <span>2.</span> Description / Notes
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={salaryDescription}
+                          onChange={(e) => setSalaryDescription(e.target.value)}
+                          placeholder="e.g. Monthly Salary Slip for August 2026 - Transferred to your registered bank account via WPS."
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-[#060c19] border border-[#1b2742] text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500/50 resize-none font-medium"
+                        />
+                      </div>
+
+                      {/* 3. SALARY SLIP IMAGE */}
+                      <div>
+                        <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-400 mb-1.5 flex items-center gap-1.5">
+                          <span>3.</span> Salary Slip Image / Document
+                        </label>
+
+                        {!salaryImagePreview ? (
+                          <label className="flex flex-col items-center justify-center p-5 rounded-2xl border-2 border-dashed border-[#1b2742] hover:border-emerald-500/50 bg-[#060c19]/50 cursor-pointer transition-colors group">
+                            <UploadCloud size={24} className="text-slate-500 group-hover:text-emerald-400 mb-1.5 transition-colors" />
+                            <span className="text-xs font-bold text-slate-300 group-hover:text-white">
+                              Click to attach slip image
+                            </span>
+                            <span className="text-[10px] text-slate-500 font-mono mt-0.5">
+                              PNG, JPG, WEBP, or PDF
+                            </span>
+                            <input
+                              type="file"
+                              accept="image/*,.pdf"
+                              onChange={handleSalaryImageChange}
+                              className="hidden"
+                            />
+                          </label>
+                        ) : (
+                          <div className="relative rounded-2xl overflow-hidden border border-emerald-500/40 bg-[#060c19] p-3 flex items-center gap-3">
+                            <img
+                              src={salaryImagePreview}
+                              alt="Salary Slip Preview"
+                              className="w-16 h-16 rounded-xl object-cover border border-slate-700 shrink-0"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-bold text-white truncate">{salaryImageFile?.name || 'Attached Slip'}</p>
+                              <p className="text-[10px] text-emerald-400 font-mono">Ready to dispatch</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={clearSalaryImage}
+                              className="p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors cursor-pointer"
+                              title="Remove image"
+                            >
+                              <X size={14} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Send Button */}
+                      <button
+                        type="submit"
+                        disabled={salarySubmitting || !selectedSalaryStaffId}
+                        className={`w-full py-3.5 px-6 rounded-2xl font-black text-xs uppercase tracking-wider font-montserrat flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg ${
+                          salarySubmitting || !selectedSalaryStaffId
+                            ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-[1.01] active:scale-[0.99]'
+                        }`}
+                      >
+                        {salarySubmitting ? (
+                          <>
+                            <RefreshCw size={15} className="animate-spin" />
+                            <span>Sending Slip...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send size={15} />
+                            <span>Send Monthly Salary Slip to Staff</span>
+                          </>
+                        )}
+                      </button>
+
+                    </form>
+
+                  </div>
+                </div>
+
+
+                {/* ── RIGHT: Sent Salary Slips Directory (7 cols) ────────────── */}
+                <div className="lg:col-span-7">
+                  <div className="p-6 rounded-3xl bg-[#0c1527] border border-[#1b2742] shadow-2xl h-full flex flex-col">
+                    
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-800/80">
+                      <div>
+                        <h3 className="text-sm font-extrabold text-white font-montserrat">Issued Salary Slips Directory</h3>
+                        <p className="text-[10px] text-slate-500 font-mono">All monthly slips sent to staff members</p>
+                      </div>
+
+                      {/* Search history */}
+                      <div className="relative min-w-[200px]">
+                        <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                        <input
+                          type="text"
+                          value={salaryHistorySearch}
+                          onChange={(e) => setSalaryHistorySearch(e.target.value)}
+                          placeholder="Filter slips..."
+                          className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[#060c19] border border-[#1b2742] text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500/50"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Slips List */}
+                    <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[580px] custom-scrollbar">
+                      {salaryApplications
+                        .filter(slip => {
+                          const q = salaryHistorySearch.toLowerCase().trim();
+                          return !q || 
+                            (slip.staffName || '').toLowerCase().includes(q) || 
+                            (slip.staffId || '').toLowerCase().includes(q) || 
+                            (slip.description || '').toLowerCase().includes(q) ||
+                            (slip.staffDep || '').toLowerCase().includes(q);
+                        })
+                        .map((slip) => {
+                          const initials = (slip.staffName || '??').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+                          const imgUrl = slip.image ? (slip.image.startsWith('http') ? slip.image : `${API_BASE_URL}${slip.image.startsWith('/') ? '' : '/'}${slip.image}`) : null;
+
+                          return (
+                            <div
+                              key={slip.id}
+                              className="p-4 rounded-2xl bg-[#060c19]/80 border border-[#1b2742] hover:border-slate-700 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                            >
+                              <div className="flex items-start gap-3 flex-1 min-w-0">
+                                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-extrabold text-xs shrink-0 mt-0.5">
+                                  {initials}
+                                </div>
+
+                                <div className="flex-1 min-w-0 space-y-1">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="text-xs font-black text-white">{slip.staffName}</span>
+                                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-md">
+                                      {slip.staffId}
+                                    </span>
+                                    <span className="text-[10px] font-mono text-slate-500">
+                                      {slip.staffDep}
+                                    </span>
+                                  </div>
+
+                                  <p className="text-xs text-slate-300 font-medium leading-relaxed break-words">
+                                    {slip.description || <span className="text-slate-600 italic">No description provided</span>}
+                                  </p>
+
+                                  <div className="flex items-center gap-2 text-[10px] text-slate-500 font-mono">
+                                    <Clock size={11} />
+                                    <span>Issued: {new Date(slip.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Right Actions & Image Thumbnail */}
+                              <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-center">
+                                {imgUrl && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setViewingSlipImage(imgUrl)}
+                                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 text-xs font-bold transition-all cursor-pointer"
+                                  >
+                                    <img src={imgUrl} alt="thumbnail" className="w-5 h-5 rounded object-cover" />
+                                    <span>View Slip</span>
+                                  </button>
+                                )}
+
+                                <button
+                                  type="button"
+                                  onClick={() => setSalarySlipDeleteConfirm(slip.id)}
+                                  className="p-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 transition-all cursor-pointer"
+                                  title="Delete Salary Slip"
+                                >
+                                  <Trash2 size={15} />
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+
+                      {salaryApplications.length === 0 && (
+                        <div className="py-20 text-center">
+                          <Receipt size={36} className="text-slate-700 mx-auto mb-3" />
+                          <p className="text-slate-400 font-bold text-xs">No salary slips issued yet.</p>
+                          <p className="text-slate-600 text-[11px] font-mono mt-1">Use the form on the left to send the first salary slip.</p>
+                        </div>
+                      )}
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          )}
+
         </main>
       </div>
 
+      {/* ── Image Preview Zoom Modal ────────────────────────────────────────── */}
+      <AnimatePresence>
+        {viewingSlipImage && (
+          <div
+            className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4"
+            onClick={() => setViewingSlipImage(null)}
+          >
+            <div
+              className="relative max-w-3xl max-h-[90vh] bg-[#0c1527] border border-slate-700 rounded-3xl p-4 shadow-2xl overflow-hidden flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+                <span className="text-xs font-mono font-bold text-emerald-400">Salary Slip Attachment</span>
+                <button
+                  onClick={() => setViewingSlipImage(null)}
+                  className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-auto rounded-2xl flex items-center justify-center bg-black/40 p-2">
+                <img
+                  src={viewingSlipImage}
+                  alt="Full Salary Slip"
+                  className="max-h-[75vh] w-auto rounded-xl object-contain shadow-lg"
+                />
+              </div>
+
+              <div className="pt-3 mt-2 flex justify-end gap-2">
+                <a
+                  href={viewingSlipImage}
+                  target="_blank"
+                  rel="noreferrer"
+                  download
+                  className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 hover:bg-emerald-500 transition-colors"
+                >
+                  <ExternalLink size={13} /> Open in New Tab
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Delete Confirmation Modal ───────────────────────────────────────── */}
+      <AnimatePresence>
+        {salarySlipDeleteConfirm && (
+          <div
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setSalarySlipDeleteConfirm(null)}
+          >
+            <div
+              className="max-w-md w-full bg-[#0c1527] border border-slate-700 rounded-3xl p-6 shadow-2xl space-y-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center border border-red-500/30">
+                <Trash2 size={22} />
+              </div>
+              <div>
+                <h3 className="text-base font-extrabold text-white">Delete Salary Slip?</h3>
+                <p className="text-xs text-slate-400 mt-1">This will permanently delete this issued salary slip from the staff portal.</p>
+              </div>
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setSalarySlipDeleteConfirm(null)}
+                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-bold text-xs cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteSalarySlip(salarySlipDeleteConfirm)}
+                  className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs cursor-pointer shadow-lg shadow-red-600/30"
+                >
+                  Confirm Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
+

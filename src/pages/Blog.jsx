@@ -299,6 +299,18 @@ export default function OrthopedicArticlesPage() {
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Poppins', 'Inter', sans-serif", paddingTop: "120px", paddingBottom: "50px" }}>
 
       <div style={{ maxWidth: "1140px", margin: "0 auto", padding: "0 24px" }}>
+        {/* Page Header */}
+        <div className="mb-10 text-center sm:text-left">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#08709d] bg-sky-50 px-3.5 py-1.5 rounded-full border border-sky-100 inline-block mb-3">
+            Health Insights & Articles
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Latest Medical Articles & Insights
+          </h1>
+          <p className="text-slate-600 text-sm sm:text-base mt-2 max-w-2xl">
+            Stay informed with verified medical guides, health tips, and surgical care insights curated by our DHA-licensed clinical team.
+          </p>
+        </div>
 
         {/* Article Grid */}
         {currentPosts.length > 0 ? (

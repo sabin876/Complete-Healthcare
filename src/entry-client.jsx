@@ -2,14 +2,19 @@ import React from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 import App from './App.jsx';
+import { SSRDataProvider } from './context/SSRDataContext.jsx';
 import './index.css';
 
 const container = document.getElementById('root');
+const initialData = (typeof window !== 'undefined' && window.__INITIAL_DATA__) ? window.__INITIAL_DATA__ : null;
+
 const app = (
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <SSRDataProvider initialData={initialData}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </SSRDataProvider>
   </React.StrictMode>
 );
 
@@ -20,4 +25,3 @@ if (isSSR) {
 } else if (container) {
   createRoot(container).render(app);
 }
-

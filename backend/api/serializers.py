@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import (
     StaffProfile, Task, LeaveApplication,
     OtApplication, SalaryApplication, NoticeApplication, DutyApplication,
-    BlogPost, Service, TeamMember
+    BlogPost, Service, TeamMember, DriverSchedule, DriverRouteStop
 )
 from django.utils.text import slugify
 
@@ -10,7 +10,7 @@ from django.utils.text import slugify
 class StaffProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffProfile
-        fields = ['id', 'staff_id', 'full_name', 'position', 'department', 'password', 'role', 'created_at']
+        fields = ['id', 'staff_id', 'full_name', 'position', 'department', 'photo', 'password', 'role', 'created_at']
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,24 +42,135 @@ class SalaryApplicationSerializer(serializers.ModelSerializer):
         model = SalaryApplication
         fields = [
             'id', 'staff', 'staff_name', 'staff_dep', 'staff_position',
-            'inc_type', 'status', 'submitted_at'
+            'description', 'image', 'status', 'submitted_at'
         ]
 
+
+
 class NoticeApplicationSerializer(serializers.ModelSerializer):
+    selected_staff_details = serializers.SerializerMethodField()
+
     class Meta:
         model = NoticeApplication
         fields = [
-            'id', 'staff', 'staff_name', 'notice_title', 'notice_message',
-            'status', 'submitted_at'
+            'id', 'title', 'content', 'target_audience', 'selected_staff',
+            'selected_staff_details', 'target_department', 'priority',
+            'staff', 'staff_name', 'status', 'submitted_at'
         ]
+
+    def get_selected_staff_details(self, obj):
+        return [{'id': s.staff_id, 'name': s.full_name, 'department': s.department} for s in obj.selected_staff.all()]
 
 class DutyApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = DutyApplication
         fields = [
-            'id', 'staff', 'staff_name', 'duty_date', 'duty_replacement',
-            'duty_reason', 'status', 'submitted_at'
+            'id', 'staff', 'staff_name', 'duty_date',
+            'shift_timing', 'shift_type',
+            'duty_replacement', 'duty_reason', 'status', 'submitted_at'
         ]
+
+
+class DriverRouteStopSerializer(serializers.ModelSerializer):
+    staff_passengers_details = serializers.SerializerMethodField()
+    staff_dropoffs_details = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DriverRouteStop
+        fields = [
+            'id', 'schedule', 'stop_order',
+            'staff_passengers', 'staff_passengers_details',
+            'staff_dropoffs', 'staff_dropoffs_details',
+            'staff_passenger', 'staff_passenger_name',
+            'source_location', 'source_time',
+            'destination_location', 'destination_time',
+            'status', 'notes',
+            'created_at', 'updated_at'
+        ]
+
+    def get_staff_passengers_details(self, obj):
+        passengers = [
+            {
+                'id': s.staff_id,
+                'staff_id': s.staff_id,
+                'name': s.full_name,
+                'full_name': s.full_name,
+                'department': s.department,
+                'position': s.position
+            }
+            for s in obj.staff_passengers.all()
+        ]
+        if not passengers and obj.staff_passenger:
+            s = obj.staff_passenger
+            passengers.append({
+                'id': s.staff_id,
+                'staff_id': s.staff_id,
+                'name': s.full_name,
+                'full_name': s.full_name,
+                'department': s.department,
+                'position': s.position
+            })
+        elif not passengers and obj.staff_passenger_name:
+            passengers.append({
+                'id': 'leg-pass',
+                'staff_id': '',
+                'name': obj.staff_passenger_name,
+                'full_name': obj.staff_passenger_name,
+                'department': '',
+                'position': ''
+            })
+        return passengers
+
+    def get_staff_dropoffs_details(self, obj):
+        dropoffs = [
+            {
+                'id': s.staff_id,
+                'staff_id': s.staff_id,
+                'name': s.full_name,
+                'full_name': s.full_name,
+                'department': s.department,
+                'position': s.position
+            }
+            for s in obj.staff_dropoffs.all()
+        ]
+        if not dropoffs and obj.staff_passenger:
+            s = obj.staff_passenger
+            dropoffs.append({
+                'id': s.staff_id,
+                'staff_id': s.staff_id,
+                'name': s.full_name,
+                'full_name': s.full_name,
+                'department': s.department,
+                'position': s.position
+            })
+        elif not dropoffs and obj.staff_passenger_name:
+            dropoffs.append({
+                'id': 'leg-drop',
+                'staff_id': '',
+                'name': obj.staff_passenger_name,
+                'full_name': obj.staff_passenger_name,
+                'department': '',
+                'position': ''
+            })
+        return dropoffs
+
+
+class DriverScheduleSerializer(serializers.ModelSerializer):
+    route_stops = DriverRouteStopSerializer(many=True, read_only=True)
+    driver_staff_id = serializers.CharField(source='driver.staff_id', read_only=True, default='')
+
+    class Meta:
+        model = DriverSchedule
+        fields = [
+            'id', 'driver', 'driver_name', 'driver_phone', 'vehicle_info',
+            'driver_staff_id',
+            'staff_passenger', 'staff_passenger_name', 'staff_passenger_phone',
+            'schedule_date', 'pickup_location', 'pickup_time',
+            'drop_location', 'drop_time',
+            'route_stops',
+            'status', 'notes', 'created_at', 'updated_at'
+        ]
+
 
 
 class BlogPostSerializer(serializers.ModelSerializer):

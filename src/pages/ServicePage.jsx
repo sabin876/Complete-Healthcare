@@ -8,6 +8,7 @@ import ServiceBenefitsSection from '../components/ServiceBenefitsSection';
 import ServiceUnderstandingSection from '../components/ServiceUnderstandingSection';
 import ExploreServices from '../components/ExploreServices';
 import { servicesData as staticServicesData } from '../data/servicesData';
+import { useSSRData } from '../context/SSRDataContext';
 import NotFound from './NotFound';
 import { 
   Check, 
@@ -69,14 +70,7 @@ function EditableText({
   multiline = false
 }) {
   const storageKey = `corx_editable_${slug}_${fieldKey}`;
-  const [text, setText] = useState(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
-      return saved !== null ? saved : defaultText;
-    } catch (e) {
-      return defaultText;
-    }
-  });
+  const [text, setText] = useState(defaultText);
 
   useEffect(() => {
     try {
@@ -365,14 +359,22 @@ function HeroBackgroundAnimation() {
 }
 
 function LabServicesLanding({ slug = 'lab-services' }) {
+  const rawParts = (slug || '').toLowerCase().split('/').filter(Boolean);
+  const validParts = rawParts.filter(p => p !== 'services');
+  const targetSlug = validParts.length > 0 ? validParts[validParts.length - 1] : 'lab-test-at-home';
+  const cleanSlug = targetSlug;
+
+  const ssrData = useSSRData();
+  const initialForThisSlug = (ssrData && ssrData.slug === cleanSlug && ssrData.serviceData) ? ssrData.serviceData : null;
+
   const [visible, setVisible] = useState(false);
   const [condVisible, setCondVisible] = useState(false);
-  const [serviceData, setServiceData] = useState(null);
-  const [apiChecked, setApiChecked] = useState(false);
+  const [serviceData, setServiceData] = useState(() => initialForThisSlug);
+  const [apiChecked, setApiChecked] = useState(() => Boolean(initialForThisSlug));
   const [isEditMode, setIsEditMode] = useState(false);
 
   const handleResetDefaults = () => {
-    if (window.confirm("Are you sure you want to reset all custom edited text on this page to default?")) {
+    if (typeof window !== 'undefined' && window.confirm("Are you sure you want to reset all custom edited text on this page to default?")) {
       Object.keys(localStorage).forEach(key => {
         if (key.startsWith(`corx_editable_${slug}_`)) {
           localStorage.removeItem(key);
@@ -462,10 +464,6 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  const rawParts = (slug || '').toLowerCase().split('/').filter(Boolean);
-  const validParts = rawParts.filter(p => p !== 'services');
-  const targetSlug = validParts.length > 0 ? validParts[validParts.length - 1] : 'lab-test-at-home';
-  const cleanSlug = targetSlug;
   const altSlug = cleanSlug.replace(/docotor/g, 'doctor');
   const altSlug2 = cleanSlug.replace(/doctor/g, 'docotor');
   

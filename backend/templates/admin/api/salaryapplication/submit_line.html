@@ -1,0 +1,86 @@
+{% load i18n admin_urls jazzmin %}
+
+{% block submit-row %}
+<style>
+.salary-btn-submit {
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    border-radius: 12px !important;
+    padding: 13px 36px !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: none !important;
+    box-sizing: border-box !important;
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 18px rgba(16, 185, 129, 0.4) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+}
+
+.salary-btn-submit:hover {
+    transform: translateY(-1.5px) !important;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5) !important;
+    color: #ffffff !important;
+}
+
+.salary-btn-cancel {
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    padding: 12px 22px !important;
+    border-radius: 12px !important;
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border: 1.5px solid #cbd5e1 !important;
+    text-decoration: none !important;
+    transition: all 0.15s ease !important;
+}
+
+.salary-btn-cancel:hover {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+#salary-submit-bar {
+    width: 100% !important;
+    max-width: 950px !important;
+    box-sizing: border-box !important;
+}
+
+.card-footer {
+    overflow: visible !important;
+}
+</style>
+
+<div id="salary-submit-bar" style="display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; margin-top: 24px; padding-top: 18px; border-top: 1.5px solid #e2e8f0; flex-wrap: wrap;">
+    <a href="{% url opts|admin_urlname:'changelist' %}" class="salary-btn-cancel">
+        <i class="fas fa-times"></i> Cancel
+    </a>
+
+    <button type="submit" name="_save" class="salary-btn-submit">
+        <i class="fas fa-paper-plane" style="font-size: 15px;"></i>
+        <span>Send Monthly Salary Slip to Staff</span>
+    </button>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Ensure all fieldsets are open and visible
+    document.querySelectorAll('fieldset.module, fieldset').forEach(fs => {
+        fs.style.display = 'block';
+    });
+});
+</script>
+{% endblock %}

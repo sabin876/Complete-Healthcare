@@ -1,175 +1,426 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Mail, Phone, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  ArrowLeft, Share2, Phone, Globe, Check, Mail, Calendar
+} from 'lucide-react';
+import { Link, useNavigate } from 'react-router';
+import logo from '../assets/logo.webp';
+import heroVideo from '../assets/Hero.mp4';
 
-const Facebook = ({ size = 40, className = '', style = {} }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+/* ── Custom Social Icons ── */
+const FacebookIcon = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
   </svg>
 );
 
-const Instagram = ({ size = 40, className = '', style = {} }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+const InstagramIcon = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
   </svg>
 );
 
-const Twitter = ({ size = 40, className = '', style = {} }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
-    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-  </svg>
-);
-
-const Youtube = ({ size = 40, className = '', style = {} }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
-    <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.56 49.56 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-    <path d="m10 15 5-3-5-3v6" />
-  </svg>
-);
-
-const Linkedin = ({ size = 40, className = '', style = {} }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
+const LinkedinIcon = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
     <rect width="4" height="12" x="2" y="9" />
     <circle cx="4" cy="4" r="2" />
   </svg>
 );
 
+const WhatsAppIcon = ({ size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </svg>
+);
+
+const DiagonalArrow = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-white/80 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
+    <line x1="7" y1="17" x2="17" y2="7"></line>
+    <polyline points="7 7 17 7 17 17"></polyline>
+  </svg>
+);
 
 const SocialMedia = () => {
-  const socialPlatforms = [
+  const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    document.title = "CORx Healthcare Dubai | Connect & Official Social Media";
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  const handleShare = async () => {
+    if (typeof window !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: 'CORx Healthcare Dubai - Connect & Social Media',
+          text: 'Connect with CORx Healthcare Dubai across official platforms.',
+          url: window.location.href,
+        });
+      } catch {
+        copyToClipboard();
+      }
+    } else {
+      copyToClipboard();
+    }
+  };
+
+  const copyToClipboard = () => {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
+
+  const socialLinks = [
     {
       name: 'Facebook',
-      icon: <Facebook size={40} />,
-      handle: '@CorxHealthcare',
-      color: '#1877F2',
-      link: '#',
-      description: 'Follow us for the latest health tips and community updates.'
+      icon: <FacebookIcon size={26} />,
+      link: 'https://www.facebook.com/corxhealthcare',
     },
     {
       name: 'Instagram',
-      icon: <Instagram size={40} />,
-      handle: '@corx_healthcare_dubai',
-      color: '#E4405F',
-      link: '#',
-      description: 'Behind-the-scenes look at our home care services and wellness inspiration.'
-    },
-    {
-      name: 'Twitter',
-      icon: <Twitter size={40} />,
-      handle: '@CorxDubai',
-      color: '#1DA1F2',
-      link: '#',
-      description: 'Stay updated with healthcare news and real-time announcements.'
-    },
-    {
-      name: 'YouTube',
-      icon: <Youtube size={40} />,
-      handle: 'Corx Healthcare Dubai',
-      color: '#FF0000',
-      link: '#',
-      description: 'Educational videos on home nursing, physiotherapy, and elderly care.'
+      icon: <InstagramIcon size={26} />,
+      link: 'https://www.instagram.com/corx_healthcare',
     },
     {
       name: 'LinkedIn',
-      icon: <Linkedin size={40} />,
-      handle: 'Corx Healthcare',
-      color: '#0077B5',
-      link: '#',
-      description: 'Professional updates and career opportunities in Dubai home healthcare.'
+      icon: <LinkedinIcon size={26} />,
+      link: 'https://www.linkedin.com/company/corx-healthcare/',
     }
   ];
 
   return (
-    <div className="pt-40 pb-20 bg-white min-h-screen relative overflow-hidden">
-      {/* Mesh Gradient Background */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#08709d]/10 rounded-full blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#5fb54a]/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-[#2596be]/5 rounded-full blur-[100px]"></div>
+    <div className="min-h-screen relative text-white flex flex-col items-center justify-start px-4 sm:px-6 pt-2 sm:pt-3 pb-8 overflow-x-hidden font-['Poppins',sans-serif] select-none">
+      
+      {/* ── Background Video as used in Hero Section (Hero.mp4) ── */}
+      <div className="fixed inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover opacity-75"
+        >
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+
+        {/* Deep Blue & Midnight Overlay matching main site theme */}
+        <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#0c2e56]/92 via-[#0b2848]/88 to-[#071f3b]/94 pointer-events-none"></div>
+        {/* Soft Vignettes */}
+        <div className="absolute inset-0 z-[2] bg-gradient-to-t from-[#050e1d]/90 via-transparent to-[#050e1d]/70 pointer-events-none"></div>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-4xl md:text-6xl font-black text-secondary-color mb-6 uppercase tracking-tight">
-            Connect With Us
-          </h1>
-          <div className="w-24 h-1 bg-accent-color mx-auto mb-8 rounded-full"></div>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto font-medium">
-            Stay updated with our latest services, health tips, and community events through our social media channels.
-          </p>
-        </motion.div>
+      {/* ── Soft Radial Aura Glow behind Avatar in Brand Primary Colors ── */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-gradient-to-b from-[#08709d]/35 via-[#1a294a]/20 to-transparent rounded-full blur-[90px] pointer-events-none z-[3]"></div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {socialPlatforms.map((platform, index) => (
-            <motion.a
-              key={platform.name}
-              href={platform.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -10, scale: 1.02 }}
-              className="bg-white rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-100 flex flex-col items-center text-center group transition-all duration-500"
-            >
-              <div 
-                className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg transition-transform duration-500 group-hover:rotate-12"
-                style={{ backgroundColor: platform.color }}
-              >
-                {platform.icon}
-              </div>
-              <h3 className="text-2xl font-bold text-secondary-color mb-2">{platform.name}</h3>
-              <p className="text-accent-color font-bold mb-4">{platform.handle}</p>
-              <p className="text-gray-500 mb-8 flex-grow leading-relaxed">
-                {platform.description}
-              </p>
-              <div 
-                className="flex items-center gap-2 font-bold text-sm uppercase tracking-widest transition-colors hover:text-accent-color"
-                style={{ color: '#63b158' }}
-              >
-                Follow Now <ExternalLink size={16} />
-              </div>
-            </motion.a>
-          ))}
-        </div>
-
-        {/* Contact Strip */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="mt-20 bg-primary-color rounded-[3rem] p-12 text-white text-center shadow-2xl shadow-primary-color/30 relative overflow-hidden"
+      {/* ── Top Bar with Back & Share Buttons ── */}
+      <div className="w-full max-w-xl flex items-center justify-between relative z-20 mb-1.5 sm:mb-2">
+        <button
+          onClick={() => navigate(-1)}
+          aria-label="Go Back"
+          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer"
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent-color/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+          <ArrowLeft size={17} />
+        </button>
+
+        <button
+          onClick={handleShare}
+          aria-label="Share Page"
+          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1a294a]/80 hover:bg-[#1a294a] backdrop-blur-md border border-white/15 flex items-center justify-center text-white/90 hover:text-white transition-all shadow-md active:scale-95 cursor-pointer relative"
+        >
+          {copied ? <Check size={17} className="text-[#5eb63b]" /> : <Share2 size={17} />}
+        </button>
+      </div>
+
+      {/* Copy notification toast */}
+      <AnimatePresence>
+        {copied && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-4 z-50 bg-[#5eb63b] text-white px-4 py-2 rounded-full text-xs font-bold font-['Montserrat',sans-serif] shadow-xl flex items-center gap-1.5"
+          >
+            <Check size={14} /> Link copied to clipboard!
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Main Column Container ── */}
+      <div className="w-full max-w-xl flex flex-col items-center text-center relative z-10">
+        
+        {/* Profile Avatar / Logo with Bright Glowing Halo */}
+        <motion.div
+          initial={{ scale: 0.85, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.35 }}
+          className="relative mb-2 sm:mb-2.5"
+        >
+          {/* Glowing Aura Ring in Brand Colors (#08709d & #5eb63b) */}
+          <div className="absolute -inset-1.5 bg-gradient-to-tr from-[#08709d] via-[#38bdf8] to-[#5eb63b] rounded-full blur-md opacity-80 animate-pulse"></div>
           
-          <h2 className="text-3xl font-black mb-4 relative z-10">Need Immediate Assistance?</h2>
-          <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto relative z-10">
-            Our medical team is available 24/7 to provide premium healthcare at your doorstep.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6 relative z-10">
-            <a href="tel:+97143320776" className="bg-white text-primary-color px-6 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-accent-color hover:text-white transition-all shadow-xl">
-              <Phone size={20} /> ☎️ +971 4 332 0776
-            </a>
-            <a href="tel:+971547033311" className="bg-white text-primary-color px-6 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-accent-color hover:text-white transition-all shadow-xl">
-              <Phone size={20} /> 📱 +971 54 703 3311
-            </a>
-            <a href="tel:+971502785990" className="bg-white text-primary-color px-6 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-accent-color hover:text-white transition-all shadow-xl">
-              <Phone size={20} /> 📱 +971 50 278 5990
-            </a>
-            <a href="mailto:info@corx.ae" className="bg-white/10 backdrop-blur-md border border-white/30 px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-white/20 transition-all shadow-xl">
-              <Mail size={20} /> info@corx.ae
-            </a>
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white p-2.5 shadow-2xl flex items-center justify-center border-2 border-white/90">
+            <img
+              src={logo}
+              alt="CORx Healthcare Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
         </motion.div>
+
+        {/* Doctor / Clinic Title (Montserrat Font) */}
+        <motion.h1
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-lg sm:text-xl md:text-2xl font-extrabold text-white tracking-tight mb-3.5 sm:mb-4 font-['Montserrat',sans-serif]"
+        >
+          CORx Healthcare Dubai
+        </motion.h1>
+
+        {/* ── Primary Action Buttons Stack (Call on top, WhatsApp & Website in single row) ── */}
+        <div className="w-full flex flex-col gap-2 sm:gap-2.5 mb-4 sm:mb-5">
+          
+          {/* Row 1: Two Call Clinic Buttons Side-by-Side */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+            
+            {/* 1. Call Landline Clinic Button */}
+            <motion.a
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href="tel:+97143320776"
+              className="group bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/25 transition-all text-left min-w-0"
+            >
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                  <Phone size={17} />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                    Clinic Reception
+                  </h2>
+                  <p className="text-sky-100 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate">
+                    +971 4 332 0776
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0 hidden xs:block">
+                <DiagonalArrow />
+              </div>
+            </motion.a>
+
+            {/* 2. Call 24/7 Helpline Button */}
+            <motion.a
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href="tel:+971547033311"
+              className="group bg-[#08709d] hover:bg-[#075f85] border border-[#38bdf8]/30 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#08709d]/25 transition-all text-left min-w-0"
+            >
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                  <Phone size={17} />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                    24/7 Helpline
+                  </h2>
+                  <p className="text-sky-100 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate">
+                    +971 54 703 3311
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0 hidden xs:block">
+                <DiagonalArrow />
+              </div>
+            </motion.a>
+
+          </div>
+
+          {/* Single Row with WhatsApp & Visit Website Side-by-Side */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+            
+            {/* 2. WhatsApp Consultation Button */}
+            <motion.a
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href="https://wa.me/971547033311?text=Hi%20CORx%20Healthcare,%20I%20would%20like%20to%20inquire%20about%20your%20services"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group bg-[#5eb63b] hover:bg-[#4ea12f] border border-white/20 backdrop-blur-md p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-lg shadow-[#5eb63b]/30 transition-all text-left min-w-0"
+            >
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0 shadow-inner">
+                  <WhatsAppIcon size={18} />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                    WhatsApp Chat
+                  </h2>
+                  <p className="text-emerald-100 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate">
+                    +971 54 703 3311
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0 hidden xs:block">
+                <DiagonalArrow />
+              </div>
+            </motion.a>
+
+            {/* 3. Visit Official Website Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="min-w-0"
+            >
+              <Link
+                to="/"
+                className="group w-full h-full bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block min-w-0"
+              >
+                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0">
+                    <Globe size={18} />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                      Official Website
+                    </h2>
+                    <p className="text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-['Poppins',sans-serif] mt-0.5 truncate">
+                      Explore services
+                    </p>
+                  </div>
+                </div>
+                <div className="shrink-0 hidden xs:block">
+                  <DiagonalArrow />
+                </div>
+              </Link>
+            </motion.div>
+
+          </div>
+
+          {/* Row 3: Email Inquiries & Book an Appointment Side-by-Side */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+            
+            {/* 4. Email Inquiries Button */}
+            <motion.a
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.38 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href="mailto:info@corx.ae"
+              className="group bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left min-w-0"
+            >
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
+                  <Mail size={18} />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                    Email Inquiries
+                  </h2>
+                  <p className="text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-mono mt-0.5 truncate">
+                    info@corx.ae
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0 hidden xs:block">
+                <DiagonalArrow />
+              </div>
+            </motion.a>
+
+            {/* 5. Book an Appointment Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.42 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="min-w-0"
+            >
+              <Link
+                to="/book-an-appointment"
+                className="group w-full h-full bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block min-w-0"
+              >
+                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
+                    <Calendar size={18} />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                      Book Appointment
+                    </h2>
+                    <p className="text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-['Poppins',sans-serif] mt-0.5 truncate">
+                      Online Booking
+                    </p>
+                  </div>
+                </div>
+                <div className="shrink-0 hidden xs:block">
+                  <DiagonalArrow />
+                </div>
+              </Link>
+            </motion.div>
+
+          </div>
+
+        </div>
+
+        {/* ── Section Divider: CONNECT SOCIALLY ── */}
+        <div className="w-full">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex-1 h-px bg-white/15"></div>
+            <span className="text-[10px] sm:text-[11px] font-bold font-['Montserrat',sans-serif] uppercase tracking-[0.25em] text-slate-300">
+              CONNECT SOCIALLY
+            </span>
+            <div className="flex-1 h-px bg-white/15"></div>
+          </div>
+
+          {/* 3 Square/Rounded Cards: Facebook, Instagram, LinkedIn */}
+          <div className="grid grid-cols-3 gap-3 sm:gap-4">
+            {socialLinks.map((item, i) => (
+              <motion.a
+                key={item.name}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + i * 0.05 }}
+                whileHover={{ y: -3, scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#08709d]/85 hover:bg-[#08709d] backdrop-blur-md border border-[#38bdf8]/35 hover:border-[#38bdf8]/70 p-3.5 sm:p-4 rounded-2xl flex flex-col items-center justify-center gap-2.5 text-white transition-all shadow-md shadow-[#08709d]/25 group"
+              >
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 group-hover:bg-white/30 flex items-center justify-center text-white group-hover:scale-110 transition-all shadow-inner">
+                  {item.icon}
+                </div>
+                <span className="text-[11px] sm:text-xs font-bold tracking-wide text-white font-['Montserrat',sans-serif]">
+                  {item.name}
+                </span>
+              </motion.a>
+            ))}
+          </div>
+        </div>
+
       </div>
+
     </div>
   );
 };
