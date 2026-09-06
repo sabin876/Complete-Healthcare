@@ -213,7 +213,6 @@ const Header = () => {
       dropdown: [
         { name: 'English', path: '#', code: 'EN', flag: '🇬🇧' },
         { name: 'Arabic', path: '#', code: 'AR', flag: '🇦🇪' },
-        { name: 'Nepalese', path: '#', code: 'NE', flag: '�🇵' },
       ]
     },
   ];
