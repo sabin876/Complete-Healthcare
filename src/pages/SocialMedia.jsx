@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, Share2, Phone, Globe, Check, Mail, Calendar
+  ArrowLeft, Share2, Phone, Globe, Check, Mail, Calendar, MapPin, Navigation
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import logo from '../assets/logo.webp';
@@ -180,10 +180,24 @@ const SocialMedia = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-lg sm:text-xl md:text-2xl font-extrabold text-white tracking-tight mb-3.5 sm:mb-4 font-['Montserrat',sans-serif]"
+          className="text-lg sm:text-xl md:text-2xl font-extrabold text-white tracking-tight mb-1 font-['Montserrat',sans-serif]"
         >
           CORx Healthcare Dubai
         </motion.h1>
+
+        {/* Location Subtitle Pill */}
+        <motion.a
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          href="https://www.google.com/maps/place/CORx+Healthcare/@24.9981035,55.1701128,17z/data=!3m1!4b1!4m6!3m5!1s0xa6b0036ffadede71:0xff91b5de95976932!8m2!3d24.9981035!4d55.1701128!16s%2Fg%2F11vxqqxt2z"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1a294a]/80 hover:bg-[#223963] border border-[#38bdf8]/30 backdrop-blur-md text-slate-200 hover:text-white text-[10px] sm:text-[11px] mb-3.5 sm:mb-4 transition-all group"
+        >
+          <MapPin size={12} className="text-[#38bdf8] group-hover:scale-110 transition-transform" />
+          <span>Dubai Investment Park 1, Dubai, UAE</span>
+        </motion.a>
 
         {/* ── Primary Action Buttons Stack (Call on top, WhatsApp & Website in single row) ── */}
         <div className="w-full flex flex-col gap-2 sm:gap-2.5 mb-4 sm:mb-5">
@@ -252,7 +266,7 @@ const SocialMedia = () => {
           {/* Single Row with WhatsApp & Visit Website Side-by-Side */}
           <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
             
-            {/* 2. WhatsApp Consultation Button */}
+            {/* 3. WhatsApp Consultation Button */}
             <motion.a
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -282,7 +296,7 @@ const SocialMedia = () => {
               </div>
             </motion.a>
 
-            {/* 3. Visit Official Website Button */}
+            {/* 4. Visit Official Website Button */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -319,7 +333,7 @@ const SocialMedia = () => {
           {/* Row 3: Email Inquiries & Book an Appointment Side-by-Side */}
           <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
             
-            {/* 4. Email Inquiries Button */}
+            {/* 5. Email Inquiries Button */}
             <motion.a
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -347,7 +361,7 @@ const SocialMedia = () => {
               </div>
             </motion.a>
 
-            {/* 5. Book an Appointment Button */}
+            {/* 6. Book an Appointment Button */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -381,6 +395,73 @@ const SocialMedia = () => {
 
           </div>
 
+          {/* Row 4: Clinic Location (Google Maps) & Dubai Coverage Areas */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+            
+            {/* 7. Google Maps Location */}
+            <motion.a
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href="https://www.google.com/maps/place/CORx+Healthcare/@24.9981035,55.1701128,17z/data=!3m1!4b1!4m6!3m5!1s0xa6b0036ffadede71:0xff91b5de95976932!8m2!3d24.9981035!4d55.1701128!16s%2Fg%2F11vxqqxt2z"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left min-w-0"
+            >
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
+                  <MapPin size={18} className="text-[#38bdf8]" />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                    Clinic Location
+                  </h2>
+                  <p className="text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-['Poppins',sans-serif] mt-0.5 truncate">
+                    Google Maps
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0 hidden xs:block">
+                <DiagonalArrow />
+              </div>
+            </motion.a>
+
+            {/* 8. Coverage Areas & Service Locations */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.48 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="min-w-0"
+            >
+              <Link
+                to="/locations"
+                className="group w-full h-full bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block min-w-0"
+              >
+                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
+                    <Navigation size={18} className="text-[#5eb63b]" />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
+                      Coverage Areas
+                    </h2>
+                    <p className="text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-['Poppins',sans-serif] mt-0.5 truncate">
+                      All Across Dubai
+                    </p>
+                  </div>
+                </div>
+                <div className="shrink-0 hidden xs:block">
+                  <DiagonalArrow />
+                </div>
+              </Link>
+            </motion.div>
+
+          </div>
+
         </div>
 
         {/* ── Section Divider: CONNECT SOCIALLY ── */}
@@ -400,7 +481,7 @@ const SocialMedia = () => {
                 key={item.name}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + i * 0.05 }}
+                transition={{ delay: 0.5 + i * 0.05 }}
                 whileHover={{ y: -3, scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 href={item.link}
@@ -418,6 +499,36 @@ const SocialMedia = () => {
             ))}
           </div>
         </div>
+
+        {/* ── Full Address & Directions Footer Card ── */}
+        <motion.a
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.65 }}
+          whileHover={{ scale: 1.01 }}
+          href="https://www.google.com/maps/place/CORx+Healthcare/@24.9981035,55.1701128,17z/data=!3m1!4b1!4m6!3m5!1s0xa6b0036ffadede71:0xff91b5de95976932!8m2!3d24.9981035!4d55.1701128!16s%2Fg%2F11vxqqxt2z"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full mt-6 p-3 sm:p-3.5 rounded-2xl bg-[#1a294a]/60 hover:bg-[#1a294a]/85 border border-white/10 hover:border-white/20 backdrop-blur-md flex items-center justify-between text-left transition-all group"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-[#08709d]/30 text-[#38bdf8] flex items-center justify-center shrink-0">
+              <MapPin size={16} />
+            </div>
+            <div className="min-w-0 text-left">
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-200 group-hover:text-white truncate">
+                Office 303, Royal Class Building, DIP 1
+              </p>
+              <p className="text-[9px] sm:text-[10px] text-slate-400 truncate">
+                Dubai, United Arab Emirates • Get Directions
+              </p>
+            </div>
+          </div>
+          <div className="shrink-0 text-sky-400 group-hover:translate-x-0.5 transition-transform text-xs font-medium flex items-center gap-1">
+            <span className="hidden sm:inline">Directions</span>
+            <DiagonalArrow />
+          </div>
+        </motion.a>
 
       </div>
 
