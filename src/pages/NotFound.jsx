@@ -1,25 +1,16 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router';
+import SEO from '../components/SEO';
 
 const NotFound = () => {
-  useEffect(() => {
-    document.title = "Page Not Found | CORx Healthcare Dubai";
-    if (typeof window !== 'undefined') {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
-      }
-      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-        ? window.location.origin
-        : 'https://corx.ae';
-      canonicalLink.setAttribute('href', `${origin}/404`);
-    }
-  }, []);
-
   return (
     <div className="pt-20 sm:pt-24 pb-20 bg-slate-50 min-h-[75vh] text-slate-800 font-sans flex flex-col justify-start items-center">
+      <SEO
+        title="404 - Page Not Found | CORx Healthcare Dubai"
+        description="The requested page could not be found. Explore our 24/7 home healthcare services in Dubai at CORx Healthcare."
+        canonical="https://corx.ae/404"
+        robots="noindex, nofollow"
+      />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl mt-4 sm:mt-8">
         <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-slate-200/80 text-center space-y-6">
           
@@ -32,7 +23,7 @@ const NotFound = () => {
           </p>
 
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-lg mx-auto">
-            The link you clicked may be broken, or the page may have been moved or removed. You can return to our homepage or explore our popular medical services below.
+            The link you clicked may be broken, or the page may have been moved or removed. You can return to our homepage or explore our popular home medical services in Dubai.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">

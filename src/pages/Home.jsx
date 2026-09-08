@@ -17,6 +17,7 @@ import ThreeStepsProcessSection from '../components/ThreeStepsProcessSection';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FAQ from '../components/FAQ';
+import SEO from '../components/SEO';
 
 import hero2 from '../assets/hero/hero2.png';
 import hero3 from '../assets/hero/hero3.png';
@@ -570,43 +571,31 @@ const Home = () => {
   const [selectedDept, setSelectedDept] = useState("All");
   const [diffImageIndex, setDiffImageIndex] = useState(0);
 
-  useEffect(() => {
-    const titleText = "CORX Healthcare: Home Health Care Services in Dubai *24/7";
-    const descText = "Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.";
+  const titleText = "CORX Healthcare: Home Health Care Services in Dubai *24/7";
+  const descText = "Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.";
 
-    document.title = titleText;
-
-    const setMetaTag = (attrName, attrVal, contentVal) => {
-      let metaElem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
-      if (!metaElem) {
-        metaElem = document.createElement('meta');
-        metaElem.setAttribute(attrName, attrVal);
-        document.head.appendChild(metaElem);
-      }
-      metaElem.setAttribute('content', contentVal);
-    };
-
-    setMetaTag('name', 'description', descText);
-    setMetaTag('property', 'og:title', titleText);
-    setMetaTag('property', 'og:description', descText);
-
-    // Set dynamic canonical link tag for SEO
-    if (typeof window !== 'undefined') {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
-      }
-      const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
-        ? window.location.pathname.slice(0, -1)
-        : window.location.pathname;
-      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-        ? window.location.origin
-        : 'https://corx.ae';
-      canonicalLink.setAttribute('href', `${origin}${cleanPath}`);
-    }
-  }, []);
+  const homeSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalBusiness',
+    name: 'CORx Healthcare',
+    url: 'https://corx.ae/',
+    logo: 'https://corx.ae/favicon.webp',
+    description: descText,
+    telephone: '+97143320776',
+    priceRange: '$$',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Office 303, Royal Class Building, DIP',
+      addressLocality: 'Dubai',
+      addressCountry: 'AE',
+    },
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '00:00',
+      closes: '23:59',
+    },
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -660,6 +649,13 @@ const Home = () => {
 
   return (
     <main>
+      <SEO
+        title={titleText}
+        description={descText}
+        canonical="https://corx.ae/"
+        ogImage="https://corx.ae/og-image.jpg"
+        schema={homeSchema}
+      />
       {/* Hero Slider */}
       <section className="relative min-h-[95vh] flex items-center py-20 md:py-28 overflow-hidden bg-black">
         {/* Exclusive Background Video (Hero.mp4) with Restored Overlay */}

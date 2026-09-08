@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { API_BASE_URL, SEND_EMAIL_URL } from "../config/api";
+import SEO from "../components/SEO";
 
 const PhoneIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -111,46 +112,6 @@ export default function Contact() {
   ]);
 
   useEffect(() => {
-    const titleText = "Book an Appointment | Home Nursing | Home Physiotherapy Dubai";
-    const descText = "Book an appointment with Corx Home Healthcare in Dubai for personalized home care services — schedule doctor visits, nursing, lab tests";
-
-    document.title = titleText;
-
-    const setMetaTag = (attrName, attrVal, contentVal) => {
-      let metaElem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
-      if (!metaElem) {
-        metaElem = document.createElement('meta');
-        metaElem.setAttribute(attrName, attrVal);
-        document.head.appendChild(metaElem);
-      }
-      metaElem.setAttribute('content', contentVal);
-    };
-
-    setMetaTag('name', 'description', descText);
-    setMetaTag('property', 'og:title', titleText);
-    setMetaTag('property', 'og:description', descText);
-    setMetaTag('property', 'twitter:title', titleText);
-    setMetaTag('property', 'twitter:description', descText);
-
-    // Set dynamic canonical link tag for SEO
-    if (typeof window !== 'undefined') {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
-      }
-      const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
-        ? window.location.pathname.slice(0, -1)
-        : window.location.pathname;
-      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-        ? window.location.origin
-        : 'https://corx.ae';
-      canonicalLink.setAttribute('href', `${origin}${cleanPath}`);
-    }
-  }, []);
-
-  useEffect(() => {
     fetch(`${API_BASE_URL}/api/services/`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
@@ -258,13 +219,18 @@ export default function Contact() {
 
   return (
     <div style={styles.page}>
+      <SEO
+        title="Book an Appointment | Contact CORx Home Healthcare Dubai 24/7"
+        description="Book an appointment with CORx Home Healthcare in Dubai. Contact our 24/7 medical team for doctor home visits, nursing, lab tests, and physiotherapy."
+        canonical="https://corx.ae/contact-us"
+      />
       {/* Header */}
       <div style={styles.header}>
         <p style={styles.tagline}>GET IN TOUCH</p>
         <h1 style={styles.title}>We're Here for You</h1>
         <p style={styles.subtitle}>
-          Whether you need a consultation or have a question about our orthopedic services,<br />
-          reach out to us.
+          Whether you need an appointment or have a question about our home healthcare services,<br />
+          reach out to our medical team anytime 24/7.
         </p>
       </div>
 

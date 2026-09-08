@@ -7,29 +7,13 @@ import {
   ExternalLink, Code
 } from 'lucide-react';
 import { API_BASE_URL } from '../config/api';
+import SEO from '../components/SEO';
 
 const Sitemap = () => {
   const [dynamicServices, setDynamicServices] = useState([]);
   const [dynamicBlogs, setDynamicBlogs] = useState([]);
 
   useEffect(() => {
-    document.title = "Sitemap | CORx Healthcare Dubai";
-    if (typeof window !== 'undefined') {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
-      }
-      const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
-        ? window.location.pathname.slice(0, -1)
-        : window.location.pathname;
-      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-        ? window.location.origin
-        : 'https://corx.ae';
-      canonicalLink.setAttribute('href', `${origin}${cleanPath}`);
-    }
-
     // Fetch dynamic services
     fetch(`${API_BASE_URL}/api/services/`)
       .then(res => res.ok ? res.json() : null)
@@ -55,13 +39,14 @@ const Sitemap = () => {
   const mainPages = [
     { name: "Home", path: "/", icon: Home },
     { name: "About Us", path: "/about-us", icon: Users },
+    { name: "Our Services Overview", path: "/services", icon: HeartPulse },
     { name: "Our Medical Team", path: "/team", icon: Stethoscope },
     { name: "Careers", path: "/career", icon: Briefcase },
     { name: "Locations & Coverage", path: "/locations", icon: MapPin },
     { name: "Book An Appointment", path: "/book-an-appointment", icon: Calendar },
+    { name: "Contact Us", path: "/contact-us", icon: FileText },
     { name: "Social Media & Connect", path: "/social-media", icon: ExternalLink },
-    { name: "Privacy Policy", path: "/privacy-policy", icon: ShieldCheck },
-    { name: "Staff Dashboard", path: "/dashboard", icon: Code }
+    { name: "Privacy Policy", path: "/privacy-policy", icon: ShieldCheck }
   ];
 
   // Core Medical Services
@@ -186,6 +171,11 @@ const Sitemap = () => {
 
   return (
     <div className="pt-28 pb-24 bg-slate-50 min-h-screen text-slate-800 font-sans">
+      <SEO
+        title="HTML Website Sitemap | CORx Healthcare Dubai"
+        description="Browse the complete structure and pages of CORx Healthcare Dubai including all medical services, care guides, and official resources."
+        canonical="https://corx.ae/sitemap"
+      />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         
         {/* Simple Page Header */}

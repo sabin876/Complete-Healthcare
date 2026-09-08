@@ -2,26 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Clock, ExternalLink, Globe, ArrowRight, ShieldCheck, Navigation } from 'lucide-react';
 import { Link } from 'react-router';
+import SEO from '../components/SEO';
 
 const Locations = () => {
-  React.useEffect(() => {
-    document.title = "Our Locations & Service Areas in Dubai | CORx Healthcare";
-    if (typeof window !== 'undefined') {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
-      }
-      const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
-        ? window.location.pathname.slice(0, -1)
-        : window.location.pathname;
-      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-        ? window.location.origin
-        : 'https://corx.ae';
-      canonicalLink.setAttribute('href', `${origin}${cleanPath}`);
-    }
-  }, []);
 
   const regions = [
     {
@@ -57,6 +40,11 @@ const Locations = () => {
       position: "relative",
       overflow: "hidden",
     }}>
+      <SEO
+        title="Our Locations & Service Areas in Dubai | CORx Healthcare"
+        description="CORx Healthcare provides 24/7 home healthcare across all Dubai areas including Dubai Marina, Palm Jumeirah, Downtown, Jumeirah, DIP, and Jebel Ali."
+        canonical="https://corx.ae/locations"
+      />
       {/* Background Dot Texture */}
       <div style={{
         position: "absolute", inset: 0, opacity: 0.06,

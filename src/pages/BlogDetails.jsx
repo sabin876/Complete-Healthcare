@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import { API_BASE_URL } from "../config/api";
-
 import { slugifyTitle } from "./Blog";
+import { useSSRData } from "../context/SSRDataContext";
+import SEO from "../components/SEO";
 
 const blogDatabase = [
   {
@@ -110,11 +111,16 @@ const blogDatabase = [
 export default function BlogDetails() {
   const { id, slug } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
+  const ssrData = useSSRData();
 
   const targetParam = (slug || id || '').toString().toLowerCase();
-  const initialPost = blogDatabase.find(
-    (p) => p.slug === targetParam || p.id.toString() === targetParam || slugifyTitle(p.title) === targetParam
-  ) || blogDatabase[0];
+  
+  const initialPost = (ssrData && ssrData.blogPost) ? ssrData.blogPost : (
+    blogDatabase.find(
+      (p) => p.slug === targetParam || p.id.toString() === targetParam || slugifyTitle(p.title) === targetParam
+    ) || blogDatabase[0]
+  );
+  
   const [post, setPost] = useState(initialPost);
   const articleId = post ? post.id : 1;
 
@@ -139,7 +145,9 @@ export default function BlogDetails() {
               heroImage: data.image && !data.image.includes('placeholder') ? data.image : 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80',
               tags: [data.tag || data.category || 'Healthcare'],
               content: data.content || `<p>${data.excerpt}</p>`,
-              excerpt: data.excerpt || undefined
+              excerpt: data.excerpt || undefined,
+              meta_title: data.meta_title || '',
+              meta_description: data.meta_description || ''
             });
           }
         })
@@ -147,51 +155,49 @@ export default function BlogDetails() {
     }
   }, [targetParam]);
 
-  useEffect(() => {
-    if (!post) return;
+  const pageTitle = post?.meta_title || (post?.title ? `${post.title} | CORx Healthcare Blog Dubai` : 'CORx Home Healthcare Blog');
+  const pageDesc = post?.meta_description || post?.excerpt || (post?.title ? `Read ${post.title} on CORx Home Healthcare Blog.` : 'Explore the CORx Home Healthcare Blog for expert health tips, home care advice, and wellness guides.');
+  const postSlug = post?.slug || slugifyTitle(post?.title || 'article');
+  const postImage = post?.heroImage || 'https://corx.ae/og-image.jpg';
 
-    const pageTitle = post.meta_title || (post.title ? `${post.title} | Corx Healthcare Blog Dubai` : 'Corx Home Healthcare Blog');
-    const pageDesc = post.meta_description || post.excerpt || (post.title ? `Read ${post.title} on Corx Home Healthcare Blog.` : 'Explore the Corx Home Healthcare Blog for expert health tips, home care advice, and wellness guides.');
-
-    document.title = pageTitle;
-
-    const setMetaTag = (attrName, attrVal, contentVal) => {
-      let metaElem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
-      if (!metaElem) {
-        metaElem = document.createElement('meta');
-        metaElem.setAttribute(attrName, attrVal);
-        document.head.appendChild(metaElem);
-      }
-      metaElem.setAttribute('content', contentVal);
-    };
-
-    setMetaTag('name', 'description', pageDesc);
-    setMetaTag('property', 'og:title', pageTitle);
-    setMetaTag('property', 'og:description', pageDesc);
-    setMetaTag('property', 'og:type', 'article');
-    if (post.heroImage) {
-      setMetaTag('property', 'og:image', post.heroImage);
-    }
-    setMetaTag('property', 'twitter:title', pageTitle);
-    setMetaTag('property', 'twitter:description', pageDesc);
-
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalLink);
-    }
-    const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-      ? window.location.origin
-      : 'https://corx.ae';
-    canonicalLink.setAttribute('href', `${origin}/blog/${post.slug || articleId}`);
-  }, [post]);
+  const blogSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post?.title,
+    description: pageDesc,
+    image: postImage,
+    author: {
+      '@type': 'Organization',
+      name: post?.author || 'CORx Healthcare',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'CORx Healthcare',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://corx.ae/favicon.webp',
+      },
+    },
+    datePublished: post?.date || '2026-05-22',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://corx.ae/blog/${postSlug}`,
+    },
+  };
 
   const prevPost = blogDatabase.find((p) => p.id === articleId - 1) || blogDatabase[blogDatabase.length - 1];
   const nextPost = blogDatabase.find((p) => p.id === articleId + 1) || blogDatabase[0];
 
   return (
     <div style={{ backgroundColor: "#eef2f6", color: "#3a3f47", fontFamily: "Georgia, 'Times New Roman', serif", minHeight: "100vh", paddingTop: "95px", paddingBottom: "50px" }}>
+      <SEO
+        title={pageTitle}
+        description={pageDesc}
+        canonical={`https://corx.ae/blog/${postSlug}`}
+        ogImage={postImage}
+        ogType="article"
+        schema={blogSchema}
+      />
       <style>{`
         .blog-page {
           max-width: 1220px;

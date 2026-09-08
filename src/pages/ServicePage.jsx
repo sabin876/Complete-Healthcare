@@ -9,6 +9,7 @@ import ServiceUnderstandingSection from '../components/ServiceUnderstandingSecti
 import ExploreServices from '../components/ExploreServices';
 import { servicesData as staticServicesData } from '../data/servicesData';
 import { useSSRData } from '../context/SSRDataContext';
+import SEO from '../components/SEO';
 import NotFound from './NotFound';
 import { 
   Check, 
@@ -540,41 +541,27 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     };
   }, [cleanSlug]);
 
-  // Dynamic SEO Meta Tags & Head Title Update
-  useEffect(() => {
-    const pageTitle = mergedData?.meta_title || (mergedData?.title ? `${mergedData.title} in Dubai | Corx Healthcare` : 'Corx Healthcare: Home Healthcare Services in Dubai, UAE');
-    const pageDesc = mergedData?.meta_description || mergedData?.description || mergedData?.tagline || 'Professional, reliable, and on-demand DHA-certified medical care at your doorstep across Dubai.';
+  const pageTitle = mergedData?.meta_title || (mergedData?.title ? `${mergedData.title} in Dubai | CORx Healthcare` : 'CORx Healthcare: Home Healthcare Services in Dubai, UAE');
+  const pageDesc = mergedData?.meta_description || mergedData?.description || mergedData?.tagline || 'Professional, reliable, and on-demand DHA-certified medical care at your doorstep across Dubai.';
+  const serviceOgImage = mergedData?.image_file || mergedData?.image || 'https://corx.ae/og-image.jpg';
 
-    document.title = pageTitle;
-
-    const setMetaTag = (attrName, attrVal, contentVal) => {
-      let metaElem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
-      if (!metaElem) {
-        metaElem = document.createElement('meta');
-        metaElem.setAttribute(attrName, attrVal);
-        document.head.appendChild(metaElem);
-      }
-      metaElem.setAttribute('content', contentVal);
-    };
-
-    setMetaTag('name', 'description', pageDesc);
-    setMetaTag('property', 'og:title', pageTitle);
-    setMetaTag('property', 'og:description', pageDesc);
-
-    // Set dynamic canonical link tag for SEO
-    if (typeof window !== 'undefined') {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
-      }
-      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-        ? window.location.origin
-        : 'https://corx.ae';
-      canonicalLink.setAttribute('href', `${origin}/${slug}`);
-    }
-  }, [mergedData, slug]);
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalBusiness',
+    name: 'CORx Healthcare',
+    url: `https://corx.ae/${slug}`,
+    description: pageDesc,
+    image: serviceOgImage,
+    telephone: '+97143320776',
+    priceRange: '$$',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Office 303, Royal Class Building, DIP',
+      addressLocality: 'Dubai',
+      addressCountry: 'AE',
+    },
+    serviceType: mergedData?.title || slug,
+  };
 
   const formatSlugToTitle = (slug, dataObj) => {
     if (dataObj?.title) return dataObj.title;
@@ -831,6 +818,13 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
+      <SEO
+        title={pageTitle}
+        description={pageDesc}
+        canonical={`https://corx.ae/${slug}`}
+        ogImage={serviceOgImage}
+        schema={serviceSchema}
+      />
       {/* ── HERO SECTION ── */}
       <Section variant="white" className="pt-20 pb-16 md:pt-28 md:pb-20 relative overflow-hidden min-h-[480px]">
         <HeroBackgroundAnimation />
@@ -1691,12 +1685,16 @@ function SubServicesGridSection({ subServices = [], serviceTitle = '', isEditMod
 
 function ServicesOverviewPage() {
   useEffect(() => {
-    document.title = "Home Healthcare Services in Dubai | CORx Healthcare";
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="bg-white min-h-screen">
+      <SEO
+        title="Home Healthcare Services in Dubai | CORx Healthcare"
+        description="From 24/7 doctor home visits and IV drip therapy to home nursing, physiotherapy, and lab tests — receive hospital-grade medical care directly in your home."
+        canonical="https://corx.ae/services"
+      />
       <Section variant="white" className="pt-20 pb-12 md:pt-24 md:pb-16 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-b border-slate-100">
         <Container className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-[#08709d]/10 border border-[#08709d]/20 px-4 py-2 rounded-full mb-6">

@@ -5,29 +5,11 @@ import {
   Eye, Target, Sparkles, CheckCircle2, ArrowRight, Compass, HeartPulse, Globe,
   Shield, Check, Star, Building2, HeartHandshake
 } from 'lucide-react';
+import SEO from '../components/SEO';
 import aboutUsBg from '../assets/About us .jpg';
 import aboutServicesCollage from '../assets/about_services_collage.png';
 
 const About = () => {
-  React.useEffect(() => {
-    document.title = "About Us | CORx Healthcare Dubai";
-    if (typeof window !== 'undefined') {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
-      }
-      const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
-        ? window.location.pathname.slice(0, -1)
-        : window.location.pathname;
-      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-        ? window.location.origin
-        : 'https://corx.ae';
-      canonicalLink.setAttribute('href', `${origin}${cleanPath}`);
-    }
-  }, []);
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -35,6 +17,11 @@ const About = () => {
       exit={{ opacity: 0 }}
       className="pt-28 pb-20 bg-white min-h-screen text-slate-800 font-sans"
     >
+      <SEO
+        title="About Us | DHA-Licensed Home Healthcare in Dubai | CORx Healthcare"
+        description="Learn about CORx Healthcare, Dubai's premier DHA-licensed home healthcare provider offering 24/7 doctor home visits, home nursing, physiotherapy, and lab services."
+        canonical="https://corx.ae/about-us"
+      />
       {/* ── HERO SECTION ── */}
       <section 
         className="relative min-h-[44vh] flex items-center py-16 mb-8 text-white text-center bg-cover bg-center overflow-hidden"

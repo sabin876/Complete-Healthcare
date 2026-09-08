@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { User, Calendar, ArrowRight, Tag, BookOpen } from "lucide-react";
 import { Link } from "react-router";
 import { API_BASE_URL } from "../config/api";
+import SEO from "../components/SEO";
 
 
 const DUMMY_IMAGE =
@@ -232,46 +233,6 @@ export default function OrthopedicArticlesPage() {
   };
 
   React.useEffect(() => {
-    const titleText = "Corx Home Healthcare Blog — Health Tips, Care Guides & Advice";
-    const descText = "Explore the Corx Home Healthcare Blog for expert health tips, home care advice, physiotherapy insights, and wellness guides";
-
-    document.title = titleText;
-
-    const setMetaTag = (attrName, attrVal, contentVal) => {
-      let metaElem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
-      if (!metaElem) {
-        metaElem = document.createElement('meta');
-        metaElem.setAttribute(attrName, attrVal);
-        document.head.appendChild(metaElem);
-      }
-      metaElem.setAttribute('content', contentVal);
-    };
-
-    setMetaTag('name', 'description', descText);
-    setMetaTag('property', 'og:title', titleText);
-    setMetaTag('property', 'og:description', descText);
-    setMetaTag('property', 'twitter:title', titleText);
-    setMetaTag('property', 'twitter:description', descText);
-
-    // Set dynamic canonical link tag for SEO
-    if (typeof window !== 'undefined') {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
-      }
-      const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
-        ? window.location.pathname.slice(0, -1)
-        : window.location.pathname;
-      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-        ? window.location.origin
-        : 'https://corx.ae';
-      canonicalLink.setAttribute('href', `${origin}${cleanPath}`);
-    }
-  }, []);
-
-  React.useEffect(() => {
     fetch(`${API_BASE_URL}/api/blogs/`)
       .then(res => {
         if (!res.ok) return null;
@@ -297,6 +258,11 @@ export default function OrthopedicArticlesPage() {
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Poppins', 'Inter', sans-serif", paddingTop: "120px", paddingBottom: "50px" }}>
+      <SEO
+        title="CORx Healthcare Blog — Health Tips, Care Guides & Medical Advice Dubai"
+        description="Explore the CORx Healthcare blog for expert health tips, home care advice, physiotherapy insights, and wellness guides across Dubai."
+        canonical="https://corx.ae/blog"
+      />
 
       <div style={{ maxWidth: "1140px", margin: "0 auto", padding: "0 24px" }}>
         {/* Page Header */}

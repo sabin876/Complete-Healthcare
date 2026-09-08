@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router';
 import { Calendar, GraduationCap, IdCard, MapPin, Award, Clock } from 'lucide-react';
+import SEO from '../components/SEO';
+import { API_BASE_URL } from '../config/api';
 import kajalPhoto from '../assets/kajal.png';
 import teamHero from '../assets/team_hero.png';
 
@@ -264,22 +266,12 @@ const Team = () => {
   const [dbTeam, setDbTeam] = useState([]);
 
   useEffect(() => {
-    document.title = "Our Medical Team | CORx Healthcare Dubai";
-    if (typeof window !== 'undefined') {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
-      }
-      const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
-        ? window.location.pathname.slice(0, -1)
-        : window.location.pathname;
-      const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-        ? window.location.origin
-        : 'https://corx.ae';
-      canonicalLink.setAttribute('href', `${origin}${cleanPath}`);
-    }
+    fetch(`${API_BASE_URL}/api/team/`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (Array.isArray(data)) setDbTeam(data);
+      })
+      .catch(() => {});
   }, []);
 
   const mappedDbTeam = dbTeam.map(member => {
@@ -320,6 +312,11 @@ const Team = () => {
       exit={{ opacity: 0 }}
       className="pt-28 pb-24 bg-gray-50 min-h-screen"
     >
+      <SEO
+        title="Our Medical Team | DHA Licensed Doctors & Nurses | CORx Healthcare"
+        description="Meet the expert medical team at CORx Healthcare Dubai. Our DHA-licensed doctors, registered nurses, and specialized physiotherapists provide 24/7 home care."
+        canonical="https://corx.ae/team"
+      />
       <section 
         className="relative min-h-[50vh] flex items-center py-20 mb-16 text-white text-center bg-cover bg-center overflow-hidden"
         style={{

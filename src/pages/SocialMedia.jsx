@@ -4,6 +4,7 @@ import {
   ArrowLeft, Share2, Phone, Globe, Check, Mail, Calendar, MapPin, Navigation
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
+import SEO from '../components/SEO';
 import logo from '../assets/logo.webp';
 import heroVideo from '../assets/Hero.mp4';
 
@@ -48,7 +49,6 @@ const SocialMedia = () => {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    document.title = "CORx Healthcare Dubai | Connect & Official Social Media";
     if (typeof window !== 'undefined') {
       window.scrollTo(0, 0);
     }
@@ -97,9 +97,13 @@ const SocialMedia = () => {
   ];
 
   return (
-    <div className="min-h-screen relative text-white flex flex-col items-center justify-start px-4 sm:px-6 pt-2 sm:pt-3 pb-8 overflow-x-hidden font-['Poppins',sans-serif] select-none">
-      
-      {/* ── Background Video as used in Hero Section (Hero.mp4) ── */}
+    <div className="min-h-screen bg-[#061021] text-white flex flex-col items-center justify-start pt-6 sm:pt-10 pb-16 px-4 relative overflow-hidden font-['Plus_Jakarta_Sans',sans-serif]">
+      <SEO
+        title="Connect & Official Social Media | CORx Healthcare Dubai"
+        description="Connect with CORx Healthcare Dubai across official platforms: WhatsApp, Instagram, LinkedIn, Facebook, and Google Maps."
+        canonical="https://corx.ae/social-media"
+      />
+      {/* ── Background Video Container with Deep Tint & Vignettes ── */}
       <div className="fixed inset-0 z-0 w-full h-full overflow-hidden bg-black pointer-events-none">
         <video
           autoPlay
