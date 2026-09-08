@@ -9,7 +9,6 @@ import { AuthProvider } from './context/AuthContext';
 
 import Home from './pages/Home';
 import About from './pages/About';
-import Locations from './pages/Locations';
 import Contact from './pages/Contact';
 import Blog from './pages/Blog';
 import BlogDetails from './pages/BlogDetails';
@@ -83,8 +82,8 @@ const AnimatedRoutes = () => {
         <Route path="/contact/" element={<Navigate to="/contact-us" replace />} />
         <Route path="/book-an-appointment" element={<Contact />} />
         <Route path="/book-an-appointment/" element={<Contact />} />
-        <Route path="/locations" element={<Locations />} />
-        <Route path="/locations/" element={<Locations />} />
+        <Route path="/locations" element={<Navigate to="/" replace />} />
+        <Route path="/locations/" element={<Navigate to="/" replace />} />
         <Route path="/team" element={<Team />} />
         <Route path="/team/" element={<Team />} />
         <Route path="/career" element={<Career />} />

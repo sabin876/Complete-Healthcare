@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, Share2, Phone, Globe, Check, Mail, Calendar, MapPin, Navigation
+  ArrowLeft, Share2, Phone, Globe, Check, Mail, Calendar, MapPin
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import SEO from '../components/SEO';
@@ -399,10 +399,8 @@ const SocialMedia = () => {
 
           </div>
 
-          {/* Row 4: Clinic Location (Google Maps) & Dubai Coverage Areas */}
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
-            
-            {/* 7. Google Maps Location */}
+          {/* Row 4: Clinic Location (Google Maps) */}
+          <div className="w-full">
             <motion.a
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -412,9 +410,9 @@ const SocialMedia = () => {
               href="https://www.google.com/maps/place/CORx+Healthcare/@24.9981035,55.1701128,17z/data=!3m1!4b1!4m6!3m5!1s0xa6b0036ffadede71:0xff91b5de95976932!8m2!3d24.9981035!4d55.1701128!16s%2Fg%2F11vxqqxt2z"
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left min-w-0"
+              className="group bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left w-full"
             >
-              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
                   <MapPin size={18} className="text-[#38bdf8]" />
                 </div>
@@ -423,7 +421,7 @@ const SocialMedia = () => {
                     Clinic Location
                   </h2>
                   <p className="text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-['Poppins',sans-serif] mt-0.5 truncate">
-                    Google Maps
+                    View on Google Maps — Royal Class Building, DIP 1, Dubai
                   </p>
                 </div>
               </div>
@@ -431,39 +429,6 @@ const SocialMedia = () => {
                 <DiagonalArrow />
               </div>
             </motion.a>
-
-            {/* 8. Coverage Areas & Service Locations */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.48 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="min-w-0"
-            >
-              <Link
-                to="/locations"
-                className="group w-full h-full bg-[#1a294a]/85 hover:bg-[#223963] backdrop-blur-md border border-white/15 hover:border-white/25 p-3 sm:p-3.5 rounded-2xl flex items-center justify-between shadow-md transition-all text-left block min-w-0"
-              >
-                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
-                    <Navigation size={18} className="text-[#5eb63b]" />
-                  </div>
-                  <div className="min-w-0">
-                    <h2 className="font-extrabold text-white text-[11px] sm:text-xs md:text-sm leading-tight font-['Montserrat',sans-serif] truncate">
-                      Coverage Areas
-                    </h2>
-                    <p className="text-slate-300 text-[9px] sm:text-[10px] md:text-[11px] font-['Poppins',sans-serif] mt-0.5 truncate">
-                      All Across Dubai
-                    </p>
-                  </div>
-                </div>
-                <div className="shrink-0 hidden xs:block">
-                  <DiagonalArrow />
-                </div>
-              </Link>
-            </motion.div>
-
           </div>
 
         </div>

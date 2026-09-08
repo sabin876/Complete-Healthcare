@@ -117,12 +117,6 @@ async function runTests() {
       titleKeyword: 'Careers',
     },
     {
-      path: '/locations',
-      expectedStatus: 200,
-      expectedCanonical: 'https://corx.ae/locations',
-      titleKeyword: 'Our Locations',
-    },
-    {
       path: '/privacy-policy',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/privacy-policy',

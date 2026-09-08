@@ -42,7 +42,6 @@ const Sitemap = () => {
     { name: "Our Services Overview", path: "/services", icon: HeartPulse },
     { name: "Our Medical Team", path: "/team", icon: Stethoscope },
     { name: "Careers", path: "/career", icon: Briefcase },
-    { name: "Locations & Coverage", path: "/locations", icon: MapPin },
     { name: "Book An Appointment", path: "/book-an-appointment", icon: Calendar },
     { name: "Contact Us", path: "/contact-us", icon: FileText },
     { name: "Social Media & Connect", path: "/social-media", icon: ExternalLink },

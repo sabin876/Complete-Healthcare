@@ -502,22 +502,6 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     };
   }
 
-  if (first === 'locations') {
-    return {
-      statusCode: 200,
-      initialData: null,
-      seo: {
-        title: 'Our Locations & Service Areas in Dubai | CORx Healthcare',
-        description: 'CORx Healthcare provides 24/7 home healthcare across all Dubai areas including Dubai Marina, Palm Jumeirah, Downtown, Jumeirah, DIP, and Jebel Ali.',
-        ogTitle: 'Our Locations & Service Areas in Dubai | CORx Healthcare',
-        ogDescription: 'CORx Healthcare provides 24/7 home healthcare across all Dubai areas including Dubai Marina, Palm Jumeirah, Downtown, Jumeirah, DIP, and Jebel Ali.',
-        ogImage: DEFAULT_OG_IMAGE,
-        ogType: 'website',
-        canonicalUrl: `${BASE_SITE_URL}/locations`,
-      },
-    };
-  }
-
   if (first === 'privacy-policy') {
     return {
       statusCode: 200,
