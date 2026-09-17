@@ -4,8 +4,383 @@
 {% block extrahead %}
 {{ block.super }}
 <style>
+/* ==========================================================================
+   CLEANING UP JAZZMIN / DJANGO ADMIN CHROME
+   ========================================================================== */
+
+/* Full width layout without sidebar */
+.col-12.col-lg-9 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+/* Hide duplicate Jazzmin tab header, jazzy actions sidebar, and default submit rows */
+.card-header:has(.nav-tabs),
+.nav-tabs,
+ul.nav.nav-tabs,
+.card-header-tabs,
+#jazzy-actions,
+.col-12.col-lg-3,
+.submit-row,
+#salary-submit-bar,
+.card-footer {
+    display: none !important;
+}
+
+/* Redundant fieldset titles in step 1 */
+#driver-section-1 fieldset.module > h2,
+#driver-section-1 fieldset.module > .description {
+    display: none !important;
+}
+
+fieldset.module {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 16px 0 !important;
+}
+
+/* ==========================================================================
+   MODERN WIZARD CONTAINER & STEPPER HEADER
+   ========================================================================== */
+
+.driver-wizard-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 24px 0 !important;
+    font-family: inherit !important;
+}
+
+/* Top Stepper Bar */
+.driver-stepper-bar {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr auto 1fr !important;
+    align-items: center !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 16px 24px !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    gap: 16px !important;
+}
+
+.driver-step-tab {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 10px 18px !important;
+    border-radius: 14px !important;
+    border: 1.5px solid transparent !important;
+    background: #f8fafc !important;
+}
+
+.driver-step-tab:hover {
+    background: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+}
+
+.driver-step-tab.active {
+    background: #f0f9ff !important;
+    border-color: #08709d !important;
+    box-shadow: 0 4px 16px rgba(8, 112, 157, 0.12) !important;
+}
+
+.driver-step-tab.completed {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+}
+
+.driver-step-bubble {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    background: #e2e8f0 !important;
+    color: #64748b !important;
+    font-weight: 800 !important;
+    font-size: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    transition: all 0.25s ease !important;
+}
+
+.driver-step-tab.active .driver-step-bubble {
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(8, 112, 157, 0.35) !important;
+    transform: scale(1.05) !important;
+}
+
+.driver-step-tab.completed .driver-step-bubble {
+    background: #059669 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3) !important;
+}
+
+.driver-step-info {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+}
+
+.driver-step-title {
+    font-weight: 800 !important;
+    font-size: 14px !important;
+    color: #0f172a !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.driver-step-subtitle {
+    font-size: 11.5px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.driver-step-tab.active .driver-step-title {
+    color: #08709d !important;
+}
+
+.driver-step-tab.completed .driver-step-title {
+    color: #065f46 !important;
+}
+
+.driver-step-divider {
+    height: 2px !important;
+    width: 32px !important;
+    background: #e2e8f0 !important;
+    border-radius: 999px !important;
+    transition: background 0.25s ease !important;
+}
+
+.driver-step-divider.completed {
+    background: #059669 !important;
+}
+
+/* ==========================================================================
+   STEP CARD WRAPPERS
+   ========================================================================== */
+
+.driver-wizard-section {
+    display: none;
+}
+
+.driver-wizard-section.active-section {
+    display: block !important;
+    animation: driverFadeIn 0.25s ease-out !important;
+}
+
+@keyframes driverFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.driver-step-card-box {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 28px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 24px !important;
+}
+
+.driver-step-card-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 22px !important;
+    border-bottom: 1.5px solid #f1f5f9 !important;
+    flex-wrap: wrap !important;
+}
+
+.driver-step-card-header-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.driver-step-card-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+    background: #e0f2fe !important;
+    color: #08709d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+}
+
+.driver-step-card-title {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    letter-spacing: -0.01em !important;
+}
+
+.driver-step-card-desc {
+    font-size: 12.5px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    margin-top: 2px !important;
+}
+
+/* Form Fields Styling for Step 1 */
+#driver-section-1 .form-row {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+    gap: 18px !important;
+    margin-bottom: 18px !important;
+    background: #f8fafc !important;
+    padding: 18px 20px !important;
+    border-radius: 16px !important;
+    border: 1.5px solid #e2e8f0 !important;
+}
+
+#driver-section-1 label {
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: #475569 !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+}
+
+#driver-section-1 input[type="text"],
+#driver-section-1 input[type="date"],
+#driver-section-1 select {
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    color: #0f172a !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease !important;
+}
+
+#driver-section-1 input:focus,
+#driver-section-1 select:focus {
+    border-color: #08709d !important;
+    box-shadow: 0 0 0 3.5px rgba(8, 112, 157, 0.15) !important;
+    outline: none !important;
+}
+
+/* ==========================================================================
+   NAVIGATION ACTION BUTTONS
+   ========================================================================== */
+
+.driver-nav-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    margin-top: 28px !important;
+    padding-top: 22px !important;
+    border-top: 1.5px solid #e2e8f0 !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+}
+
+.driver-btn-primary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    padding: 13px 32px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 18px rgba(8, 112, 157, 0.35) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+}
+
+.driver-btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(8, 112, 157, 0.45) !important;
+    color: #ffffff !important;
+}
+
+.driver-btn-secondary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    padding: 12px 24px !important;
+    border-radius: 14px !important;
+    background: #f8fafc !important;
+    color: #334155 !important;
+    border: 1.5px solid #cbd5e1 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    text-decoration: none !important;
+}
+
+.driver-btn-secondary:hover {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+.driver-btn-send {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    padding: 14px 40px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-decoration: none !important;
+}
+
+.driver-btn-send:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 28px rgba(16, 185, 129, 0.55) !important;
+    color: #ffffff !important;
+}
+
 /* ================================================================
-   1. CUSTOM MULTI-SELECT DROPDOWN STYLING
+   CUSTOM MULTI-SELECT DROPDOWN STYLING
    ================================================================ */
 .staff-multiselect-dropdown {
     position: relative !important;
@@ -106,7 +481,6 @@
     color: #0284c7 !important;
 }
 
-/* Floating Dropdown Panel */
 .staff-multiselect-dropdown {
     position: relative !important;
     width: 100% !important;
@@ -235,15 +609,15 @@
 }
 
 /* ================================================================
-   2. MAIN INLINE CONTAINER & CARDS
+   MAIN INLINE CONTAINER & CARDS FOR STEP 2
    ================================================================ */
 #route_stops-group,
 .inline-group[id*="route_stops"] {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    margin-top: 20px !important;
-    margin-bottom: 30px !important;
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
     overflow: visible !important;
 }
 
@@ -413,9 +787,7 @@
     transition: all 0.2s ease !important;
 }
 
-#route_stops-group input[type="text"]:focus,
-#route_stops-group input[type="number"]:focus,
-#route_stops-group input[type="time"]:focus,
+#route_stops-group input:focus,
 #route_stops-group select:focus {
     border-color: #0284c7 !important;
     box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.18) !important;
@@ -432,7 +804,7 @@
 
 /* Add Row Button */
 #route_stops-group .add-row {
-    margin-top: 10px !important;
+    margin-top: 14px !important;
     text-align: center !important;
 }
 
@@ -445,10 +817,10 @@
     color: #ffffff !important;
     font-size: 14px !important;
     font-weight: 800 !important;
-    padding: 14px 28px !important;
+    padding: 13px 28px !important;
     border-radius: 12px !important;
     text-decoration: none !important;
-    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35) !important;
+    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35) !important;
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
     transition: all 0.2s ease !important;
@@ -457,8 +829,38 @@
 
 #route_stops-group .add-row a:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 24px rgba(2, 132, 199, 0.45) !important;
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45) !important;
     color: #ffffff !important;
+}
+
+/* Alert Toast */
+.driver-alert-popup {
+    display: none;
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: #ef4444;
+    color: #ffffff;
+    padding: 16px 26px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 12px 36px rgba(239, 68, 68, 0.4);
+    z-index: 999999;
+    align-items: center;
+    gap: 12px;
+    animation: driverSlideIn 0.25s ease-out;
+}
+
+@keyframes driverSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Hide unwanted Django related icons */
@@ -468,7 +870,23 @@ a.related-widget-wrapper-link {
 }
 
 /* Responsive */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 840px) {
+    .driver-stepper-bar {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        padding: 14px !important;
+    }
+    .driver-step-divider {
+        display: none !important;
+    }
+    .driver-nav-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    .driver-nav-bar > * {
+        width: 100% !important;
+        text-align: center !important;
+    }
     #route_stops-group .form-row:has(.field-stop_order),
     #route_stops-group .form-row:has(.field-source_location),
     #route_stops-group .form-row:has(.field-destination_location) {
@@ -476,13 +894,437 @@ a.related-widget-wrapper-link {
     }
 }
 </style>
+{% endblock %}
 
+{% block field_sets %}
+<div class="col-12" style="padding: 0 !important;">
+    <!-- Top Stepper Navigation -->
+    <div class="driver-wizard-container">
+        <div class="driver-stepper-bar" id="driver-stepper-bar">
+            <div class="driver-step-tab active" data-step="1" id="driver-tab-1">
+                <div class="driver-step-bubble" id="driver-bubble-1">1</div>
+                <div class="driver-step-info">
+                    <div class="driver-step-title">1. Driver & Details</div>
+                    <div class="driver-step-subtitle">Assign Driver & Date</div>
+                </div>
+            </div>
+
+            <div class="driver-step-divider" id="driver-divider-1"></div>
+
+            <div class="driver-step-tab" data-step="2" id="driver-tab-2">
+                <div class="driver-step-bubble" id="driver-bubble-2">2</div>
+                <div class="driver-step-info">
+                    <div class="driver-step-title">2. Route & Stops</div>
+                    <div class="driver-step-subtitle">Multi-Stop Schedule</div>
+                </div>
+            </div>
+
+            <div class="driver-step-divider" id="driver-divider-2"></div>
+
+            <div class="driver-step-tab" data-step="3" id="driver-tab-3">
+                <div class="driver-step-bubble" id="driver-bubble-3">3</div>
+                <div class="driver-step-info">
+                    <div class="driver-step-title">3. Review & Send</div>
+                    <div class="driver-step-subtitle">Finalize & Dispatch</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Popup -->
+    <div id="driver-alert-popup" class="driver-alert-popup">
+        <i class="fas fa-exclamation-circle" style="font-size: 20px;"></i>
+        <span id="driver-alert-text">Please assign a driver before continuing!</span>
+    </div>
+
+    <!-- STEP 1: DRIVER & DETAILS -->
+    <div id="driver-section-1" class="driver-wizard-section driver-step-card-box active-section">
+        <div class="driver-step-card-header">
+            <div class="driver-step-card-header-left">
+                <div class="driver-step-card-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div>
+                    <div class="driver-step-card-title">Step 1: Driver, Vehicle & Schedule Date</div>
+                    <div class="driver-step-card-desc">Assign the driver, vehicle information, and schedule date for this trip.</div>
+                </div>
+            </div>
+        </div>
+
+        {% for fieldset in adminform %}
+            {% include "admin/includes/fieldset.html" %}
+        {% endfor %}
+
+        <div class="driver-nav-bar">
+            <a href="{% url opts|admin_urlname:'changelist' %}" class="driver-btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+            <button type="button" id="driver-next-to-2" class="driver-btn-primary">
+                <span>Next: Route & Stops</span> <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 2: ROUTE STOPS & PASSENGERS -->
+    <div id="driver-section-2" class="driver-wizard-section driver-step-card-box">
+        <div class="driver-step-card-header">
+            <div class="driver-step-card-header-left">
+                <div class="driver-step-card-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div>
+                    <div class="driver-step-card-title">Step 2: Multi-Stop Route & Staff Passengers</div>
+                    <div class="driver-step-card-desc">Configure trip legs, departure/arrival locations, timings, and passenger lists.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="driver-step2-info-badge"></div>
+
+        <!-- Inline Multi-stop route legs formset -->
+        {% for inline_admin_formset in inline_admin_formsets %}
+            {% include inline_admin_formset.opts.template %}
+        {% endfor %}
+
+        <div class="driver-nav-bar">
+            <button type="button" id="driver-back-to-1" class="driver-btn-secondary">
+                <i class="fas fa-arrow-left"></i> <span>Back: Driver Details</span>
+            </button>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="driver-btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="button" id="driver-next-to-3" class="driver-btn-primary">
+                    <span>Next: Review & Send</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 3: REVIEW & DISPATCH SCHEDULE -->
+    <div id="driver-section-3" class="driver-wizard-section driver-step-card-box">
+        <div class="driver-step-card-header">
+            <div class="driver-step-card-header-left">
+                <div class="driver-step-card-icon" style="background: #ecfdf5; color: #059669;">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div>
+                    <div class="driver-step-card-title">Step 3: Review & Dispatch Driver Schedule</div>
+                    <div class="driver-step-card-desc">Review the complete route itinerary, timings, and dispatch schedule.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="driver-step3-summary-box"></div>
+
+        <div class="driver-nav-bar">
+            <button type="button" id="driver-back-to-2" class="driver-btn-secondary">
+                <i class="fas fa-arrow-left"></i> <span>Back: Route & Stops</span>
+            </button>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="driver-btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" name="_save" class="driver-btn-send" id="driver-btn-submit-final">
+                    <i class="fas fa-paper-plane" style="font-size: 16px;"></i>
+                    <span>Send Driver Schedule</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block inline_field_sets %}
+{# Inline formsets already rendered inside Step 2 container above #}
+{% endblock %}
+
+{% block extrajs %}
+{{ block.super }}
 <script>
 (function() {
+    let currentStep = 1;
+
+    function showAlert(message) {
+        const popup = document.getElementById('driver-alert-popup');
+        const text = document.getElementById('driver-alert-text');
+        if (popup && text) {
+            text.textContent = message;
+            popup.style.display = 'flex';
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 3200);
+        } else {
+            alert(message);
+        }
+    }
+
+    function isDriverSelected() {
+        const driverSelect = document.getElementById('id_driver');
+        return Boolean(driverSelect && driverSelect.value && driverSelect.value.trim() !== '');
+    }
+
+    function getDriverInfo() {
+        const driverSelect = document.getElementById('id_driver');
+        const phoneInput = document.getElementById('id_driver_phone');
+        const vehicleInput = document.getElementById('id_vehicle_info');
+        const dateInput = document.getElementById('id_schedule_date');
+        const statusSelect = document.getElementById('id_status');
+
+        let driverName = "Assigned Driver";
+        if (driverSelect && driverSelect.selectedIndex >= 0) {
+            const opt = driverSelect.options[driverSelect.selectedIndex];
+            if (opt && opt.text && opt.value) {
+                driverName = opt.text;
+            }
+        }
+
+        const phone = (phoneInput && phoneInput.value.trim()) ? phoneInput.value.trim() : '—';
+        const vehicle = (vehicleInput && vehicleInput.value.trim()) ? vehicleInput.value.trim() : 'Standard Vehicle';
+        const date = (dateInput && dateInput.value.trim()) ? dateInput.value.trim() : 'Today';
+        const status = (statusSelect && statusSelect.selectedIndex >= 0) ? statusSelect.options[statusSelect.selectedIndex].text : 'Scheduled';
+
+        return { name: driverName, phone: phone, vehicle: vehicle, date: date, status: status };
+    }
+
+    function getRouteStopsSummary() {
+        const stops = [];
+        const inlineRows = document.querySelectorAll('#route_stops-group .inline-related:not(.empty-form)');
+        inlineRows.forEach((row, idx) => {
+            const isDelete = row.querySelector('input[name$="-DELETE"]:checked');
+            if (isDelete) return;
+
+            const orderInput = row.querySelector('input[name$="-stop_order"]');
+            const sourceInput = row.querySelector('input[name$="-source_location"]');
+            const sourceTimeInput = row.querySelector('input[name$="-source_time"]');
+            const destInput = row.querySelector('input[name$="-destination_location"]');
+            const destTimeInput = row.querySelector('input[name$="-destination_time"]');
+            
+            // Pickup tags
+            const pickupTags = Array.from(row.querySelectorAll('.field-staff_passengers .staff-selected-tag span:first-child')).map(el => el.innerText.replace('👤', '').trim());
+            // Dropoff tags
+            const dropoffTags = Array.from(row.querySelectorAll('.field-staff_dropoffs .staff-selected-tag span:first-child')).map(el => el.innerText.replace('👤', '').trim());
+
+            const order = (orderInput && orderInput.value) ? orderInput.value : (idx + 1);
+            const source = (sourceInput && sourceInput.value) ? sourceInput.value : 'Departure Point';
+            const sourceTime = (sourceTimeInput && sourceTimeInput.value) ? sourceTimeInput.value : '';
+            const dest = (destInput && destInput.value) ? destInput.value : 'Destination Point';
+            const destTime = (destTimeInput && destTimeInput.value) ? destTimeInput.value : '';
+
+            stops.push({
+                order: order,
+                source: source,
+                sourceTime: sourceTime,
+                dest: dest,
+                destTime: destTime,
+                pickups: pickupTags,
+                dropoffs: dropoffTags
+            });
+        });
+        return stops;
+    }
+
+    function updateStepUI(stepNumber) {
+        currentStep = stepNumber;
+
+        // Update Tab indicators
+        for (let i = 1; i <= 3; i++) {
+            const tab = document.getElementById('driver-tab-' + i);
+            const bubble = document.getElementById('driver-bubble-' + i);
+            const divider = document.getElementById('driver-divider-' + i);
+
+            if (tab && bubble) {
+                tab.classList.remove('active', 'completed');
+                if (i < currentStep) {
+                    tab.classList.add('completed');
+                    bubble.innerHTML = '<i class="fas fa-check" style="font-size: 14px;"></i>';
+                } else if (i === currentStep) {
+                    tab.classList.add('active');
+                    bubble.textContent = i;
+                } else {
+                    bubble.textContent = i;
+                }
+            }
+
+            if (divider) {
+                if (i < currentStep) {
+                    divider.classList.add('completed');
+                } else {
+                    divider.classList.remove('completed');
+                }
+            }
+        }
+
+        // Show/Hide Sections
+        const section1 = document.getElementById('driver-section-1');
+        const section2 = document.getElementById('driver-section-2');
+        const section3 = document.getElementById('driver-section-3');
+
+        if (section1) section1.classList.toggle('active-section', currentStep === 1);
+        if (section2) section2.classList.toggle('active-section', currentStep === 2);
+        if (section3) section3.classList.toggle('active-section', currentStep === 3);
+
+        const driverInfo = getDriverInfo();
+
+        // Update Step 2 Info Banner
+        const step2Badge = document.getElementById('driver-step2-info-badge');
+        if (step2Badge) {
+            step2Badge.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 20px; background: #f0f9ff; border: 1.5px solid #bae6fd; border-radius: 14px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <div style="width: 38px; height: 38px; border-radius: 10px; background: #0284c7; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                            <i class="fas fa-id-badge"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 11px; font-weight: 800; color: #0369a1; text-transform: uppercase; letter-spacing: 0.05em;">Trip Overview</div>
+                            <div style="font-size: 15px; font-weight: 800; color: #0f172a;">${driverInfo.name} <span style="font-size: 12px; font-weight: 700; color: #0369a1; background: #e0f2fe; padding: 2px 8px; border-radius: 6px; margin-left: 4px;">${driverInfo.vehicle}</span></div>
+                            <div style="font-size: 12px; color: #475569; font-weight: 600; margin-top: 2px;">📅 Date: ${driverInfo.date} • 📞 ${driverInfo.phone} • Status: <span style="color: #059669; font-weight: 700;">${driverInfo.status}</span></div>
+                        </div>
+                    </div>
+                    <button type="button" id="driver-step2-edit-btn" style="padding: 7px 14px; font-size: 12px; font-weight: 700; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0284c7; cursor: pointer;">
+                        <i class="fas fa-edit"></i> Edit Details
+                    </button>
+                </div>
+            `;
+            const editBtn = document.getElementById('driver-step2-edit-btn');
+            if (editBtn) editBtn.addEventListener('click', () => updateStepUI(1));
+        }
+
+        // Update Step 3 Summary Box
+        const step3Summary = document.getElementById('driver-step3-summary-box');
+        const stops = getRouteStopsSummary();
+
+        let stopsHtml = '';
+        if (stops.length === 0) {
+            stopsHtml = '<div style="color: #94a3b8; font-size: 13px; font-style: italic; padding: 10px;">No route stops added yet.</div>';
+        } else {
+            stopsHtml = stops.map(s => `
+                <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 10px; border-radius: 8px;">Stop #${s.order}</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+                        <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 12px;">
+                            <div style="font-size: 11px; font-weight: 800; color: #0369a1; text-transform: uppercase;">🛫 Departure</div>
+                            <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 2px;">${s.source} ${s.sourceTime ? `<span style="font-size: 12px; color: #0284c7; font-weight: 700;">(${s.sourceTime})</span>` : ''}</div>
+                            <div style="font-size: 11.5px; color: #475569; font-weight: 600; margin-top: 4px;">👥 Pickups: ${s.pickups.length > 0 ? s.pickups.join(', ') : '<span style="color: #94a3b8;">None</span>'}</div>
+                        </div>
+                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px;">
+                            <div style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase;">🛬 Destination</div>
+                            <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 2px;">${s.dest} ${s.destTime ? `<span style="font-size: 12px; color: #059669; font-weight: 700;">(${s.destTime})</span>` : ''}</div>
+                            <div style="font-size: 11.5px; color: #475569; font-weight: 600; margin-top: 4px;">👥 Drop-offs: ${s.dropoffs.length > 0 ? s.dropoffs.join(', ') : '<span style="color: #94a3b8;">None</span>'}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        if (step3Summary) {
+            step3Summary.innerHTML = `
+                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 20px 24px; margin-bottom: 24px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px;">
+                            <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Assigned Driver:</div>
+                            <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">${driverInfo.name}</div>
+                            <div style="font-size: 12px; color: #0284c7; font-weight: 700; margin-top: 2px;">📞 ${driverInfo.phone}</div>
+                        </div>
+                        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px;">
+                            <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Vehicle & Schedule:</div>
+                            <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 2px;">🚐 ${driverInfo.vehicle}</div>
+                            <div style="font-size: 12px; color: #059669; font-weight: 700; margin-top: 2px;">📅 ${driverInfo.date} • Status: ${driverInfo.status}</div>
+                        </div>
+                    </div>
+
+                    <div style="font-size: 13px; font-weight: 800; text-transform: uppercase; color: #0284c7; letter-spacing: 0.05em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-list-ol"></i> Route Stops Summary (${stops.length} Leg${stops.length === 1 ? '' : 's'})
+                    </div>
+                    ${stopsHtml}
+                </div>
+            `;
+        }
+
+        // Scroll to wizard stepper top
+        const stepper = document.getElementById('driver-stepper-bar');
+        if (stepper) {
+            stepper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function initDriverWizardEvents() {
+        const nextTo2 = document.getElementById('driver-next-to-2');
+        if (nextTo2) {
+            nextTo2.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!isDriverSelected()) {
+                    showAlert('⚠️ Please select an assigned driver before proceeding!');
+                    const driverSelect = document.getElementById('id_driver');
+                    if (driverSelect) {
+                        driverSelect.focus();
+                        driverSelect.style.borderColor = '#ef4444';
+                        setTimeout(() => { driverSelect.style.borderColor = '#cbd5e1'; }, 2000);
+                    }
+                    return;
+                }
+                updateStepUI(2);
+            });
+        }
+
+        const backTo1 = document.getElementById('driver-back-to-1');
+        if (backTo1) {
+            backTo1.addEventListener('click', function(e) {
+                e.preventDefault();
+                updateStepUI(1);
+            });
+        }
+
+        const nextTo3 = document.getElementById('driver-next-to-3');
+        if (nextTo3) {
+            nextTo3.addEventListener('click', function(e) {
+                e.preventDefault();
+                updateStepUI(3);
+            });
+        }
+
+        const backTo2 = document.getElementById('driver-back-to-2');
+        if (backTo2) {
+            backTo2.addEventListener('click', function(e) {
+                e.preventDefault();
+                updateStepUI(2);
+            });
+        }
+
+        const tab1 = document.getElementById('driver-tab-1');
+        if (tab1) tab1.addEventListener('click', () => updateStepUI(1));
+
+        const tab2 = document.getElementById('driver-tab-2');
+        if (tab2) {
+            tab2.addEventListener('click', () => {
+                if (!isDriverSelected()) {
+                    showAlert('⚠️ Please assign a driver before navigating to Route & Stops.');
+                    return;
+                }
+                updateStepUI(2);
+            });
+        }
+
+        const tab3 = document.getElementById('driver-tab-3');
+        if (tab3) {
+            tab3.addEventListener('click', () => {
+                if (!isDriverSelected()) {
+                    showAlert('⚠️ Please assign a driver before navigating to Review & Send.');
+                    return;
+                }
+                updateStepUI(3);
+            });
+        }
+
+        updateStepUI(1);
+    }
+
+    /* Multi-select staff dropdown initialization */
     function setupStaffDropdown(wrapper) {
         if (!wrapper || wrapper.closest('.empty-form') || wrapper.closest('.grp-empty-form')) return;
         if (wrapper.dataset.fieldName && wrapper.dataset.fieldName.includes('__prefix__')) return;
-
         if (wrapper.dataset.initialized === 'true') return;
         wrapper.dataset.initialized = 'true';
 
@@ -503,7 +1345,6 @@ a.related-widget-wrapper-link {
                 if (cb && cb.checked) {
                     count++;
                     item.classList.add('selected');
-
                     const name = item.dataset.staffName || 'Staff';
 
                     const tag = document.createElement('span');
@@ -533,12 +1374,10 @@ a.related-widget-wrapper-link {
             }
         }
 
-        // Toggle open/close
         if (trigger && panel) {
             trigger.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const isOpen = wrapper.classList.contains('open');
-                // Close all other open dropdowns first
                 document.querySelectorAll('.staff-multiselect-dropdown.open').forEach(d => {
                     if (d !== wrapper) {
                         d.classList.remove('open');
@@ -558,7 +1397,6 @@ a.related-widget-wrapper-link {
             });
         }
 
-        // Search filtering
         if (searchInput) {
             searchInput.addEventListener('input', function() {
                 const query = this.value.toLowerCase().trim();
@@ -576,7 +1414,6 @@ a.related-widget-wrapper-link {
             });
         }
 
-        // Option checkbox click
         optionItems.forEach(item => {
             const cb = item.querySelector('.staff-dropdown-checkbox');
             if (cb) {
@@ -601,7 +1438,6 @@ a.related-widget-wrapper-link {
         });
     }
 
-    // Close on outside click
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.staff-multiselect-dropdown')) {
             document.querySelectorAll('.staff-multiselect-dropdown.open').forEach(wrapper => {
@@ -613,9 +1449,15 @@ a.related-widget-wrapper-link {
     });
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAllDropdowns);
+        document.addEventListener('DOMContentLoaded', () => {
+            initDriverWizardEvents();
+            initAllDropdowns();
+        });
     } else {
-        setTimeout(initAllDropdowns, 100);
+        setTimeout(() => {
+            initDriverWizardEvents();
+            initAllDropdowns();
+        }, 50);
     }
 
     const observer = new MutationObserver(function() {

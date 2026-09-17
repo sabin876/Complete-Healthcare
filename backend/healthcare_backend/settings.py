@@ -246,6 +246,7 @@ JAZZMIN_SETTINGS = {
     "changeform_format": "horizontal_tabs",
     "changeform_format_overrides": {
         "api.salaryapplication": "single",
+        "api.driverschedule": "single",
     },
 }
 
