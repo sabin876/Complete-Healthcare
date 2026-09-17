@@ -247,124 +247,199 @@ fieldset.module {
 }
 
 /* ==========================================================================
-   STEP 1: FULL-WIDTH RESPONSIVE MULTI-COLUMN GRID ROW DESIGN
+   STEP 1: SUB-CARDS 2-COLUMN RESPONSIVE SAAS GRID
    ========================================================================== */
 
-#driver-section-1 fieldset.module {
-    background: #f8fafc !important;
+.driver-step1-cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)) !important;
+    gap: 22px !important;
+    margin-top: 22px !important;
+    margin-bottom: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.driver-step1-subcard {
+    background: #ffffff !important;
     border: 1.5px solid #e2e8f0 !important;
     border-radius: 18px !important;
-    padding: 22px 24px !important;
-    margin-bottom: 20px !important;
-}
-
-#driver-section-1 .form-row {
-    display: grid !important;
-    gap: 20px !important;
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    float: none !important;
-}
-
-/* Driver & Vehicle Details (3 columns) */
-#driver-section-1 .form-row:has(.field-driver) {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
-}
-
-/* Schedule Date & Status (2 columns) */
-#driver-section-1 .form-row:has(.field-schedule_date) {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
-}
-
-#driver-section-1 .fieldBox,
-#driver-section-1 .form-row > div {
+    padding: 22px !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03) !important;
     display: flex !important;
     flex-direction: column !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+}
+
+.driver-step1-subcard:hover {
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
+}
+
+.driver-subcard-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding-bottom: 14px !important;
+    margin-bottom: 18px !important;
+    border-bottom: 1.5px solid #f1f5f9 !important;
+}
+
+.driver-subcard-header-icon {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 16px !important;
+    flex-shrink: 0 !important;
+}
+
+.driver-subcard-title {
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+}
+
+.driver-subcard-subtitle {
+    font-size: 12px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    margin-top: 1px !important;
+}
+
+/* Overriding Bootstrap & Jazzmin form group styles inside subcards */
+.driver-step1-subcard .form-group,
+.driver-step1-subcard .form-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    width: 100% !important;
+    margin: 0 0 14px 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.driver-step1-subcard .form-group > .row {
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 !important;
+    gap: 14px !important;
+    width: 100% !important;
+}
+
+.driver-step1-subcard label,
+.driver-step1-subcard .col-form-label {
     width: 100% !important;
     max-width: 100% !important;
-    float: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-}
-
-#driver-section-1 .flex-container {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    float: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-#driver-section-1 label {
-    font-size: 12px !important;
+    flex: 0 0 100% !important;
+    font-size: 11.5px !important;
     font-weight: 800 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.05em !important;
-    color: #334155 !important;
-    margin-bottom: 8px !important;
+    color: #475569 !important;
+    padding: 0 !important;
+    margin: 0 0 6px 0 !important;
     display: flex !important;
     align-items: center !important;
     gap: 6px !important;
 }
 
-#driver-section-1 .field-driver label:before { content: "👤 "; }
-#driver-section-1 .field-driver_phone label:before { content: "📞 "; }
-#driver-section-1 .field-vehicle_info label:before { content: "🚐 "; }
-#driver-section-1 .field-schedule_date label:before { content: "📅 "; }
-#driver-section-1 .field-status label:before { content: "🏷️ "; }
+.driver-step1-subcard .field-driver_phone label:before { content: "📞 "; }
+.driver-step1-subcard .field-vehicle_info label:before { content: "🚐 "; }
+.driver-step1-subcard .field-schedule_date label:before { content: "📅 "; }
+.driver-step1-subcard .field-status label:before { content: "🏷️ "; }
 
-#driver-section-1 input[type="text"],
-#driver-section-1 input[type="date"],
-#driver-section-1 input.vDateField,
-#driver-section-1 select {
+.driver-step1-subcard .col-auto,
+.driver-step1-subcard .fieldBox {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.driver-step1-subcard input[type="text"],
+.driver-step1-subcard input[type="date"],
+.driver-step1-subcard input.vDateField,
+.driver-step1-subcard select {
     width: 100% !important;
     height: 48px !important;
     border-radius: 12px !important;
     border: 1.5px solid #cbd5e1 !important;
     padding: 10px 16px !important;
     font-size: 14px !important;
+    font-weight: 600 !important;
     color: #0f172a !important;
-    background: #ffffff !important;
-    box-sizing: border-box !important;
+    background: #f8fafc !important;
     transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
 }
 
-#driver-section-1 input:focus,
-#driver-section-1 select:focus {
+.driver-step1-subcard input:focus,
+.driver-step1-subcard select:focus {
+    background: #ffffff !important;
     border-color: #08709d !important;
     box-shadow: 0 0 0 3.5px rgba(8, 112, 157, 0.15) !important;
     outline: none !important;
 }
 
-#driver-section-1 .help,
-#driver-section-1 .help-block,
-#driver-section-1 .help-inline {
-    font-size: 11.5px !important;
+.driver-step1-subcard .help-block {
+    font-size: 11px !important;
     color: #64748b !important;
-    font-weight: 500 !important;
-    margin-top: 6px !important;
+    margin-top: 4px !important;
 }
 
-#driver-section-1 .datetimeshortcuts {
-    margin-top: 6px !important;
-    font-size: 12px !important;
-    font-weight: 700 !important;
+/* Preset Chips Box */
+.driver-preset-wrapper {
+    margin-top: 14px !important;
+    padding-top: 14px !important;
+    border-top: 1.5px dashed #e2e8f0 !important;
+}
+
+.driver-preset-title {
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #64748b !important;
+    margin-bottom: 8px !important;
     display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.driver-preset-chips {
+    display: flex !important;
+    flex-wrap: wrap !important;
     gap: 8px !important;
 }
 
-#driver-section-1 .datetimeshortcuts a {
-    color: #08709d !important;
-    text-decoration: none !important;
+.driver-vehicle-chip,
+.driver-date-chip,
+.driver-status-chip {
+    background: #f1f5f9 !important;
+    border: 1.5px solid #e2e8f0 !important;
+    color: #334155 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    padding: 6px 12px !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    user-select: none !important;
+}
+
+.driver-vehicle-chip:hover,
+.driver-date-chip:hover,
+.driver-status-chip:hover {
     background: #e0f2fe !important;
-    padding: 2px 8px !important;
-    border-radius: 6px !important;
+    border-color: #08709d !important;
+    color: #08709d !important;
+    transform: translateY(-1px) !important;
 }
 
 /* ==========================================================================
@@ -1024,14 +1099,78 @@ a.related-widget-wrapper-link {
                 </div>
                 <div>
                     <div class="driver-step-card-title">Step 1: Driver, Vehicle & Schedule Date</div>
-                    <div class="driver-step-card-desc">Assign the driver, vehicle information, and schedule date for this trip.</div>
+                    <div class="driver-step-card-desc">Assign the driver from the fleet directory, vehicle information, and schedule date.</div>
                 </div>
             </div>
         </div>
 
+        <!-- Fieldset 1: Driver Directory Picker -->
         {% for fieldset in adminform %}
-            {% include "admin/includes/fieldset.html" %}
+            {% if forloop.counter == 1 %}
+                {% include "admin/includes/fieldset.html" %}
+            {% endif %}
         {% endfor %}
+
+        <!-- 2-Column Responsive Card Grid for Vehicle & Schedule -->
+        <div class="driver-step1-cards-grid">
+            <!-- Card 1: Vehicle & Contact -->
+            <div class="driver-step1-subcard">
+                <div class="driver-subcard-header">
+                    <div class="driver-subcard-header-icon" style="background: #e0f2fe; color: #08709d;">
+                        <i class="fas fa-van-shuttle"></i>
+                    </div>
+                    <div>
+                        <div class="driver-subcard-title">Vehicle & Driver Contact</div>
+                        <div class="driver-subcard-subtitle">Vehicle plate, model and driver phone number</div>
+                    </div>
+                </div>
+
+                {% for fieldset in adminform %}
+                    {% if forloop.counter == 2 %}
+                        {% include "admin/includes/fieldset.html" %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="driver-preset-wrapper">
+                    <div class="driver-preset-title"><i class="fas fa-bolt" style="color: #f59e0b;"></i> Quick Vehicle Presets</div>
+                    <div class="driver-preset-chips">
+                        <button type="button" class="driver-vehicle-chip" data-vehicle="Toyota HiAce - DXB 45921">🚐 Toyota HiAce (DXB 45921)</button>
+                        <button type="button" class="driver-vehicle-chip" data-vehicle="Nissan Urvan - DXB 88210">🚐 Nissan Urvan (DXB 88210)</button>
+                        <button type="button" class="driver-vehicle-chip" data-vehicle="Ambulance Unit 01 - DXB 10420">🚑 Ambulance Unit 01</button>
+                        <button type="button" class="driver-vehicle-chip" data-vehicle="Executive Van - AUH 77312">🚗 Executive Van (AUH 77312)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Schedule & Status -->
+            <div class="driver-step1-subcard">
+                <div class="driver-subcard-header">
+                    <div class="driver-subcard-header-icon" style="background: #f0fdf4; color: #059669;">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div>
+                        <div class="driver-subcard-title">Schedule Date & Trip Status</div>
+                        <div class="driver-subcard-subtitle">Trip date assignment and dispatch status</div>
+                    </div>
+                </div>
+
+                {% for fieldset in adminform %}
+                    {% if forloop.counter == 3 %}
+                        {% include "admin/includes/fieldset.html" %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="driver-preset-wrapper">
+                    <div class="driver-preset-title"><i class="fas fa-calendar-day" style="color: #08709d;"></i> Quick Date Shortcuts</div>
+                    <div class="driver-preset-chips">
+                        <button type="button" class="driver-date-chip" data-days="0">📅 Today</button>
+                        <button type="button" class="driver-date-chip" data-days="1">📅 Tomorrow</button>
+                        <button type="button" class="driver-date-chip" data-days="2">📅 In 2 Days</button>
+                        <button type="button" class="driver-date-chip" data-days="7">📅 Next Week</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="driver-nav-bar">
             <a href="{% url opts|admin_urlname:'changelist' %}" class="driver-btn-secondary">
@@ -1138,22 +1277,27 @@ a.related-widget-wrapper-link {
     }
 
     function isDriverSelected() {
-        const driverSelect = document.getElementById('id_driver');
-        return Boolean(driverSelect && driverSelect.value && driverSelect.value.trim() !== '');
+        const driverInput = document.getElementById('id_driver');
+        return Boolean(driverInput && driverInput.value && driverInput.value.trim() !== '');
     }
 
     function getDriverInfo() {
-        const driverSelect = document.getElementById('id_driver');
+        const driverInput = document.getElementById('id_driver');
         const phoneInput = document.getElementById('id_driver_phone');
         const vehicleInput = document.getElementById('id_vehicle_info');
         const dateInput = document.getElementById('id_schedule_date');
         const statusSelect = document.getElementById('id_status');
 
         let driverName = "Assigned Driver";
-        if (driverSelect && driverSelect.selectedIndex >= 0) {
-            const opt = driverSelect.options[driverSelect.selectedIndex];
-            if (opt && opt.text && opt.value) {
-                driverName = opt.text;
+        const selectedBannerName = document.getElementById('driver-banner-name');
+        if (selectedBannerName && selectedBannerName.textContent.trim()) {
+            driverName = selectedBannerName.textContent.trim();
+        } else if (driverInput && driverInput.value) {
+            const selectedCard = document.querySelector(`.driver-staff-card[data-staff-id="${driverInput.value}"]`);
+            if (selectedCard) {
+                driverName = selectedCard.getAttribute('data-name') || driverInput.value;
+            } else {
+                driverName = driverInput.value;
             }
         }
 
@@ -1329,18 +1473,45 @@ a.related-widget-wrapper-link {
     }
 
     function initDriverWizardEvents() {
+        // Vehicle Preset Chips
+        document.querySelectorAll('.driver-vehicle-chip').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const val = this.getAttribute('data-vehicle');
+                const vehInput = document.getElementById('id_vehicle_info');
+                if (vehInput && val) {
+                    vehInput.value = val;
+                    vehInput.focus();
+                }
+            });
+        });
+
+        // Date Preset Chips
+        document.querySelectorAll('.driver-date-chip').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const daysToAdd = parseInt(this.getAttribute('data-days') || '0', 10);
+                const d = new Date();
+                d.setDate(d.getDate() + daysToAdd);
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                const dateStr = `${yyyy}-${mm}-${dd}`;
+                
+                const dateInput = document.getElementById('id_schedule_date');
+                if (dateInput) {
+                    dateInput.value = dateStr;
+                    dateInput.focus();
+                }
+            });
+        });
+
         const nextTo2 = document.getElementById('driver-next-to-2');
         if (nextTo2) {
             nextTo2.addEventListener('click', function(e) {
                 e.preventDefault();
                 if (!isDriverSelected()) {
                     showAlert('⚠️ Please select an assigned driver before proceeding!');
-                    const driverSelect = document.getElementById('id_driver');
-                    if (driverSelect) {
-                        driverSelect.focus();
-                        driverSelect.style.borderColor = '#ef4444';
-                        setTimeout(() => { driverSelect.style.borderColor = '#cbd5e1'; }, 2000);
-                    }
+                    const searchBox = document.getElementById('driver-staff-search');
+                    if (searchBox) searchBox.focus();
                     return;
                 }
                 updateStepUI(2);
