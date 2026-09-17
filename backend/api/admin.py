@@ -2860,11 +2860,23 @@ class DriverScheduleForm(forms.ModelForm):
         model = DriverSchedule
         fields = '__all__'
         widgets = {
+            'driver': forms.Select(attrs={
+                'style': 'width: 100% !important; padding: 12px 16px !important; border-radius: 12px !important; border: 1.5px solid #cbd5e1 !important; font-size: 14px !important; background: #ffffff !important; box-sizing: border-box !important;',
+            }),
             'driver_phone': forms.TextInput(attrs={
                 'placeholder': 'e.g. +971 50 123 4567',
+                'style': 'width: 100% !important; padding: 12px 16px !important; border-radius: 12px !important; border: 1.5px solid #cbd5e1 !important; font-size: 14px !important; background: #ffffff !important; box-sizing: border-box !important;',
             }),
             'vehicle_info': forms.TextInput(attrs={
                 'placeholder': 'e.g. Toyota HiAce - DXB 45921',
+                'style': 'width: 100% !important; padding: 12px 16px !important; border-radius: 12px !important; border: 1.5px solid #cbd5e1 !important; font-size: 14px !important; background: #ffffff !important; box-sizing: border-box !important;',
+            }),
+            'schedule_date': forms.DateInput(attrs={
+                'type': 'date',
+                'style': 'width: 100% !important; padding: 12px 16px !important; border-radius: 12px !important; border: 1.5px solid #cbd5e1 !important; font-size: 14px !important; background: #ffffff !important; box-sizing: border-box !important;',
+            }),
+            'status': forms.Select(attrs={
+                'style': 'width: 100% !important; padding: 12px 16px !important; border-radius: 12px !important; border: 1.5px solid #cbd5e1 !important; font-size: 14px !important; background: #ffffff !important; box-sizing: border-box !important;',
             }),
         }
 

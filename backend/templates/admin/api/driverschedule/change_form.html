@@ -246,38 +246,91 @@ fieldset.module {
     margin-top: 2px !important;
 }
 
-/* Form Fields Styling for Step 1 */
+/* ==========================================================================
+   STEP 1: FULL-WIDTH RESPONSIVE MULTI-COLUMN GRID ROW DESIGN
+   ========================================================================== */
+
+#driver-section-1 fieldset.module {
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 18px !important;
+    padding: 22px 24px !important;
+    margin-bottom: 20px !important;
+}
+
 #driver-section-1 .form-row {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
-    gap: 18px !important;
-    margin-bottom: 18px !important;
-    background: #f8fafc !important;
-    padding: 18px 20px !important;
-    border-radius: 16px !important;
-    border: 1.5px solid #e2e8f0 !important;
+    gap: 20px !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    float: none !important;
+}
+
+/* Driver & Vehicle Details (3 columns) */
+#driver-section-1 .form-row:has(.field-driver) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+}
+
+/* Schedule Date & Status (2 columns) */
+#driver-section-1 .form-row:has(.field-schedule_date) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+}
+
+#driver-section-1 .fieldBox,
+#driver-section-1 .form-row > div {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    float: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+#driver-section-1 .flex-container {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    float: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 #driver-section-1 label {
-    font-size: 12.5px !important;
-    font-weight: 700 !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.04em !important;
-    color: #475569 !important;
-    margin-bottom: 6px !important;
-    display: block !important;
+    letter-spacing: 0.05em !important;
+    color: #334155 !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
 }
+
+#driver-section-1 .field-driver label:before { content: "👤 "; }
+#driver-section-1 .field-driver_phone label:before { content: "📞 "; }
+#driver-section-1 .field-vehicle_info label:before { content: "🚐 "; }
+#driver-section-1 .field-schedule_date label:before { content: "📅 "; }
+#driver-section-1 .field-status label:before { content: "🏷️ "; }
 
 #driver-section-1 input[type="text"],
 #driver-section-1 input[type="date"],
+#driver-section-1 input.vDateField,
 #driver-section-1 select {
-    background: #ffffff !important;
-    border: 1.5px solid #cbd5e1 !important;
+    width: 100% !important;
+    height: 48px !important;
     border-radius: 12px !important;
-    padding: 10px 14px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    padding: 10px 16px !important;
     font-size: 14px !important;
     color: #0f172a !important;
-    width: 100% !important;
+    background: #ffffff !important;
     box-sizing: border-box !important;
     transition: all 0.2s ease !important;
 }
@@ -287,6 +340,31 @@ fieldset.module {
     border-color: #08709d !important;
     box-shadow: 0 0 0 3.5px rgba(8, 112, 157, 0.15) !important;
     outline: none !important;
+}
+
+#driver-section-1 .help,
+#driver-section-1 .help-block,
+#driver-section-1 .help-inline {
+    font-size: 11.5px !important;
+    color: #64748b !important;
+    font-weight: 500 !important;
+    margin-top: 6px !important;
+}
+
+#driver-section-1 .datetimeshortcuts {
+    margin-top: 6px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    gap: 8px !important;
+}
+
+#driver-section-1 .datetimeshortcuts a {
+    color: #08709d !important;
+    text-decoration: none !important;
+    background: #e0f2fe !important;
+    padding: 2px 8px !important;
+    border-radius: 6px !important;
 }
 
 /* ==========================================================================
