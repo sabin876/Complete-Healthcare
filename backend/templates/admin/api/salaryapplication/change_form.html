@@ -5,64 +5,138 @@
 {{ block.super }}
 <style>
 /* ==========================================================================
-   MONTHLY SALARY SLIP STEPPER & WIZARD STYLES
+   CLEANING UP JAZZMIN / DJANGO ADMIN CHROME
    ========================================================================== */
 
-/* Make form area full width for comfortable wizard layout */
+/* Full width layout without sidebar */
 .col-12.col-lg-9 {
     flex: 0 0 100% !important;
     max-width: 100% !important;
 }
 
+/* Hide duplicate Jazzmin tab header, jazzy actions sidebar, and default submit rows */
+.card-header:has(.nav-tabs),
+.nav-tabs,
+ul.nav.nav-tabs,
+.card-header-tabs,
 #jazzy-actions,
-.col-12.col-lg-3:has(#jazzy-actions),
+.col-12.col-lg-3,
 .submit-row,
-#salary-submit-bar {
+#salary-submit-bar,
+.card-footer {
     display: none !important;
 }
 
-.salary-wizard-container {
-    width: 100%;
-    max-width: 980px;
-    margin: 0 auto 24px auto;
-    font-family: inherit;
+/* Hide redundant fieldset headers/descriptions that clutter the wizard */
+.salary-wizard-section > h2,
+.salary-wizard-section > .description,
+.salary-wizard-section .help-block,
+.salary-wizard-section .help-inline {
+    display: none !important;
 }
 
-/* Stepper Bar */
+/* Ensure form rows are full width */
+.salary-wizard-section .form-group,
+.salary-wizard-section .form-row {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.salary-wizard-section .form-group > label,
+.salary-wizard-section .form-row > label {
+    display: none !important;
+}
+
+.salary-wizard-section .col-sm-2,
+.salary-wizard-section .col-sm-3,
+.salary-wizard-section .col-sm-9,
+.salary-wizard-section .col-sm-10,
+.salary-wizard-section .col-auto,
+.salary-wizard-section .col {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+}
+
+/* ==========================================================================
+   MODERN WIZARD CONTAINER & STEPPER HEADER
+   ========================================================================== */
+
+.salary-wizard-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto 30px auto !important;
+    font-family: inherit !important;
+}
+
+/* Top Stepper Bar */
 .salary-stepper-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #ffffff;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 18px;
-    padding: 16px 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    gap: 12px;
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr auto 1fr !important;
+    align-items: center !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 16px 24px !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    gap: 16px !important;
 }
 
 .salary-step-tab {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    user-select: none;
-    transition: all 0.2s ease;
-    padding: 8px 14px;
-    border-radius: 12px;
-    border: 1.5px solid transparent;
-    flex: 1;
-    min-width: 0;
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 10px 18px !important;
+    border-radius: 14px !important;
+    border: 1.5px solid transparent !important;
+    background: #f8fafc !important;
 }
 
 .salary-step-tab:hover {
-    background: #f8fafc;
+    background: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
 }
 
 .salary-step-tab.active {
-    background: #f0f9ff;
-    border-color: #bae6fd;
+    background: #f0f9ff !important;
+    border-color: #08709d !important;
+    box-shadow: 0 4px 16px rgba(8, 112, 157, 0.12) !important;
+}
+
+.salary-step-tab.completed {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+}
+
+.salary-step-bubble {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    background: #e2e8f0 !important;
+    color: #64748b !important;
+    font-weight: 800 !important;
+    font-size: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    transition: all 0.25s ease !important;
+}
+
+.salary-step-tab.active .salary-step-bubble {
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(8, 112, 157, 0.35) !important;
+    transform: scale(1.05) !important;
 }
 
 .salary-step-tab.completed .salary-step-bubble {
@@ -71,82 +145,67 @@
     box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3) !important;
 }
 
-.salary-step-tab.active .salary-step-bubble {
-    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
-    color: #ffffff !important;
-    box-shadow: 0 4px 14px rgba(8, 112, 157, 0.35) !important;
-    transform: scale(1.05);
-}
-
-.salary-step-bubble {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #e2e8f0;
-    color: #64748b;
-    font-weight: 800;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.25s ease;
-}
-
 .salary-step-info {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
 }
 
 .salary-step-title {
-    font-weight: 800;
-    font-size: 13.5px;
-    color: #0f172a;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-weight: 800 !important;
+    font-size: 14px !important;
+    color: #0f172a !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 
 .salary-step-subtitle {
-    font-size: 11px;
-    color: #64748b;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 11.5px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 
 .salary-step-tab.active .salary-step-title {
-    color: #08709d;
+    color: #08709d !important;
+}
+
+.salary-step-tab.completed .salary-step-title {
+    color: #065f46 !important;
 }
 
 .salary-step-divider {
-    height: 2px;
-    flex: 0 0 28px;
-    background: #e2e8f0;
-    border-radius: 999px;
-    transition: background 0.2s ease;
+    height: 2px !important;
+    width: 32px !important;
+    background: #e2e8f0 !important;
+    border-radius: 999px !important;
+    transition: background 0.25s ease !important;
 }
 
 .salary-step-divider.completed {
-    background: #059669;
+    background: #059669 !important;
 }
 
-/* Step Content Sections */
+/* ==========================================================================
+   STEP CARD WRAPPERS
+   ========================================================================== */
+
 .salary-wizard-section {
     display: none !important;
 }
 
 .salary-wizard-section.active-section {
     display: block !important;
-    animation: salaryFadeIn 0.25s ease-out;
+    animation: salaryFadeIn 0.25s ease-out !important;
 }
 
 @keyframes salaryFadeIn {
     from {
         opacity: 0;
-        transform: translateY(6px);
+        transform: translateY(8px);
     }
     to {
         opacity: 1;
@@ -154,63 +213,99 @@
     }
 }
 
-/* Custom Fieldset card styling */
-fieldset.module.salary-wizard-section {
+.salary-step-card-box {
     background: #ffffff !important;
     border: 1.5px solid #e2e8f0 !important;
     border-radius: 20px !important;
-    padding: 24px !important;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.03) !important;
-    margin-bottom: 24px !important;
+    padding: 28px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
-fieldset.module.salary-wizard-section > h2 {
-    background: transparent !important;
-    color: #0f172a !important;
+.salary-step-card-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 22px !important;
+    border-bottom: 1.5px solid #f1f5f9 !important;
+    flex-wrap: wrap !important;
+}
+
+.salary-step-card-header-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.salary-step-card-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+    background: #e0f2fe !important;
+    color: #08709d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+}
+
+.salary-step-card-title {
     font-size: 17px !important;
     font-weight: 800 !important;
-    padding: 0 0 16px 0 !important;
-    margin: 0 0 18px 0 !important;
-    border-bottom: 1.5px solid #f1f5f9 !important;
+    color: #0f172a !important;
     letter-spacing: -0.01em !important;
 }
 
-/* Section Action Nav Buttons */
+.salary-step-card-desc {
+    font-size: 12.5px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    margin-top: 2px !important;
+}
+
+/* ==========================================================================
+   NAVIGATION ACTION BUTTONS
+   ========================================================================== */
+
 .salary-nav-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1.5px solid #e2e8f0;
-    flex-wrap: wrap;
-    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    margin-top: 28px !important;
+    padding-top: 22px !important;
+    border-top: 1.5px solid #e2e8f0 !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
 }
 
 .salary-btn-primary {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 8px !important;
+    gap: 10px !important;
     font-size: 14px !important;
     font-weight: 800 !important;
-    padding: 12px 28px !important;
-    border-radius: 12px !important;
+    padding: 13px 32px !important;
+    border-radius: 14px !important;
     background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
     color: #ffffff !important;
     border: none !important;
     cursor: pointer !important;
-    box-shadow: 0 4px 16px rgba(8, 112, 157, 0.3) !important;
+    box-shadow: 0 4px 18px rgba(8, 112, 157, 0.35) !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.03em !important;
+    letter-spacing: 0.04em !important;
     transition: all 0.2s ease !important;
     text-decoration: none !important;
 }
 
 .salary-btn-primary:hover {
-    transform: translateY(-1.5px) !important;
-    box-shadow: 0 6px 20px rgba(8, 112, 157, 0.4) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(8, 112, 157, 0.45) !important;
     color: #ffffff !important;
 }
 
@@ -221,9 +316,9 @@ fieldset.module.salary-wizard-section > h2 {
     gap: 8px !important;
     font-size: 13.5px !important;
     font-weight: 700 !important;
-    padding: 12px 22px !important;
-    border-radius: 12px !important;
-    background: #f1f5f9 !important;
+    padding: 12px 24px !important;
+    border-radius: 14px !important;
+    background: #f8fafc !important;
     color: #334155 !important;
     border: 1.5px solid #cbd5e1 !important;
     cursor: pointer !important;
@@ -241,15 +336,15 @@ fieldset.module.salary-wizard-section > h2 {
     align-items: center !important;
     justify-content: center !important;
     gap: 10px !important;
-    font-size: 14.5px !important;
+    font-size: 15px !important;
     font-weight: 800 !important;
-    padding: 13px 36px !important;
-    border-radius: 12px !important;
+    padding: 14px 40px !important;
+    border-radius: 14px !important;
     background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
     color: #ffffff !important;
     border: none !important;
     cursor: pointer !important;
-    box-shadow: 0 4px 18px rgba(16, 185, 129, 0.4) !important;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4) !important;
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -257,9 +352,53 @@ fieldset.module.salary-wizard-section > h2 {
 }
 
 .salary-btn-send:hover {
-    transform: translateY(-1.5px) !important;
-    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 28px rgba(16, 185, 129, 0.55) !important;
     color: #ffffff !important;
+}
+
+/* ==========================================================================
+   STEP 2 & STEP 3 CUSTOM WIDGETS
+   ========================================================================== */
+
+.salary-quick-chip {
+    padding: 7px 14px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    border-radius: 999px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    background: #f8fafc !important;
+    color: #475569 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+}
+
+.salary-quick-chip:hover {
+    border-color: #08709d !important;
+    background: #e0f2fe !important;
+    color: #08709d !important;
+}
+
+.salary-dropzone {
+    border: 2px dashed #94a3b8 !important;
+    border-radius: 16px !important;
+    padding: 32px 24px !important;
+    text-align: center !important;
+    background: #f8fafc !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+    margin-top: 10px !important;
+}
+
+.salary-dropzone:hover {
+    border-color: #08709d !important;
+    background: #f0f9ff !important;
+}
+
+.salary-dropzone i {
+    font-size: 42px !important;
+    color: #08709d !important;
+    margin-bottom: 12px !important;
 }
 
 /* Alert Toast */
@@ -270,14 +409,14 @@ fieldset.module.salary-wizard-section > h2 {
     right: 24px;
     background: #ef4444;
     color: #ffffff;
-    padding: 14px 22px;
-    border-radius: 14px;
+    padding: 16px 26px;
+    border-radius: 16px;
     font-weight: 700;
-    font-size: 13.5px;
-    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.35);
+    font-size: 14px;
+    box-shadow: 0 12px 36px rgba(239, 68, 68, 0.4);
     z-index: 999999;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     animation: salarySlideIn 0.25s ease-out;
 }
 
@@ -293,23 +432,22 @@ fieldset.module.salary-wizard-section > h2 {
 }
 
 /* Responsive */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 840px) {
     .salary-stepper-bar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-        padding: 14px;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        padding: 14px !important;
     }
     .salary-step-divider {
-        display: none;
+        display: none !important;
     }
     .salary-nav-bar {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: column !important;
+        align-items: stretch !important;
     }
     .salary-nav-bar > * {
-        width: 100%;
-        text-align: center;
+        width: 100% !important;
+        text-align: center !important;
     }
 }
 </style>
@@ -351,7 +489,7 @@ fieldset.module.salary-wizard-section > h2 {
 
 <!-- Alert Popup -->
 <div id="salary-alert-popup" class="salary-alert-popup">
-    <i class="fas fa-exclamation-circle" style="font-size: 18px;"></i>
+    <i class="fas fa-exclamation-circle" style="font-size: 20px;"></i>
     <span id="salary-alert-text">Please choose a staff member first!</span>
 </div>
 
@@ -389,6 +527,7 @@ fieldset.module.salary-wizard-section > h2 {
         let staffName = "Selected Staff";
         let staffDept = "Staff Member";
         let staffId = hiddenInput ? hiddenInput.value : "";
+        let staffPhoto = "";
 
         if (banner && bannerName && bannerName.innerText.trim()) {
             staffName = bannerName.innerText.trim();
@@ -402,9 +541,10 @@ fieldset.module.salary-wizard-section > h2 {
             staffName = selectedCard.getAttribute('data-name') || staffName;
             staffDept = selectedCard.getAttribute('data-dept') || staffDept;
             staffId = selectedCard.getAttribute('data-staff-id') || staffId;
+            staffPhoto = selectedCard.getAttribute('data-photo') || "";
         }
 
-        return { name: staffName, dept: staffDept, id: staffId };
+        return { name: staffName, dept: staffDept, id: staffId, photo: staffPhoto };
     }
 
     function updateStepUI(stepNumber) {
@@ -420,7 +560,7 @@ fieldset.module.salary-wizard-section > h2 {
                 tab.classList.remove('active', 'completed');
                 if (i < currentStep) {
                     tab.classList.add('completed');
-                    bubble.innerHTML = '<i class="fas fa-check" style="font-size: 13px;"></i>';
+                    bubble.innerHTML = '<i class="fas fa-check" style="font-size: 14px;"></i>';
                 } else if (i === currentStep) {
                     tab.classList.add('active');
                     bubble.textContent = i;
@@ -449,22 +589,32 @@ fieldset.module.salary-wizard-section > h2 {
 
         // Update preview in Step 2 & 3
         const staffInfo = getSelectedStaffInfo();
+        const initials = staffInfo.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || 'ST';
+        const photoHtml = staffInfo.photo
+            ? `<img src="${staffInfo.photo}" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 2.5px solid #059669;" />`
+            : `<div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(5,150,105,0.2);">${initials}</div>`;
+
         const step2Badge = document.getElementById('salary-step2-staff-badge');
         if (step2Badge) {
             step2Badge.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #ecfdf5; border: 2px solid #059669; border-radius: 14px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(5,150,105,0.08);">
-                    <div style="width: 34px; height: 34px; border-radius: 10px; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">
-                        <i class="fas fa-user-check"></i>
-                    </div>
+                <div style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: #f0fdf4; border: 2px solid #059669; border-radius: 16px; margin-bottom: 22px; box-shadow: 0 4px 16px rgba(5,150,105,0.08);">
+                    ${photoHtml}
                     <div style="flex: 1; min-width: 0;">
-                        <div style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.05em;">Selected Staff Recipient</div>
-                        <div style="font-size: 14.5px; font-weight: 800; color: #0f172a; margin-top: 1px;">
-                            ${staffInfo.name} <span style="font-size: 11.5px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 2px 7px; border-radius: 6px; margin-left: 4px;">ID: ${staffInfo.id}</span>
+                        <div style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.06em;">✓ Selected Staff Member</div>
+                        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">
+                            ${staffInfo.name} <span style="font-size: 12px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 2px 9px; border-radius: 8px; margin-left: 6px;">ID: ${staffInfo.id}</span>
                         </div>
-                        <div style="font-size: 12px; color: #475569; font-weight: 600; margin-top: 2px;">${staffInfo.dept}</div>
+                        <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 2px;">${staffInfo.dept}</div>
                     </div>
+                    <button type="button" id="salary-step2-change-staff-btn" style="padding: 8px 16px; font-size: 12.5px; font-weight: 700; border-radius: 10px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #08709d; cursor: pointer; transition: all 0.15s ease;">
+                        <i class="fas fa-edit"></i> Change
+                    </button>
                 </div>
             `;
+            const changeBtn = document.getElementById('salary-step2-change-staff-btn');
+            if (changeBtn) {
+                changeBtn.addEventListener('click', () => updateStepUI(1));
+            }
         }
 
         const step3Summary = document.getElementById('salary-step3-summary-box');
@@ -473,20 +623,23 @@ fieldset.module.salary-wizard-section > h2 {
 
         if (step3Summary) {
             step3Summary.innerHTML = `
-                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 18px 20px; margin-bottom: 22px;">
-                    <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #08709d; letter-spacing: 0.05em; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 20px 24px; margin-bottom: 24px;">
+                    <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #08709d; letter-spacing: 0.05em; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-clipboard-check"></i> Monthly Salary Slip Details Summary
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
-                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px;">
-                            <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Recipient Staff:</div>
-                            <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 4px;">${staffInfo.name}</div>
-                            <div style="font-size: 12px; color: #08709d; font-weight: 700; margin-top: 2px;">ID: ${staffInfo.id}</div>
-                            <div style="font-size: 12px; color: #475569; font-weight: 600; margin-top: 2px;">${staffInfo.dept}</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+                        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px; display: flex; align-items: center; gap: 14px;">
+                            ${photoHtml}
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Employee Recipient:</div>
+                                <div style="font-size: 15px; font-weight: 800; color: #0f172a; margin-top: 2px;">${staffInfo.name}</div>
+                                <div style="font-size: 12px; color: #08709d; font-weight: 700; margin-top: 1px;">ID: ${staffInfo.id}</div>
+                                <div style="font-size: 12px; color: #475569; font-weight: 600;">${staffInfo.dept}</div>
+                            </div>
                         </div>
-                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px;">
+                        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px;">
                             <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Description / Notes:</div>
-                            <div style="font-size: 13px; color: #334155; font-weight: 600; margin-top: 4px; line-height: 1.5; word-break: break-word;">${descVal}</div>
+                            <div style="font-size: 13.5px; color: #334155; font-weight: 600; margin-top: 6px; line-height: 1.5; word-break: break-word;">${descVal}</div>
                         </div>
                     </div>
                 </div>
@@ -518,17 +671,35 @@ fieldset.module.salary-wizard-section > h2 {
         if (!container1 || !container2 || !container3) return;
 
         container1.id = 'salary-section-1';
-        container1.classList.add('salary-wizard-section');
+        container1.className = 'salary-wizard-section salary-step-card-box';
 
         container2.id = 'salary-section-2';
-        container2.classList.add('salary-wizard-section');
+        container2.className = 'salary-wizard-section salary-step-card-box';
 
         container3.id = 'salary-section-3';
-        container3.classList.add('salary-wizard-section');
+        container3.className = 'salary-wizard-section salary-step-card-box';
 
         const cancelUrl = window.location.pathname.replace(/\/add\/?.*$/, '/').replace(/\/\d+\/change\/?.*$/, '/');
 
-        // 1. Navigation for Section 1 (Choose Staff)
+        // 1. Setup Section 1 Header & Navigation
+        if (!document.getElementById('salary-step1-header')) {
+            const h1 = document.createElement('div');
+            h1.id = 'salary-step1-header';
+            h1.className = 'salary-step-card-header';
+            h1.innerHTML = `
+                <div class="salary-step-card-header-left">
+                    <div class="salary-step-card-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div>
+                        <div class="salary-step-card-title">Step 1: Choose Staff Member</div>
+                        <div class="salary-step-card-desc">Select the employee who will receive this Monthly Salary Slip.</div>
+                    </div>
+                </div>
+            `;
+            container1.insertBefore(h1, container1.firstChild);
+        }
+
         if (!document.getElementById('salary-nav-1')) {
             const nav1 = document.createElement('div');
             nav1.id = 'salary-nav-1';
@@ -538,7 +709,7 @@ fieldset.module.salary-wizard-section > h2 {
                     <i class="fas fa-times"></i> Cancel
                 </a>
                 <button type="button" id="salary-next-to-2" class="salary-btn-primary">
-                    <span>Next: Description / Note</span> <i class="fas fa-arrow-right"></i>
+                    <span>Next: Description & Notes</span> <i class="fas fa-arrow-right"></i>
                 </button>
             `;
             container1.appendChild(nav1);
@@ -546,7 +717,7 @@ fieldset.module.salary-wizard-section > h2 {
             document.getElementById('salary-next-to-2').addEventListener('click', function(e) {
                 e.preventDefault();
                 if (!isStaffSelected()) {
-                    showAlert('⚠️ Please choose a staff member first before proceeding!');
+                    showAlert('⚠️ Please select a staff member first before proceeding!');
                     const searchInput = document.getElementById('salary-staff-search');
                     if (searchInput) {
                         searchInput.focus();
@@ -559,11 +730,61 @@ fieldset.module.salary-wizard-section > h2 {
             });
         }
 
-        // 2. Staff Info & Navigation for Section 2 (Description / Note)
+        // 2. Setup Section 2 Header, Quick Chips & Navigation
+        if (!document.getElementById('salary-step2-header')) {
+            const h2 = document.createElement('div');
+            h2.id = 'salary-step2-header';
+            h2.className = 'salary-step-card-header';
+            h2.innerHTML = `
+                <div class="salary-step-card-header-left">
+                    <div class="salary-step-card-icon">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <div>
+                        <div class="salary-step-card-title">Step 2: Description & Remarks</div>
+                        <div class="salary-step-card-desc">Enter details, month period notes, or WPS transfer reference.</div>
+                    </div>
+                </div>
+            `;
+            container2.insertBefore(h2, container2.firstChild);
+        }
+
         if (!document.getElementById('salary-step2-staff-badge')) {
             const badge2 = document.createElement('div');
             badge2.id = 'salary-step2-staff-badge';
-            container2.insertBefore(badge2, container2.firstChild);
+            container2.insertBefore(badge2, container2.children[1]);
+        }
+
+        // Quick Preset Chips for Description
+        if (!document.getElementById('salary-step2-presets')) {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const curDate = new Date();
+            const curMonth = monthNames[curDate.getMonth()];
+            const curYear = curDate.getFullYear();
+            const prevMonth = monthNames[(curDate.getMonth() - 1 + 12) % 12];
+
+            const presets = document.createElement('div');
+            presets.id = 'salary-step2-presets';
+            presets.style.cssText = 'display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;';
+            presets.innerHTML = `
+                <span style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">Quick Presets:</span>
+                <button type="button" class="salary-quick-chip" data-text="Salary Slip for ${curMonth} ${curYear} - Processed via WPS">${curMonth} ${curYear} Salary (WPS)</button>
+                <button type="button" class="salary-quick-chip" data-text="Salary Slip for ${prevMonth} ${curYear} - Transferred">${prevMonth} ${curYear} Salary</button>
+                <button type="button" class="salary-quick-chip" data-text="Monthly Salary & Overtime Allowance for ${curMonth} ${curYear}">Salary + Overtime</button>
+                <button type="button" class="salary-quick-chip" data-text="Salary Advance / Settlement for ${curMonth} ${curYear}">Advance / Settlement</button>
+            `;
+            container2.insertBefore(presets, descField);
+
+            presets.querySelectorAll('.salary-quick-chip').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const text = this.getAttribute('data-text');
+                    const descTextarea = document.getElementById('id_description');
+                    if (descTextarea) {
+                        descTextarea.value = text;
+                        descTextarea.focus();
+                    }
+                });
+            });
         }
 
         if (!document.getElementById('salary-nav-2')) {
@@ -596,11 +817,29 @@ fieldset.module.salary-wizard-section > h2 {
             });
         }
 
-        // 3. Summary & Send Details Navigation for Section 3 (Upload Slip & Send)
+        // 3. Setup Section 3 Header, Summary & Send Navigation
+        if (!document.getElementById('salary-step3-header')) {
+            const h3 = document.createElement('div');
+            h3.id = 'salary-step3-header';
+            h3.className = 'salary-step-card-header';
+            h3.innerHTML = `
+                <div class="salary-step-card-header-left">
+                    <div class="salary-step-card-icon" style="background: #ecfdf5; color: #059669;">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <div>
+                        <div class="salary-step-card-title">Step 3: Upload Slip & Send Details</div>
+                        <div class="salary-step-card-desc">Attach the official salary slip document and submit to employee.</div>
+                    </div>
+                </div>
+            `;
+            container3.insertBefore(h3, container3.firstChild);
+        }
+
         if (!document.getElementById('salary-step3-summary-box')) {
             const sumBox = document.createElement('div');
             sumBox.id = 'salary-step3-summary-box';
-            container3.insertBefore(sumBox, container3.firstChild);
+            container3.insertBefore(sumBox, container3.children[1]);
         }
 
         if (!document.getElementById('salary-nav-3')) {
@@ -616,7 +855,7 @@ fieldset.module.salary-wizard-section > h2 {
                         <i class="fas fa-times"></i> Cancel
                     </a>
                     <button type="submit" name="_save" class="salary-btn-send" id="salary-btn-submit-final">
-                        <i class="fas fa-paper-plane" style="font-size: 15px;"></i>
+                        <i class="fas fa-paper-plane" style="font-size: 16px;"></i>
                         <span>Send Monthly Salary Slip to Staff</span>
                     </button>
                 </div>
