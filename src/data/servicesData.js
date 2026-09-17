@@ -546,10 +546,49 @@ export const servicesData = {
         a: "Yes. If your doctor has prescribed bronchodilator or steroid medications via a nebulizer for asthma, COPD, or bronchitis, our nurse can set up and administer the treatment during their visit."
       }
     ]
+  },
+  'physiotherapy': {
+    title: "Physiotherapy At Home In Dubai",
+    eyebrow: "DHA-licensed physical therapy at your doorstep",
+    tagline: "Restore mobility, eliminate pain, and accelerate your recovery at home.",
+    description: "Recovering from surgery, sports injuries, joint pain, or stroke? Our DHA-licensed physiotherapists bring personalized rehabilitation, manual therapy, and mobility exercises directly to your home across Dubai. Skip clinic visits and recover comfortably in your own living room.",
+    icon: "Activity",
+    themeColor: "#08709d",
+    floatingBadge: {
+      title: "Personalized Home Physiotherapy",
+      desc: "Expert physical therapy designed for fast, safe recovery."
+    },
+    benefits: [
+      { title: "DHA-Licensed Therapists", desc: "Certified physiotherapists with specialized clinical expertise" },
+      { title: "Custom Rehab Plans", desc: "Targeted exercise routines tailored to your specific condition" },
+      { title: "Zero Travel Stress", desc: "Treatment delivered in the comfort and privacy of your home" },
+      { title: "Flexible Scheduling", desc: "Available 7 days a week across all areas of Dubai" }
+    ],
+    faqs: [
+      {
+        q: "What conditions can be treated with home physiotherapy?",
+        a: "Our home physiotherapists treat post-operative orthopedic cases (knee/hip replacement, ACL surgery), back and neck pain, sciatica, sports injuries, neurological conditions (stroke, Parkinson's), arthritis, and geriatric mobility issues."
+      },
+      {
+        q: "Do your physiotherapists bring necessary equipment to my home?",
+        a: "Yes. Our therapists bring portable rehabilitation equipment including resistance bands, TENS machines, weights, mobilization tools, and therapeutic devices needed for your session."
+      },
+      {
+        q: "How long is a typical home physiotherapy session?",
+        a: "Each session typically lasts 45 to 60 minutes, comprising assessment, hands-on manual therapy, guided therapeutic exercise, and posture advice."
+      },
+      {
+        q: "Are your physiotherapists DHA-licensed in Dubai?",
+        a: "Yes, all our physiotherapists hold active licenses from the Dubai Health Authority (DHA) and have extensive clinical experience in physical rehabilitation."
+      }
+    ]
   }
 };
 
 // Specialized Physiotherapy Sub-services
+servicesData['physiotherapy-at-home-in-dubai'] = servicesData['physiotherapy'];
+servicesData['physiotherapy-services'] = servicesData['physiotherapy'];
+servicesData['Physiotherapy-Services'] = servicesData['physiotherapy'];
 servicesData['geriatric-physiotherapy'] = {
   ...servicesData['physiotherapy'],
   title: "Geriatric Physiotherapy at Home",

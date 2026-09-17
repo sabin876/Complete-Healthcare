@@ -1,7 +1,10 @@
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { matchRouteAndLoadSEO } from '../src/utils/ssrSEO.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(__dirname, '..');
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -21,21 +24,10 @@ function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo
 
   // Clean existing metadata tags from template to prevent duplicates
   html = html
-    .replace(/<title>[\s\S]*?<\/title>/gi, '')
-    .replace(/<meta\s+name=["']description["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:title["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:description["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:url["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:image["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:type["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:site_name["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+(?:name|property)=["']twitter:title["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+(?:name|property)=["']twitter:description["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+(?:name|property)=["']twitter:image["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+(?:name|property)=["']twitter:card["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+name=["']robots["'][\s\S]*?>/gi, '')
-    .replace(/<link\s+rel=["']canonical["'][\s\S]*?>/gi, '')
-    .replace(/<script\s+type=["']application\/ld\+json["'][\s\S]*?<\/script>/gi, '');
+    .replace(/<title\b[^>]*>[\s\S]*?<\/title>/gi, '')
+    .replace(/<meta\b[^>]*?\b(?:name|property)=["'](?:description|og:[^"']+|twitter:[^"']+|robots)["'][^>]*\/?>/gi, '')
+    .replace(/<link\b[^>]*?\brel=["']canonical["'][^>]*\/?>/gi, '')
+    .replace(/<script\b[^>]*?\btype=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi, '');
 
   const activeTitle = seo?.title || 'CORX Healthcare: Home Health Care Services in Dubai *24/7';
   const activeDesc = seo?.description || 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.';
@@ -82,6 +74,10 @@ function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo
 async function runTests() {
   console.log('=== Starting Comprehensive SSR & SEO Metadata Tests ===\n');
 
+  const template = await fs.readFile(path.resolve(rootDir, 'dist/index.html'), 'utf-8');
+  const entryServerUrl = pathToFileURL(path.resolve(rootDir, 'dist/entry-server.js')).href;
+  const { render } = await import(entryServerUrl);
+
   let passed = 0;
   let failed = 0;
 
@@ -91,98 +87,163 @@ async function runTests() {
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/',
       titleKeyword: 'CORX Healthcare',
+      contentCheck: 'Without Leaving Your Home',
     },
     {
       path: '/about-us',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/about-us',
       titleKeyword: 'About Us',
+      contentCheck: 'About Us',
     },
     {
       path: '/contact-us',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/contact-us',
       titleKeyword: 'Book an Appointment',
+      contentCheck: 'GET IN TOUCH',
+    },
+    {
+      path: '/book-an-appointment',
+      expectedStatus: 200,
+      expectedCanonical: 'https://corx.ae/book-an-appointment',
+      titleKeyword: 'Book an Appointment',
+      contentCheck: 'GET IN TOUCH',
     },
     {
       path: '/team',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/team',
       titleKeyword: 'Our Medical Team',
+      contentCheck: 'Our Medical Team',
     },
     {
       path: '/career',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/career',
       titleKeyword: 'Careers',
+      contentCheck: 'Why Join CORx Healthcare?',
     },
     {
       path: '/privacy-policy',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/privacy-policy',
       titleKeyword: 'Privacy Policy',
+      contentCheck: 'Privacy Policy',
     },
     {
       path: '/sitemap',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/sitemap',
       titleKeyword: 'Sitemap',
+      contentCheck: 'CORx Site Map',
     },
     {
       path: '/social-media',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/social-media',
       titleKeyword: 'Social Media',
+      contentCheck: 'CORx Healthcare Dubai',
     },
     {
       path: '/services',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/services',
       titleKeyword: 'Home Healthcare Services',
+      contentCheck: 'Our Home Healthcare Services in Dubai',
     },
     {
       path: '/lab-test-at-home',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/lab-test-at-home',
       titleKeyword: 'Dubai',
+      contentCheck: 'Lab Test',
     },
     {
       path: '/doctor-on-call',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/doctor-on-call',
       titleKeyword: 'Dubai',
+      contentCheck: 'Doctor',
+    },
+    {
+      path: '/home-nursing',
+      expectedStatus: 200,
+      expectedCanonical: 'https://corx.ae/home-nursing',
+      titleKeyword: 'Dubai',
+      contentCheck: 'Nursing',
+    },
+    {
+      path: '/elderly-home-care',
+      expectedStatus: 200,
+      expectedCanonical: 'https://corx.ae/elderly-home-care',
+      titleKeyword: 'Dubai',
+      contentCheck: 'Elderly',
+    },
+    {
+      path: '/iv-therapy',
+      expectedStatus: 200,
+      expectedCanonical: 'https://corx.ae/iv-therapy',
+      titleKeyword: 'Dubai',
+      contentCheck: 'IV',
+    },
+    {
+      path: '/physiotherapy-at-home-in-dubai',
+      expectedStatus: 200,
+      expectedCanonical: 'https://corx.ae/physiotherapy-at-home-in-dubai',
+      titleKeyword: 'Dubai',
+      contentCheck: 'Physiotherapy',
     },
     {
       path: '/blog',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/blog',
       titleKeyword: 'Blog',
+      contentCheck: 'Medical Articles',
     },
     {
       path: '/blog/advantages-of-stem-cells-regenerative-medicine',
       expectedStatus: 200,
       expectedCanonical: 'https://corx.ae/blog/advantages-of-stem-cells-regenerative-medicine',
       titleKeyword: 'Stem Cells',
+      contentCheck: 'Advantages of Stem Cells: Regenerative Medicine',
+    },
+    {
+      path: '/blog/what-is-physiotherapy-comprehensive-guide',
+      expectedStatus: 200,
+      expectedCanonical: 'https://corx.ae/blog/what-is-physiotherapy-comprehensive-guide',
+      titleKeyword: 'Physiotherapy',
+      contentCheck: 'WHAT IS PHYSIOTHERAPY?',
+    },
+    {
+      path: '/blog/burnout-in-working-professionals-signs-solutions',
+      expectedStatus: 200,
+      expectedCanonical: 'https://corx.ae/blog/burnout-in-working-professionals-signs-solutions',
+      titleKeyword: 'Burnout',
+      contentCheck: 'Burnout in Working Professionals',
+    },
+    {
+      path: '/blog/doctor-at-home-vs-hospital-visit',
+      expectedStatus: 200,
+      expectedCanonical: 'https://corx.ae/blog/doctor-at-home-vs-hospital-visit',
+      titleKeyword: 'Doctor',
+      contentCheck: 'Doctor at Home vs Hospital Visit',
+    },
+    {
+      path: '/blog/managing-chronic-conditions-with-home-healthcare',
+      expectedStatus: 200,
+      expectedCanonical: 'https://corx.ae/blog/managing-chronic-conditions-with-home-healthcare',
+      titleKeyword: 'Chronic',
+      contentCheck: 'Managing Chronic Conditions',
     },
     {
       path: '/unknown-route-test-404',
       expectedStatus: 404,
       expectedCanonical: 'https://corx.ae/404',
       titleKeyword: '404',
+      contentCheck: 'Page Not Found',
     },
   ];
-
-  const htmlTemplate = `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>CORX Healthcare: Home Health Care Services in Dubai *24/7</title>
-    <meta name="description" content="Old desc" />
-  </head>
-  <body>
-    <div id="root"><!--ssr-outlet--></div>
-  </body>
-</html>`;
 
   for (const t of testRoutes) {
     const routeRes = await matchRouteAndLoadSEO(t.path, 'http://localhost:8000');
@@ -214,27 +275,55 @@ async function runTests() {
       failed++;
     }
 
+    // 2. Perform Real React SSR render
+    const rendered = await render(t.path, routeRes.initialData);
+
     // Test HTML injection for duplicates
-    const finalHtml = injectMetaAndInitialData(htmlTemplate, {
-      renderedHtml: `<div>Content for ${t.path}</div>`,
+    const finalHtml = injectMetaAndInitialData(template, {
+      renderedHtml: rendered.html,
       initialData: routeRes.initialData,
       seo: routeRes.seo,
     });
 
-    const titleMatches = (finalHtml.match(/<title>/gi) || []).length;
-    const descMatches = (finalHtml.match(/<meta\s+name=["']description["']/gi) || []).length;
-    const canonicalMatches = (finalHtml.match(/<link\s+rel=["']canonical["']/gi) || []).length;
-    const ogTitleMatches = (finalHtml.match(/<meta\s+property=["']og:title["']/gi) || []).length;
-    const twitterCardMatches = (finalHtml.match(/<meta\s+name=["']twitter:card["']/gi) || []).length;
+    // Verify rendered content
+    if (finalHtml.includes(t.contentCheck)) {
+      console.log(`[PASS] ${t.path} -> SSR content verified: "${t.contentCheck}"`);
+      passed++;
+    } else {
+      console.error(`[FAIL] ${t.path} -> SSR content missing "${t.contentCheck}" in rendered HTML`);
+      failed++;
+    }
+
+    const titleMatches = (finalHtml.match(/<title\b/gi) || []).length;
+    const descMatches = (finalHtml.match(/<meta\b[^>]*?\bname=["']description["']/gi) || []).length;
+    const canonicalMatches = (finalHtml.match(/<link\b[^>]*?\brel=["']canonical["']/gi) || []).length;
+    const ogTitleMatches = (finalHtml.match(/<meta\b[^>]*?\bproperty=["']og:title["']/gi) || []).length;
+    const ogDescMatches = (finalHtml.match(/<meta\b[^>]*?\bproperty=["']og:description["']/gi) || []).length;
+    const ogUrlMatches = (finalHtml.match(/<meta\b[^>]*?\bproperty=["']og:url["']/gi) || []).length;
+    const ogImageMatches = (finalHtml.match(/<meta\b[^>]*?\bproperty=["']og:image["']/gi) || []).length;
+    const ogTypeMatches = (finalHtml.match(/<meta\b[^>]*?\bproperty=["']og:type["']/gi) || []).length;
+    const ogSiteMatches = (finalHtml.match(/<meta\b[^>]*?\bproperty=["']og:site_name["']/gi) || []).length;
+    const twitterCardMatches = (finalHtml.match(/<meta\b[^>]*?\bname=["']twitter:card["']/gi) || []).length;
+    const twitterTitleMatches = (finalHtml.match(/<meta\b[^>]*?\bname=["']twitter:title["']/gi) || []).length;
+    const twitterDescMatches = (finalHtml.match(/<meta\b[^>]*?\bname=["']twitter:description["']/gi) || []).length;
+    const twitterImageMatches = (finalHtml.match(/<meta\b[^>]*?\bname=["']twitter:image["']/gi) || []).length;
 
     if (
       titleMatches === 1 &&
       descMatches === 1 &&
       canonicalMatches === 1 &&
       ogTitleMatches === 1 &&
-      twitterCardMatches === 1
+      ogDescMatches === 1 &&
+      ogUrlMatches === 1 &&
+      ogImageMatches === 1 &&
+      ogTypeMatches === 1 &&
+      ogSiteMatches === 1 &&
+      twitterCardMatches === 1 &&
+      twitterTitleMatches === 1 &&
+      twitterDescMatches === 1 &&
+      twitterImageMatches === 1
     ) {
-      console.log(`[PASS] ${t.path} -> No duplicate meta tags (title: 1, desc: 1, canonical: 1, og:title: 1, twitter:card: 1)`);
+      console.log(`[PASS] ${t.path} -> ZERO duplicate meta tags (all tags count = 1)`);
       passed++;
     } else {
       console.error(`[FAIL] ${t.path} -> Duplicate tags detected in HTML! title: ${titleMatches}, desc: ${descMatches}, canonical: ${canonicalMatches}`);

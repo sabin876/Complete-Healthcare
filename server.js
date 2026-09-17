@@ -26,23 +26,12 @@ function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo
   const serialized = initialData ? JSON.stringify(initialData).replace(/</g, '\\u003c') : 'null';
   const hydrationScript = `<script>window.__INITIAL_DATA__ = ${serialized};</script>`;
 
-  // 2. Clean existing metadata tags from template to prevent duplicates
+  // 2. Clean existing metadata tags from template to prevent duplicates (regardless of attribute ordering or format)
   html = html
-    .replace(/<title>[\s\S]*?<\/title>/gi, '')
-    .replace(/<meta\s+name=["']description["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:title["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:description["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:url["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:image["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:type["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+property=["']og:site_name["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+(?:name|property)=["']twitter:title["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+(?:name|property)=["']twitter:description["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+(?:name|property)=["']twitter:image["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+(?:name|property)=["']twitter:card["'][\s\S]*?>/gi, '')
-    .replace(/<meta\s+name=["']robots["'][\s\S]*?>/gi, '')
-    .replace(/<link\s+rel=["']canonical["'][\s\S]*?>/gi, '')
-    .replace(/<script\s+type=["']application\/ld\+json["'][\s\S]*?<\/script>/gi, '');
+    .replace(/<title\b[^>]*>[\s\S]*?<\/title>/gi, '')
+    .replace(/<meta\b[^>]*?\b(?:name|property)=["'](?:description|og:[^"']+|twitter:[^"']+|robots)["'][^>]*\/?>/gi, '')
+    .replace(/<link\b[^>]*?\brel=["']canonical["'][^>]*\/?>/gi, '')
+    .replace(/<script\b[^>]*?\btype=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi, '');
 
   const activeTitle = seo?.title || 'CORX Healthcare: Home Health Care Services in Dubai *24/7';
   const activeDesc = seo?.description || 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.';
