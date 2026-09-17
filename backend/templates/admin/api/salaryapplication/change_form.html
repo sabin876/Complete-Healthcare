@@ -27,12 +27,20 @@ ul.nav.nav-tabs,
     display: none !important;
 }
 
-/* Hide redundant fieldset headers/descriptions that clutter the wizard */
-.salary-wizard-section > h2,
-.salary-wizard-section > .description,
-.salary-wizard-section .help-block,
-.salary-wizard-section .help-inline {
+/* Hide redundant fieldset headers/descriptions from inside the cards */
+fieldset.module > h2,
+fieldset.module > .description,
+.salary-wizard-section fieldset.module > h2,
+.salary-wizard-section fieldset.module > .description {
     display: none !important;
+}
+
+fieldset.module {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 /* Ensure form rows are full width */
@@ -46,9 +54,18 @@ ul.nav.nav-tabs,
     background: transparent !important;
 }
 
-.salary-wizard-section .form-group > label,
-.salary-wizard-section .form-row > label {
+.salary-wizard-section .field-staff label,
+.salary-wizard-section .field-staff .control-label {
     display: none !important;
+}
+
+.salary-wizard-section .field-description label,
+.salary-wizard-section .field-image label {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: #334155 !important;
+    margin-bottom: 8px !important;
+    display: block !important;
 }
 
 .salary-wizard-section .col-sm-2,
@@ -70,7 +87,7 @@ ul.nav.nav-tabs,
 .salary-wizard-container {
     width: 100% !important;
     max-width: 100% !important;
-    margin: 0 auto 30px auto !important;
+    margin: 0 0 24px 0 !important;
     font-family: inherit !important;
 }
 
@@ -194,7 +211,7 @@ ul.nav.nav-tabs,
    ========================================================================== */
 
 .salary-wizard-section {
-    display: none !important;
+    display: none;
 }
 
 .salary-wizard-section.active-section {
@@ -221,6 +238,7 @@ ul.nav.nav-tabs,
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    margin-bottom: 24px !important;
 }
 
 .salary-step-card-header {
@@ -357,10 +375,7 @@ ul.nav.nav-tabs,
     color: #ffffff !important;
 }
 
-/* ==========================================================================
-   STEP 2 & STEP 3 CUSTOM WIDGETS
-   ========================================================================== */
-
+/* Quick Chips */
 .salary-quick-chip {
     padding: 7px 14px !important;
     font-size: 12.5px !important;
@@ -377,28 +392,6 @@ ul.nav.nav-tabs,
     border-color: #08709d !important;
     background: #e0f2fe !important;
     color: #08709d !important;
-}
-
-.salary-dropzone {
-    border: 2px dashed #94a3b8 !important;
-    border-radius: 16px !important;
-    padding: 32px 24px !important;
-    text-align: center !important;
-    background: #f8fafc !important;
-    transition: all 0.2s ease !important;
-    cursor: pointer !important;
-    margin-top: 10px !important;
-}
-
-.salary-dropzone:hover {
-    border-color: #08709d !important;
-    background: #f0f9ff !important;
-}
-
-.salary-dropzone i {
-    font-size: 42px !important;
-    color: #08709d !important;
-    margin-bottom: 12px !important;
 }
 
 /* Alert Toast */
@@ -453,47 +446,160 @@ ul.nav.nav-tabs,
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="salary-wizard-container">
+{% block field_sets %}
+<div class="col-12" style="padding: 0 !important;">
     <!-- Top Stepper Navigation -->
-    <div class="salary-stepper-bar" id="salary-stepper-bar">
-        <div class="salary-step-tab active" data-step="1" id="salary-tab-1">
-            <div class="salary-step-bubble" id="salary-bubble-1">1</div>
-            <div class="salary-step-info">
-                <div class="salary-step-title">1. Choose Staff</div>
-                <div class="salary-step-subtitle">Select Employee</div>
+    <div class="salary-wizard-container">
+        <div class="salary-stepper-bar" id="salary-stepper-bar">
+            <div class="salary-step-tab active" data-step="1" id="salary-tab-1">
+                <div class="salary-step-bubble" id="salary-bubble-1">1</div>
+                <div class="salary-step-info">
+                    <div class="salary-step-title">1. Choose Staff</div>
+                    <div class="salary-step-subtitle">Select Employee</div>
+                </div>
+            </div>
+
+            <div class="salary-step-divider" id="salary-divider-1"></div>
+
+            <div class="salary-step-tab" data-step="2" id="salary-tab-2">
+                <div class="salary-step-bubble" id="salary-bubble-2">2</div>
+                <div class="salary-step-info">
+                    <div class="salary-step-title">2. Description / Note</div>
+                    <div class="salary-step-subtitle">Salary Period & Remarks</div>
+                </div>
+            </div>
+
+            <div class="salary-step-divider" id="salary-divider-2"></div>
+
+            <div class="salary-step-tab" data-step="3" id="salary-tab-3">
+                <div class="salary-step-bubble" id="salary-bubble-3">3</div>
+                <div class="salary-step-info">
+                    <div class="salary-step-title">3. Upload Slip & Send</div>
+                    <div class="salary-step-subtitle">Attach & Finalize</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Popup -->
+    <div id="salary-alert-popup" class="salary-alert-popup">
+        <i class="fas fa-exclamation-circle" style="font-size: 20px;"></i>
+        <span id="salary-alert-text">Please choose a staff member first!</span>
+    </div>
+
+    <!-- STEP 1: CHOOSE STAFF MEMBER -->
+    <div id="salary-section-1" class="salary-wizard-section salary-step-card-box active-section">
+        <div class="salary-step-card-header">
+            <div class="salary-step-card-header-left">
+                <div class="salary-step-card-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div>
+                    <div class="salary-step-card-title">Step 1: Choose Staff Member</div>
+                    <div class="salary-step-card-desc">Select the employee who will receive this Monthly Salary Slip.</div>
+                </div>
             </div>
         </div>
 
-        <div class="salary-step-divider" id="salary-divider-1"></div>
+        {% for fieldset in adminform %}
+            {% if forloop.counter == 1 %}
+                {% include "admin/includes/fieldset.html" %}
+            {% endif %}
+        {% endfor %}
 
-        <div class="salary-step-tab" data-step="2" id="salary-tab-2">
-            <div class="salary-step-bubble" id="salary-bubble-2">2</div>
-            <div class="salary-step-info">
-                <div class="salary-step-title">2. Description / Note</div>
-                <div class="salary-step-subtitle">Salary Period & Remarks</div>
+        <div class="salary-nav-bar">
+            <a href="{% url opts|admin_urlname:'changelist' %}" class="salary-btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+            <button type="button" id="salary-next-to-2" class="salary-btn-primary">
+                <span>Next: Description & Notes</span> <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 2: DESCRIPTION & REMARKS -->
+    <div id="salary-section-2" class="salary-wizard-section salary-step-card-box">
+        <div class="salary-step-card-header">
+            <div class="salary-step-card-header-left">
+                <div class="salary-step-card-icon">
+                    <i class="fas fa-pencil-alt"></i>
+                </div>
+                <div>
+                    <div class="salary-step-card-title">Step 2: Description & Remarks</div>
+                    <div class="salary-step-card-desc">Enter details, month period notes, or WPS transfer reference.</div>
+                </div>
             </div>
         </div>
 
-        <div class="salary-step-divider" id="salary-divider-2"></div>
+        <div id="salary-step2-staff-badge"></div>
 
-        <div class="salary-step-tab" data-step="3" id="salary-tab-3">
-            <div class="salary-step-bubble" id="salary-bubble-3">3</div>
-            <div class="salary-step-info">
-                <div class="salary-step-title">3. Upload Slip & Send</div>
-                <div class="salary-step-subtitle">Attach & Finalize</div>
+        <div id="salary-step2-presets" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+            <span style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">Quick Presets:</span>
+            <button type="button" class="salary-quick-chip" data-text="Salary Slip - Processed & Transferred via WPS">WPS Salary Transfer</button>
+            <button type="button" class="salary-quick-chip" data-text="Monthly Salary & Overtime Allowance">Salary + Overtime</button>
+            <button type="button" class="salary-quick-chip" data-text="Salary Advance / Final Settlement">Advance / Settlement</button>
+            <button type="button" class="salary-quick-chip" data-text="Performance Bonus & Incentive">Bonus / Incentive</button>
+        </div>
+
+        {% for fieldset in adminform %}
+            {% if forloop.counter == 2 %}
+                {% include "admin/includes/fieldset.html" %}
+            {% endif %}
+        {% endfor %}
+
+        <div class="salary-nav-bar">
+            <button type="button" id="salary-back-to-1" class="salary-btn-secondary">
+                <i class="fas fa-arrow-left"></i> <span>Back: Choose Staff</span>
+            </button>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="salary-btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="button" id="salary-next-to-3" class="salary-btn-primary">
+                    <span>Next: Upload Slip</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 3: UPLOAD SLIP & SEND DETAILS -->
+    <div id="salary-section-3" class="salary-wizard-section salary-step-card-box">
+        <div class="salary-step-card-header">
+            <div class="salary-step-card-header-left">
+                <div class="salary-step-card-icon" style="background: #ecfdf5; color: #059669;">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <div>
+                    <div class="salary-step-card-title">Step 3: Upload Slip & Send Details</div>
+                    <div class="salary-step-card-desc">Attach the official salary slip document and submit to employee.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="salary-step3-summary-box"></div>
+
+        {% for fieldset in adminform %}
+            {% if forloop.counter == 3 %}
+                {% include "admin/includes/fieldset.html" %}
+            {% endif %}
+        {% endfor %}
+
+        <div class="salary-nav-bar">
+            <button type="button" id="salary-back-to-2" class="salary-btn-secondary">
+                <i class="fas fa-arrow-left"></i> <span>Back: Description</span>
+            </button>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="salary-btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" name="_save" class="salary-btn-send" id="salary-btn-submit-final">
+                    <i class="fas fa-paper-plane" style="font-size: 16px;"></i>
+                    <span>Send Monthly Salary Slip to Staff</span>
+                </button>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Alert Popup -->
-<div id="salary-alert-popup" class="salary-alert-popup">
-    <i class="fas fa-exclamation-circle" style="font-size: 20px;"></i>
-    <span id="salary-alert-text">Please choose a staff member first!</span>
-</div>
-
-{{ block.super }}
 
 <script>
 (function() {
@@ -578,7 +684,7 @@ ul.nav.nav-tabs,
             }
         }
 
-        // Show/Hide Fieldset Sections
+        // Show/Hide Sections
         const section1 = document.getElementById('salary-section-1');
         const section2 = document.getElementById('salary-section-2');
         const section3 = document.getElementById('salary-section-3');
@@ -653,71 +759,14 @@ ul.nav.nav-tabs,
         }
     }
 
-    function setupWizardDOM() {
-        const staffField = document.querySelector('.field-staff');
-        const descField = document.querySelector('.field-description');
-        const imageField = document.querySelector('.field-image');
-
-        if (!staffField || !descField || !imageField) return;
-
-        const findParentContainer = (el) => {
-            return el.closest('fieldset') || el.closest('.card') || el.closest('.module') || el.parentElement;
-        };
-
-        const container1 = findParentContainer(staffField);
-        const container2 = findParentContainer(descField);
-        const container3 = findParentContainer(imageField);
-
-        if (!container1 || !container2 || !container3) return;
-
-        container1.id = 'salary-section-1';
-        container1.className = 'salary-wizard-section salary-step-card-box';
-
-        container2.id = 'salary-section-2';
-        container2.className = 'salary-wizard-section salary-step-card-box';
-
-        container3.id = 'salary-section-3';
-        container3.className = 'salary-wizard-section salary-step-card-box';
-
-        const cancelUrl = window.location.pathname.replace(/\/add\/?.*$/, '/').replace(/\/\d+\/change\/?.*$/, '/');
-
-        // 1. Setup Section 1 Header & Navigation
-        if (!document.getElementById('salary-step1-header')) {
-            const h1 = document.createElement('div');
-            h1.id = 'salary-step1-header';
-            h1.className = 'salary-step-card-header';
-            h1.innerHTML = `
-                <div class="salary-step-card-header-left">
-                    <div class="salary-step-card-icon">
-                        <i class="fas fa-user-check"></i>
-                    </div>
-                    <div>
-                        <div class="salary-step-card-title">Step 1: Choose Staff Member</div>
-                        <div class="salary-step-card-desc">Select the employee who will receive this Monthly Salary Slip.</div>
-                    </div>
-                </div>
-            `;
-            container1.insertBefore(h1, container1.firstChild);
-        }
-
-        if (!document.getElementById('salary-nav-1')) {
-            const nav1 = document.createElement('div');
-            nav1.id = 'salary-nav-1';
-            nav1.className = 'salary-nav-bar';
-            nav1.innerHTML = `
-                <a href="${cancelUrl}" class="salary-btn-secondary">
-                    <i class="fas fa-times"></i> Cancel
-                </a>
-                <button type="button" id="salary-next-to-2" class="salary-btn-primary">
-                    <span>Next: Description & Notes</span> <i class="fas fa-arrow-right"></i>
-                </button>
-            `;
-            container1.appendChild(nav1);
-
-            document.getElementById('salary-next-to-2').addEventListener('click', function(e) {
+    function initWizardEvents() {
+        // Next button step 1 -> step 2
+        const nextTo2 = document.getElementById('salary-next-to-2');
+        if (nextTo2) {
+            nextTo2.addEventListener('click', function(e) {
                 e.preventDefault();
                 if (!isStaffSelected()) {
-                    showAlert('⚠️ Please select a staff member first before proceeding!');
+                    showAlert('⚠️ Please choose a staff member first before proceeding!');
                     const searchInput = document.getElementById('salary-staff-search');
                     if (searchInput) {
                         searchInput.focus();
@@ -730,163 +779,69 @@ ul.nav.nav-tabs,
             });
         }
 
-        // 2. Setup Section 2 Header, Quick Chips & Navigation
-        if (!document.getElementById('salary-step2-header')) {
-            const h2 = document.createElement('div');
-            h2.id = 'salary-step2-header';
-            h2.className = 'salary-step-card-header';
-            h2.innerHTML = `
-                <div class="salary-step-card-header-left">
-                    <div class="salary-step-card-icon">
-                        <i class="fas fa-pencil-alt"></i>
-                    </div>
-                    <div>
-                        <div class="salary-step-card-title">Step 2: Description & Remarks</div>
-                        <div class="salary-step-card-desc">Enter details, month period notes, or WPS transfer reference.</div>
-                    </div>
-                </div>
-            `;
-            container2.insertBefore(h2, container2.firstChild);
-        }
-
-        if (!document.getElementById('salary-step2-staff-badge')) {
-            const badge2 = document.createElement('div');
-            badge2.id = 'salary-step2-staff-badge';
-            container2.insertBefore(badge2, container2.children[1]);
-        }
-
-        // Quick Preset Chips for Description
-        if (!document.getElementById('salary-step2-presets')) {
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const curDate = new Date();
-            const curMonth = monthNames[curDate.getMonth()];
-            const curYear = curDate.getFullYear();
-            const prevMonth = monthNames[(curDate.getMonth() - 1 + 12) % 12];
-
-            const presets = document.createElement('div');
-            presets.id = 'salary-step2-presets';
-            presets.style.cssText = 'display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;';
-            presets.innerHTML = `
-                <span style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">Quick Presets:</span>
-                <button type="button" class="salary-quick-chip" data-text="Salary Slip for ${curMonth} ${curYear} - Processed via WPS">${curMonth} ${curYear} Salary (WPS)</button>
-                <button type="button" class="salary-quick-chip" data-text="Salary Slip for ${prevMonth} ${curYear} - Transferred">${prevMonth} ${curYear} Salary</button>
-                <button type="button" class="salary-quick-chip" data-text="Monthly Salary & Overtime Allowance for ${curMonth} ${curYear}">Salary + Overtime</button>
-                <button type="button" class="salary-quick-chip" data-text="Salary Advance / Settlement for ${curMonth} ${curYear}">Advance / Settlement</button>
-            `;
-            container2.insertBefore(presets, descField);
-
-            presets.querySelectorAll('.salary-quick-chip').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const text = this.getAttribute('data-text');
-                    const descTextarea = document.getElementById('id_description');
-                    if (descTextarea) {
-                        descTextarea.value = text;
-                        descTextarea.focus();
-                    }
-                });
-            });
-        }
-
-        if (!document.getElementById('salary-nav-2')) {
-            const nav2 = document.createElement('div');
-            nav2.id = 'salary-nav-2';
-            nav2.className = 'salary-nav-bar';
-            nav2.innerHTML = `
-                <button type="button" id="salary-back-to-1" class="salary-btn-secondary">
-                    <i class="fas fa-arrow-left"></i> <span>Back: Choose Staff</span>
-                </button>
-                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                    <a href="${cancelUrl}" class="salary-btn-secondary">
-                        <i class="fas fa-times"></i> Cancel
-                    </a>
-                    <button type="button" id="salary-next-to-3" class="salary-btn-primary">
-                        <span>Next: Upload Slip</span> <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            `;
-            container2.appendChild(nav2);
-
-            document.getElementById('salary-back-to-1').addEventListener('click', function(e) {
+        // Back button step 2 -> step 1
+        const backTo1 = document.getElementById('salary-back-to-1');
+        if (backTo1) {
+            backTo1.addEventListener('click', function(e) {
                 e.preventDefault();
                 updateStepUI(1);
             });
+        }
 
-            document.getElementById('salary-next-to-3').addEventListener('click', function(e) {
+        // Next button step 2 -> step 3
+        const nextTo3 = document.getElementById('salary-next-to-3');
+        if (nextTo3) {
+            nextTo3.addEventListener('click', function(e) {
                 e.preventDefault();
                 updateStepUI(3);
             });
         }
 
-        // 3. Setup Section 3 Header, Summary & Send Navigation
-        if (!document.getElementById('salary-step3-header')) {
-            const h3 = document.createElement('div');
-            h3.id = 'salary-step3-header';
-            h3.className = 'salary-step-card-header';
-            h3.innerHTML = `
-                <div class="salary-step-card-header-left">
-                    <div class="salary-step-card-icon" style="background: #ecfdf5; color: #059669;">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                    </div>
-                    <div>
-                        <div class="salary-step-card-title">Step 3: Upload Slip & Send Details</div>
-                        <div class="salary-step-card-desc">Attach the official salary slip document and submit to employee.</div>
-                    </div>
-                </div>
-            `;
-            container3.insertBefore(h3, container3.firstChild);
-        }
-
-        if (!document.getElementById('salary-step3-summary-box')) {
-            const sumBox = document.createElement('div');
-            sumBox.id = 'salary-step3-summary-box';
-            container3.insertBefore(sumBox, container3.children[1]);
-        }
-
-        if (!document.getElementById('salary-nav-3')) {
-            const nav3 = document.createElement('div');
-            nav3.id = 'salary-nav-3';
-            nav3.className = 'salary-nav-bar';
-            nav3.innerHTML = `
-                <button type="button" id="salary-back-to-2" class="salary-btn-secondary">
-                    <i class="fas fa-arrow-left"></i> <span>Back: Description</span>
-                </button>
-                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                    <a href="${cancelUrl}" class="salary-btn-secondary">
-                        <i class="fas fa-times"></i> Cancel
-                    </a>
-                    <button type="submit" name="_save" class="salary-btn-send" id="salary-btn-submit-final">
-                        <i class="fas fa-paper-plane" style="font-size: 16px;"></i>
-                        <span>Send Monthly Salary Slip to Staff</span>
-                    </button>
-                </div>
-            `;
-            container3.appendChild(nav3);
-
-            document.getElementById('salary-back-to-2').addEventListener('click', function(e) {
+        // Back button step 3 -> step 2
+        const backTo2 = document.getElementById('salary-back-to-2');
+        if (backTo2) {
+            backTo2.addEventListener('click', function(e) {
                 e.preventDefault();
                 updateStepUI(2);
             });
         }
 
         // Stepper tabs click listeners
-        document.getElementById('salary-tab-1').addEventListener('click', function() {
-            updateStepUI(1);
-        });
+        const tab1 = document.getElementById('salary-tab-1');
+        if (tab1) tab1.addEventListener('click', () => updateStepUI(1));
 
-        document.getElementById('salary-tab-2').addEventListener('click', function() {
-            if (!isStaffSelected()) {
-                showAlert('⚠️ Please choose a staff member first before navigating to Section 2.');
-                return;
-            }
-            updateStepUI(2);
-        });
+        const tab2 = document.getElementById('salary-tab-2');
+        if (tab2) {
+            tab2.addEventListener('click', () => {
+                if (!isStaffSelected()) {
+                    showAlert('⚠️ Please choose a staff member first before navigating to Section 2.');
+                    return;
+                }
+                updateStepUI(2);
+            });
+        }
 
-        document.getElementById('salary-tab-3').addEventListener('click', function() {
-            if (!isStaffSelected()) {
-                showAlert('⚠️ Please choose a staff member first before navigating to Section 3.');
-                return;
-            }
-            updateStepUI(3);
+        const tab3 = document.getElementById('salary-tab-3');
+        if (tab3) {
+            tab3.addEventListener('click', () => {
+                if (!isStaffSelected()) {
+                    showAlert('⚠️ Please choose a staff member first before navigating to Section 3.');
+                    return;
+                }
+                updateStepUI(3);
+            });
+        }
+
+        // Quick Preset Chips listener
+        document.querySelectorAll('.salary-quick-chip').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const text = this.getAttribute('data-text');
+                const descTextarea = document.getElementById('id_description');
+                if (descTextarea) {
+                    descTextarea.value = text;
+                    descTextarea.focus();
+                }
+            });
         });
 
         // Set initial step
@@ -894,9 +849,9 @@ ul.nav.nav-tabs,
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupWizardDOM);
+        document.addEventListener('DOMContentLoaded', initWizardEvents);
     } else {
-        setTimeout(setupWizardDOM, 50);
+        setTimeout(initWizardEvents, 50);
     }
 })();
 </script>

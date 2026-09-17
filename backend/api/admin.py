@@ -2582,7 +2582,7 @@ class SalarySlipAdminForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'rows': 4,
                 'placeholder': 'Enter monthly salary slip description (e.g. Salary Slip for August 2026 - Transferred via WPS)...',
-                'style': 'font-size: 13.5px; max-width: 850px;'
+                'style': 'font-size: 14px; width: 100%; border-radius: 12px; padding: 14px; border: 1.5px solid #cbd5e1; box-sizing: border-box; background: #ffffff; line-height: 1.5;'
             }),
         }
 
