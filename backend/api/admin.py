@@ -2579,6 +2579,7 @@ class SalarySlipAdminForm(forms.ModelForm):
 @admin.register(SalaryApplication)
 class SalaryApplicationAdmin(admin.ModelAdmin):
     form = SalarySlipAdminForm
+    change_form_template = 'admin/api/salaryapplication/change_form.html'
     list_display = ('staff_badge', 'description_summary', 'image_preview', 'status_badge', 'submitted_at')
     list_display_links = ('staff_badge',)
     list_filter = ('submitted_at', 'status')
