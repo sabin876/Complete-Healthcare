@@ -440,14 +440,15 @@ fieldset.module {
     position: relative !important;
     width: 100% !important;
     font-family: inherit !important;
+    z-index: 10;
 }
 
 .staff-dropdown-trigger {
     background: #ffffff !important;
     border: 1.5px solid #cbd5e1 !important;
-    border-radius: 10px !important;
+    border-radius: 12px !important;
     padding: 6px 14px !important;
-    min-height: 44px !important;
+    min-height: 48px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
@@ -461,8 +462,8 @@ fieldset.module {
 .staff-dropdown-trigger:hover,
 .staff-dropdown-trigger:focus,
 .staff-multiselect-dropdown.open .staff-dropdown-trigger {
-    border-color: #0284c7 !important;
-    box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.15) !important;
+    border-color: #08709d !important;
+    box-shadow: 0 0 0 3.5px rgba(8, 112, 157, 0.15) !important;
     outline: none !important;
 }
 
@@ -487,7 +488,7 @@ fieldset.module {
     background: #e0f2fe !important;
     color: #0369a1 !important;
     border: 1px solid #bae6fd !important;
-    padding: 3px 10px !important;
+    padding: 4px 10px !important;
     border-radius: 999px !important;
     font-size: 12px !important;
     font-weight: 700 !important;
@@ -516,11 +517,11 @@ fieldset.module {
 }
 
 .staff-dropdown-count-badge {
-    background: #0284c7 !important;
+    background: #08709d !important;
     color: #ffffff !important;
     font-size: 11px !important;
     font-weight: 800 !important;
-    padding: 2px 7px !important;
+    padding: 2px 8px !important;
     border-radius: 999px !important;
 }
 
@@ -532,14 +533,7 @@ fieldset.module {
 
 .staff-multiselect-dropdown.open .staff-dropdown-chevron {
     transform: rotate(180deg) !important;
-    color: #0284c7 !important;
-}
-
-.staff-multiselect-dropdown {
-    position: relative !important;
-    width: 100% !important;
-    font-family: inherit !important;
-    z-index: 10;
+    color: #08709d !important;
 }
 
 .staff-multiselect-dropdown.open {
@@ -553,7 +547,7 @@ fieldset.module {
     right: 0 !important;
     z-index: 99999 !important;
     background: #ffffff !important;
-    border: 1.5px solid #0284c7 !important;
+    border: 1.5px solid #08709d !important;
     border-radius: 14px !important;
     box-shadow: 0 14px 40px rgba(15, 23, 42, 0.2) !important;
     padding: 12px !important;
@@ -585,7 +579,7 @@ fieldset.module {
 }
 
 .staff-dropdown-search-input:focus {
-    border-color: #0284c7 !important;
+    border-color: #08709d !important;
     background: #ffffff !important;
     outline: none !important;
 }
@@ -628,7 +622,7 @@ fieldset.module {
 .staff-dropdown-checkbox {
     width: 16px !important;
     height: 16px !important;
-    accent-color: #0284c7 !important;
+    accent-color: #08709d !important;
     cursor: pointer !important;
 }
 
@@ -653,7 +647,7 @@ fieldset.module {
 }
 
 .staff-option-checkmark {
-    color: #0284c7 !important;
+    color: #08709d !important;
     font-size: 12px !important;
     display: none !important;
 }
@@ -663,227 +657,214 @@ fieldset.module {
 }
 
 /* ================================================================
-   MAIN INLINE CONTAINER & CARDS FOR STEP 2
+   STEP 2: ROUTE & STOP INLINE CARDS DESIGN
    ================================================================ */
+
+.route-stops-inline-group,
 #route_stops-group,
 .inline-group[id*="route_stops"] {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    margin-top: 10px !important;
-    margin-bottom: 20px !important;
+    margin: 0 0 20px 0 !important;
+    padding: 0 !important;
     overflow: visible !important;
 }
 
+.route-stops-inline-group > h2,
 #route_stops-group > h2,
 .inline-group[id*="route_stops"] > h2 {
-    background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%) !important;
-    color: #ffffff !important;
-    font-size: 16px !important;
-    font-weight: 800 !important;
-    padding: 16px 24px !important;
-    border-radius: 16px 16px 0 0 !important;
-    margin: 0 !important;
-    letter-spacing: -0.01em !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    box-shadow: 0 4px 14px rgba(3, 105, 161, 0.2) !important;
+    display: none !important;
 }
 
+.route-stops-cards-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.route-stop-card,
 #route_stops-group .inline-related,
 .inline-group[id*="route_stops"] .inline-related {
     background: #ffffff !important;
     border: 1.5px solid #e2e8f0 !important;
-    border-radius: 16px !important;
+    border-radius: 18px !important;
     margin-bottom: 20px !important;
-    padding: 22px 24px !important;
+    padding: 24px !important;
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04) !important;
     transition: all 0.2s ease-in-out !important;
     position: relative !important;
     overflow: visible !important;
+    box-sizing: border-box !important;
 }
 
+.route-stop-card:hover,
 #route_stops-group .inline-related:hover {
-    border-color: #38bdf8 !important;
-    box-shadow: 0 8px 26px rgba(14, 165, 233, 0.09) !important;
+    border-color: #94a3b8 !important;
+    box-shadow: 0 8px 26px rgba(15, 23, 42, 0.08) !important;
 }
 
+.route-stop-card.empty-form {
+    display: none !important;
+}
+
+.route-stop-card-header,
 #route_stops-group .inline-related > h3 {
-    background: #f8fafc !important;
-    color: #0f172a !important;
-    font-size: 14.5px !important;
-    font-weight: 800 !important;
-    padding: 12px 18px !important;
-    margin: -22px -24px 20px -24px !important;
-    border-bottom: 1.5px solid #e2e8f0 !important;
-    border-radius: 14px 14px 0 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
+    background: transparent !important;
+    padding: 0 0 16px 0 !important;
+    margin: 0 0 18px 0 !important;
+    border: none !important;
+    border-bottom: 1.5px solid #f1f5f9 !important;
+    border-radius: 0 !important;
 }
 
-#route_stops-group .inline-related > h3 span.delete {
+.route-stop-card-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: #e0f2fe !important;
+    color: #0369a1 !important;
+    padding: 6px 14px !important;
+    border-radius: 10px !important;
+    font-size: 13.5px !important;
+    font-weight: 800 !important;
+}
+
+.route-stop-delete-box {
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.route-stop-delete-label {
     display: inline-flex !important;
     align-items: center !important;
     gap: 6px !important;
-    font-size: 12px !important;
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    border: 1px solid #fecaca !important;
+    padding: 6px 14px !important;
+    border-radius: 8px !important;
+    font-size: 12.5px !important;
     font-weight: 700 !important;
-    color: #ef4444 !important;
-}
-
-#route_stops-group .inline-related > h3 span.delete input[type="checkbox"] {
-    accent-color: #ef4444 !important;
-    width: 16px !important;
-    height: 16px !important;
     cursor: pointer !important;
+    margin: 0 !important;
+    transition: all 0.15s ease !important;
 }
 
-/* Row 1: Stop #, Status */
-#route_stops-group .form-row:has(.field-stop_order) {
-    display: grid !important;
-    grid-template-columns: 140px 180px !important;
-    gap: 16px !important;
-    background: #f8fafc !important;
-    padding: 14px 16px !important;
-    border-radius: 12px !important;
-    border: 1px solid #e2e8f0 !important;
-    margin-bottom: 16px !important;
-    overflow: visible !important;
+.route-stop-delete-label:hover {
+    background: #fee2e2 !important;
+    border-color: #fca5a5 !important;
 }
 
-/* Row 2 & 3: Departure / Source Box (Light Blue Accent) */
-#route_stops-group .form-row:has(.field-source_location) {
-    display: grid !important;
-    grid-template-columns: 2fr 1fr !important;
-    gap: 16px !important;
-    background: #f0f9ff !important;
-    padding: 16px 16px 8px 16px !important;
-    border-radius: 12px 12px 0 0 !important;
-    border: 1.5px solid #bae6fd !important;
-    border-bottom: 1px dashed #bae6fd !important;
-    margin-bottom: 0 !important;
-    overflow: visible !important;
+.route-stop-delete-label input[type="checkbox"] {
+    accent-color: #dc2626 !important;
+    width: 15px !important;
+    height: 15px !important;
+    cursor: pointer !important;
+    margin: 0 !important;
 }
 
-#route_stops-group .form-row:has(.field-staff_passengers) {
-    display: block !important;
-    background: #f0f9ff !important;
-    padding: 0 16px 16px 16px !important;
-    border-radius: 0 0 12px 12px !important;
-    border: 1.5px solid #bae6fd !important;
-    border-top: none !important;
-    margin-bottom: 16px !important;
-    overflow: visible !important;
-}
-
-/* Row 4 & 5: Arrival / Destination Box (Light Emerald Accent) */
-#route_stops-group .form-row:has(.field-destination_location) {
-    display: grid !important;
-    grid-template-columns: 2fr 1fr !important;
-    gap: 16px !important;
-    background: #f0fdf4 !important;
-    padding: 16px 16px 8px 16px !important;
-    border-radius: 12px 12px 0 0 !important;
-    border: 1.5px solid #bbf7d0 !important;
-    border-bottom: 1px dashed #bbf7d0 !important;
-    margin-bottom: 0 !important;
-    overflow: visible !important;
-}
-
-#route_stops-group .form-row:has(.field-staff_dropoffs) {
-    display: block !important;
-    background: #f0fdf4 !important;
-    padding: 0 16px 16px 16px !important;
-    border-radius: 0 0 12px 12px !important;
-    border: 1.5px solid #bbf7d0 !important;
-    border-top: none !important;
-    margin-bottom: 16px !important;
-    overflow: visible !important;
-}
-
-#route_stops-group .field-staff_passengers,
-#route_stops-group .field-staff_dropoffs,
-#route_stops-group .related-widget-wrapper {
-    overflow: visible !important;
-}
-
-#route_stops-group label {
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.04em !important;
-    color: #475569 !important;
-    margin-bottom: 6px !important;
-    display: block !important;
-}
-
-#route_stops-group .field-source_location label:before { content: "🛫 "; }
-#route_stops-group .field-source_time label:before { content: "⏰ "; }
-#route_stops-group .field-staff_passengers label:before { content: "👥 "; }
-
-#route_stops-group .field-destination_location label:before { content: "🛬 "; }
-#route_stops-group .field-destination_time label:before { content: "⏰ "; }
-#route_stops-group .field-staff_dropoffs label:before { content: "👥 "; }
-
-#route_stops-group input[type="text"],
-#route_stops-group input[type="number"],
-#route_stops-group input[type="time"],
-#route_stops-group select {
-    background: #ffffff !important;
-    border: 1.5px solid #cbd5e1 !important;
-    border-radius: 10px !important;
-    padding: 9px 12px !important;
-    font-size: 13.5px !important;
-    color: #0f172a !important;
+.route-stop-card-body {
+    display: flex !important;
+    flex-direction: column !important;
     width: 100% !important;
     box-sizing: border-box !important;
-    transition: all 0.2s ease !important;
 }
 
-#route_stops-group input:focus,
-#route_stops-group select:focus {
-    border-color: #0284c7 !important;
-    box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.18) !important;
+/* Departure & Arrival Sub-containers */
+.route-location-box {
+    border-radius: 16px !important;
+    padding: 20px !important;
+    margin-top: 18px !important;
+    box-sizing: border-box !important;
+}
+
+.departure-box {
+    background: #f0f9ff !important;
+    border: 1.5px solid #bae6fd !important;
+}
+
+.arrival-box {
+    background: #f0fdf4 !important;
+    border: 1.5px solid #bbf7d0 !important;
+}
+
+.route-box-title {
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+#driver-section-2 input[type="text"],
+#driver-section-2 input[type="number"],
+#driver-section-2 input[type="time"],
+#driver-section-2 select {
+    width: 100% !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     outline: none !important;
 }
 
-#route_stops-group .field-stop_order input {
-    font-weight: 800 !important;
-    text-align: center !important;
-    color: #0369a1 !important;
-    background: #e0f2fe !important;
-    border-color: #7dd3fc !important;
+#driver-section-2 input[type="text"]:focus,
+#driver-section-2 input[type="number"]:focus,
+#driver-section-2 input[type="time"]:focus,
+#driver-section-2 select:focus {
+    border-color: #08709d !important;
+    box-shadow: 0 0 0 3.5px rgba(8, 112, 157, 0.15) !important;
+    background: #ffffff !important;
 }
 
-/* Add Row Button */
+/* Django Add Row Button */
+.route-stops-inline-group .add-row,
 #route_stops-group .add-row {
-    margin-top: 14px !important;
+    margin-top: 16px !important;
     text-align: center !important;
+    padding: 10px 0 !important;
 }
 
+.route-stops-inline-group .add-row a,
 #route_stops-group .add-row a {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 10px !important;
-    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
-    color: #ffffff !important;
     font-size: 14px !important;
     font-weight: 800 !important;
-    padding: 13px 28px !important;
-    border-radius: 12px !important;
-    text-decoration: none !important;
-    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35) !important;
+    padding: 13px 32px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 18px rgba(8, 112, 157, 0.35) !important;
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
     transition: all 0.2s ease !important;
-    cursor: pointer !important;
+    text-decoration: none !important;
 }
 
+.route-stops-inline-group .add-row a:hover,
 #route_stops-group .add-row a:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45) !important;
+    box-shadow: 0 8px 24px rgba(8, 112, 157, 0.45) !important;
     color: #ffffff !important;
 }
 
@@ -1195,7 +1176,7 @@ a.related-widget-wrapper-link {
 
     function getRouteStopsSummary() {
         const stops = [];
-        const inlineRows = document.querySelectorAll('#route_stops-group .inline-related:not(.empty-form)');
+        const inlineRows = document.querySelectorAll('.route-stops-inline-group .inline-related:not(.empty-form), #route_stops-group .inline-related:not(.empty-form)');
         inlineRows.forEach((row, idx) => {
             const isDelete = row.querySelector('input[name$="-DELETE"]:checked');
             if (isDelete) return;
@@ -1207,9 +1188,9 @@ a.related-widget-wrapper-link {
             const destTimeInput = row.querySelector('input[name$="-destination_time"]');
             
             // Pickup tags
-            const pickupTags = Array.from(row.querySelectorAll('.field-staff_passengers .staff-selected-tag span:first-child')).map(el => el.innerText.replace('👤', '').trim());
+            const pickupTags = Array.from(row.querySelectorAll('.departure-box .staff-selected-tag span:first-child, .field-staff_passengers .staff-selected-tag span:first-child')).map(el => el.innerText.replace('👤', '').trim());
             // Dropoff tags
-            const dropoffTags = Array.from(row.querySelectorAll('.field-staff_dropoffs .staff-selected-tag span:first-child')).map(el => el.innerText.replace('👤', '').trim());
+            const dropoffTags = Array.from(row.querySelectorAll('.arrival-box .staff-selected-tag span:first-child, .field-staff_dropoffs .staff-selected-tag span:first-child')).map(el => el.innerText.replace('👤', '').trim());
 
             const order = (orderInput && orderInput.value) ? orderInput.value : (idx + 1);
             const source = (sourceInput && sourceInput.value) ? sourceInput.value : 'Departure Point';

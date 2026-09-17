@@ -1,0 +1,169 @@
+{% load i18n admin_urls static %}
+<div class="js-inline-admin-formset inline-group route-stops-inline-group" id="{{ inline_admin_formset.formset.prefix }}-group"
+     data-inline-type="stacked"
+     data-inline-formset="{{ inline_admin_formset.inline_formset_data }}">
+  
+  {{ inline_admin_formset.formset.management_form }}
+  {{ inline_admin_formset.formset.non_form_errors }}
+
+  <div class="route-stops-cards-wrapper">
+    {% for inline_admin_form in inline_admin_formset %}
+      <div class="inline-related route-stop-card{% if inline_admin_form.original or inline_admin_form.show_url %} has_original{% endif %}{% if forloop.last and inline_admin_formset.has_add_permission %} empty-form last-related{% endif %}" id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
+        
+        <!-- Route Stop Card Header -->
+        <div class="route-stop-card-header">
+          <div class="route-stop-card-badge">
+            <span class="stop-badge-icon"><i class="fas fa-map-marked-alt"></i></span>
+            <span class="stop-badge-title">
+              {% if inline_admin_form.original %}
+                {{ inline_admin_form.original }}
+              {% else %}
+                {% if not forloop.last %}
+                  Stop #{{ forloop.counter }}
+                {% else %}
+                  New Route / Stop Template
+                {% endif %}
+              {% endif %}
+            </span>
+          </div>
+
+          {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}
+            <div class="route-stop-delete-box">
+              <label class="route-stop-delete-label">
+                {{ inline_admin_form.deletion_field.field }}
+                <span class="delete-label-text"><i class="fas fa-trash-alt"></i> Delete Stop</span>
+              </label>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if inline_admin_form.form.non_field_errors %}
+          <div class="route-stop-errors" style="background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; font-weight: 600; font-size: 13px;">
+            {{ inline_admin_form.form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <!-- Route Stop Card Body -->
+        <div class="route-stop-card-body">
+          
+          <!-- Row 1: Stop Sequence & Status (2-Column Grid) -->
+          <div class="driver-fields-row-2">
+            <div class="driver-form-group">
+              <label class="driver-label" for="{{ inline_admin_form.form.stop_order.id_for_label }}">
+                <i class="fas fa-list-ol" style="color: #08709d;"></i>
+                <span>Stop # / Sequence</span>
+                <span class="req-star">*</span>
+              </label>
+              {{ inline_admin_form.form.stop_order }}
+              <div class="driver-help">Sequence order for this trip stop (e.g. 1, 2, 3...)</div>
+            </div>
+
+            <div class="driver-form-group">
+              <label class="driver-label" for="{{ inline_admin_form.form.status.id_for_label }}">
+                <i class="fas fa-tag" style="color: #08709d;"></i>
+                <span>Stop Status</span>
+                <span class="req-star">*</span>
+              </label>
+              {{ inline_admin_form.form.status }}
+              <div class="driver-help">Current status of this route stop</div>
+            </div>
+          </div>
+
+          <!-- Section: Departure / Pick-up Details -->
+          <div class="route-location-box departure-box">
+            <div class="route-box-title" style="color: #0369a1;">
+              <i class="fas fa-plane-departure"></i>
+              <span>Departure & Pick-Up Details</span>
+            </div>
+
+            <div class="driver-fields-row-2" style="margin-bottom: 18px;">
+              <div class="driver-form-group">
+                <label class="driver-label" for="{{ inline_admin_form.form.source_location.id_for_label }}">
+                  <i class="fas fa-map-marker-alt" style="color: #0369a1;"></i>
+                  <span>Departure Location</span>
+                  <span class="req-star">*</span>
+                </label>
+                {{ inline_admin_form.form.source_location }}
+                <div class="driver-help">Starting address, pick-up point, or clinic HQ</div>
+              </div>
+
+              <div class="driver-form-group">
+                <label class="driver-label" for="{{ inline_admin_form.form.source_time.id_for_label }}">
+                  <i class="fas fa-clock" style="color: #0369a1;"></i>
+                  <span>Departure Time</span>
+                </label>
+                {{ inline_admin_form.form.source_time }}
+                <div class="driver-help">Scheduled departure / pick-up time</div>
+              </div>
+            </div>
+
+            <div class="driver-form-group">
+              <label class="driver-label">
+                <i class="fas fa-user-friends" style="color: #0369a1;"></i>
+                <span>Staff Passengers (Pick Up)</span>
+              </label>
+              {{ inline_admin_form.form.staff_passengers }}
+              <div class="driver-help">Select staff members boarding at this departure point</div>
+            </div>
+          </div>
+
+          <!-- Section: Arrival / Destination Details -->
+          <div class="route-location-box arrival-box">
+            <div class="route-box-title" style="color: #059669;">
+              <i class="fas fa-plane-arrival"></i>
+              <span>Arrival & Drop-Off Details</span>
+            </div>
+
+            <div class="driver-fields-row-2" style="margin-bottom: 18px;">
+              <div class="driver-form-group">
+                <label class="driver-label" for="{{ inline_admin_form.form.destination_location.id_for_label }}">
+                  <i class="fas fa-flag-checkered" style="color: #059669;"></i>
+                  <span>Destination Location</span>
+                  <span class="req-star">*</span>
+                </label>
+                {{ inline_admin_form.form.destination_location }}
+                <div class="driver-help">Destination address, hospital, or drop-off point</div>
+              </div>
+
+              <div class="driver-form-group">
+                <label class="driver-label" for="{{ inline_admin_form.form.destination_time.id_for_label }}">
+                  <i class="fas fa-clock" style="color: #059669;"></i>
+                  <span>Estimated Arrival Time</span>
+                </label>
+                {{ inline_admin_form.form.destination_time }}
+                <div class="driver-help">Estimated arrival / drop-off time</div>
+              </div>
+            </div>
+
+            <div class="driver-form-group">
+              <label class="driver-label">
+                <i class="fas fa-user-check" style="color: #059669;"></i>
+                <span>Staff Drop-Offs</span>
+              </label>
+              {{ inline_admin_form.form.staff_dropoffs }}
+              <div class="driver-help">Select staff members leaving the vehicle at this destination</div>
+            </div>
+          </div>
+
+          <!-- Section: Notes / Special Instructions -->
+          <div class="driver-form-group" style="margin-top: 20px;">
+            <label class="driver-label" for="{{ inline_admin_form.form.notes.id_for_label }}">
+              <i class="fas fa-clipboard-list" style="color: #475569;"></i>
+              <span>Notes & Special Instructions</span>
+            </label>
+            {{ inline_admin_form.form.notes }}
+            <div class="driver-help">Optional gate access codes, patient notes, or special instructions</div>
+          </div>
+
+          <!-- Hidden Foreign Keys / Primary Keys -->
+          {% if inline_admin_form.has_auto_field or inline_admin_form.needs_explicit_pk_field %}
+            {{ inline_admin_form.pk_field.field }}
+          {% endif %}
+          {{ inline_admin_form.fk_field.field }}
+        </div>
+
+      </div>
+    {% endfor %}
+  </div>
+
+</div>

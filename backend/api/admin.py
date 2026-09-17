@@ -2954,20 +2954,32 @@ class DriverRouteStopForm(forms.ModelForm):
             'stop_order': forms.NumberInput(attrs={
                 'min': '1',
                 'placeholder': '1',
+                'class': 'driver-input-control',
+            }),
+            'status': forms.Select(attrs={
+                'class': 'driver-input-control',
             }),
             'staff_passengers': StaffDropdownMultiSelectWidget(placeholder="Select staff to pick up..."),
             'staff_dropoffs': StaffDropdownMultiSelectWidget(placeholder="Select staff to drop off..."),
             'source_location': forms.TextInput(attrs={
                 'placeholder': 'e.g. Dubai Marina / Clinic Headquarters',
+                'class': 'driver-input-control',
             }),
             'source_time': forms.TextInput(attrs={
                 'type': 'time',
+                'class': 'driver-input-control',
             }),
             'destination_location': forms.TextInput(attrs={
                 'placeholder': 'e.g. Kings College Hospital / Patient Home',
+                'class': 'driver-input-control',
             }),
             'destination_time': forms.TextInput(attrs={
                 'type': 'time',
+                'class': 'driver-input-control',
+            }),
+            'notes': forms.TextInput(attrs={
+                'placeholder': 'Optional gate codes, patient notes, or instructions...',
+                'class': 'driver-input-control',
             }),
         }
 
@@ -2975,9 +2987,10 @@ class DriverRouteStopForm(forms.ModelForm):
 class DriverRouteStopInline(admin.StackedInline):
     model = DriverRouteStop
     form = DriverRouteStopForm
+    template = "admin/api/driverschedule/route_stop_inline.html"
     extra = 1
     verbose_name = "Route Leg / Stop"
-    verbose_name_plural = "📍 Multi-Stop Trip Schedule & Routes"
+    verbose_name_plural = "Multi-Stop Trip Schedule & Routes"
     fieldsets = (
         (None, {
             'fields': (
@@ -2986,6 +2999,7 @@ class DriverRouteStopInline(admin.StackedInline):
                 'staff_passengers',
                 ('destination_location', 'destination_time'),
                 'staff_dropoffs',
+                'notes',
             )
         }),
     )
