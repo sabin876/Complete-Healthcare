@@ -2855,260 +2855,28 @@ class DutyApplicationAdmin(admin.ModelAdmin):
     )
 
 
-class DriverSinglePickerWidget(forms.Widget):
-    def render(self, name, value, attrs=None, renderer=None):
-        selected_val = str(value) if value is not None else ""
-        staff_list = StaffProfile.objects.all().order_by('full_name')
-
-        selected_staff_obj = None
-        if selected_val:
-            selected_staff_obj = StaffProfile.objects.filter(models.Q(staff_id=selected_val) | models.Q(id=selected_val)).first()
-
-        departments = list(set([s.department for s in staff_list if s.department]))
-        departments.sort()
-
-        dept_chips_html = '<button type="button" class="driver-dept-filter active" data-dept="all" style="padding: 7px 16px; font-size: 13px; font-weight: 700; border-radius: 999px; border: 1.5px solid #08709d; background: #08709d; color: #ffffff; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;"><span>All Staff / Drivers</span> <span style="background: rgba(255,255,255,0.25); color: #ffffff; font-size: 11px; padding: 1px 7px; border-radius: 999px;">' + str(len(staff_list)) + '</span></button>'
-        
-        for d in departments:
-            count = len([s for s in staff_list if s.department == d])
-            dept_chips_html += f'<button type="button" class="driver-dept-filter" data-dept="{d.lower()}" style="padding: 7px 16px; font-size: 13px; font-weight: 700; border-radius: 999px; border: 1.5px solid #e2e8f0; background: #ffffff; color: #475569; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;"><span>{d}</span> <span style=\"background: #f1f5f9; color: #64748b; font-size: 11px; padding: 1px 7px; border-radius: 999px;\">{count}</span></button>'
-
-        selected_banner_html = ""
-        if selected_staff_obj:
-            s_init = "".join([w[0].upper() for w in selected_staff_obj.full_name.split() if w])[:2] if selected_staff_obj.full_name else "??"
-            s_photo = f'<img src="{selected_staff_obj.photo.url}" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 2.5px solid #059669; box-shadow: 0 4px 12px rgba(5,150,105,0.2);" />' if selected_staff_obj.photo else f'<div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(5,150,105,0.2);">{s_init}</div>'
-            selected_banner_html = f"""
-            <div id="driver-staff-selected-banner" style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: #f0fdf4; border: 2px solid #059669; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 6px 18px rgba(5,150,105,0.1);">
-                {s_photo}
-                <div style="flex: 1; min-width: 0;">
-                    <div style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">✓ Assigned Driver</div>
-                    <div style="font-size: 16px; font-weight: 800; color: #0f172a;">{selected_staff_obj.full_name} <span style="font-size: 12px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 2px 9px; border-radius: 8px; margin-left: 6px;">ID: {selected_staff_obj.staff_id}</span></div>
-                    <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 2px;">{selected_staff_obj.position or 'Staff'} • {selected_staff_obj.department or 'General'}</div>
-                </div>
-                <div style="width: 36px; height: 36px; border-radius: 50%; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 2px 8px rgba(5,150,105,0.3);">
-                    <i class="fas fa-check"></i>
-                </div>
-            </div>
-            """
-        else:
-            selected_banner_html = f"""
-            <div id="driver-staff-selected-banner" style="display: none; align-items: center; gap: 16px; padding: 16px 20px; background: #f0fdf4; border: 2px solid #059669; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 6px 18px rgba(5,150,105,0.1);">
-                <div id="driver-banner-avatar"></div>
-                <div style="flex: 1; min-width: 0;">
-                    <div style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">✓ Assigned Driver</div>
-                    <div id="driver-banner-name" style="font-size: 16px; font-weight: 800; color: #0f172a;"></div>
-                    <div id="driver-banner-dept" style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 2px;"></div>
-                </div>
-                <div style="width: 36px; height: 36px; border-radius: 50%; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 2px 8px rgba(5,150,105,0.3);">
-                    <i class="fas fa-check"></i>
-                </div>
-            </div>
-            """
-
-        output = [f"""
-        <style>
-            .field-driver {{ width: 100% !important; max-width: 100% !important; }}
-            .field-driver label, .field-driver .control-label {{ display: none !important; }}
-            .field-driver .related-widget-wrapper-link {{ display: none !important; }}
-            .field-driver .related-widget-wrapper {{ width: 100% !important; max-width: 100% !important; display: block !important; }}
-            
-            .driver-staff-card:hover {{
-                border-color: #08709d !important;
-                transform: translateY(-2px);
-                box-shadow: 0 10px 25px rgba(8, 112, 157, 0.12) !important;
-            }}
-            .driver-dept-filter:hover {{
-                border-color: #08709d !important;
-                color: #08709d !important;
-            }}
-            .driver-dept-filter.active {{
-                background: #08709d !important;
-                border-color: #08709d !important;
-                color: #ffffff !important;
-            }}
-            .driver-dept-filter.active span:last-child {{
-                background: rgba(255, 255, 255, 0.25) !important;
-                color: #ffffff !important;
-            }}
-        </style>
-        <div class="driver-staff-picker" style="width: 100%; box-sizing: border-box;">
-            <input type="hidden" name="{name}" id="id_{name}" value="{selected_val}" />
-            
-            {selected_banner_html}
-
-            <!-- Top Search & Filter Bar -->
-            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 18px 20px; margin-bottom: 20px;">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px;">
-                    <div>
-                        <div style="font-weight: 800; font-size: 15px; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-id-badge" style="color: #08709d;"></i>
-                            <span>Assigned Driver / Staff Directory</span>
-                        </div>
-                        <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 2px;">Click a staff member to assign as the official trip driver</div>
-                    </div>
-
-                    <div style="position: relative; min-width: 280px; flex: 1; max-width: 420px;">
-                        <input type="text" id="driver-staff-search" placeholder="Search by name, ID, department, role..." style="width: 100%; padding: 10px 16px 10px 40px; font-size: 13.5px; border-radius: 12px; border: 1.5px solid #cbd5e1; outline: none; background: #ffffff; transition: all 0.2s; box-sizing: border-box; box-shadow: 0 1px 3px rgba(0,0,0,0.03);" />
-                        <i class="fas fa-search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
-                    </div>
-                </div>
-
-                <!-- Department Filter Chips -->
-                <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; padding-bottom: 2px;">
-                    {dept_chips_html}
-                </div>
-            </div>
-
-            <!-- Staff Grid -->
-            <div id="driver-staff-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; max-height: 440px; overflow-y: auto; padding: 4px; box-sizing: border-box;">
-        """]
-
-        for s in staff_list:
-            is_selected = (selected_val == str(s.id) or selected_val == str(s.staff_id))
-            border_col = "#059669" if is_selected else "#e2e8f0"
-            bg_col = "#f0fdf4" if is_selected else "#ffffff"
-            initials = "".join([w[0].upper() for w in s.full_name.split() if w])[:2] if s.full_name else "??"
-            dept_str = s.department if s.department else "General"
-            dept_lower = dept_str.lower()
-
-            photo_html = f'<img src="{s.photo.url}" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; flex-shrink: 0; border: 1.5px solid #cbd5e1;" />' if s.photo else f'<div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); color: #08709d; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1.5px solid #bae6fd;">{initials}</div>'
-
-            output.append(f"""
-                <div class="driver-staff-card" data-staff-id="{s.staff_id}" data-name="{s.full_name}" data-dept="{s.position or 'Staff'} • {dept_str}" data-dept-raw="{dept_lower}" data-initials="{initials}" data-photo="{s.photo.url if s.photo else ''}" data-search-text="{s.full_name.lower()} {s.staff_id.lower()} {s.department.lower()} {s.position.lower()}" style="display: flex; align-items: center; gap: 14px; padding: 16px; border: 2px solid {border_col}; background: {bg_col}; border-radius: 16px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); user-select: none; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                    {photo_html}
-                    <div style="flex: 1; min-width: 0;">
-                        <div style="font-weight: 800; font-size: 14.5px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{s.full_name}</div>
-                        <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap;">
-                            <span style="font-size: 11px; color: #08709d; font-weight: 700; background: #e0f2fe; padding: 1px 8px; border-radius: 6px; font-family: monospace;">{s.staff_id}</span>
-                            <span style="font-size: 11.5px; color: #64748b; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{dept_str}</span>
-                        </div>
-                        <div style="font-size: 12px; color: #059669; font-weight: 600; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{s.position or 'Staff'}</div>
-                    </div>
-                    <div class="check-circle-wrapper" style="width: 26px; height: 26px; border-radius: 50%; border: 2px solid {'#059669' if is_selected else '#cbd5e1'}; background: {'#059669' if is_selected else '#ffffff'}; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; transition: all 0.2s;">
-                        <i class="fas fa-check" style="display: {'block' if is_selected else 'none'};"></i>
-                    </div>
-                </div>
-            """)
-
-        output.append(f"""
-            </div>
-            <script>
-            (function() {{
-                const hiddenInput = document.getElementById('id_{name}');
-                const cards = document.querySelectorAll('.driver-staff-card');
-                const searchInput = document.getElementById('driver-staff-search');
-                const deptFilters = document.querySelectorAll('.driver-dept-filter');
-                const banner = document.getElementById('driver-staff-selected-banner');
-                const bannerAvatar = document.getElementById('driver-banner-avatar');
-                const bannerName = document.getElementById('driver-banner-name');
-                const bannerDept = document.getElementById('driver-banner-dept');
-
-                let currentDeptFilter = 'all';
-
-                function filterCards() {{
-                    const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
-                    cards.forEach(card => {{
-                        const text = card.getAttribute('data-search-text') || '';
-                        const cardDept = card.getAttribute('data-dept-raw') || '';
-                        const matchesQuery = !query || text.includes(query);
-                        const matchesDept = (currentDeptFilter === 'all') || (cardDept === currentDeptFilter);
-                        card.style.display = (matchesQuery && matchesDept) ? 'flex' : 'none';
-                    }});
-                }}
-
-                cards.forEach(card => {{
-                    card.addEventListener('click', function() {{
-                        const sId = this.getAttribute('data-staff-id');
-                        const sName = this.getAttribute('data-name');
-                        const sDept = this.getAttribute('data-dept');
-                        const sInit = this.getAttribute('data-initials');
-                        const sPhoto = this.getAttribute('data-photo');
-
-                        if (hiddenInput) hiddenInput.value = sId;
-                        
-                        cards.forEach(c => {{
-                            c.style.borderColor = '#e2e8f0';
-                            c.style.background = '#ffffff';
-                            const chk = c.querySelector('.check-circle-wrapper');
-                            if (chk) {{
-                                chk.style.borderColor = '#cbd5e1';
-                                chk.style.background = '#ffffff';
-                                const icon = chk.querySelector('i');
-                                if (icon) icon.style.display = 'none';
-                            }}
-                        }});
-
-                        this.style.borderColor = '#059669';
-                        this.style.background = '#f0fdf4';
-                        const myChk = this.querySelector('.check-circle-wrapper');
-                        if (myChk) {{
-                            myChk.style.borderColor = '#059669';
-                            myChk.style.background = '#059669';
-                            const icon = myChk.querySelector('i');
-                            if (icon) icon.style.display = 'block';
-                        }}
-
-                        if (banner) {{
-                            banner.style.display = 'flex';
-                            if (bannerAvatar) {{
-                                if (sPhoto) {{
-                                    bannerAvatar.innerHTML = '<img src="' + sPhoto + '" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 2.5px solid #059669;" />';
-                                }} else {{
-                                    bannerAvatar.innerHTML = '<div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center;">' + sInit + '</div>';
-                                }}
-                            }}
-                            if (bannerName) bannerName.innerHTML = sName + ' <span style="font-size: 12px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 2px 9px; border-radius: 8px; margin-left: 6px;">ID: ' + sId + '</span>';
-                            if (bannerDept) bannerDept.innerText = sDept;
-                        }}
-
-                        if (hiddenInput) hiddenInput.dispatchEvent(new Event('change'));
-                    }});
-                }});
-
-                deptFilters.forEach(btn => {{
-                    btn.addEventListener('click', function() {{
-                        deptFilters.forEach(b => {{
-                            b.classList.remove('active');
-                            b.style.background = '#ffffff';
-                            b.style.borderColor = '#e2e8f0';
-                            b.style.color = '#475569';
-                        }});
-                        this.classList.add('active');
-                        this.style.background = '#08709d';
-                        this.style.borderColor = '#08709d';
-                        this.style.color = '#ffffff';
-
-                        currentDeptFilter = this.getAttribute('data-dept');
-                        filterCards();
-                    }});
-                }});
-
-                if (searchInput) {{
-                    searchInput.addEventListener('input', filterCards);
-                }}
-            }})();
-            </script>
-        </div>
-        """)
-        return mark_safe("".join(output))
-
-
 class DriverScheduleForm(forms.ModelForm):
     class Meta:
         model = DriverSchedule
         fields = '__all__'
         widgets = {
-            'driver': DriverSinglePickerWidget(),
+            'driver': forms.Select(attrs={
+                'class': 'driver-input-control',
+            }),
             'driver_phone': forms.TextInput(attrs={
                 'placeholder': 'e.g. +971 50 123 4567',
+                'class': 'driver-input-control',
             }),
             'vehicle_info': forms.TextInput(attrs={
                 'placeholder': 'e.g. Toyota HiAce - DXB 45921',
+                'class': 'driver-input-control',
             }),
             'schedule_date': forms.DateInput(attrs={
                 'type': 'date',
+                'class': 'driver-input-control',
             }),
             'status': forms.Select(attrs={
+                'class': 'driver-input-control',
             }),
         }
 
@@ -3267,17 +3035,11 @@ class DriverScheduleAdmin(admin.ModelAdmin):
     )
     ordering = ('-schedule_date', '-created_at')
     fieldsets = (
-        ('👤 1. Assign Driver / Staff Member', {
-            'fields': ('driver',),
-            'description': mark_safe('<span style="color: #08709d; font-weight: 700; font-size: 13.5px;">Select the driver or assigned staff member from the directory.</span>')
-        }),
-        ('🚐 2. Vehicle & Contact Details', {
-            'fields': (('driver_phone', 'vehicle_info'),),
-            'description': 'Driver contact number and vehicle plate or model details.'
-        }),
-        ('📅 3. Schedule Timing & Status', {
-            'fields': (('schedule_date', 'status'),),
-            'description': 'Trip date assignment and initial status.'
+        ('Driver & Schedule Details', {
+            'fields': (
+                ('driver', 'driver_phone', 'vehicle_info'),
+                ('schedule_date', 'status'),
+            )
         }),
     )
 
