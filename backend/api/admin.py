@@ -1861,6 +1861,33 @@ class LeaveApplicationInline(admin.TabularInline):
     classes = ('collapse',)
 
 
+class OtApplicationInline(admin.TabularInline):
+    model = OtApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('ot_type', 'ot_date', 'ot_hours', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
+class DutyApplicationInline(admin.TabularInline):
+    model = DutyApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('duty_date', 'shift_timing', 'shift_type', 'duty_replacement', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
+class SalaryApplicationInline(admin.TabularInline):
+    model = SalaryApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('description', 'image', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
 class StaffProfileForm(forms.ModelForm):
     confirm_password = forms.CharField(
         label="Re-type Password (Portal)",
@@ -1924,6 +1951,7 @@ class StaffProfileForm(forms.ModelForm):
 @admin.register(StaffProfile)
 class StaffProfileAdmin(admin.ModelAdmin):
     form = StaffProfileForm
+    inlines = [TaskInline, LeaveApplicationInline, OtApplicationInline, DutyApplicationInline, SalaryApplicationInline]
     list_display = ('passport_photo_thumbnail', 'full_name', 'staff_id_badge', 'department_badge', 'position', 'actions_buttons')
     list_display_links = ('passport_photo_thumbnail', 'full_name')
     search_fields = ('staff_id', 'full_name', 'position', 'department')
@@ -2322,8 +2350,277 @@ class LeaveApplicationAdmin(admin.ModelAdmin):
 
 @admin.register(OtApplication)
 class OtApplicationAdmin(admin.ModelAdmin):
-    list_display = ('staff_name', 'ot_type', 'ot_date', 'ot_hours', 'status')
-    list_filter = ('status', 'ot_type')
+    list_display = (
+        'staff_card',
+        'ot_type_badge',
+        'ot_hours_and_date',
+        'status_pill',
+        'submitted_at_fmt',
+        'quick_actions'
+    )
+    list_display_links = ('staff_card',)
+    list_filter = ('status', 'ot_type', 'submitted_at', 'staff_dep')
+    search_fields = ('staff_name', 'staff__staff_id', 'staff_dep', 'ot_type')
+    list_per_page = 20
+    actions = ['approve_selected', 'reject_selected', 'reset_to_pending']
+
+    readonly_fields = ('ot_details_hero', 'submitted_at')
+    fieldsets = (
+        ('⏱️ Clinical Overtime (OT) Overview', {
+            'fields': ('ot_details_hero',),
+            'description': mark_safe('<span style="color: #08709d; font-weight: 700;">Complete overview of staff overtime claim, hours worked, and shift duty.</span>')
+        }),
+        ('⚙️ Administrative Decision & Record Details', {
+            'fields': (
+                'status',
+                'ot_type',
+                ('ot_date', 'ot_hours'),
+                ('staff', 'staff_name'),
+                ('staff_dep', 'staff_position'),
+                'submitted_at',
+            ),
+        }),
+    )
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('<int:ot_id>/approve/', self.admin_site.admin_view(self.quick_approve_view), name='api_ot_approve'),
+            path('<int:ot_id>/reject/', self.admin_site.admin_view(self.quick_reject_view), name='api_ot_reject'),
+        ]
+        return custom_urls + urls
+
+    def quick_approve_view(self, request, ot_id):
+        try:
+            ot = OtApplication.objects.get(id=ot_id)
+            ot.status = 'Approved'
+            ot.save()
+            self.message_user(request, f"✅ OT application for {ot.staff_name} has been APPROVED successfully.", level=messages.SUCCESS)
+        except OtApplication.DoesNotExist:
+            self.message_user(request, "OT application not found.", level=messages.ERROR)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/admin/api/otapplication/'))
+
+    def quick_reject_view(self, request, ot_id):
+        try:
+            ot = OtApplication.objects.get(id=ot_id)
+            ot.status = 'Rejected'
+            ot.save()
+            self.message_user(request, f"❌ OT application for {ot.staff_name} has been REJECTED.", level=messages.WARNING)
+        except OtApplication.DoesNotExist:
+            self.message_user(request, "OT application not found.", level=messages.ERROR)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/admin/api/otapplication/'))
+
+    def staff_card(self, obj):
+        profile = getattr(obj, 'staff', None)
+        photo_url = profile.photo.url if (profile and profile.photo) else None
+        initials = "".join([w[0].upper() for w in obj.staff_name.split() if w])[:2] if obj.staff_name else "??"
+        
+        avatar_html = (
+            f'<img src="{photo_url}" style="width: 38px; height: 38px; border-radius: 10px; object-fit: cover; border: 1.5px solid #08709d;" />'
+            if photo_url else
+            f'<div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #1a294a, #08709d); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">{initials}</div>'
+        )
+        
+        dept = obj.staff_dep or (profile.department if profile else '') or 'Clinical'
+        pos = obj.staff_position or (profile.position if profile else '') or 'Staff'
+        staff_id = profile.staff_id if profile else (obj.staff_id if hasattr(obj, 'staff_id') else '')
+
+        return mark_safe(f"""
+            <div style="display: flex; align-items: center; gap: 12px; font-family: system-ui, -apple-system, sans-serif;">
+                {avatar_html}
+                <div>
+                    <div style="font-weight: 800; font-size: 13.5px; color: #0f172a;">{obj.staff_name}</div>
+                    <div style="font-size: 11px; color: #64748b; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                        <span style="background: #e0f2fe; color: #08709d; padding: 1px 6px; border-radius: 4px; font-family: monospace; font-weight: 700;">{staff_id}</span>
+                        <span>• {pos} ({dept})</span>
+                    </div>
+                </div>
+            </div>
+        """)
+    staff_card.short_description = "Staff Member"
+
+    def ot_type_badge(self, obj):
+        colors = {
+            'Day Shift': ('#0284c7', '#e0f2fe', '#bae6fd', '☀️'),
+            'Day Shift Extension': ('#0284c7', '#e0f2fe', '#bae6fd', '☀️'),
+            'Night Shift': ('#6366f1', '#e0e7ff', '#c7d2fe', '🌙'),
+            'Weekend Clinical Duty': ('#d97706', '#fef3c7', '#fde68a', '🏥'),
+            'Emergency On-Call Duty': ('#b91c1c', '#fef2f2', '#fecaca', '🚨'),
+            'Home Visit Overtime': ('#059669', '#dcfce7', '#bbf7d0', '🏡'),
+        }
+        fg, bg, border, icon = colors.get(obj.ot_type, ('#08709d', '#f0f9ff', '#bae6fd', '⏱️'))
+        return mark_safe(f"""
+            <span style="background: {bg}; color: {fg}; border: 1px solid {border}; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
+                <span>{icon}</span> {obj.ot_type}
+            </span>
+        """)
+    ot_type_badge.short_description = "Shift Type"
+
+    def ot_hours_and_date(self, obj):
+        date_fmt = obj.ot_date.strftime('%d %b %Y') if obj.ot_date else '—'
+        hours_str = f"{obj.ot_hours} Hours" if obj.ot_hours else '—'
+        return mark_safe(f"""
+            <div style="font-family: system-ui, -apple-system, sans-serif;">
+                <div style="font-weight: 800; font-size: 13px; color: #059669; display: flex; align-items: center; gap: 5px;">
+                    <span style="background: #ecfdf5; color: #047857; padding: 2px 8px; border-radius: 6px; border: 1px solid #a7f3d0; font-size: 11.5px; font-family: monospace; font-weight: 700;">⏱️ {hours_str}</span>
+                </div>
+                <div style="font-size: 11.5px; color: #475569; margin-top: 3px; font-weight: 600;">
+                    📅 Duty Date: {date_fmt}
+                </div>
+            </div>
+        """)
+    ot_hours_and_date.short_description = "OT Hours & Duty Date"
+
+    def status_pill(self, obj):
+        cfg = {
+            'Approved': ('#16a34a', '#dcfce7', '#bbf7d0', '✓ Approved'),
+            'Pending': ('#d97706', '#fef3c7', '#fde68a', '⏳ Pending Approval'),
+            'Rejected': ('#dc2626', '#fee2e2', '#fecaca', '✕ Rejected'),
+        }
+        fg, bg, border, label = cfg.get(obj.status, ('#64748b', '#f1f5f9', '#cbd5e1', obj.status))
+        return mark_safe(f"""
+            <span style="background: {bg}; color: {fg}; border: 1px solid {border}; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 4px;">
+                {label}
+            </span>
+        """)
+    status_pill.short_description = "Status"
+
+    def submitted_at_fmt(self, obj):
+        if obj.submitted_at:
+            return mark_safe(f"""
+                <span style="font-size: 11.5px; color: #64748b; font-weight: 600;">
+                    {obj.submitted_at.strftime('%d %b %Y')}<br/>
+                    <small style="color: #94a3b8;">{obj.submitted_at.strftime('%I:%M %p')}</small>
+                </span>
+            """)
+        return "—"
+    submitted_at_fmt.short_description = "Submitted"
+
+    def quick_actions(self, obj):
+        approve_url = f"/admin/api/otapplication/{obj.id}/approve/"
+        reject_url = f"/admin/api/otapplication/{obj.id}/reject/"
+        edit_url = f"/admin/api/otapplication/{obj.id}/change/"
+
+        return mark_safe(f"""
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <a href="{edit_url}" style="background: #08709d; color: white; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(8,112,157,0.25);" title="View Full OT Details">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+                <a href="{approve_url}" style="background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Quick Approve">
+                    <i class="fas fa-check"></i>
+                </a>
+                <a href="{reject_url}" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Quick Reject">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+        """)
+    quick_actions.short_description = "Actions"
+
+    def ot_details_hero(self, obj):
+        if not obj or not obj.pk:
+            return mark_safe('<div style="color: #64748b; font-style: italic;">Save the record first to view overtime details card.</div>')
+
+        profile = getattr(obj, 'staff', None)
+        photo_url = profile.photo.url if (profile and profile.photo) else None
+        initials = "".join([w[0].upper() for w in obj.staff_name.split() if w])[:2] if obj.staff_name else "??"
+        
+        avatar_html = (
+            f'<img src="{photo_url}" style="width: 56px; height: 56px; border-radius: 16px; object-fit: cover; border: 2.5px solid #08709d; box-shadow: 0 4px 12px rgba(8,112,157,0.2);" />'
+            if photo_url else
+            f'<div style="width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #1a294a, #08709d); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: 0 4px 12px rgba(8,112,157,0.2);">{initials}</div>'
+        )
+
+        duty_date_str = obj.ot_date.strftime('%A, %d %B %Y') if obj.ot_date else '—'
+
+        cfg = {
+            'Approved': ('#16a34a', '#dcfce7', '#bbf7d0', '✓ APPROVED BY ADMINISTRATION'),
+            'Pending': ('#d97706', '#fef3c7', '#fde68a', '⏳ PENDING REVIEW & DECISION'),
+            'Rejected': ('#dc2626', '#fee2e2', '#fecaca', '✕ REJECTED'),
+        }
+        fg, bg, border, status_text = cfg.get(obj.status, ('#64748b', '#f1f5f9', '#cbd5e1', obj.status))
+        
+        approve_url = f"/admin/api/otapplication/{obj.id}/approve/"
+        reject_url = f"/admin/api/otapplication/{obj.id}/reject/"
+
+        return mark_safe(f"""
+        <div style="max-width: 950px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 18px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); font-family: system-ui, -apple-system, sans-serif;">
+            
+            <!-- Top Applicant Profile Bar -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 18px;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    {avatar_html}
+                    <div>
+                        <div style="font-weight: 800; font-size: 18px; color: #0f172a;">{obj.staff_name}</div>
+                        <div style="font-size: 12.5px; color: #64748b; font-weight: 600; margin-top: 3px; display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 6px; font-weight: 800; font-family: monospace;">{profile.staff_id if profile else 'STF'}</span>
+                            <span>• {obj.staff_position or (profile.position if profile else 'Staff')}</span>
+                            <span>• Department: <strong style="color: #08709d;">{obj.staff_dep or (profile.department if profile else 'Clinical')}</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+                    <span style="background: {bg}; color: {fg}; border: 1.5px solid {border}; font-weight: 800; font-size: 12px; padding: 6px 14px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em;">
+                        {status_text}
+                    </span>
+                    <span style="font-size: 11px; color: #94a3b8; font-weight: 500;">
+                        Submitted on {obj.submitted_at.strftime('%d %b %Y, %I:%M %p') if obj.submitted_at else 'Recently'}
+                    </span>
+                </div>
+            </div>
+
+            <!-- OT Hours & Duty Details Grid -->
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; margin: 20px 0; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 18px;">
+                <div style="text-align: center; background: white; padding: 14px; border-radius: 10px; border: 1px solid #cbd5e1;">
+                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">📅 Duty Date</div>
+                    <div style="font-size: 15px; font-weight: 800; color: #0f172a;">{duty_date_str}</div>
+                </div>
+
+                <div style="text-align: center; padding: 0 10px;">
+                    <div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; font-size: 14px; font-weight: 800; padding: 8px 18px; border-radius: 999px; box-shadow: 0 4px 12px rgba(16,185,129,0.3); display: inline-block;">
+                        ⏱️ {obj.ot_hours} Hours Overtime
+                    </div>
+                </div>
+
+                <div style="text-align: center; background: white; padding: 14px; border-radius: 10px; border: 1px solid #cbd5e1;">
+                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">🏷️ Shift Category</div>
+                    <div style="font-size: 15px; font-weight: 800; color: #08709d;">{obj.ot_type}</div>
+                </div>
+            </div>
+
+            <!-- Quick Approval Toolbar -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1.5px solid #f1f5f9; padding-top: 16px; flex-wrap: wrap;">
+                <div style="font-size: 12.5px; color: #64748b; font-weight: 600;">
+                    Administrative Action:
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <a href="{approve_url}" style="background: #16a34a; color: white; font-weight: 800; font-size: 12.5px; padding: 9px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(22,163,74,0.25);">
+                        <i class="fas fa-check-circle"></i> Approve Overtime
+                    </a>
+                    <a href="{reject_url}" style="background: #dc2626; color: white; font-weight: 800; font-size: 12.5px; padding: 9px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(220,38,38,0.25);">
+                        <i class="fas fa-times-circle"></i> Reject Overtime
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        """)
+    ot_details_hero.short_description = "Overtime Application Summary"
+
+    def approve_selected(self, request, queryset):
+        count = queryset.update(status='Approved')
+        self.message_user(request, f"Successfully approved {count} overtime application(s).", level=messages.SUCCESS)
+    approve_selected.short_description = "✓ Approve selected OT applications"
+
+    def reject_selected(self, request, queryset):
+        count = queryset.update(status='Rejected')
+        self.message_user(request, f"Successfully rejected {count} overtime application(s).", level=messages.WARNING)
+    reject_selected.short_description = "✕ Reject selected OT applications"
+
+    def reset_to_pending(self, request, queryset):
+        count = queryset.update(status='Pending')
+        self.message_user(request, f"Reset {count} overtime application(s) to Pending.", level=messages.INFO)
+    reset_to_pending.short_description = "⏳ Reset status to Pending"
 
 
 # ----------------------------------------------------------------------
@@ -2591,13 +2888,18 @@ class SalarySlipAdminForm(forms.ModelForm):
 class SalaryApplicationAdmin(admin.ModelAdmin):
     form = SalarySlipAdminForm
     change_form_template = 'admin/api/salaryapplication/change_form.html'
-    list_display = ('staff_badge', 'description_summary', 'image_preview', 'status_badge', 'submitted_at')
-    list_display_links = ('staff_badge',)
-    list_filter = ('submitted_at', 'status')
+    list_display = ('staff_card', 'description_summary', 'image_preview', 'status_badge', 'submitted_at_fmt', 'quick_actions')
+    list_display_links = ('staff_card',)
+    list_filter = ('submitted_at', 'status', 'staff_dep')
     search_fields = ('staff_name', 'staff__staff_id', 'description', 'staff_dep', 'staff_position')
     list_per_page = 20
+    readonly_fields = ('salary_details_hero', 'submitted_at')
 
     fieldsets = (
+        ('💵 Monthly Salary Slip Overview', {
+            'fields': ('salary_details_hero',),
+            'description': mark_safe('<span style="color: #059669; font-weight: 700; font-size: 13px;">View full summary of issued monthly salary slip document and staff recipient.</span>')
+        }),
         ('👤 1. Choose Staff Member', {
             'fields': ('staff',),
             'description': mark_safe('<span style="color: #08709d; font-weight: 700; font-size: 13.5px;">Select the staff member who will receive this Monthly Salary Slip.</span>')
@@ -2620,39 +2922,148 @@ class SalaryApplicationAdmin(admin.ModelAdmin):
         obj.status = 'Issued'
         super().save_model(request, obj, form, change)
 
-    def staff_badge(self, obj):
+    def staff_card(self, obj):
+        profile = getattr(obj, 'staff', None)
+        photo_url = profile.photo.url if (profile and profile.photo) else None
         initials = "".join([w[0].upper() for w in obj.staff_name.split() if w])[:2] if obj.staff_name else "??"
-        dept = f" • {obj.staff_dep}" if obj.staff_dep else ""
+        
+        avatar_html = (
+            f'<img src="{photo_url}" style="width: 38px; height: 38px; border-radius: 10px; object-fit: cover; border: 1.5px solid #059669;" />'
+            if photo_url else
+            f'<div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #059669, #10b981); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">{initials}</div>'
+        )
+        
+        dept = obj.staff_dep or (profile.department if profile else '') or 'Clinical'
+        pos = obj.staff_position or (profile.position if profile else '') or 'Staff'
+        staff_id = profile.staff_id if profile else (obj.staff_id if hasattr(obj, 'staff_id') else '')
+
         return mark_safe(f"""
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <div style="width: 30px; height: 30px; border-radius: 6px; background: #05966920; color: #059669; font-weight: 800; font-size: 11px; display: flex; align-items: center; justify-content: center;">
-                {initials}
+            <div style="display: flex; align-items: center; gap: 12px; font-family: system-ui, -apple-system, sans-serif;">
+                {avatar_html}
+                <div>
+                    <div style="font-weight: 800; font-size: 13.5px; color: #0f172a;">{obj.staff_name}</div>
+                    <div style="font-size: 11px; color: #64748b; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                        <span style="background: #e0f2fe; color: #08709d; padding: 1px 6px; border-radius: 4px; font-family: monospace; font-weight: 700;">{staff_id}</span>
+                        <span>• {pos} ({dept})</span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <div style="font-weight: 700; font-size: 13px; color: #0f172a;">{obj.staff_name}</div>
-                <div style="font-size: 11px; color: #64748b;">{obj.staff_id}{dept}</div>
-            </div>
-        </div>
         """)
-    staff_badge.short_description = "Staff Member"
+    staff_card.short_description = "Recipient Staff"
 
     def description_summary(self, obj):
         desc = obj.description or "—"
-        if len(desc) > 80:
-            desc = desc[:77] + "..."
-        return mark_safe(f"<span style='font-size: 12.5px; color: #334155;'>{desc}</span>")
-    description_summary.short_description = "Description"
+        if len(desc) > 75:
+            desc = desc[:72] + "..."
+        return mark_safe(f"<span style='font-size: 12.5px; color: #334155; font-weight: 500;'>{desc}</span>")
+    description_summary.short_description = "Slip Description"
 
     def image_preview(self, obj):
         if obj.image:
             url = obj.image.url
-            return mark_safe(f'<a href="{url}" target="_blank" style="display: inline-flex; align-items: center; gap: 5px; color: #08709d; font-weight: 700; font-size: 12px; text-decoration: none;"><img src="{url}" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover; border: 1px solid #cbd5e1;" /> <span>View Slip</span></a>')
-        return mark_safe('<span style="color: #94a3b8; font-size: 11.5px;">No image</span>')
-    image_preview.short_description = "Salary Slip"
+            return mark_safe(f'<a href="{url}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; color: #08709d; font-weight: 700; font-size: 12px; text-decoration: none; background: #f0f9ff; padding: 4px 10px; border-radius: 8px; border: 1px solid #bae6fd;"><img src="{url}" style="width: 24px; height: 24px; border-radius: 4px; object-fit: cover;" /> <span>View Document</span></a>')
+        return mark_safe('<span style="color: #94a3b8; font-size: 11.5px; font-style: italic;">No document</span>')
+    image_preview.short_description = "Salary Slip File"
 
     def status_badge(self, obj):
         return mark_safe('<span style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; text-transform: uppercase;">Issued</span>')
     status_badge.short_description = "Status"
+
+    def submitted_at_fmt(self, obj):
+        if obj.submitted_at:
+            return mark_safe(f"""
+                <span style="font-size: 11.5px; color: #64748b; font-weight: 600;">
+                    {obj.submitted_at.strftime('%d %b %Y')}<br/>
+                    <small style="color: #94a3b8;">{obj.submitted_at.strftime('%I:%M %p')}</small>
+                </span>
+            """)
+        return "—"
+    submitted_at_fmt.short_description = "Date Issued"
+
+    def quick_actions(self, obj):
+        edit_url = f"/admin/api/salaryapplication/{obj.id}/change/"
+        doc_btn = f'<a href="{obj.image.url}" target="_blank" style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Open Slip File"><i class="fas fa-file-download"></i></a>' if obj.image else ''
+
+        return mark_safe(f"""
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <a href="{edit_url}" style="background: #08709d; color: white; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(8,112,157,0.25);" title="View / Edit Salary Slip">
+                    <i class="fas fa-eye"></i> View Slip
+                </a>
+                {doc_btn}
+            </div>
+        """)
+    quick_actions.short_description = "Actions"
+
+    def salary_details_hero(self, obj):
+        if not obj or not obj.pk:
+            return mark_safe('<div style="color: #64748b; font-style: italic;">Save the record first to view salary slip details overview.</div>')
+
+        profile = getattr(obj, 'staff', None)
+        photo_url = profile.photo.url if (profile and profile.photo) else None
+        initials = "".join([w[0].upper() for w in obj.staff_name.split() if w])[:2] if obj.staff_name else "??"
+        
+        avatar_html = (
+            f'<img src="{photo_url}" style="width: 56px; height: 56px; border-radius: 16px; object-fit: cover; border: 2.5px solid #059669; box-shadow: 0 4px 12px rgba(5,150,105,0.2);" />'
+            if photo_url else
+            f'<div style="width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #059669, #10b981); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: 0 4px 12px rgba(5,150,105,0.2);">{initials}</div>'
+        )
+
+        doc_html = f"""
+            <div style="margin-top: 14px;">
+                <a href="{obj.image.url}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #08709d; color: white; padding: 10px 20px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; box-shadow: 0 3px 10px rgba(8,112,157,0.25);">
+                    <i class="fas fa-external-link-alt"></i> Open / Download Full Salary Slip Document
+                </a>
+            </div>
+        """ if obj.image else '<div style="color: #94a3b8; font-style: italic; margin-top: 10px;">No salary slip file attached.</div>'
+
+        return mark_safe(f"""
+        <div style="max-width: 950px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 18px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); font-family: system-ui, -apple-system, sans-serif;">
+            
+            <!-- Top Recipient Profile Bar -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 18px;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    {avatar_html}
+                    <div>
+                        <div style="font-weight: 800; font-size: 18px; color: #0f172a;">{obj.staff_name}</div>
+                        <div style="font-size: 12.5px; color: #64748b; font-weight: 600; margin-top: 3px; display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 6px; font-weight: 800; font-family: monospace;">{profile.staff_id if profile else 'STF'}</span>
+                            <span>• {obj.staff_position or (profile.position if profile else 'Staff')}</span>
+                            <span>• Department: <strong style="color: #08709d;">{obj.staff_dep or (profile.department if profile else 'Clinical')}</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+                    <span style="background: #ecfdf5; color: #047857; border: 1.5px solid #a7f3d0; font-weight: 800; font-size: 12px; padding: 6px 14px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em;">
+                        ✓ ISSUED TO STAFF PORTAL
+                    </span>
+                    <span style="font-size: 11px; color: #94a3b8; font-weight: 500;">
+                        Issued on {obj.submitted_at.strftime('%d %b %Y, %I:%M %p') if obj.submitted_at else 'Recently'}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Description Box -->
+            <div style="margin: 20px 0 16px 0;">
+                <div style="font-weight: 700; font-size: 12.5px; color: #475569; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.04em;">
+                    📝 Salary Slip Description / Remarks:
+                </div>
+                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 16px; color: #1e293b; font-size: 13.5px; line-height: 1.6; font-weight: 500;">
+                    {obj.description or 'Standard monthly salary slip issued.'}
+                </div>
+            </div>
+
+            <!-- Attached File Card -->
+            <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 14px; padding: 18px;">
+                <div style="font-weight: 800; font-size: 13px; color: #059669; text-transform: uppercase; letter-spacing: 0.05em;">
+                    📄 Attached Salary Slip Document:
+                </div>
+                {doc_html}
+            </div>
+
+        </div>
+        """)
+    salary_details_hero.short_description = "Salary Slip Summary"
 
 
 
@@ -2832,27 +3243,283 @@ class NoticeApplicationAdmin(admin.ModelAdmin):
 
 @admin.register(DutyApplication)
 class DutyApplicationAdmin(admin.ModelAdmin):
-    list_display = ('staff_name', 'duty_date', 'shift_timing', 'shift_type', 'duty_replacement', 'status', 'submitted_at')
-    list_filter = ('status', 'shift_timing', 'shift_type', 'duty_date')
+    list_display = (
+        'staff_card',
+        'swap_with_badge',
+        'shift_details_badge',
+        'status_pill',
+        'submitted_at_fmt',
+        'quick_actions'
+    )
+    list_display_links = ('staff_card',)
+    list_filter = ('status', 'shift_timing', 'shift_type', 'duty_date', 'submitted_at')
     search_fields = ('staff_name', 'staff__staff_id', 'duty_replacement', 'duty_reason')
     ordering = ('-submitted_at',)
+    list_per_page = 20
+    actions = ['approve_selected', 'reject_selected', 'reset_to_pending']
+
+    readonly_fields = ('duty_details_hero', 'submitted_at')
     fieldsets = (
-        ('Applicant Details', {
-            'fields': (('staff', 'staff_name'),)
+        ('🔄 Duty Schedule Swap Overview', {
+            'fields': ('duty_details_hero',),
+            'description': mark_safe('<span style="color: #08709d; font-weight: 700;">Complete overview of staff duty shift exchange and replacement covering arrangements.</span>')
         }),
-        ('Duty & Shift Information', {
+        ('⚙️ Administrative Decision & Record Details', {
             'fields': (
+                'status',
                 ('duty_date', 'shift_timing', 'shift_type'),
                 'duty_replacement',
-            )
-        }),
-        ('Reason / Handover Notes & Status', {
-            'fields': (
                 'duty_reason',
-                'status',
-            )
+                ('staff', 'staff_name'),
+                'submitted_at',
+            ),
         }),
     )
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('<int:duty_id>/approve/', self.admin_site.admin_view(self.quick_approve_view), name='api_duty_approve'),
+            path('<int:duty_id>/reject/', self.admin_site.admin_view(self.quick_reject_view), name='api_duty_reject'),
+        ]
+        return custom_urls + urls
+
+    def quick_approve_view(self, request, duty_id):
+        try:
+            duty = DutyApplication.objects.get(id=duty_id)
+            duty.status = 'Approved'
+            duty.save()
+            self.message_user(request, f"✅ Duty swap request for {duty.staff_name} with {duty.duty_replacement} has been APPROVED.", level=messages.SUCCESS)
+        except DutyApplication.DoesNotExist:
+            self.message_user(request, "Duty swap request not found.", level=messages.ERROR)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/admin/api/dutyapplication/'))
+
+    def quick_reject_view(self, request, duty_id):
+        try:
+            duty = DutyApplication.objects.get(id=duty_id)
+            duty.status = 'Rejected'
+            duty.save()
+            self.message_user(request, f"❌ Duty swap request for {duty.staff_name} has been REJECTED.", level=messages.WARNING)
+        except DutyApplication.DoesNotExist:
+            self.message_user(request, "Duty swap request not found.", level=messages.ERROR)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/admin/api/dutyapplication/'))
+
+    def staff_card(self, obj):
+        profile = getattr(obj, 'staff', None)
+        photo_url = profile.photo.url if (profile and profile.photo) else None
+        initials = "".join([w[0].upper() for w in obj.staff_name.split() if w])[:2] if obj.staff_name else "??"
+        
+        avatar_html = (
+            f'<img src="{photo_url}" style="width: 38px; height: 38px; border-radius: 10px; object-fit: cover; border: 1.5px solid #08709d;" />'
+            if photo_url else
+            f'<div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #1a294a, #08709d); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">{initials}</div>'
+        )
+        
+        dept = (profile.department if profile else '') or 'Clinical'
+        pos = (profile.position if profile else '') or 'Staff'
+        staff_id = profile.staff_id if profile else (obj.staff_id if hasattr(obj, 'staff_id') else '')
+
+        return mark_safe(f"""
+            <div style="display: flex; align-items: center; gap: 12px; font-family: system-ui, -apple-system, sans-serif;">
+                {avatar_html}
+                <div>
+                    <div style="font-weight: 800; font-size: 13.5px; color: #0f172a;">{obj.staff_name}</div>
+                    <div style="font-size: 11px; color: #64748b; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                        <span style="background: #e0f2fe; color: #08709d; padding: 1px 6px; border-radius: 4px; font-family: monospace; font-weight: 700;">{staff_id}</span>
+                        <span>• {pos} ({dept})</span>
+                    </div>
+                </div>
+            </div>
+        """)
+    staff_card.short_description = "Requesting Staff"
+
+    def swap_with_badge(self, obj):
+        return mark_safe(f"""
+            <div style="font-family: system-ui, -apple-system, sans-serif;">
+                <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">🔄 Covering Staff:</div>
+                <div style="font-weight: 800; font-size: 13px; color: #08709d; margin-top: 2px;">{obj.duty_replacement or '—'}</div>
+            </div>
+        """)
+    swap_with_badge.short_description = "Swap Arrangement"
+
+    def shift_details_badge(self, obj):
+        date_fmt = obj.duty_date.strftime('%d %b %Y') if obj.duty_date else '—'
+        timing_icon = '🌙 Night' if obj.shift_timing == 'Night' else '☀️ Day'
+        return mark_safe(f"""
+            <div style="font-family: system-ui, -apple-system, sans-serif;">
+                <div style="font-weight: 800; font-size: 12.5px; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                    <span style="background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; padding: 2px 7px; border-radius: 6px; font-size: 11px;">{timing_icon}</span>
+                    <span style="background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; padding: 2px 7px; border-radius: 6px; font-size: 11px;">{obj.shift_type}</span>
+                </div>
+                <div style="font-size: 11.5px; color: #64748b; margin-top: 3px; font-weight: 600;">
+                    📅 Scheduled: {date_fmt}
+                </div>
+            </div>
+        """)
+    shift_details_badge.short_description = "Shift & Duty Date"
+
+    def status_pill(self, obj):
+        cfg = {
+            'Approved': ('#16a34a', '#dcfce7', '#bbf7d0', '✓ Approved'),
+            'Pending': ('#d97706', '#fef3c7', '#fde68a', '⏳ Pending Approval'),
+            'Rejected': ('#dc2626', '#fee2e2', '#fecaca', '✕ Rejected'),
+        }
+        fg, bg, border, label = cfg.get(obj.status, ('#64748b', '#f1f5f9', '#cbd5e1', obj.status))
+        return mark_safe(f"""
+            <span style="background: {bg}; color: {fg}; border: 1px solid {border}; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 4px;">
+                {label}
+            </span>
+        """)
+    status_pill.short_description = "Status"
+
+    def submitted_at_fmt(self, obj):
+        if obj.submitted_at:
+            return mark_safe(f"""
+                <span style="font-size: 11.5px; color: #64748b; font-weight: 600;">
+                    {obj.submitted_at.strftime('%d %b %Y')}<br/>
+                    <small style="color: #94a3b8;">{obj.submitted_at.strftime('%I:%M %p')}</small>
+                </span>
+            """)
+        return "—"
+    submitted_at_fmt.short_description = "Submitted"
+
+    def quick_actions(self, obj):
+        approve_url = f"/admin/api/dutyapplication/{obj.id}/approve/"
+        reject_url = f"/admin/api/dutyapplication/{obj.id}/reject/"
+        edit_url = f"/admin/api/dutyapplication/{obj.id}/change/"
+
+        return mark_safe(f"""
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <a href="{edit_url}" style="background: #08709d; color: white; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(8,112,157,0.25);" title="View Full Swap Details">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+                <a href="{approve_url}" style="background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Quick Approve">
+                    <i class="fas fa-check"></i>
+                </a>
+                <a href="{reject_url}" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" title="Quick Reject">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+        """)
+    quick_actions.short_description = "Actions"
+
+    def duty_details_hero(self, obj):
+        if not obj or not obj.pk:
+            return mark_safe('<div style="color: #64748b; font-style: italic;">Save the record first to view duty swap details card.</div>')
+
+        profile = getattr(obj, 'staff', None)
+        photo_url = profile.photo.url if (profile and profile.photo) else None
+        initials = "".join([w[0].upper() for w in obj.staff_name.split() if w])[:2] if obj.staff_name else "??"
+        
+        avatar_html = (
+            f'<img src="{photo_url}" style="width: 56px; height: 56px; border-radius: 16px; object-fit: cover; border: 2.5px solid #08709d; box-shadow: 0 4px 12px rgba(8,112,157,0.2);" />'
+            if photo_url else
+            f'<div style="width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #1a294a, #08709d); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: 0 4px 12px rgba(8,112,157,0.2);">{initials}</div>'
+        )
+
+        duty_date_str = obj.duty_date.strftime('%A, %d %B %Y') if obj.duty_date else '—'
+
+        cfg = {
+            'Approved': ('#16a34a', '#dcfce7', '#bbf7d0', '✓ APPROVED BY ADMINISTRATION'),
+            'Pending': ('#d97706', '#fef3c7', '#fde68a', '⏳ PENDING REVIEW & DECISION'),
+            'Rejected': ('#dc2626', '#fee2e2', '#fecaca', '✕ REJECTED'),
+        }
+        fg, bg, border, status_text = cfg.get(obj.status, ('#64748b', '#f1f5f9', '#cbd5e1', obj.status))
+        
+        approve_url = f"/admin/api/dutyapplication/{obj.id}/approve/"
+        reject_url = f"/admin/api/dutyapplication/{obj.id}/reject/"
+
+        return mark_safe(f"""
+        <div style="max-width: 950px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 18px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); font-family: system-ui, -apple-system, sans-serif;">
+            
+            <!-- Top Applicant Profile Bar -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 18px;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    {avatar_html}
+                    <div>
+                        <div style="font-weight: 800; font-size: 18px; color: #0f172a;">{obj.staff_name}</div>
+                        <div style="font-size: 12.5px; color: #64748b; font-weight: 600; margin-top: 3px; display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 6px; font-weight: 800; font-family: monospace;">{profile.staff_id if profile else 'STF'}</span>
+                            <span>• {profile.position if profile else 'Staff'}</span>
+                            <span>• Department: <strong style="color: #08709d;">{profile.department if profile else 'Clinical'}</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+                    <span style="background: {bg}; color: {fg}; border: 1.5px solid {border}; font-weight: 800; font-size: 12px; padding: 6px 14px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em;">
+                        {status_text}
+                    </span>
+                    <span style="font-size: 11px; color: #94a3b8; font-weight: 500;">
+                        Submitted on {obj.submitted_at.strftime('%d %b %Y, %I:%M %p') if obj.submitted_at else 'Recently'}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Duty Shift & Swap Details Grid -->
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; margin: 20px 0; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 18px;">
+                <div style="text-align: center; background: white; padding: 14px; border-radius: 10px; border: 1px solid #cbd5e1;">
+                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">📅 Scheduled Date</div>
+                    <div style="font-size: 15px; font-weight: 800; color: #0f172a;">{duty_date_str}</div>
+                    <div style="font-size: 12px; font-weight: 700; color: #08709d; margin-top: 4px;">{obj.shift_timing} Shift ({obj.shift_type})</div>
+                </div>
+
+                <div style="text-align: center; padding: 0 10px;">
+                    <div style="background: #0284c7; color: white; font-size: 14px; font-weight: 800; padding: 8px 18px; border-radius: 999px; box-shadow: 0 4px 12px rgba(2,132,199,0.3); display: inline-block;">
+                        🔄 Swap Exchange
+                    </div>
+                </div>
+
+                <div style="text-align: center; background: white; padding: 14px; border-radius: 10px; border: 1px solid #cbd5e1;">
+                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">👤 Covering Replacement Staff</div>
+                    <div style="font-size: 16px; font-weight: 800; color: #059669;">{obj.duty_replacement}</div>
+                    <div style="font-size: 11.5px; color: #64748b; margin-top: 4px; font-weight: 600;">Agreed to cover this shift</div>
+                </div>
+            </div>
+
+            <!-- Reason Box -->
+            <div style="margin-bottom: 20px;">
+                <div style="font-weight: 700; font-size: 12.5px; color: #475569; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.04em;">
+                    📝 Reason & Clinical Handover Notes:
+                </div>
+                <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 16px; color: #166534; font-size: 13.5px; line-height: 1.6; font-weight: 500; white-space: pre-wrap;">
+                    {obj.duty_reason or 'No additional handover notes specified.'}
+                </div>
+            </div>
+
+            <!-- Quick Approval Toolbar -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1.5px solid #f1f5f9; padding-top: 16px; flex-wrap: wrap;">
+                <div style="font-size: 12.5px; color: #64748b; font-weight: 600;">
+                    Administrative Action:
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <a href="{approve_url}" style="background: #16a34a; color: white; font-weight: 800; font-size: 12.5px; padding: 9px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(22,163,74,0.25);">
+                        <i class="fas fa-check-circle"></i> Approve Shift Swap
+                    </a>
+                    <a href="{reject_url}" style="background: #dc2626; color: white; font-weight: 800; font-size: 12.5px; padding: 9px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(220,38,38,0.25);">
+                        <i class="fas fa-times-circle"></i> Reject Shift Swap
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        """)
+    duty_details_hero.short_description = "Duty Swap Summary"
+
+    def approve_selected(self, request, queryset):
+        count = queryset.update(status='Approved')
+        self.message_user(request, f"Successfully approved {count} duty swap application(s).", level=messages.SUCCESS)
+    approve_selected.short_description = "✓ Approve selected duty swap applications"
+
+    def reject_selected(self, request, queryset):
+        count = queryset.update(status='Rejected')
+        self.message_user(request, f"Successfully rejected {count} duty swap application(s).", level=messages.WARNING)
+    reject_selected.short_description = "✕ Reject selected duty swap applications"
+
+    def reset_to_pending(self, request, queryset):
+        count = queryset.update(status='Pending')
+        self.message_user(request, f"Reset {count} duty swap application(s) to Pending.", level=messages.INFO)
+    reset_to_pending.short_description = "⏳ Reset status to Pending"
 
 
 class DriverScheduleForm(forms.ModelForm):

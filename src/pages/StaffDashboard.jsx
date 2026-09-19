@@ -164,9 +164,11 @@ const StaffDashboard = () => {
   } = useAuth();
 
   const [activeTab, setActiveTab] = useState('leave'); // 'leave' | 'ot' | 'duty' | 'schedule' | 'notice' | 'salary'
-  const [activeModal, setActiveModal] = useState(null); // 'leave' | 'ot' | 'duty' | 'notice' | 'salary' | 'viewNotice' | 'viewLeave' | 'viewSalarySlip' | 'viewSchedule'
+  const [activeModal, setActiveModal] = useState(null); // 'leave' | 'ot' | 'duty' | 'notice' | 'salary' | 'viewNotice' | 'viewLeave' | 'viewOt' | 'viewDuty' | 'viewSalarySlip' | 'viewSchedule'
   const [selectedNotice, setSelectedNotice] = useState(null);
   const [selectedLeave, setSelectedLeave] = useState(null);
+  const [selectedOt, setSelectedOt] = useState(null);
+  const [selectedDuty, setSelectedDuty] = useState(null);
   const [selectedSalarySlip, setSelectedSalarySlip] = useState(null);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
@@ -226,26 +228,35 @@ const StaffDashboard = () => {
   const [dutyReplacement, setDutyReplacement] = useState('');
   const [dutyReason, setDutyReason] = useState('');
 
-  /* ── Notice form state (Apply/Post Notice) ── */
+  /* ── Notice form state ── */
   const [noticeTitle, setNoticeTitle] = useState('');
-  const [noticeCategory, setNoticeCategory] = useState('Internal Staff Notice');
   const [noticePriority, setNoticePriority] = useState('normal');
-  const [noticeTargetAudience, setNoticeTargetAudience] = useState('all');
+  const [noticeTarget, setNoticeTarget] = useState('all');
+  const [noticeDepartment, setNoticeDepartment] = useState('');
   const [noticeMessage, setNoticeMessage] = useState('');
   const [noticeFile, setNoticeFile] = useState(null);
   const noticeFileRef = useRef(null);
 
   /* ── Salary form state ── */
-  const [incType, setIncType] = useState('Merit-Based Performance Review');
+  const [incAmount, setIncAmount] = useState('');
   const [incJustification, setIncJustification] = useState('');
   const [incFile, setIncFile] = useState(null);
   const incFileRef = useRef(null);
 
-  /* ── Shared staff fields ── */
+  /* ── Autofill from logged-in user ── */
   const [staffName, setStaffName] = useState(currentUser?.name || '');
   const [staffId, setStaffId] = useState(currentUser?.id || '');
   const [staffDep, setStaffDep] = useState(currentUser?.department || '');
   const [staffPosition, setStaffPosition] = useState(currentUser?.position || '');
+
+  useEffect(() => {
+    if (currentUser) {
+      setStaffName(currentUser.name || '');
+      setStaffId(currentUser.id || '');
+      setStaffDep(currentUser.department || '');
+      setStaffPosition(currentUser.position || '');
+    }
+  }, [currentUser]);
 
   /* ── Route guard ── */
   useEffect(() => {
@@ -268,6 +279,10 @@ const StaffDashboard = () => {
       setSelectedNotice(data);
     } else if (type === 'viewLeave') {
       setSelectedLeave(data);
+    } else if (type === 'viewOt') {
+      setSelectedOt(data);
+    } else if (type === 'viewDuty') {
+      setSelectedDuty(data);
     } else if (type === 'viewSalarySlip') {
       setSelectedSalarySlip(data);
     } else if (type === 'viewSchedule') {
@@ -280,6 +295,8 @@ const StaffDashboard = () => {
     setActiveModal(null);
     setSelectedNotice(null);
     setSelectedLeave(null);
+    setSelectedOt(null);
+    setSelectedDuty(null);
     setSelectedSalarySlip(null);
     setSelectedSchedule(null);
     setLeaveStart(''); setLeaveEnd(''); setLeaveReason(''); setLeaveFile(null);
@@ -684,9 +701,20 @@ const StaffDashboard = () => {
                           <span className="text-emerald-700 font-bold font-mono">⏱️ {r.otHours}h Claimed</span>
                         </div>
                       </div>
-                      <span className="text-[10px] sm:text-[11px] text-slate-400 font-mono shrink-0">
-                        Submitted: {new Date(r.submittedAt).toLocaleDateString('en-GB')}
-                      </span>
+                      
+                      <div className="flex items-center gap-3 shrink-0 pt-2 sm:pt-0 sm:self-center border-t sm:border-t-0 border-slate-100 justify-between sm:justify-end">
+                        <span className="text-[10px] sm:text-[11px] text-slate-400 font-mono">
+                          {new Date(r.submittedAt).toLocaleDateString('en-GB')}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => openModal('viewOt', r)}
+                          className="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/70 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95"
+                        >
+                          <Eye size={13} className="text-emerald-700" />
+                          <span>View Details</span>
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -735,9 +763,20 @@ const StaffDashboard = () => {
                           </p>
                         )}
                       </div>
-                      <span className="text-[10px] sm:text-[11px] text-slate-400 font-mono shrink-0">
-                        Submitted: {new Date(r.submittedAt).toLocaleDateString('en-GB')}
-                      </span>
+                      
+                      <div className="flex items-center gap-3 shrink-0 pt-2 sm:pt-0 sm:self-center border-t sm:border-t-0 border-slate-100 justify-between sm:justify-end">
+                        <span className="text-[10px] sm:text-[11px] text-slate-400 font-mono">
+                          {new Date(r.submittedAt).toLocaleDateString('en-GB')}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => openModal('viewDuty', r)}
+                          className="px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-50 hover:bg-sky-100 text-[#08709d] border border-sky-200/70 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95"
+                        >
+                          <Eye size={13} className="text-[#08709d]" />
+                          <span>View Details</span>
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -1513,6 +1552,208 @@ const StaffDashboard = () => {
                     <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-100 pt-2.5">
                       <span>Submitted: {new Date(selectedLeave.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                       <span className="text-slate-500 font-semibold">Corx HR</span>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={closeModal}
+                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#08709d] text-white text-xs font-bold cursor-pointer hover:bg-[#065679] transition-all shadow-xs"
+                      >
+                        Close Details
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── 2b. VIEW OT DETAILS MODAL ── */}
+                {activeModal === 'viewOt' && selectedOt && (
+                  <div className="flex flex-col gap-3.5 sm:gap-4 text-left">
+                    <ModalHeader title="Overtime Duty Claim Details" icon={<Clock size={18} />} color="#5eb63b" onClose={closeModal} />
+
+                    {/* Status & Hours Highlight Banner */}
+                    <div className="flex items-center justify-between bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-3 sm:p-4">
+                      <div>
+                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                          Claim Status
+                        </span>
+                        <Badge label={selectedOt.status || 'Pending'} />
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                          Total Hours
+                        </span>
+                        <span className="text-xs sm:text-base font-extrabold text-emerald-700 bg-white px-2.5 sm:px-3 py-1 rounded-xl border border-emerald-100 shadow-2xs font-mono">
+                          ⏱️ {selectedOt.otHours || '0'} hrs
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Date & Shift Category Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <CalendarDays size={13} className="text-emerald-600" /> Date of Duty
+                        </span>
+                        <span className="text-xs sm:text-sm font-bold text-[#1a294a] block">
+                          {selectedOt.otDate ? new Date(selectedOt.otDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }) : '—'}
+                        </span>
+                      </div>
+
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <Clock size={13} className="text-emerald-600" /> Overtime Shift Type
+                        </span>
+                        <span className="text-xs sm:text-sm font-bold text-emerald-800 block">
+                          {selectedOt.otType || 'Day Shift Extension'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Staff & Metadata */}
+                    <div className="grid grid-cols-2 gap-2.5 sm:gap-3 text-xs bg-white border border-slate-200 rounded-2xl p-3 sm:p-3.5">
+                      <div>
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Staff Name</span>
+                        <span className="font-bold text-slate-700 text-xs sm:text-sm">{selectedOt.staffName || currentUser?.name}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Staff ID</span>
+                        <span className="font-bold font-mono text-emerald-700 text-xs sm:text-sm">{selectedOt.staffId || currentUser?.id}</span>
+                      </div>
+                      <div className="mt-1">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Department</span>
+                        <span className="font-bold text-slate-700 text-xs">{selectedOt.staffDep || currentUser?.department || 'Clinical'}</span>
+                      </div>
+                      <div className="mt-1">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Position</span>
+                        <span className="font-bold text-slate-700 text-xs">{selectedOt.staffPosition || currentUser?.position || 'Staff'}</span>
+                      </div>
+                    </div>
+
+                    {/* Shift Description / Patient Activity Summary */}
+                    <div>
+                      <span className="text-[10.5px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                        Shift & Clinical Duties Summary
+                      </span>
+                      <div className="bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-200 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium">
+                        {selectedOt.description || 'No additional activity notes provided.'}
+                      </div>
+                    </div>
+
+                    {/* Proof file attachment if present */}
+                    {selectedOt.file && (
+                      <div className="bg-emerald-50/50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Paperclip size={15} className="text-emerald-700 shrink-0" />
+                          <span className="text-xs font-semibold text-emerald-900 truncate">Attached Shift Proof / Logsheet</span>
+                        </div>
+                        <a
+                          href={selectedOt.file.startsWith('http') ? selectedOt.file : `${API_BASE_URL}${selectedOt.file.startsWith('/') ? '' : '/'}${selectedOt.file}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-xs font-bold text-emerald-700 hover:underline shrink-0 flex items-center gap-1"
+                        >
+                          <ExternalLink size={12} /> View File
+                        </a>
+                      </div>
+                    )}
+
+                    {/* Submitted Timestamp */}
+                    <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-100 pt-2.5">
+                      <span>Submitted: {new Date(selectedOt.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                      <span className="text-slate-500 font-semibold">Corx HR & Payroll</span>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={closeModal}
+                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold cursor-pointer hover:bg-emerald-700 transition-all shadow-xs"
+                      >
+                        Close Details
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── 2c. VIEW DUTY SWAP DETAILS MODAL ── */}
+                {activeModal === 'viewDuty' && selectedDuty && (
+                  <div className="flex flex-col gap-3.5 sm:gap-4 text-left">
+                    <ModalHeader title="Duty Swap & Replacement Details" icon={<CalendarDays size={18} />} color="#0284c7" onClose={closeModal} />
+
+                    {/* Status & Shift Pill Banner */}
+                    <div className="flex items-center justify-between bg-sky-50/70 border border-sky-200/80 rounded-2xl p-3 sm:p-4">
+                      <div>
+                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                          Request Status
+                        </span>
+                        <Badge label={selectedDuty.status || 'Pending'} />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {selectedDuty.shiftTiming && (
+                          <span className={`text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-xl border ${
+                            selectedDuty.shiftTiming === 'Night'
+                              ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                              : 'bg-amber-50 text-amber-800 border-amber-200'
+                          }`}>
+                            {selectedDuty.shiftTiming === 'Night' ? '🌙 Night Shift' : '☀️ Day Shift'}
+                          </span>
+                        )}
+                        {selectedDuty.shiftType && (
+                          <span className="text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-xl bg-sky-100 text-sky-800 border border-sky-200 font-mono">
+                            ⏱️ {selectedDuty.shiftType === 'live-in' ? 'Live-In' : selectedDuty.shiftType}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Scheduled Duty Date & Replacement Covering Staff */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <CalendarDays size={13} className="text-[#08709d]" /> Scheduled Duty Date
+                        </span>
+                        <span className="text-xs sm:text-sm font-bold text-[#1a294a] block">
+                          {selectedDuty.dutyDate ? new Date(selectedDuty.dutyDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }) : '—'}
+                        </span>
+                      </div>
+
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <Users size={13} className="text-[#08709d]" /> Covering / Replacement Staff
+                        </span>
+                        <span className="text-xs sm:text-sm font-bold text-[#08709d] block">
+                          {selectedDuty.dutyReplacement || 'Not assigned'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Requester Metadata */}
+                    <div className="grid grid-cols-2 gap-2.5 sm:gap-3 text-xs bg-white border border-slate-200 rounded-2xl p-3 sm:p-3.5">
+                      <div>
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Applicant Name</span>
+                        <span className="font-bold text-slate-700 text-xs sm:text-sm">{selectedDuty.staffName || currentUser?.name}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Staff ID</span>
+                        <span className="font-bold font-mono text-[#08709d] text-xs sm:text-sm">{selectedDuty.staffId || currentUser?.id}</span>
+                      </div>
+                    </div>
+
+                    {/* Reason / Handover Notes */}
+                    <div>
+                      <span className="text-[10.5px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                        Reason & Shift Handover Arrangements
+                      </span>
+                      <div className="bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-200 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium">
+                        {selectedDuty.dutyReason || 'No additional handover notes provided.'}
+                      </div>
+                    </div>
+
+                    {/* Submitted Timestamp */}
+                    <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-100 pt-2.5">
+                      <span>Submitted: {new Date(selectedDuty.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                      <span className="text-slate-500 font-semibold">Corx HR & Duty Roster</span>
                     </div>
 
                     <div className="flex items-center justify-end gap-3 pt-1">

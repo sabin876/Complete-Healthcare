@@ -61,8 +61,8 @@ class StaffProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Enrolled Date")
 
     class Meta:
-        verbose_name = "Staff Member Profile"
-        verbose_name_plural = "Staff Member Directory"
+        verbose_name = "Staff Detail"
+        verbose_name_plural = "Staff Details"
         ordering = ['-created_at']
 
     def __str__(self):

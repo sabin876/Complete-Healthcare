@@ -197,7 +197,7 @@ JAZZMIN_SETTINGS = {
                 {"name": "Sitemap.xml Setting", "url": "/admin/api/sitemapxml/", "permissions": ["api.view_sitemapxml"]},
             ]
         },
-        {"name": "Staff Directory", "url": "/admin/api/staffprofile/", "permissions": ["api.view_staffprofile"]},
+        {"name": "Staff Details", "url": "/admin/api/staffprofile/", "permissions": ["api.view_staffprofile"]},
         {"name": "React Frontend Dashboard", "url": "/dashboard", "new_window": True},
         {"name": "Live Web App", "url": "/", "new_window": True},
     ],
