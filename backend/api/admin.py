@@ -1850,6 +1850,7 @@ class StaffProfileForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(attrs={
             'placeholder': 'Re-type password to confirm',
+            'class': 'staff-input-control',
             'style': 'font-family: Consolas, monospace;'
         }),
         help_text="Re-enter the portal login password to confirm."
@@ -1861,21 +1862,24 @@ class StaffProfileForm(forms.ModelForm):
         widgets = {
             'full_name': forms.TextInput(attrs={
                 'placeholder': 'e.g. Dr. Sarah Jenkins, RN',
-                'style': 'font-weight: 600;'
+                'class': 'staff-input-control',
             }),
             'department': forms.TextInput(attrs={
                 'placeholder': 'Enter Department (e.g. Home Nursing, Doctor on Call, HR, Lab, etc.)',
-                'style': 'font-weight: 600;'
+                'class': 'staff-input-control',
             }),
             'position': forms.TextInput(attrs={
                 'placeholder': 'e.g. Senior DHA Registered Nurse / Consultant Physician',
+                'class': 'staff-input-control',
             }),
             'staff_id': forms.TextInput(attrs={
                 'placeholder': 'e.g. STF-101 or ADMIN-001',
-                'style': 'font-weight: 700; font-family: Consolas, monospace; letter-spacing: 0.05em;'
+                'class': 'staff-input-control',
+                'style': 'font-family: Consolas, monospace; letter-spacing: 0.05em;'
             }),
             'password': forms.TextInput(attrs={
                 'placeholder': 'Enter Portal Login Password (e.g. Staff@2024)',
+                'class': 'staff-input-control',
                 'style': 'font-family: Consolas, monospace;'
             }),
         }
@@ -1907,6 +1911,7 @@ class StaffProfileForm(forms.ModelForm):
 @admin.register(StaffProfile)
 class StaffProfileAdmin(admin.ModelAdmin):
     form = StaffProfileForm
+    change_form_template = "admin/api/staffprofile/change_form.html"
     list_display = ('passport_photo_thumbnail', 'full_name', 'staff_id_badge', 'department_badge', 'position', 'actions_buttons')
     list_display_links = ('passport_photo_thumbnail', 'full_name')
     search_fields = ('staff_id', 'full_name', 'position', 'department')

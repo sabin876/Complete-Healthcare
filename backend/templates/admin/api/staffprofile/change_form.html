@@ -1,0 +1,641 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* ==========================================================================
+   CLEANING UP JAZZMIN / DJANGO ADMIN CHROME
+   ========================================================================== */
+
+/* Full width layout without sidebar */
+.col-12.col-lg-9 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+/* Hide duplicate Jazzmin tab header, jazzy actions sidebar, and default submit rows */
+.card-header:has(.nav-tabs),
+.nav-tabs,
+ul.nav.nav-tabs,
+.card-header-tabs,
+#jazzy-actions,
+.col-12.col-lg-3,
+.submit-row,
+.card-footer {
+    display: none !important;
+}
+
+fieldset.module {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 16px 0 !important;
+}
+
+fieldset.module > h2,
+fieldset.module > .description {
+    display: none !important;
+}
+
+/* ==========================================================================
+   MODERN STAFF DETAILS CONTAINER & CARDS
+   ========================================================================== */
+
+.staff-wizard-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 24px 0 !important;
+    font-family: inherit !important;
+}
+
+/* Top Banner Header */
+.staff-banner-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 20px 28px !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+}
+
+.staff-banner-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+}
+
+.staff-banner-icon {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 16px !important;
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 22px !important;
+    box-shadow: 0 4px 16px rgba(8, 112, 157, 0.3) !important;
+    flex-shrink: 0 !important;
+}
+
+.staff-banner-title {
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    letter-spacing: -0.02em !important;
+}
+
+.staff-banner-subtitle {
+    font-size: 13px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    margin: 3px 0 0 0 !important;
+}
+
+/* Step Card Box */
+.staff-card-box {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 28px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 24px !important;
+}
+
+.staff-card-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    padding-bottom: 18px !important;
+    margin-bottom: 22px !important;
+    border-bottom: 1.5px solid #f1f5f9 !important;
+    flex-wrap: wrap !important;
+}
+
+.staff-card-header-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.staff-card-icon {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 12px !important;
+    background: #e0f2fe !important;
+    color: #08709d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 17px !important;
+    flex-shrink: 0 !important;
+}
+
+.staff-card-title {
+    font-size: 16.5px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    letter-spacing: -0.01em !important;
+}
+
+.staff-card-desc {
+    font-size: 12px !important;
+    color: #64748b !important;
+    font-weight: 500 !important;
+    margin-top: 2px !important;
+}
+
+/* Clean Form Grid & Containers */
+.staff-form-container {
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 18px !important;
+    padding: 24px !important;
+    box-sizing: border-box !important;
+}
+
+.staff-fields-row-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+    margin-bottom: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.staff-fields-row-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.staff-form-group {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.staff-label {
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #334155 !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.staff-label .req-star {
+    color: #ef4444 !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+}
+
+.staff-input-control,
+.staff-wizard-container input[type="text"],
+.staff-wizard-container input[type="password"],
+.staff-wizard-container select {
+    width: 100% !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    outline: none !important;
+}
+
+.staff-input-control:focus,
+.staff-wizard-container input:focus,
+.staff-wizard-container select:focus {
+    border-color: #08709d !important;
+    box-shadow: 0 0 0 3.5px rgba(8, 112, 157, 0.15) !important;
+    background: #ffffff !important;
+}
+
+.staff-help {
+    font-size: 11.5px !important;
+    color: #64748b !important;
+    font-weight: 500 !important;
+    margin-top: 6px !important;
+}
+
+/* Security Callout */
+.staff-security-tip {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    background: #f0f9ff !important;
+    border: 1.5px solid #bae6fd !important;
+    border-radius: 14px !important;
+    padding: 14px 18px !important;
+    margin-top: 20px !important;
+    color: #0369a1 !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    line-height: 1.5 !important;
+}
+
+.staff-security-tip i {
+    font-size: 18px !important;
+    color: #0284c7 !important;
+    margin-top: 2px !important;
+}
+
+/* Passport Photo Uploader Layout */
+.staff-photo-section {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    gap: 24px !important;
+    align-items: center !important;
+}
+
+.staff-photo-preview-box {
+    width: 140px !important;
+    height: 160px !important;
+    border-radius: 16px !important;
+    border: 2px dashed #cbd5e1 !important;
+    background: #ffffff !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+    position: relative !important;
+    flex-shrink: 0 !important;
+}
+
+.staff-photo-preview-box img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.staff-photo-upload-controls {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+/* Action Navigation Buttons Bar */
+.staff-nav-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    margin-top: 28px !important;
+    padding-top: 22px !important;
+    border-top: 1.5px solid #e2e8f0 !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+}
+
+.staff-btn-primary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    padding: 13px 30px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 18px rgba(8, 112, 157, 0.35) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+}
+
+.staff-btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(8, 112, 157, 0.45) !important;
+    color: #ffffff !important;
+}
+
+.staff-btn-secondary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    padding: 12px 24px !important;
+    border-radius: 14px !important;
+    background: #f8fafc !important;
+    color: #334155 !important;
+    border: 1.5px solid #cbd5e1 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    text-decoration: none !important;
+}
+
+.staff-btn-secondary:hover {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+.staff-btn-save {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
+    padding: 13px 36px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-decoration: none !important;
+}
+
+.staff-btn-save:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 28px rgba(16, 185, 129, 0.55) !important;
+    color: #ffffff !important;
+}
+
+@media screen and (max-width: 900px) {
+    .staff-fields-row-3,
+    .staff-fields-row-2,
+    .staff-photo-section {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="staff-wizard-container">
+    
+    <!-- Top Header Banner -->
+    <div class="staff-banner-header">
+        <div class="staff-banner-left">
+            <div class="staff-banner-icon">
+                <i class="fas fa-user-md"></i>
+            </div>
+            <div>
+                <h1 class="staff-banner-title">
+                    {% if original %}
+                        Edit Staff Details — {{ original.full_name }}
+                    {% else %}
+                        Register New Staff Member
+                    {% endif %}
+                </h1>
+                <p class="staff-banner-subtitle">
+                    Configure official healthcare credentials, portal access credentials, and profile photography.
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <a href="{% url 'admin:api_staffprofile_changelist' %}" class="staff-btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Staff Directory
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Form Element -->
+    <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form" novalidate>
+        {% csrf_token %}
+        
+        {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1" />{% endif %}
+        {% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}" />{% endif %}
+
+        {% if errors %}
+            <div class="alert alert-danger" style="border-radius: 14px; margin-bottom: 24px; font-weight: 600; padding: 16px 20px; box-shadow: 0 4px 16px rgba(220, 38, 38, 0.1);">
+                <div style="font-weight: 800; font-size: 15px; margin-bottom: 6px;">
+                    <i class="fas fa-exclamation-triangle"></i> Please correct the error{{ errors|length|pluralize }} below:
+                </div>
+                {{ adminform.form.non_field_errors }}
+                {% for field in adminform.form %}
+                    {% if field.errors %}
+                        <div style="font-size: 13px; margin-top: 4px;">• <strong>{{ field.label }}:</strong> {{ field.errors|striptags }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Card 1: 👤 Staff Member Details -->
+        <div class="staff-card-box">
+            <div class="staff-card-header">
+                <div class="staff-card-header-left">
+                    <div class="staff-card-icon">
+                        <i class="fas fa-id-badge"></i>
+                    </div>
+                    <div>
+                        <div class="staff-card-title">Staff Member Details</div>
+                        <div class="staff-card-desc">Official healthcare title, clinical specialty department, and designation.</div>
+                    </div>
+                </div>
+                <span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700; font-size: 11.5px; padding: 5px 12px; border-radius: 8px;">Step 1 of 3</span>
+            </div>
+
+            <div class="staff-form-container">
+                <div class="staff-fields-row-3">
+                    <div class="staff-form-group">
+                        <label class="staff-label">
+                            Full Medical Name <span class="req-star">*</span>
+                        </label>
+                        {{ adminform.form.full_name }}
+                        <div class="staff-help">e.g. Dr. Sarah Jenkins, RN / Consultant Physician</div>
+                    </div>
+
+                    <div class="staff-form-group">
+                        <label class="staff-label">
+                            Department <span class="req-star">*</span>
+                        </label>
+                        {{ adminform.form.department }}
+                        <div class="staff-help">e.g. Home Nursing, Doctor on Call, Lab, HR</div>
+                    </div>
+
+                    <div class="staff-form-group">
+                        <label class="staff-label">
+                            Position / Title <span class="req-star">*</span>
+                        </label>
+                        {{ adminform.form.position }}
+                        <div class="staff-help">e.g. Senior DHA Registered Nurse</div>
+                    </div>
+                </div>
+
+                {% if adminform.form.role %}
+                <div class="staff-fields-row-2">
+                    <div class="staff-form-group">
+                        <label class="staff-label">Role / Access Level</label>
+                        {{ adminform.form.role }}
+                        <div class="staff-help">Clinical staff member vs Administrator</div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Card 2: 🔒 Portal Login Credentials -->
+        <div class="staff-card-box">
+            <div class="staff-card-header">
+                <div class="staff-card-header-left">
+                    <div class="staff-card-icon" style="background: #fef3c7; color: #d97706;">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div>
+                        <div class="staff-card-title">Portal Login Credentials</div>
+                        <div class="staff-card-desc">Unique staff username/ID and secure password for portal sign-in.</div>
+                    </div>
+                </div>
+                <span class="badge" style="background: #fef3c7; color: #b45309; font-weight: 700; font-size: 11.5px; padding: 5px 12px; border-radius: 8px;">Step 2 of 3</span>
+            </div>
+
+            <div class="staff-form-container">
+                <div class="staff-fields-row-3">
+                    <div class="staff-form-group">
+                        <label class="staff-label">
+                            Username / Staff ID <span class="req-star">*</span>
+                        </label>
+                        {{ adminform.form.staff_id }}
+                        <div class="staff-help">Unique ID for Portal login (e.g. STF-101, DOC-202)</div>
+                    </div>
+
+                    <div class="staff-form-group">
+                        <label class="staff-label">
+                            Portal Password <span class="req-star">*</span>
+                        </label>
+                        {{ adminform.form.password }}
+                        <div class="staff-help">Password used to authenticate at /portal</div>
+                    </div>
+
+                    <div class="staff-form-group">
+                        <label class="staff-label">
+                            Confirm Password <span class="req-star">*</span>
+                        </label>
+                        {{ adminform.form.confirm_password }}
+                        <div class="staff-help">Re-enter password to avoid typos</div>
+                    </div>
+                </div>
+
+                <div class="staff-security-tip">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <strong>Security Notice:</strong> The Staff ID and Password configured here grant direct access to the Staff Self-Service Portal at <a href="/portal" target="_blank" style="color: #0284c7; text-decoration: underline; font-weight: 700;">/portal</a>. Please provide these credentials directly to the staff member.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: 📷 Passport Size Photo -->
+        <div class="staff-card-box">
+            <div class="staff-card-header">
+                <div class="staff-card-header-left">
+                    <div class="staff-card-icon" style="background: #dcfce7; color: #15803d;">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div>
+                        <div class="staff-card-title">Passport Size Photograph</div>
+                        <div class="staff-card-desc">Official photograph displayed on staff badge, ID verification, and directory.</div>
+                    </div>
+                </div>
+                <span class="badge" style="background: #dcfce7; color: #15803d; font-weight: 700; font-size: 11.5px; padding: 5px 12px; border-radius: 8px;">Step 3 of 3</span>
+            </div>
+
+            <div class="staff-form-container">
+                <div class="staff-photo-section">
+                    <div class="staff-photo-preview-box" id="staffPhotoBox">
+                        {% if original.photo %}
+                            <img src="{{ original.photo.url }}" id="staffPhotoImg" alt="Staff Photo" />
+                        {% else %}
+                            <div id="staffPhotoEmpty" style="text-align: center; color: #94a3b8; padding: 12px;">
+                                <i class="fas fa-user-circle" style="font-size: 48px; margin-bottom: 8px; color: #cbd5e1;"></i>
+                                <div style="font-size: 11.5px; font-weight: 600;">No photo selected</div>
+                            </div>
+                            <img id="staffPhotoImg" style="display: none;" alt="Preview" />
+                        {% endif %}
+                    </div>
+
+                    <div class="staff-photo-upload-controls">
+                        <label class="staff-label">Choose Photograph File</label>
+                        {{ adminform.form.photo }}
+                        <div class="staff-help">
+                            Recommended size: 300x400px (Passport aspect ratio). Supported formats: JPG, PNG, WEBP.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation & Action Bar -->
+        <div class="staff-nav-bar">
+            <a href="{% url 'admin:api_staffprofile_changelist' %}" class="staff-btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Staff Directory
+            </a>
+
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <button type="submit" name="_continue" class="staff-btn-primary">
+                    <i class="fas fa-save"></i> Save & Continue Editing
+                </button>
+                <button type="submit" name="_save" class="staff-btn-save">
+                    <i class="fas fa-check-circle"></i> Save Staff Member
+                </button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Live photo preview update
+    const photoInput = document.querySelector('input[type="file"][name="photo"]');
+    const photoImg = document.getElementById('staffPhotoImg');
+    const photoEmpty = document.getElementById('staffPhotoEmpty');
+
+    if (photoInput) {
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    if (photoImg) {
+                        photoImg.src = evt.target.result;
+                        photoImg.style.display = 'block';
+                    }
+                    if (photoEmpty) {
+                        photoEmpty.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
