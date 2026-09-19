@@ -179,30 +179,30 @@
             </div>
         </div>
 
-        <!-- Driver Schedules -->
+        <!-- Pending Leaves -->
         <div class="col-lg-3 col-md-6 col-12 mb-4">
             <div style="background: white; border-radius: 16px; border: 1.5px solid #e2e8f0; padding: 22px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.2s ease-in-out;" class="metric-card">
-                <div style="background: rgba(5, 150, 105, 0.1); color: #059669; width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
-                    <i class="fas fa-route"></i>
+                <div style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+                    <i class="fas fa-calendar-times"></i>
                 </div>
                 <div>
-                    <div style="color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Trip Schedules</div>
-                    <div style="font-size: 26px; font-weight: 800; color: #0f172a;">{{ schedule_count|default:"0" }}</div>
-                    <a href="/admin/api/driverschedule/" style="font-size: 11.5px; font-weight: 700; color: #059669; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; margin-top: 4px;">Manage Schedules →</a>
+                    <div style="color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Pending Leaves</div>
+                    <div style="font-size: 26px; font-weight: 800; color: #0f172a;">{{ pending_leaves|default:"0" }}</div>
+                    <a href="/admin/api/leaveapplication/?status__exact=Pending" style="font-size: 11.5px; font-weight: 700; color: #f43f5e; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; margin-top: 4px;">Review Applications →</a>
                 </div>
             </div>
         </div>
 
-        <!-- Staff Notices -->
+        <!-- Active Tasks -->
         <div class="col-lg-3 col-md-6 col-12 mb-4">
             <div style="background: white; border-radius: 16px; border: 1.5px solid #e2e8f0; padding: 22px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.2s ease-in-out;" class="metric-card">
-                <div style="background: rgba(99, 102, 241, 0.1); color: #6366f1; width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
-                    <i class="fas fa-bullhorn"></i>
+                <div style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+                    <i class="fas fa-tasks"></i>
                 </div>
                 <div>
-                    <div style="color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Staff Notices</div>
-                    <div style="font-size: 26px; font-weight: 800; color: #0f172a;">{{ notice_count|default:"0" }}</div>
-                    <a href="/admin/api/noticeapplication/" style="font-size: 11.5px; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; margin-top: 4px;">Post Notices →</a>
+                    <div style="color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Active Tasks</div>
+                    <div style="font-size: 26px; font-weight: 800; color: #0f172a;">{{ active_tasks|default:"0" }}</div>
+                    <a href="/admin/api/task/?status__exact=In+Progress" style="font-size: 11.5px; font-weight: 700; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; margin-top: 4px;">Track Board →</a>
                 </div>
             </div>
         </div>
@@ -224,56 +224,61 @@
 
     <!-- 3. Operations Layout (Tables and Quick links) -->
     <div class="row">
-        <!-- Left: Schedules and Core apps -->
+        <!-- Left: Tasks and Core apps -->
         <div class="col-lg-8 col-12">
             
-            <!-- Driver Schedules List Card -->
+            <!-- Tasks List Card -->
             <div class="card mb-4" style="border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.02); background: white;">
                 <div class="card-header" style="background: #ffffff; border-bottom: 1.5px solid #f1f5f9; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;">
                     <h5 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.03em;">
-                        Recent Driver Trip Schedules
+                        Recent Operational Tasks
                     </h5>
-                    <a href="/admin/api/driverschedule/add/" class="btn btn-sm" style="background: #08709d; color: white; font-weight: 700; font-size: 11px; padding: 6px 12px; border-radius: 6px;">+ Create Schedule</a>
+                    <a href="/admin/api/task/add/" class="btn btn-sm" style="background: #08709d; color: white; font-weight: 700; font-size: 11px; padding: 6px 12px; border-radius: 6px;">+ Assign Task</a>
                 </div>
                 <div class="card-body" style="padding: 0;">
                     <div class="table-responsive">
                         <table class="table" style="margin: 0; border: none;">
                             <thead>
                                 <tr>
-                                    <th style="font-size: 11px; padding: 12px 20px; background: #061e36 !important; color: white;">Assigned Driver</th>
-                                    <th style="font-size: 11px; padding: 12px 20px; background: #061e36 !important; color: white;">Vehicle Info</th>
-                                    <th style="font-size: 11px; padding: 12px 20px; text-align: center; background: #061e36 !important; color: white;">Date</th>
+                                    <th style="font-size: 11px; padding: 12px 20px; background: #061e36 !important; color: white;">Task Title</th>
+                                    <th style="font-size: 11px; padding: 12px 20px; background: #061e36 !important; color: white;">Assigned To</th>
+                                    <th style="font-size: 11px; padding: 12px 20px; text-align: center; background: #061e36 !important; color: white;">Priority</th>
                                     <th style="font-size: 11px; padding: 12px 20px; text-align: center; background: #061e36 !important; color: white;">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% if recent_schedules %}
-                                    {% for sch in recent_schedules %}
+                                {% if recent_tasks %}
+                                    {% for task in recent_tasks %}
                                         <tr>
                                             <td style="padding: 14px 20px; font-weight: 700; color: #1e293b;">
-                                                <a href="/admin/api/driverschedule/{{ sch.id }}/change/">{{ sch.driver_name|default:sch.driver.full_name }}</a>
-                                                <div style="font-size: 11px; color: #64748b; font-weight: 500;">📞 {{ sch.driver_phone|default:"No phone" }}</div>
+                                                <a href="/admin/api/task/{{ task.id }}/change/">{{ task.title }}</a>
                                             </td>
                                             <td style="padding: 14px 20px; color: #64748b; font-weight: 600;">
-                                                {{ sch.vehicle_info|default:"Standard Vehicle" }}
-                                            </td>
-                                            <td style="padding: 14px 20px; text-align: center; font-weight: 600; font-size: 12px;">
-                                                {{ sch.schedule_date|default:"TBD" }}
+                                                {{ task.assigned_to_name|default:task.assigned_to.full_name }}
                                             </td>
                                             <td style="padding: 14px 20px; text-align: center;">
-                                                {% if sch.status == 'Completed' %}
-                                                    <span class="badge" style="background: #dcfce7; color: #15803d; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">✓ Done</span>
-                                                {% elif sch.status == 'In Progress' %}
-                                                    <span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">● In Route</span>
+                                                {% if task.priority == 'High' %}
+                                                    <span class="badge" style="background: #fee2e2; color: #ef4444; font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px;">High</span>
+                                                {% elif task.priority == 'Medium' %}
+                                                    <span class="badge" style="background: #fef3c7; color: #d97706; font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px;">Medium</span>
                                                 {% else %}
-                                                    <span class="badge" style="background: #fef3c7; color: #d97706; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">⏳ Scheduled</span>
+                                                    <span class="badge" style="background: #f0fdf4; color: #16a34a; font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px;">Low</span>
+                                                {% endif %}
+                                            </td>
+                                            <td style="padding: 14px 20px; text-align: center;">
+                                                {% if task.status == 'Completed' %}
+                                                    <span class="badge" style="background: #dcfce7; color: #15803d; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">✓ Done</span>
+                                                {% elif task.status == 'In Progress' %}
+                                                    <span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">● Active</span>
+                                                {% else %}
+                                                    <span class="badge" style="background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">○ Pending</span>
                                                 {% endif %}
                                             </td>
                                         </tr>
                                     {% endfor %}
                                 {% else %}
                                     <tr>
-                                        <td colspan="4" style="text-align: center; color: #94a3b8; padding: 24px; font-style: italic;">No driver schedules added yet.</td>
+                                        <td colspan="4" style="text-align: center; color: #94a3b8; padding: 24px; font-style: italic;">No recent tasks assigned.</td>
                                     </tr>
                                 {% endif %}
                             </tbody>
@@ -326,37 +331,45 @@
 
         </div>
 
-        <!-- Right: Recent Staff Details & Utilities -->
+        <!-- Right: Recent Leaves & Utilities -->
         <div class="col-lg-4 col-12">
             
-            <!-- Staff Details Card -->
+            <!-- Leaves Review Card -->
             <div class="card mb-4" style="border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.02); background: white;">
-                <div class="card-header" style="background: #ffffff; border-bottom: 1.5px solid #f1f5f9; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;">
+                <div class="card-header" style="background: #ffffff; border-bottom: 1.5px solid #f1f5f9; padding: 18px 24px;">
                     <h5 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.03em;">
-                        Staff Details
+                        Leave Applications
                     </h5>
-                    <a href="/admin/api/staffprofile/add/" class="btn btn-sm" style="background: #10b981; color: white; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 6px;">+ Add Staff</a>
                 </div>
                 <div class="card-body" style="padding: 20px;">
                     <div style="display: flex; flex-direction: column; gap: 14px;">
-                        {% if recent_staff %}
-                            {% for s in recent_staff %}
-                                <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;" class="last-border-none">
+                        {% if recent_leaves %}
+                            {% for leave in recent_leaves %}
+                                <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start;" class="last-border-none">
                                     <div>
                                         <div style="font-weight: 700; font-size: 13.5px; color: #1e293b;">
-                                            <a href="/admin/api/staffprofile/{{ s.id }}/change/">{{ s.full_name }}</a>
+                                            <a href="/admin/api/leaveapplication/{{ leave.id }}/change/">{{ leave.staff_name }}</a>
                                         </div>
                                         <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 2px;">
-                                            {{ s.position|default:"Staff" }} • {{ s.department|default:"Clinical" }}
+                                            {{ leave.leave_type }}
+                                        </div>
+                                        <div style="font-size: 11px; color: #94a3b8; font-weight: 600; margin-top: 4px;">
+                                            {{ leave.leave_start }} to {{ leave.leave_end }}
                                         </div>
                                     </div>
                                     <div>
-                                        <span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700; font-size: 11px; padding: 3px 8px; border-radius: 6px; font-family: monospace;">{{ s.staff_id }}</span>
+                                        {% if leave.status == 'Approved' %}
+                                            <span class="badge" style="background: #dcfce7; color: #15803d; font-weight: 700; font-size: 10px; padding: 3px 8px; border-radius: 12px;">Approved</span>
+                                        {% elif leave.status == 'Rejected' %}
+                                            <span class="badge" style="background: #fee2e2; color: #b91c1c; font-weight: 700; font-size: 10px; padding: 3px 8px; border-radius: 12px;">Rejected</span>
+                                        {% else %}
+                                            <span class="badge" style="background: #fef3c7; color: #d97706; font-weight: 700; font-size: 10px; padding: 3px 8px; border-radius: 12px;">Pending</span>
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <div style="text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">No staff registered yet.</div>
+                            <div style="text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">No recent leave requests.</div>
                         {% endif %}
                     </div>
                 </div>

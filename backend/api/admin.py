@@ -1844,6 +1844,50 @@ class TeamMemberAdmin(admin.ModelAdmin):
     search_fields = ('name', 'post')
 
 
+class TaskInline(admin.TabularInline):
+    model = Task
+    fk_name = 'assigned_to'
+    extra = 0
+    fields = ('title', 'priority', 'status', 'due_date')
+    classes = ('collapse',)
+
+
+class LeaveApplicationInline(admin.TabularInline):
+    model = LeaveApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('leave_type', 'leave_start', 'leave_end', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
+class OtApplicationInline(admin.TabularInline):
+    model = OtApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('ot_type', 'ot_date', 'ot_hours', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
+class DutyApplicationInline(admin.TabularInline):
+    model = DutyApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('duty_date', 'shift_timing', 'shift_type', 'duty_replacement', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
+class SalaryApplicationInline(admin.TabularInline):
+    model = SalaryApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('description', 'image', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
 class StaffProfileForm(forms.ModelForm):
     confirm_password = forms.CharField(
         label="Re-type Password (Portal)",
@@ -1907,6 +1951,7 @@ class StaffProfileForm(forms.ModelForm):
 @admin.register(StaffProfile)
 class StaffProfileAdmin(admin.ModelAdmin):
     form = StaffProfileForm
+    inlines = [TaskInline, LeaveApplicationInline, OtApplicationInline, DutyApplicationInline, SalaryApplicationInline]
     list_display = ('passport_photo_thumbnail', 'full_name', 'staff_id_badge', 'department_badge', 'position', 'actions_buttons')
     list_display_links = ('passport_photo_thumbnail', 'full_name')
     search_fields = ('staff_id', 'full_name', 'position', 'department')
@@ -3799,15 +3844,15 @@ def custom_admin_index(request, extra_context=None):
     
     try:
         extra_context['staff_count'] = StaffProfile.objects.count()
-        extra_context['schedule_count'] = DriverSchedule.objects.count()
-        extra_context['notice_count'] = NoticeApplication.objects.count()
+        extra_context['pending_leaves'] = LeaveApplication.objects.filter(status='Pending').count()
+        extra_context['active_tasks'] = Task.objects.filter(status='In Progress').count()
         extra_context['service_count'] = Service.objects.count()
         extra_context['blog_count'] = BlogPost.objects.count()
         extra_context['team_count'] = TeamMember.objects.count()
         
         # Recent data for tables
-        extra_context['recent_schedules'] = DriverSchedule.objects.order_by('-schedule_date', '-created_at')[:5]
-        extra_context['recent_staff'] = StaffProfile.objects.order_by('-id')[:5]
+        extra_context['recent_tasks'] = Task.objects.order_by('-created_at')[:5]
+        extra_context['recent_leaves'] = LeaveApplication.objects.order_by('-submitted_at')[:5]
     except Exception:
         pass
         
