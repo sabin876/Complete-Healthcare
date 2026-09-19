@@ -31,7 +31,7 @@ jobs:
             -i ~/.ssh/id_ed25519 \
             -o StrictHostKeyChecking=no \
             -p "${{ secrets.SSH_PORT }}" \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" << EOF
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" << 'EOF'
 
           set -e
 
@@ -42,20 +42,30 @@ jobs:
           echo "Current directory:"
           pwd
 
-          echo "Pull latest code..."
-          git pull origin main
+          echo "Configuring git safe directory..."
+          git config --global --add safe.directory "*" || true
+
+          echo "Fetching latest code from origin/main..."
+          git fetch origin main
+
+          echo "Resetting working tree to origin/main..."
+          git reset --hard origin/main
 
           echo "Activate Python virtual environment..."
-          source /home4/corxae/virtualenv/Complete-Healthcare/backend/3.10/bin/activate
+          if [ -f /home4/corxae/virtualenv/Complete-Healthcare/backend/3.10/bin/activate ]; then
+            source /home4/corxae/virtualenv/Complete-Healthcare/backend/3.10/bin/activate
+          elif [ -f ~/virtualenv/Complete-Healthcare/backend/3.10/bin/activate ]; then
+            source ~/virtualenv/Complete-Healthcare/backend/3.10/bin/activate
+          fi
 
           echo "Enter backend directory..."
           cd backend
 
           echo "Python version:"
-          python --version
+          python --version || python3 --version
 
           echo "Upgrade pip..."
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip || pip install --upgrade pip
 
           echo "Install requirements..."
           pip install -r requirements.txt
