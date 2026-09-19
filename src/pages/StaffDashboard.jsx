@@ -1,17 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  LogOut, ChevronDown, CheckCircle2, X,
-  Paperclip, ArrowUpRight, Sun, Moon, Zap,
-  User, Megaphone, Bell,
-  Eye, Sparkles, Check, Send,
-  Car, Clock
+  LogOut, Calendar, Clock, ChevronDown, CheckCircle2, X,
+  Paperclip, ArrowUpRight, Sun, Moon, Zap, TrendingUp,
+  ClipboardList, CalendarDays, User, Megaphone, Bell,
+  Eye, Sparkles, Check, Send, AlertCircle, FileText,
+  Briefcase, Building2, Hourglass, Receipt, Download, ExternalLink,
+  Car, MapPin, Navigation, Route, Phone, ArrowRight
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import { API_BASE_URL } from '../config/api';
 import logo from '../assets/logo.webp';
 import ShuttleDispatchCard from '../components/ShuttleDispatchCard';
+
 
 /* ── Brand palette ──────────────────────────────────────────────────────── */
 const B = {
@@ -47,6 +49,14 @@ const getGreeting = () => {
 const formatDate = () => new Date().toLocaleDateString('en-GB', {
   weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
 });
+
+const calculateDays = (start, end) => {
+  if (!start || !end) return '—';
+  const s = new Date(start), e = new Date(end);
+  if (isNaN(s) || isNaN(e)) return '—';
+  const d = Math.ceil((e - s) / 86400000) + 1;
+  return d > 0 ? `${d} day${d !== 1 ? 's' : ''}` : '0 days';
+};
 
 const formatScheduleDate = (dateStr) => {
   if (!dateStr) return 'Sat, 5 Sep 2026';
@@ -145,13 +155,21 @@ const EmptyState = ({ icon: Icon, text }) => (
 const StaffDashboard = () => {
   const navigate = useNavigate();
   const {
-    currentUser, logout,
-    noticeApplications, createNoticeApplication
+    currentUser, staffUsers, logout, getTasksForStaff, updateTaskStatus,
+    leaveApplications, createLeaveApplication,
+    otApplications, createOtApplication,
+    salaryApplications, createSalaryApplication,
+    noticeApplications, createNoticeApplication,
+    dutyApplications, createDutyApplication
   } = useAuth();
 
-  const [activeTab, setActiveTab] = useState('schedule'); // 'schedule' | 'notice'
-  const [activeModal, setActiveModal] = useState(null); // 'notice' | 'viewNotice' | 'viewSchedule'
+  const [activeTab, setActiveTab] = useState('leave'); // 'leave' | 'ot' | 'duty' | 'schedule' | 'notice' | 'salary'
+  const [activeModal, setActiveModal] = useState(null); // 'leave' | 'ot' | 'duty' | 'notice' | 'salary' | 'viewNotice' | 'viewLeave' | 'viewOt' | 'viewDuty' | 'viewSalarySlip' | 'viewSchedule'
   const [selectedNotice, setSelectedNotice] = useState(null);
+  const [selectedLeave, setSelectedLeave] = useState(null);
+  const [selectedOt, setSelectedOt] = useState(null);
+  const [selectedDuty, setSelectedDuty] = useState(null);
+  const [selectedSalarySlip, setSelectedSalarySlip] = useState(null);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
@@ -187,13 +205,43 @@ const StaffDashboard = () => {
     fetchSchedules();
   }, [currentUser]);
 
+  /* ── Leave form state ── */
+  const [leaveType, setLeaveType] = useState('Annual Leave');
+  const [leaveStart, setLeaveStart] = useState('');
+  const [leaveEnd, setLeaveEnd] = useState('');
+  const [leaveReason, setLeaveReason] = useState('');
+  const [leaveFile, setLeaveFile] = useState(null);
+  const leaveFileRef = useRef(null);
+
+  /* ── OT form state ── */
+  const [otType, setOtType] = useState('Day Shift');
+  const [otDate, setOtDate] = useState('');
+  const [otHours, setOtHours] = useState('');
+  const [otDescription, setOtDescription] = useState('');
+  const [otFile, setOtFile] = useState(null);
+  const otFileRef = useRef(null);
+
+  /* ── Duty Schedule form state ── */
+  const [dutyDate, setDutyDate] = useState('');
+  const [dutyShiftTiming, setDutyShiftTiming] = useState('Day');
+  const [dutyShiftType, setDutyShiftType] = useState('8-hours');
+  const [dutyReplacement, setDutyReplacement] = useState('');
+  const [dutyReason, setDutyReason] = useState('');
+
   /* ── Notice form state ── */
   const [noticeTitle, setNoticeTitle] = useState('');
   const [noticePriority, setNoticePriority] = useState('normal');
-  const [noticeTargetAudience, setNoticeTargetAudience] = useState('all');
+  const [noticeTarget, setNoticeTarget] = useState('all');
+  const [noticeDepartment, setNoticeDepartment] = useState('');
   const [noticeMessage, setNoticeMessage] = useState('');
   const [noticeFile, setNoticeFile] = useState(null);
   const noticeFileRef = useRef(null);
+
+  /* ── Salary form state ── */
+  const [incAmount, setIncAmount] = useState('');
+  const [incJustification, setIncJustification] = useState('');
+  const [incFile, setIncFile] = useState(null);
+  const incFileRef = useRef(null);
 
   /* ── Autofill from logged-in user ── */
   const [staffName, setStaffName] = useState(currentUser?.name || '');
@@ -229,6 +277,14 @@ const StaffDashboard = () => {
   const openModal = (type, data = null) => {
     if (type === 'viewNotice') {
       setSelectedNotice(data);
+    } else if (type === 'viewLeave') {
+      setSelectedLeave(data);
+    } else if (type === 'viewOt') {
+      setSelectedOt(data);
+    } else if (type === 'viewDuty') {
+      setSelectedDuty(data);
+    } else if (type === 'viewSalarySlip') {
+      setSelectedSalarySlip(data);
     } else if (type === 'viewSchedule') {
       setSelectedSchedule(data);
     }
@@ -238,9 +294,18 @@ const StaffDashboard = () => {
   const closeModal = () => {
     setActiveModal(null);
     setSelectedNotice(null);
+    setSelectedLeave(null);
+    setSelectedOt(null);
+    setSelectedDuty(null);
+    setSelectedSalarySlip(null);
     setSelectedSchedule(null);
+    setLeaveStart(''); setLeaveEnd(''); setLeaveReason(''); setLeaveFile(null);
+    setOtDate(''); setOtHours(''); setOtDescription(''); setOtFile(null);
+    setDutyDate(''); setDutyShiftTiming('Day'); setDutyShiftType('8-hours'); setDutyReplacement(''); setDutyReason('');
     setNoticeTitle(''); setNoticeMessage(''); setNoticeFile(null);
+    setIncJustification(''); setIncFile(null);
   };
+
 
   const toggleAcknowledgeNotice = (id) => {
     setAcknowledgedNotices(prev => {
@@ -254,16 +319,32 @@ const StaffDashboard = () => {
 
   const submitForm = async (e, type, record) => {
     e.preventDefault();
-    if (type === 'notice') {
+    if (type === 'leave') {
+      await createLeaveApplication(record);
+      setSuccessMsg('Leave application submitted to HR successfully.');
+    } else if (type === 'ot') {
+      await createOtApplication(record);
+      setSuccessMsg('Overtime claim submitted successfully.');
+    } else if (type === 'duty') {
+      await createDutyApplication(record);
+      setSuccessMsg('Duty replacement schedule request submitted successfully.');
+    } else if (type === 'notice') {
       await createNoticeApplication(record);
       setSuccessMsg('Staff Notice submitted and published successfully.');
+    } else if (type === 'salary') {
+      await createSalaryApplication(record);
+      setSuccessMsg('Salary review request submitted to HR.');
     }
     closeModal();
     setTimeout(() => setSuccessMsg(null), 5000);
   };
 
   /* ── Filtered user data ── */
-  const allNotices = (noticeApplications || []);
+  const myLeaves    = (leaveApplications || []).filter(r => r.staffId?.trim().toLowerCase() === currentUser?.id?.trim().toLowerCase());
+  const myOts       = (otApplications || []).filter(r => r.staffId?.trim().toLowerCase() === currentUser?.id?.trim().toLowerCase());
+  const myDuties    = (dutyApplications || []).filter(r => r.staffId?.trim().toLowerCase() === currentUser?.id?.trim().toLowerCase());
+  const mySalaries  = (salaryApplications || []).filter(r => r.staffId?.trim().toLowerCase() === currentUser?.id?.trim().toLowerCase());
+  const allNotices  = (noticeApplications || []);
   const mySubmittedNotices = allNotices.filter(r => r.staffId?.trim().toLowerCase() === currentUser?.id?.trim().toLowerCase());
 
   /* ── Driver / Trip Schedules Filter ── */
@@ -313,6 +394,7 @@ const StaffDashboard = () => {
 
   const greeting = getGreeting();
   const initials = getInitials(currentUser?.name);
+  const myTasks  = getTasksForStaff ? getTasksForStaff(currentUser?.id) : [];
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-['Poppins']">
@@ -405,7 +487,7 @@ const StaffDashboard = () => {
           )}
         </AnimatePresence>
 
-        {/* ── Welcome Profile Hero Card ─────────────────────────────────────── */}
+        {/* ── Welcome Profile Hero Card (Mobile Compact & Clean) ────────────── */}
         <section className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-7 shadow-xs relative overflow-hidden">
           {/* Subtle background ambient gradient */}
           <div className="absolute top-0 right-0 w-64 sm:w-80 h-64 sm:h-80 bg-gradient-to-bl from-sky-100/60 via-emerald-50/40 to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
@@ -444,38 +526,50 @@ const StaffDashboard = () => {
               </div>
             </div>
 
-            {/* Quick Metrics */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full sm:w-auto shrink-0 pt-1 sm:pt-0">
-              <div className="bg-sky-50/80 border border-sky-100/80 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl text-center min-w-[110px]">
-                <span className="text-[9px] sm:text-[10px] font-bold text-sky-700 uppercase tracking-wider block truncate">Schedules</span>
-                <span className="text-base sm:text-xl font-black text-[#08709d] block mt-0.5">{displayedSchedules.length}</span>
+            {/* Quick Metrics (2x2 on Mobile, 4x1 on Desktop) */}
+            <div className="grid grid-cols-4 gap-2 sm:gap-3 w-full lg:w-auto shrink-0 pt-1 sm:pt-0">
+              <div className="bg-sky-50/80 border border-sky-100/80 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center">
+                <span className="text-[9px] sm:text-[10px] font-bold text-sky-700 uppercase tracking-wider block truncate">Tasks</span>
+                <span className="text-base sm:text-xl font-black text-[#08709d] block mt-0.5">{myTasks.length}</span>
               </div>
-              <div className="bg-amber-50/80 border border-amber-100/80 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl text-center min-w-[110px]">
+              <div className="bg-amber-50/80 border border-amber-100/80 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center">
                 <span className="text-[9px] sm:text-[10px] font-bold text-amber-700 uppercase tracking-wider block truncate">Notices</span>
                 <span className="text-base sm:text-xl font-black text-amber-600 block mt-0.5">{allNotices.length}</span>
+              </div>
+              <div className="bg-emerald-50/80 border border-emerald-100/80 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center">
+                <span className="text-[9px] sm:text-[10px] font-bold text-emerald-700 uppercase tracking-wider block truncate">Leaves</span>
+                <span className="text-base sm:text-xl font-black text-emerald-600 block mt-0.5">{myLeaves.length}</span>
+              </div>
+              <div className="bg-indigo-50/80 border border-indigo-100/80 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center">
+                <span className="text-[9px] sm:text-[10px] font-bold text-indigo-700 uppercase tracking-wider block truncate">Claims</span>
+                <span className="text-base sm:text-xl font-black text-indigo-600 block mt-0.5">{myLeaves.length + myOts.length + mySalaries.length}</span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── Trip Schedules & Staff Notices ─────────────────────────────────── */}
+        {/* ── Applications & Request History (Mobile-First Touch Panes) ───────── */}
         <section className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-3 mb-3.5 sm:mb-5">
             <div>
               <h3 className="text-sm sm:text-lg font-black text-[#1a294a]">
-                Schedules & Activity
+                Applications & Request History
               </h3>
               <p className="text-[11px] sm:text-xs text-slate-400 font-medium">
-                Review driver dispatch itineraries and your published staff notices
+                Track status and approval lifecycle of your submitted forms
               </p>
             </div>
           </div>
 
-          {/* Tab Navigation */}
-          <div className="grid grid-cols-2 gap-1.5 sm:gap-2 border-b border-slate-100 pb-3 mb-4 sm:mb-5 max-w-sm">
+          {/* All 6 Tabs on Mobile (3 columns on small screen, 6 on desktop) */}
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 sm:gap-2 border-b border-slate-100 pb-3 mb-4 sm:mb-5">
             {[
+              { id: 'leave', label: 'Leaves', count: myLeaves.length, icon: Calendar },
+              { id: 'ot', label: 'OT Claims', count: myOts.length, icon: Clock },
+              { id: 'duty', label: 'Duty Swap', count: myDuties.length, icon: CalendarDays },
               { id: 'schedule', label: 'Schedules', count: displayedSchedules.length, icon: Car },
               { id: 'notice', label: 'My Notices', count: mySubmittedNotices.length, icon: Megaphone },
+              { id: 'salary', label: 'Salary Slips', count: mySalaries.length, icon: Receipt },
             ].map(tab => {
               const Icon = tab.icon;
               const active = activeTab === tab.id;
@@ -483,16 +577,16 @@ const StaffDashboard = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center justify-center gap-1 sm:gap-1.5 px-3 py-2 sm:py-2.5 rounded-xl text-[11px] sm:text-sm font-bold transition-all cursor-pointer active:scale-95 ${
+                  className={`flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3.5 py-2 sm:py-2.5 rounded-xl text-[11px] sm:text-sm font-bold transition-all cursor-pointer active:scale-95 ${
                     active
                       ? 'bg-sky-50 text-[#08709d] shadow-2xs border border-sky-200'
                       : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-transparent'
                   }`}
                 >
-                  <Icon size={14} className="shrink-0 sm:w-4 sm:h-4" />
+                  <Icon size={13} className="shrink-0 sm:w-4 sm:h-4" />
                   <span className="truncate">{tab.label}</span>
                   <span
-                    className={`text-[9px] sm:text-[10px] px-1.5 py-0.2 rounded-full font-bold shrink-0 ${
+                    className={`text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.2 rounded-full font-bold shrink-0 ${
                       active ? 'bg-[#08709d] text-white' : 'bg-slate-100 text-slate-500'
                     }`}
                   >
@@ -505,7 +599,191 @@ const StaffDashboard = () => {
 
           {/* Tab Content Panes */}
           <div>
-            {/* ── DRIVER & TRIP SCHEDULES TAB ── */}
+            {/* ── LEAVES TAB ── */}
+            {activeTab === 'leave' && (
+              myLeaves.length === 0 ? (
+                <EmptyState
+                  icon={Calendar}
+                  text="No leave applications submitted yet. Tap 'Apply for Leave' below to submit a request."
+                />
+              ) : (
+                <div className="flex flex-col gap-2.5 sm:gap-3.5">
+                  {myLeaves.map((r, i) => {
+                    const statusInfo = STATUS_CFG[r.status] || STATUS_CFG.Pending;
+                    const durationText = calculateDays(r.leaveStart, r.leaveEnd);
+
+                    return (
+                      <motion.div
+                        key={r.id || i}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.03 }}
+                        className="border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 relative overflow-hidden group"
+                      >
+                        {/* Left status accent line */}
+                        <div
+                          className="absolute left-0 top-2.5 bottom-2.5 w-1 rounded-r-full"
+                          style={{ backgroundColor: statusInfo.color }}
+                        />
+
+                        {/* Leave details */}
+                        <div className="flex-1 min-w-0 pl-1.5">
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <span className="text-xs sm:text-base font-bold text-[#1a294a]">
+                              {r.leaveType}
+                            </span>
+                            <Badge label={r.status} cfg={statusInfo} />
+                            <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-[#08709d] border border-sky-100">
+                              ⏳ {durationText}
+                            </span>
+                          </div>
+
+                          {r.reason ? (
+                            <p className="text-[11px] sm:text-xs text-slate-500 font-medium truncate max-w-xl mb-1">
+                              {r.reason}
+                            </p>
+                          ) : (
+                            <p className="text-[11px] sm:text-xs text-slate-400 font-medium italic mb-1">
+                              Standard Leave Application
+                            </p>
+                          )}
+
+                          <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-slate-400 font-medium">
+                            <span>
+                              {new Date(r.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                            </span>
+                            <span className="text-slate-300">•</span>
+                            <span className="text-slate-500 font-mono">
+                              ID: {r.staffId || currentUser?.id}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* View Details Action Button (Full width on mobile) */}
+                        <div className="flex items-center gap-2 shrink-0 pt-1 sm:pt-0 sm:self-center border-t sm:border-t-0 border-slate-100">
+                          <button
+                            type="button"
+                            onClick={() => openModal('viewLeave', r)}
+                            className="w-full sm:w-auto justify-center px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-50 hover:bg-sky-100 text-[#08709d] border border-sky-200/70 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95"
+                          >
+                            <Eye size={14} className="text-[#08709d]" />
+                            <span>View Full Details</span>
+                          </button>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )
+            )}
+
+            {/* ── OT CLAIMS TAB ── */}
+            {activeTab === 'ot' && (
+              myOts.length === 0 ? (
+                <EmptyState
+                  icon={Clock}
+                  text="No OT claims recorded. Tap 'Apply for OT' below to log your extra shift duty hours."
+                />
+              ) : (
+                <div className="flex flex-col gap-2.5 sm:gap-3">
+                  {myOts.map((r, i) => (
+                    <div
+                      key={r.id || i}
+                      className="border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 shadow-2xs"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                          <span className="text-xs sm:text-sm font-bold text-[#1a294a]">{r.otType}</span>
+                          <Badge label={r.status} />
+                        </div>
+                        <div className="flex items-center gap-2.5 text-[11px] sm:text-xs text-slate-500 font-medium flex-wrap">
+                          <span>📅 {r.otDate}</span>
+                          <span className="text-emerald-700 font-bold font-mono">⏱️ {r.otHours}h Claimed</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-3 shrink-0 pt-2 sm:pt-0 sm:self-center border-t sm:border-t-0 border-slate-100 justify-between sm:justify-end">
+                        <span className="text-[10px] sm:text-[11px] text-slate-400 font-mono">
+                          {new Date(r.submittedAt).toLocaleDateString('en-GB')}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => openModal('viewOt', r)}
+                          className="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/70 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95"
+                        >
+                          <Eye size={13} className="text-emerald-700" />
+                          <span>View Details</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            )}
+
+            {/* ── DUTY SCHEDULE TAB ── */}
+            {activeTab === 'duty' && (
+              myDuties.length === 0 ? (
+                <EmptyState
+                  icon={CalendarDays}
+                  text="No duty replacement requests logged. Tap 'Duty Schedule' below to request a shift swap."
+                />
+              ) : (
+                <div className="flex flex-col gap-2.5 sm:gap-3">
+                  {myDuties.map((r, i) => (
+                    <div
+                      key={r.id || i}
+                      className="border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 shadow-2xs"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                          <span className="text-xs sm:text-sm font-bold text-[#1a294a]">Date: {r.dutyDate}</span>
+                          <Badge label={r.status} />
+                          {r.shiftTiming && (
+                            <span className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full border ${
+                              r.shiftTiming === 'Night'
+                                ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                : 'bg-amber-50 text-amber-800 border-amber-200'
+                            }`}>
+                              {r.shiftTiming === 'Night' ? '🌙 Night Shift' : '☀️ Day Shift'}
+                            </span>
+                          )}
+                          {r.shiftType && (
+                            <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+                              ⏱️ {r.shiftType === 'live-in' ? 'Live-In Duty' : r.shiftType}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] sm:text-xs text-slate-600 font-medium mb-1">
+                          👤 Covering Staff: <span className="font-bold text-[#08709d]">{r.dutyReplacement}</span>
+                        </p>
+                        {r.dutyReason && (
+                          <p className="text-[11px] sm:text-xs text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100 line-clamp-2">
+                            <strong className="text-slate-700">Handover Notes / Reason:</strong> {r.dutyReason}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center gap-3 shrink-0 pt-2 sm:pt-0 sm:self-center border-t sm:border-t-0 border-slate-100 justify-between sm:justify-end">
+                        <span className="text-[10px] sm:text-[11px] text-slate-400 font-mono">
+                          {new Date(r.submittedAt).toLocaleDateString('en-GB')}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => openModal('viewDuty', r)}
+                          className="px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-50 hover:bg-sky-100 text-[#08709d] border border-sky-200/70 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95"
+                        >
+                          <Eye size={13} className="text-[#08709d]" />
+                          <span>View Details</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            )}
+
+            {/* ── DRIVER & TRIP SCHEDULES TAB (EXACT SCREENSHOT MAP FORM DESIGN) ── */}
             {activeTab === 'schedule' && (
               displayedSchedules.length === 0 ? (
                 <EmptyState
@@ -574,7 +852,7 @@ const StaffDashboard = () => {
               mySubmittedNotices.length === 0 ? (
                 <EmptyState
                   icon={Megaphone}
-                  text="You haven't posted any staff notices yet. Tap 'Post Notice' below to publish an update."
+                  text="You haven't posted any staff notices yet. Tap 'Submit Staff Notice' below to post."
                 />
               ) : (
                 <div className="flex flex-col gap-2.5 sm:gap-3">
@@ -609,76 +887,178 @@ const StaffDashboard = () => {
               )
             )}
 
+            {/* ── SALARY SLIPS TAB ── */}
+            {activeTab === 'salary' && (
+              mySalaries.length === 0 ? (
+                <EmptyState
+                  icon={Receipt}
+                  text="No monthly salary slips issued yet. When administration sends your salary slip, it will appear here."
+                />
+              ) : (
+                <div className="flex flex-col gap-2.5 sm:gap-3.5">
+                  {mySalaries.map((r, i) => {
+                    const imgUrl = r.image ? (r.image.startsWith('http') ? r.image : `${API_BASE_URL}${r.image.startsWith('/') ? '' : '/'}${r.image}`) : null;
+
+                    return (
+                      <div
+                        key={r.id || i}
+                        className="border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 shadow-2xs"
+                      >
+                        <div className="flex items-start gap-3 flex-1 min-w-0">
+                          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 border border-emerald-100">
+                            <Receipt size={18} />
+                          </div>
+
+                          <div className="flex-1 min-w-0 space-y-0.5 sm:space-y-1">
+                            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                              <span className="text-xs sm:text-sm font-bold text-[#1a294a]">Monthly Salary Slip</span>
+                              <span className="inline-flex items-center text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                {r.status || 'Issued'}
+                              </span>
+                            </div>
+
+                            <p className="text-[11px] sm:text-xs text-slate-600 font-medium leading-relaxed break-words">
+                              {r.description || <span className="text-slate-400 italic">No description provided</span>}
+                            </p>
+
+                            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-slate-400 font-mono pt-0.5">
+                              <span className="flex items-center gap-1">
+                                <Clock size={11} />
+                                {new Date(r.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action / Attachment */}
+                        {imgUrl && (
+                          <div className="flex items-center gap-2 shrink-0 pt-1 sm:pt-0 sm:self-center border-t sm:border-t-0 border-slate-100">
+                            <button
+                              type="button"
+                              onClick={() => openModal('viewSalarySlip', r)}
+                              className="w-full sm:w-auto justify-center flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-all cursor-pointer shadow-2xs"
+                            >
+                              <img src={imgUrl} alt="Slip thumb" className="w-4 h-4 rounded object-cover" />
+                              <span>View Slip</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )
+            )}
+
           </div>
         </section>
 
-        {/* ── Quick Action Cards ────────────────────────────────────────────── */}
+        {/* ── Quick Action Cards (Mobile 2-column touch grid & Large on Desktop) ── */}
         <section>
           <div className="flex items-center justify-between mb-2.5 sm:mb-3.5">
             <h3 className="text-xs sm:text-sm font-black text-slate-500 uppercase tracking-wider flex items-center gap-1.5 sm:gap-2">
               <Sparkles size={14} className="text-[#08709d]" />
-              Quick Actions
+              Quick Actions & Applications
             </h3>
+            <span className="text-[11px] text-slate-400 font-medium hidden sm:inline">
+              Instant HR & Administration Submissions
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 max-w-2xl">
-            {/* Post Notice Card */}
-            <motion.div
-              whileTap={{ scale: 0.96 }}
-              onClick={() => openModal('notice')}
-              className="bg-white border border-slate-200/90 hover:border-[#6366f1]/50 rounded-2xl p-4 sm:p-5 cursor-pointer relative overflow-hidden shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group"
-            >
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#6366f1] to-[#818cf8]" />
-              <div>
-                <div className="flex items-center justify-between mb-2 sm:mb-3">
-                  <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-indigo-50 text-[#6366f1] flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform">
-                    <Megaphone size={18} />
-                  </div>
-                  <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 group-hover:text-slate-700 transition-colors flex items-center gap-0.5">
-                    Open <ArrowUpRight size={12} />
-                  </span>
-                </div>
-                <h4 className="text-xs sm:text-base font-extrabold text-[#1a294a] mb-0.5 sm:mb-1">
-                  Post Staff Notice
-                </h4>
-                <p className="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight mb-2 sm:mb-4">
-                  Publish shift notes, announcements & team clinical updates
-                </p>
-              </div>
-              <div className="pt-1.5 sm:pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] sm:text-xs font-bold text-[#6366f1]">
-                <span>Submit Notice</span>
-                <ArrowUpRight size={13} />
-              </div>
-            </motion.div>
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-4">
+            {[
+              {
+                id: 'leave',
+                title: 'Apply Leave',
+                sub: 'Annual, sick or casual',
+                icon: Calendar,
+                color: '#08709d',
+                bg: 'bg-sky-50 text-[#08709d]',
+                gradient: 'from-[#08709d] to-[#0ea5e9]',
+                border: 'hover:border-[#08709d]/50',
+                actionLabel: 'Apply Leave',
+              },
+              {
+                id: 'ot',
+                title: 'Apply for OT',
+                sub: 'Log shift & overtime',
+                icon: Clock,
+                color: '#5eb63b',
+                bg: 'bg-emerald-50 text-[#5eb63b]',
+                gradient: 'from-[#5eb63b] to-[#10b981]',
+                border: 'hover:border-[#5eb63b]/50',
+                actionLabel: 'Log OT',
+              },
+              {
+                id: 'duty',
+                title: 'Duty Swap',
+                sub: 'Shift replacement',
+                icon: CalendarDays,
+                color: '#0284c7',
+                bg: 'bg-cyan-50 text-[#0284c7]',
+                gradient: 'from-[#0284c7] to-[#38bdf8]',
+                border: 'hover:border-[#0284c7]/50',
+                actionLabel: 'Duty Request',
+              },
+              {
+                id: 'notice',
+                title: 'Post Notice',
+                sub: 'Shift handover & notes',
+                icon: Megaphone,
+                color: '#6366f1',
+                bg: 'bg-indigo-50 text-[#6366f1]',
+                gradient: 'from-[#6366f1] to-[#818cf8]',
+                border: 'hover:border-[#6366f1]/50',
+                actionLabel: 'Post Notice',
+              },
+              {
+                id: 'salary',
+                title: 'Salary Review',
+                sub: 'Merit or appraisal',
+                icon: TrendingUp,
+                color: '#1a294a',
+                bg: 'bg-slate-100 text-[#1a294a]',
+                gradient: 'from-[#1a294a] to-[#334155]',
+                border: 'hover:border-[#1a294a]/50',
+                actionLabel: 'Review Request',
+              },
+            ].map((card) => {
+              const Icon = card.icon;
+              return (
+                <motion.div
+                  key={card.id}
+                  whileTap={{ scale: 0.96 }}
+                  onClick={() => openModal(card.id)}
+                  className={`bg-white border border-slate-200/90 ${card.border} rounded-2xl p-3 sm:p-5 cursor-pointer relative overflow-hidden shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group active:bg-slate-50/60`}
+                >
+                  {/* Top colored accent line */}
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient}`} />
 
-            {/* View Schedules Card */}
-            <motion.div
-              whileTap={{ scale: 0.96 }}
-              onClick={() => setActiveTab('schedule')}
-              className="bg-white border border-slate-200/90 hover:border-[#08709d]/50 rounded-2xl p-4 sm:p-5 cursor-pointer relative overflow-hidden shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group"
-            >
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#08709d] to-[#0ea5e9]" />
-              <div>
-                <div className="flex items-center justify-between mb-2 sm:mb-3">
-                  <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-sky-50 text-[#08709d] flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform">
-                    <Car size={18} />
+                  <div>
+                    <div className="flex items-center justify-between mb-2 sm:mb-3">
+                      <div className={`w-8 h-8 sm:w-11 sm:h-11 rounded-xl ${card.bg} flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform`}>
+                        <Icon size={16} className="sm:w-5 sm:h-5" />
+                      </div>
+                      <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 group-hover:text-slate-700 transition-colors flex items-center gap-0.5">
+                        Open <ArrowUpRight size={12} />
+                      </span>
+                    </div>
+
+                    <h4 className="text-xs sm:text-base font-extrabold text-[#1a294a] mb-0.5 sm:mb-1 truncate">
+                      {card.title}
+                    </h4>
+                    <p className="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight mb-2 sm:mb-4 line-clamp-2">
+                      {card.sub}
+                    </p>
                   </div>
-                  <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 group-hover:text-slate-700 transition-colors flex items-center gap-0.5">
-                    View <ArrowUpRight size={12} />
-                  </span>
-                </div>
-                <h4 className="text-xs sm:text-base font-extrabold text-[#1a294a] mb-0.5 sm:mb-1">
-                  Trip Schedules
-                </h4>
-                <p className="text-[10px] sm:text-xs text-slate-500 font-medium leading-tight mb-2 sm:mb-4">
-                  Check patient pickups, drop-offs, and driver itineraries
-                </p>
-              </div>
-              <div className="pt-1.5 sm:pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] sm:text-xs font-bold text-[#08709d]">
-                <span>Check Schedules</span>
-                <ArrowUpRight size={13} />
-              </div>
-            </motion.div>
+
+                  <div className="pt-1.5 sm:pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] sm:text-xs font-bold" style={{ color: card.color }}>
+                    <span>{card.actionLabel}</span>
+                    <ArrowUpRight size={13} />
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </section>
 
@@ -701,7 +1081,7 @@ const StaffDashboard = () => {
               </div>
             </div>
 
-            {/* Filter Pills & Post Notice Button */}
+            {/* Filter Pills & Post Notice Button (Mobile responsive bar) */}
             <div className="flex items-center justify-between sm:justify-end gap-2 flex-wrap">
               <div className="flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200">
                 {[
@@ -855,29 +1235,142 @@ const StaffDashboard = () => {
           </div>
         </section>
 
+        {/* ── Assigned Tasks Section ───────────────────────────────────────── */}
+        <section className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 shadow-xs">
+          <div className="flex items-center justify-between mb-3.5 sm:mb-4">
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-tr from-[#5eb63b] to-[#10b981] text-white flex items-center justify-center shadow-xs shrink-0">
+                <ClipboardList size={14} className="sm:w-4 sm:h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm sm:text-lg font-black text-[#1a294a]">
+                  My Assigned Tasks
+                </h3>
+                <p className="text-[11px] sm:text-xs text-slate-400 font-medium">
+                  Clinical duties & department assignments
+                </p>
+              </div>
+            </div>
+            <span className="text-[10px] sm:text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full shrink-0">
+              {myTasks.length} Task{myTasks.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+
+          {myTasks.length === 0 ? (
+            <EmptyState
+              icon={ClipboardList}
+              text="No tasks currently assigned to you. Your supervisor will assign clinical items here."
+            />
+          ) : (
+            <div className="flex flex-col gap-2.5 sm:gap-3">
+              {myTasks.map((task, i) => {
+                const pc = PRIORITY_CFG[task.priority] || PRIORITY_CFG.Medium;
+                const sc = STATUS_CFG[task.status] || STATUS_CFG.Pending;
+
+                return (
+                  <motion.div
+                    key={task.id || i}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    className="border border-slate-200/90 rounded-2xl p-3.5 sm:p-5 bg-white hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 shadow-2xs"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="text-xs sm:text-base font-bold text-[#1a294a]">
+                          {task.title}
+                        </span>
+                        <Badge label={pc.label} cfg={pc} />
+                      </div>
+
+                      {task.description && (
+                        <p className="text-[11px] sm:text-xs text-slate-500 font-medium mb-2 leading-relaxed">
+                          {task.description}
+                        </p>
+                      )}
+
+                      <div className="flex items-center gap-3 text-[10px] sm:text-[11px] text-slate-400 font-medium flex-wrap">
+                        {task.dueDate && (
+                          <span className="flex items-center gap-1 text-slate-500">
+                            <CalendarDays size={11} className="text-[#08709d]" />
+                            Due: {new Date(task.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1 text-slate-500">
+                          <User size={11} className="text-[#08709d]" />
+                          By: {task.assignedByName || 'Supervisor'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Status dropdown */}
+                    <div className="relative shrink-0 w-full sm:w-auto pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                      <select
+                        value={task.status}
+                        onChange={(e) => updateTaskStatus(task.id, e.target.value)}
+                        className="w-full sm:w-auto appearance-none font-bold text-xs px-3.5 py-2 sm:py-2.5 pr-8 rounded-xl border transition-all cursor-pointer outline-none shadow-2xs"
+                        style={{
+                          color: sc.color,
+                          backgroundColor: sc.bg,
+                          borderColor: sc.border,
+                        }}
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                      </select>
+                      <ChevronDown
+                        size={13}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                        style={{ color: sc.color }}
+                      />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
       </main>
 
-      {/* ── Mobile Floating Dock ───────────────────────────────────────────── */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-6 py-2.5 z-40 flex items-center justify-around gap-4 shadow-lg">
+      {/* ── Mobile Floating Quick Action Dock ──────────────────────────────── */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-4 py-2.5 z-40 flex items-center justify-between gap-2 shadow-lg">
         <button
           type="button"
-          onClick={() => setActiveTab('schedule')}
-          className={`flex flex-col items-center justify-center gap-0.5 py-1 ${activeTab === 'schedule' ? 'text-[#08709d]' : 'text-slate-500'} active:scale-95 transition-transform`}
+          onClick={() => openModal('leave')}
+          className="flex-1 flex flex-col items-center justify-center gap-0.5 py-1 text-[#08709d] active:scale-95 transition-transform"
         >
-          <Car size={18} />
-          <span className="text-[10px] font-bold">Schedules</span>
+          <Calendar size={18} />
+          <span className="text-[10px] font-bold">Leave</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => openModal('ot')}
+          className="flex-1 flex flex-col items-center justify-center gap-0.5 py-1 text-[#5eb63b] active:scale-95 transition-transform"
+        >
+          <Clock size={18} />
+          <span className="text-[10px] font-bold">OT Claim</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => openModal('duty')}
+          className="flex-1 flex flex-col items-center justify-center gap-0.5 py-1 text-[#0284c7] active:scale-95 transition-transform"
+        >
+          <CalendarDays size={18} />
+          <span className="text-[10px] font-bold">Swap</span>
         </button>
         <button
           type="button"
           onClick={() => openModal('notice')}
-          className="flex flex-col items-center justify-center gap-0.5 py-1 text-[#6366f1] active:scale-95 transition-transform"
+          className="flex-1 flex flex-col items-center justify-center gap-0.5 py-1 text-[#6366f1] active:scale-95 transition-transform"
         >
           <Megaphone size={18} />
-          <span className="text-[10px] font-bold">Post Notice</span>
+          <span className="text-[10px] font-bold">Notice</span>
         </button>
       </div>
 
-      {/* ════════════════════════ MODALS ════════════════════════ */}
+      {/* ════════════════════════ MODALS (Responsive Bottom-Sheet on Mobile) ════════════════════════ */}
       <AnimatePresence>
         {activeModal && (
           <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6 overflow-y-auto">
@@ -890,7 +1383,7 @@ const StaffDashboard = () => {
               className="fixed inset-0 bg-[#1a294a]/60 backdrop-blur-sm"
             />
 
-            {/* Modal Dialog Card */}
+            {/* Modal Dialog Card (Bottom Sheet style on mobile, rounded card on desktop) */}
             <motion.div
               initial={{ opacity: 0, y: 50, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -908,42 +1401,601 @@ const StaffDashboard = () => {
 
               <div className="overflow-y-auto p-4 sm:p-7 flex flex-col gap-4 sm:gap-5">
 
-                {/* ── 1. POST NOTICE MODAL ── */}
-                {activeModal === 'notice' && (
+                {/* ── 1. LEAVE MODAL (APPLY) ── */}
+                {activeModal === 'leave' && (
                   <form
-                    onSubmit={e => submitForm(e, 'notice', {
+                    onSubmit={e => submitForm(e, 'leave', {
                       staffName, staffId, staffDep, staffPosition,
-                      title: noticeTitle, priority: noticePriority,
-                      targetAudience: noticeTargetAudience, content: noticeMessage
+                      leaveType, leaveStart, leaveEnd, reason: leaveReason
                     })}
                     className="flex flex-col gap-3.5 sm:gap-4 text-left"
                   >
-                    <ModalHeader title="Post Staff Notice" icon={<Megaphone size={18} />} color="#6366f1" onClose={closeModal} />
+                    <ModalHeader title="Apply for Leave" icon={<Calendar size={18} />} color="#08709d" onClose={closeModal} />
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Full Name">
+                        <input className={inputCls} required value={staffName} onChange={e => setStaffName(e.target.value)} />
+                      </Field>
+                      <Field label="Staff ID">
+                        <input className={inputCls} required value={staffId} onChange={e => setStaffId(e.target.value)} />
+                      </Field>
+                    </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
-                      <Field label="Staff Member"><input className={inputCls} required value={staffName} onChange={e => setStaffName(e.target.value)} /></Field>
+                      <Field label="Department">
+                        <input className={inputCls} required value={staffDep} onChange={e => setStaffDep(e.target.value)} />
+                      </Field>
+                      <Field label="Position">
+                        <input className={inputCls} required value={staffPosition} onChange={e => setStaffPosition(e.target.value)} />
+                      </Field>
+                    </div>
+
+                    <Field label="Leave Category">
+                      <div className="relative">
+                        <select className={`${inputCls} appearance-none pr-9 cursor-pointer`} value={leaveType} onChange={e => setLeaveType(e.target.value)}>
+                          {['Annual Leave', 'Sick Leave', 'Casual Leave', 'Emergency Leave', 'Unpaid Leave', 'Maternity/Paternity Leave'].map(o => (
+                            <option key={o} value={o}>{o}</option>
+                          ))}
+                        </select>
+                        <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                      </div>
+                    </Field>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Start Date">
+                        <input type="date" className={inputCls} required value={leaveStart} onChange={e => setLeaveStart(e.target.value)} />
+                      </Field>
+                      <Field label="End Date">
+                        <input type="date" className={inputCls} required value={leaveEnd} onChange={e => setLeaveEnd(e.target.value)} />
+                      </Field>
+                    </div>
+
+                    {leaveStart && leaveEnd && (
+                      <div className="bg-sky-50 border border-sky-200 rounded-xl p-2.5 sm:p-3 text-center text-xs text-sky-800 font-semibold">
+                        Total leave duration: <span className="font-extrabold text-[#08709d]">{calculateDays(leaveStart, leaveEnd)}</span>
+                      </div>
+                    )}
+
+                    <Field label="Reason / Cover Plan">
+                      <textarea
+                        className={inputCls}
+                        required
+                        placeholder="State reason and handover arrangements…"
+                        value={leaveReason}
+                        onChange={e => setLeaveReason(e.target.value)}
+                        rows={3}
+                      />
+                    </Field>
+
+                    <FileUpload label="Supporting Medical/Travel Doc (Optional)" file={leaveFile} onFile={() => leaveFileRef.current.click()} onClear={() => setLeaveFile(null)} />
+                    <input type="file" ref={leaveFileRef} className="hidden" onChange={e => setLeaveFile(e.target.files[0])} />
+
+                    <ModalFooter color="#08709d" label="Submit Leave Application" onCancel={closeModal} />
+                  </form>
+                )}
+
+                {/* ── 2. VIEW LEAVE FULL DETAILS MODAL ── */}
+                {activeModal === 'viewLeave' && selectedLeave && (
+                  <div className="flex flex-col gap-3.5 sm:gap-4 text-left">
+                    <ModalHeader title="Leave Application Details" icon={<Calendar size={18} />} color="#08709d" onClose={closeModal} />
+
+                    {/* Status & Duration Banner */}
+                    <div className="bg-gradient-to-r from-sky-50 via-white to-sky-50/50 border border-sky-100 rounded-2xl p-3.5 sm:p-4 flex items-center justify-between gap-3 flex-wrap shadow-2xs">
+                      <div>
+                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                          Current Status
+                        </span>
+                        <Badge label={selectedLeave.status || 'Pending'} />
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                          Duration
+                        </span>
+                        <span className="text-xs sm:text-base font-extrabold text-[#08709d] bg-white px-2.5 sm:px-3 py-1 rounded-xl border border-sky-100 shadow-2xs">
+                          {calculateDays(selectedLeave.leaveStart, selectedLeave.leaveEnd)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Leave Date Range highlight block */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <CalendarDays size={13} className="text-[#08709d]" /> Start Date
+                        </span>
+                        <span className="text-xs sm:text-sm font-bold text-[#1a294a] block">
+                          {selectedLeave.leaveStart ? new Date(selectedLeave.leaveStart).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }) : '—'}
+                        </span>
+                      </div>
+
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <CalendarDays size={13} className="text-[#08709d]" /> End Date
+                        </span>
+                        <span className="text-xs sm:text-sm font-bold text-[#1a294a] block">
+                          {selectedLeave.leaveEnd ? new Date(selectedLeave.leaveEnd).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }) : '—'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Staff & Department Metadata */}
+                    <div className="grid grid-cols-2 gap-2.5 sm:gap-3 text-xs bg-white border border-slate-200 rounded-2xl p-3 sm:p-3.5">
+                      <div>
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Staff Name</span>
+                        <span className="font-bold text-slate-700 text-xs sm:text-sm">{selectedLeave.staffName || currentUser?.name}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Staff ID</span>
+                        <span className="font-bold font-mono text-[#08709d] text-xs sm:text-sm">{selectedLeave.staffId || currentUser?.id}</span>
+                      </div>
+                      <div className="mt-1">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Department</span>
+                        <span className="font-bold text-slate-700 text-xs">{selectedLeave.staffDep || currentUser?.department || 'Clinical'}</span>
+                      </div>
+                      <div className="mt-1">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Leave Category</span>
+                        <span className="font-bold text-slate-700 text-xs">{selectedLeave.leaveType}</span>
+                      </div>
+                    </div>
+
+                    {/* Reason / Handover Arrangements */}
+                    <div>
+                      <span className="text-[10.5px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                        Reason & Handover Cover Plan
+                      </span>
+                      <div className="bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-200 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium">
+                        {selectedLeave.reason || 'No additional notes provided with this application.'}
+                      </div>
+                    </div>
+
+                    {/* Submitted Timestamp */}
+                    <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-100 pt-2.5">
+                      <span>Submitted: {new Date(selectedLeave.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                      <span className="text-slate-500 font-semibold">Corx HR</span>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={closeModal}
+                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#08709d] text-white text-xs font-bold cursor-pointer hover:bg-[#065679] transition-all shadow-xs"
+                      >
+                        Close Details
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── 2b. VIEW OT DETAILS MODAL ── */}
+                {activeModal === 'viewOt' && selectedOt && (
+                  <div className="flex flex-col gap-3.5 sm:gap-4 text-left">
+                    <ModalHeader title="Overtime Duty Claim Details" icon={<Clock size={18} />} color="#5eb63b" onClose={closeModal} />
+
+                    {/* Status & Hours Highlight Banner */}
+                    <div className="flex items-center justify-between bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-3 sm:p-4">
+                      <div>
+                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                          Claim Status
+                        </span>
+                        <Badge label={selectedOt.status || 'Pending'} />
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                          Total Hours
+                        </span>
+                        <span className="text-xs sm:text-base font-extrabold text-emerald-700 bg-white px-2.5 sm:px-3 py-1 rounded-xl border border-emerald-100 shadow-2xs font-mono">
+                          ⏱️ {selectedOt.otHours || '0'} hrs
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Date & Shift Category Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <CalendarDays size={13} className="text-emerald-600" /> Date of Duty
+                        </span>
+                        <span className="text-xs sm:text-sm font-bold text-[#1a294a] block">
+                          {selectedOt.otDate ? new Date(selectedOt.otDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }) : '—'}
+                        </span>
+                      </div>
+
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <Clock size={13} className="text-emerald-600" /> Overtime Shift Type
+                        </span>
+                        <span className="text-xs sm:text-sm font-bold text-emerald-800 block">
+                          {selectedOt.otType || 'Day Shift Extension'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Staff & Metadata */}
+                    <div className="grid grid-cols-2 gap-2.5 sm:gap-3 text-xs bg-white border border-slate-200 rounded-2xl p-3 sm:p-3.5">
+                      <div>
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Staff Name</span>
+                        <span className="font-bold text-slate-700 text-xs sm:text-sm">{selectedOt.staffName || currentUser?.name}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Staff ID</span>
+                        <span className="font-bold font-mono text-emerald-700 text-xs sm:text-sm">{selectedOt.staffId || currentUser?.id}</span>
+                      </div>
+                      <div className="mt-1">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Department</span>
+                        <span className="font-bold text-slate-700 text-xs">{selectedOt.staffDep || currentUser?.department || 'Clinical'}</span>
+                      </div>
+                      <div className="mt-1">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Position</span>
+                        <span className="font-bold text-slate-700 text-xs">{selectedOt.staffPosition || currentUser?.position || 'Staff'}</span>
+                      </div>
+                    </div>
+
+                    {/* Shift Description / Patient Activity Summary */}
+                    <div>
+                      <span className="text-[10.5px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                        Shift & Clinical Duties Summary
+                      </span>
+                      <div className="bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-200 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium">
+                        {selectedOt.description || 'No additional activity notes provided.'}
+                      </div>
+                    </div>
+
+                    {/* Proof file attachment if present */}
+                    {selectedOt.file && (
+                      <div className="bg-emerald-50/50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Paperclip size={15} className="text-emerald-700 shrink-0" />
+                          <span className="text-xs font-semibold text-emerald-900 truncate">Attached Shift Proof / Logsheet</span>
+                        </div>
+                        <a
+                          href={selectedOt.file.startsWith('http') ? selectedOt.file : `${API_BASE_URL}${selectedOt.file.startsWith('/') ? '' : '/'}${selectedOt.file}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-xs font-bold text-emerald-700 hover:underline shrink-0 flex items-center gap-1"
+                        >
+                          <ExternalLink size={12} /> View File
+                        </a>
+                      </div>
+                    )}
+
+                    {/* Submitted Timestamp */}
+                    <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-100 pt-2.5">
+                      <span>Submitted: {new Date(selectedOt.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                      <span className="text-slate-500 font-semibold">Corx HR & Payroll</span>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={closeModal}
+                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold cursor-pointer hover:bg-emerald-700 transition-all shadow-xs"
+                      >
+                        Close Details
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── 2c. VIEW DUTY SWAP DETAILS MODAL ── */}
+                {activeModal === 'viewDuty' && selectedDuty && (
+                  <div className="flex flex-col gap-3.5 sm:gap-4 text-left">
+                    <ModalHeader title="Duty Swap & Replacement Details" icon={<CalendarDays size={18} />} color="#0284c7" onClose={closeModal} />
+
+                    {/* Status & Shift Pill Banner */}
+                    <div className="flex items-center justify-between bg-sky-50/70 border border-sky-200/80 rounded-2xl p-3 sm:p-4">
+                      <div>
+                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                          Request Status
+                        </span>
+                        <Badge label={selectedDuty.status || 'Pending'} />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {selectedDuty.shiftTiming && (
+                          <span className={`text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-xl border ${
+                            selectedDuty.shiftTiming === 'Night'
+                              ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                              : 'bg-amber-50 text-amber-800 border-amber-200'
+                          }`}>
+                            {selectedDuty.shiftTiming === 'Night' ? '🌙 Night Shift' : '☀️ Day Shift'}
+                          </span>
+                        )}
+                        {selectedDuty.shiftType && (
+                          <span className="text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-xl bg-sky-100 text-sky-800 border border-sky-200 font-mono">
+                            ⏱️ {selectedDuty.shiftType === 'live-in' ? 'Live-In' : selectedDuty.shiftType}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Scheduled Duty Date & Replacement Covering Staff */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <CalendarDays size={13} className="text-[#08709d]" /> Scheduled Duty Date
+                        </span>
+                        <span className="text-xs sm:text-sm font-bold text-[#1a294a] block">
+                          {selectedDuty.dutyDate ? new Date(selectedDuty.dutyDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }) : '—'}
+                        </span>
+                      </div>
+
+                      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-3.5">
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                          <Users size={13} className="text-[#08709d]" /> Covering / Replacement Staff
+                        </span>
+                        <span className="text-xs sm:text-sm font-bold text-[#08709d] block">
+                          {selectedDuty.dutyReplacement || 'Not assigned'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Requester Metadata */}
+                    <div className="grid grid-cols-2 gap-2.5 sm:gap-3 text-xs bg-white border border-slate-200 rounded-2xl p-3 sm:p-3.5">
+                      <div>
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Applicant Name</span>
+                        <span className="font-bold text-slate-700 text-xs sm:text-sm">{selectedDuty.staffName || currentUser?.name}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] sm:text-[10.5px] font-bold text-slate-400 uppercase tracking-wider block">Staff ID</span>
+                        <span className="font-bold font-mono text-[#08709d] text-xs sm:text-sm">{selectedDuty.staffId || currentUser?.id}</span>
+                      </div>
+                    </div>
+
+                    {/* Reason / Handover Notes */}
+                    <div>
+                      <span className="text-[10.5px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                        Reason & Shift Handover Arrangements
+                      </span>
+                      <div className="bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-200 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium">
+                        {selectedDuty.dutyReason || 'No additional handover notes provided.'}
+                      </div>
+                    </div>
+
+                    {/* Submitted Timestamp */}
+                    <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-100 pt-2.5">
+                      <span>Submitted: {new Date(selectedDuty.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                      <span className="text-slate-500 font-semibold">Corx HR & Duty Roster</span>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={closeModal}
+                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#08709d] text-white text-xs font-bold cursor-pointer hover:bg-[#065679] transition-all shadow-xs"
+                      >
+                        Close Details
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── 3. OT CLAIM MODAL ── */}
+                {activeModal === 'ot' && (
+                  <form
+                    onSubmit={e => submitForm(e, 'ot', {
+                      staffName, staffId, staffDep, staffPosition,
+                      otType, otDate, otHours, description: otDescription
+                    })}
+                    className="flex flex-col gap-3.5 sm:gap-4 text-left"
+                  >
+                    <ModalHeader title="Apply for OT" icon={<Clock size={18} />} color="#5eb63b" onClose={closeModal} />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Full Name"><input className={inputCls} required value={staffName} onChange={e => setStaffName(e.target.value)} /></Field>
                       <Field label="Staff ID"><input className={inputCls} required value={staffId} onChange={e => setStaffId(e.target.value)} /></Field>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
                       <Field label="Department"><input className={inputCls} required value={staffDep} onChange={e => setStaffDep(e.target.value)} /></Field>
-                      <Field label="Priority Level">
+                      <Field label="Position"><input className={inputCls} required value={staffPosition} onChange={e => setStaffPosition(e.target.value)} /></Field>
+                    </div>
+
+                    <Field label="Shift Type">
+                      <div className="relative">
+                        <select className={`${inputCls} appearance-none pr-9 cursor-pointer`} value={otType} onChange={e => setOtType(e.target.value)}>
+                          {['Day Shift Extension', 'Night Shift', 'Weekend Clinical Duty', 'Emergency On-Call Duty', 'Home Visit Overtime'].map(o => (
+                            <option key={o} value={o}>{o}</option>
+                          ))}
+                        </select>
+                        <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                      </div>
+                    </Field>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Date of Duty">
+                        <input type="date" className={inputCls} required value={otDate} onChange={e => setOtDate(e.target.value)} />
+                      </Field>
+                      <Field label="Hours Worked">
+                        <input type="number" step="0.5" min="0.5" max="24" placeholder="e.g. 4.5" className={inputCls} required value={otHours} onChange={e => setOtHours(e.target.value)} />
+                      </Field>
+                    </div>
+
+                    <Field label="Shift / Patient Activity Summary">
+                      <textarea
+                        className={inputCls}
+                        required
+                        placeholder="Details of the overtime duty and supervisor confirmation…"
+                        value={otDescription}
+                        onChange={e => setOtDescription(e.target.value)}
+                        rows={3}
+                      />
+                    </Field>
+
+                    <FileUpload label="Shift Logsheet / Proof (Optional)" file={otFile} onFile={() => otFileRef.current.click()} onClear={() => setOtFile(null)} accentColor="#5eb63b" />
+                    <input type="file" ref={otFileRef} className="hidden" onChange={e => setOtFile(e.target.files[0])} />
+
+                    <ModalFooter color="#5eb63b" label="Submit OT Claim" onCancel={closeModal} />
+                  </form>
+                )}
+
+                {/* ── 4. DUTY SCHEDULE MODAL ── */}
+                {activeModal === 'duty' && (
+                  <form
+                    onSubmit={e => submitForm(e, 'duty', {
+                      staffId, staffName,
+                      dutyDate,
+                      shiftTiming: dutyShiftTiming,
+                      shiftType: dutyShiftType,
+                      dutyReplacement,
+                      dutyReason
+                    })}
+                    className="flex flex-col gap-3.5 sm:gap-4 text-left"
+                  >
+                    <ModalHeader title="Duty Schedule Swap Request" icon={<CalendarDays size={18} />} color="#0284c7" onClose={closeModal} />
+
+                    {/* Applicant details */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Applicant Name">
+                        <input className={inputCls} required value={staffName} onChange={e => setStaffName(e.target.value)} />
+                      </Field>
+                      <Field label="Staff ID">
+                        <input className={inputCls} required value={staffId} onChange={e => setStaffId(e.target.value)} />
+                      </Field>
+                    </div>
+
+                    {/* Scheduled Duty Date & Shift Timing */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Scheduled Duty Date">
+                        <input type="date" className={inputCls} required value={dutyDate} onChange={e => setDutyDate(e.target.value)} />
+                      </Field>
+                      <Field label="Shift Timing">
                         <div className="relative">
-                          <select className={`${inputCls} appearance-none pr-9 cursor-pointer`} value={noticePriority} onChange={e => setNoticePriority(e.target.value)}>
-                            <option value="normal">🔵 Normal Priority</option>
-                            <option value="important">🟡 Important</option>
-                            <option value="urgent">🔴 Urgent / Critical</option>
+                          <select
+                            className={`${inputCls} appearance-none pr-9 cursor-pointer`}
+                            value={dutyShiftTiming}
+                            onChange={e => setDutyShiftTiming(e.target.value)}
+                          >
+                            <option value="Day">☀️ Day Shift</option>
+                            <option value="Night">🌙 Night Shift</option>
                           </select>
                           <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
                         </div>
                       </Field>
                     </div>
 
-                    <Field label="Notice Headline / Title">
+                    {/* Shift Type & Replacement Staff Name */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Shift Type">
+                        <div className="relative">
+                          <select
+                            className={`${inputCls} appearance-none pr-9 cursor-pointer`}
+                            value={dutyShiftType}
+                            onChange={e => setDutyShiftType(e.target.value)}
+                          >
+                            <option value="6-hours">⏱️ 6-hours Shift</option>
+                            <option value="8-hours">⏱️ 8-hours Shift</option>
+                            <option value="10-hours">⏱️ 10-hours Shift</option>
+                            <option value="12-hours">⏱️ 12-hours Shift</option>
+                            <option value="24-hours">⏱️ 24-hours Shift</option>
+                            <option value="live-in">🏠 Live-In Duty</option>
+                          </select>
+                          <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                        </div>
+                      </Field>
+
+                      <Field label="Replacement Staff Name">
+                        <div className="space-y-1.5">
+                          <div className="relative">
+                            <select
+                              className={`${inputCls} appearance-none pr-9 cursor-pointer`}
+                              value={
+                                (staffUsers || []).some(s => (s.name || s.full_name) === dutyReplacement)
+                                  ? dutyReplacement
+                                  : (dutyReplacement ? '__custom__' : '')
+                              }
+                              onChange={e => {
+                                if (e.target.value === '__custom__') {
+                                  setDutyReplacement('');
+                                } else {
+                                  setDutyReplacement(e.target.value);
+                                }
+                              }}
+                            >
+                              <option value="">-- Select Staff Colleague --</option>
+                              {(staffUsers || []).filter(s => (s.id || s.staff_id) !== currentUser?.id).map((s, idx) => {
+                                const name = s.name || s.full_name || s.username || `Staff #${s.id}`;
+                                const role = s.position || s.department || s.role || 'Staff';
+                                return (
+                                  <option key={s.id || idx} value={name}>
+                                    {name} ({role})
+                                  </option>
+                                );
+                              })}
+                              <option value="__custom__">✍️ Enter Custom / Outside Name...</option>
+                            </select>
+                            <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                          </div>
+                          {(!((staffUsers || []).some(s => (s.name || s.full_name) === dutyReplacement)) || dutyReplacement === '') && (
+                            <input
+                              type="text"
+                              className={inputCls}
+                              required
+                              placeholder="Or type replacement staff name here..."
+                              value={dutyReplacement}
+                              onChange={e => setDutyReplacement(e.target.value)}
+                            />
+                          )}
+                        </div>
+                      </Field>
+                    </div>
+
+                    <Field label="Reason / Handover Notes">
+                      <textarea
+                        className={inputCls}
+                        required
+                        placeholder="Provide details for duty shift swap, tasks to handover, or supervisor notes…"
+                        value={dutyReason}
+                        onChange={e => setDutyReason(e.target.value)}
+                        rows={3}
+                      />
+                    </Field>
+
+                    <ModalFooter color="#0284c7" label="Submit Duty Swap Request" onCancel={closeModal} />
+                  </form>
+                )}
+
+                {/* ── 5. STAFF NOTICE MODAL ── */}
+                {activeModal === 'notice' && (
+                  <form
+                    onSubmit={e => submitForm(e, 'notice', {
+                      staffId, staffName,
+                      title: noticeTitle,
+                      content: noticeMessage,
+                      priority: noticePriority,
+                      targetAudience: noticeTargetAudience
+                    })}
+                    className="flex flex-col gap-3.5 sm:gap-4 text-left"
+                  >
+                    <ModalHeader title="Submit Staff Notice" icon={<Megaphone size={18} />} color="#6366f1" onClose={closeModal} />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Notice Category">
+                        <div className="relative">
+                          <select className={`${inputCls} appearance-none pr-9 cursor-pointer`} value={noticeCategory} onChange={e => setNoticeCategory(e.target.value)}>
+                            {['Internal Staff Notice', 'Clinical Shift Handover', 'Duty Replacement Note', 'Departmental Update', 'General Request'].map(o => (
+                              <option key={o} value={o}>{o}</option>
+                            ))}
+                          </select>
+                          <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                        </div>
+                      </Field>
+
+                      <Field label="Priority / Urgency">
+                        <div className="relative">
+                          <select className={`${inputCls} appearance-none pr-9 cursor-pointer`} value={noticePriority} onChange={e => setNoticePriority(e.target.value)}>
+                            <option value="normal">🟢 Normal Notice</option>
+                            <option value="important">🟡 Important</option>
+                            <option value="urgent">🔴 Urgent Announcement</option>
+                          </select>
+                          <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                        </div>
+                      </Field>
+                    </div>
+
+                    <Field label="Notice Title / Headline">
                       <input
                         className={inputCls}
                         required
-                        placeholder="e.g., Shift Handover Instructions / Protocol Update"
+                        placeholder="e.g. Shift Handover for ICU, Duty Swap Request"
                         value={noticeTitle}
                         onChange={e => setNoticeTitle(e.target.value)}
                       />
@@ -977,7 +2029,51 @@ const StaffDashboard = () => {
                   </form>
                 )}
 
-                {/* ── 2. VIEW NOTICE FULL DETAILS MODAL ── */}
+                {/* ── 6. SALARY REVIEW MODAL ── */}
+                {activeModal === 'salary' && (
+                  <form
+                    onSubmit={e => submitForm(e, 'salary', {
+                      staffName, staffId, staffDep, staffPosition, incType, justification: incJustification
+                    })}
+                    className="flex flex-col gap-3.5 sm:gap-4 text-left"
+                  >
+                    <ModalHeader title="Salary Increment Review" icon={<TrendingUp size={18} />} color="#1a294a" onClose={closeModal} />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+                      <Field label="Full Name"><input className={inputCls} required value={staffName} onChange={e => setStaffName(e.target.value)} /></Field>
+                      <Field label="Staff ID"><input className={inputCls} required value={staffId} onChange={e => setStaffId(e.target.value)} /></Field>
+                    </div>
+
+                    <Field label="Appraisal Type">
+                      <div className="relative">
+                        <select className={`${inputCls} appearance-none pr-9 cursor-pointer`} value={incType} onChange={e => setIncType(e.target.value)}>
+                          {['Merit-Based Performance Review', 'DHA License Upgrade Alignment', 'Senior Position Promotion', 'Market Adjustment Alignment'].map(o => (
+                            <option key={o} value={o}>{o}</option>
+                          ))}
+                        </select>
+                        <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                      </div>
+                    </Field>
+
+                    <Field label="Key Accomplishments">
+                      <textarea
+                        className={inputCls}
+                        required
+                        placeholder="Detail your clinical milestones, patient feedback, and achievements…"
+                        value={incJustification}
+                        onChange={e => setIncJustification(e.target.value)}
+                        rows={3}
+                      />
+                    </Field>
+
+                    <FileUpload label="DHA Certs / Credentials (Optional)" file={incFile} onFile={() => incFileRef.current.click()} onClear={() => setIncFile(null)} accentColor="#1a294a" />
+                    <input type="file" ref={incFileRef} className="hidden" onChange={e => setIncFile(e.target.files[0])} />
+
+                    <ModalFooter color="#1a294a" label="Submit Appraisal Review" onCancel={closeModal} />
+                  </form>
+                )}
+
+                {/* ── 7. VIEW NOTICE FULL DETAILS MODAL ── */}
                 {activeModal === 'viewNotice' && selectedNotice && (
                   <div className="flex flex-col gap-3.5 sm:gap-4 text-left">
                     <ModalHeader title="Notice Details" icon={<Megaphone size={18} />} color="#08709d" onClose={closeModal} />
@@ -1024,7 +2120,61 @@ const StaffDashboard = () => {
                   </div>
                 )}
 
-                {/* ── 3. VIEW DRIVER TRIP SCHEDULE FULL MODAL ── */}
+                {/* ── 8. VIEW SALARY SLIP FULL MODAL ── */}
+                {activeModal === 'viewSalarySlip' && selectedSalarySlip && (
+                  <div className="flex flex-col gap-3.5 sm:gap-4 text-left">
+                    <ModalHeader title="Monthly Salary Slip" icon={<Receipt size={18} />} color="#059669" onClose={closeModal} />
+
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <span className="text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                        Official Monthly Slip
+                      </span>
+                      <span className="text-[10px] sm:text-xs text-slate-400 font-mono">
+                        Issued: {selectedSalarySlip.submittedAt ? new Date(selectedSalarySlip.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Recently'}
+                      </span>
+                    </div>
+
+                    {selectedSalarySlip.description && (
+                      <div className="bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-100 text-slate-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-medium">
+                        {selectedSalarySlip.description}
+                      </div>
+                    )}
+
+                    {selectedSalarySlip.image && (
+                      <div className="rounded-2xl border border-slate-200 overflow-hidden bg-slate-900/5 p-1.5 flex flex-col items-center justify-center">
+                        <img
+                          src={selectedSalarySlip.image.startsWith('http') ? selectedSalarySlip.image : `${API_BASE_URL}${selectedSalarySlip.image.startsWith('/') ? '' : '/'}${selectedSalarySlip.image}`}
+                          alt="Monthly Salary Slip"
+                          className="max-h-[55vh] sm:max-h-[65vh] w-auto rounded-xl object-contain shadow-sm"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-1">
+                      {selectedSalarySlip.image && (
+                        <a
+                          href={selectedSalarySlip.image.startsWith('http') ? selectedSalarySlip.image : `${API_BASE_URL}${selectedSalarySlip.image.startsWith('/') ? '' : '/'}${selectedSalarySlip.image}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          download
+                          className="w-full sm:w-auto justify-center px-4 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5"
+                        >
+                          <ExternalLink size={14} /> Open Full Size / Download
+                        </a>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={closeModal}
+                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 text-white text-xs font-bold cursor-pointer hover:bg-slate-700 transition-all shadow-xs"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── 9. VIEW DRIVER TRIP SCHEDULE FULL MODAL ── */}
                 {activeModal === 'viewSchedule' && selectedSchedule && (
                   <div className="flex flex-col gap-3.5 sm:gap-4 text-left">
                     <ModalHeader title="Trip & Driver Schedule" icon={<Car size={18} />} color="#08709d" onClose={closeModal} />
@@ -1124,6 +2274,7 @@ const StaffDashboard = () => {
                     </div>
                   </div>
                 )}
+
 
               </div>
             </motion.div>
