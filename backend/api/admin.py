@@ -1844,50 +1844,6 @@ class TeamMemberAdmin(admin.ModelAdmin):
     search_fields = ('name', 'post')
 
 
-class TaskInline(admin.TabularInline):
-    model = Task
-    fk_name = 'assigned_to'
-    extra = 0
-    fields = ('title', 'priority', 'status', 'due_date')
-    classes = ('collapse',)
-
-
-class LeaveApplicationInline(admin.TabularInline):
-    model = LeaveApplication
-    fk_name = 'staff'
-    extra = 0
-    fields = ('leave_type', 'leave_start', 'leave_end', 'status', 'submitted_at')
-    readonly_fields = ('submitted_at',)
-    classes = ('collapse',)
-
-
-class OtApplicationInline(admin.TabularInline):
-    model = OtApplication
-    fk_name = 'staff'
-    extra = 0
-    fields = ('ot_type', 'ot_date', 'ot_hours', 'status', 'submitted_at')
-    readonly_fields = ('submitted_at',)
-    classes = ('collapse',)
-
-
-class DutyApplicationInline(admin.TabularInline):
-    model = DutyApplication
-    fk_name = 'staff'
-    extra = 0
-    fields = ('duty_date', 'shift_timing', 'shift_type', 'duty_replacement', 'status', 'submitted_at')
-    readonly_fields = ('submitted_at',)
-    classes = ('collapse',)
-
-
-class SalaryApplicationInline(admin.TabularInline):
-    model = SalaryApplication
-    fk_name = 'staff'
-    extra = 0
-    fields = ('description', 'image', 'status', 'submitted_at')
-    readonly_fields = ('submitted_at',)
-    classes = ('collapse',)
-
-
 class StaffProfileForm(forms.ModelForm):
     confirm_password = forms.CharField(
         label="Re-type Password (Portal)",
@@ -1951,7 +1907,6 @@ class StaffProfileForm(forms.ModelForm):
 @admin.register(StaffProfile)
 class StaffProfileAdmin(admin.ModelAdmin):
     form = StaffProfileForm
-    inlines = [TaskInline, LeaveApplicationInline, OtApplicationInline, DutyApplicationInline, SalaryApplicationInline]
     list_display = ('passport_photo_thumbnail', 'full_name', 'staff_id_badge', 'department_badge', 'position', 'actions_buttons')
     list_display_links = ('passport_photo_thumbnail', 'full_name')
     search_fields = ('staff_id', 'full_name', 'position', 'department')
