@@ -3844,15 +3844,15 @@ def custom_admin_index(request, extra_context=None):
     
     try:
         extra_context['staff_count'] = StaffProfile.objects.count()
-        extra_context['pending_leaves'] = LeaveApplication.objects.filter(status='Pending').count()
-        extra_context['active_tasks'] = Task.objects.filter(status='In Progress').count()
+        extra_context['schedule_count'] = DriverSchedule.objects.count()
+        extra_context['notice_count'] = NoticeApplication.objects.count()
         extra_context['service_count'] = Service.objects.count()
         extra_context['blog_count'] = BlogPost.objects.count()
         extra_context['team_count'] = TeamMember.objects.count()
         
         # Recent data for tables
-        extra_context['recent_tasks'] = Task.objects.order_by('-created_at')[:5]
-        extra_context['recent_leaves'] = LeaveApplication.objects.order_by('-submitted_at')[:5]
+        extra_context['recent_schedules'] = DriverSchedule.objects.order_by('-schedule_date', '-created_at')[:5]
+        extra_context['recent_staff'] = StaffProfile.objects.order_by('-id')[:5]
     except Exception:
         pass
         

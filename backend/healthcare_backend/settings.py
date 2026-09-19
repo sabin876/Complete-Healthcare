@@ -219,6 +219,11 @@ JAZZMIN_SETTINGS = {
         "api.teammember",
         "api.robotstxt",
         "api.sitemapxml",
+        "api.task",
+        "api.leaveapplication",
+        "api.otapplication",
+        "api.dutyapplication",
+        "api.salaryapplication",
     ],
     "icons": {
         "auth": "fas fa-users-cog",
