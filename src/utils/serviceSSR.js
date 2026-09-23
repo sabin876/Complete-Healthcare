@@ -175,6 +175,8 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
     faqs: (Array.isArray(validBackendData.faqs) && validBackendData.faqs.length > 0) ? validBackendData.faqs : (staticFallback.faqs || []),
     benefits: (Array.isArray(validBackendData.benefits) && validBackendData.benefits.length > 0) ? validBackendData.benefits : (staticFallback.benefits || []),
     lab_columns: (Array.isArray(validBackendData.lab_columns) && validBackendData.lab_columns.length > 0) ? validBackendData.lab_columns : (staticFallback.lab_columns || []),
+    schema_markup: validBackendData.schema_markup || staticFallback.schema_markup,
+    schema: validBackendData.schema || staticFallback.schema,
   } : staticFallback;
 
   const rawSchema = validBackendData?.schema || validBackendData?.schema_markup;

@@ -585,6 +585,32 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
 
   // 5. Services Routes
   if (first === 'services' && segments.length === 1) {
+    let allServicesSchema = null;
+    try {
+      const res = await fetch(`${backendUrl}/api/services/`);
+      if (res.ok) {
+        const data = await res.json();
+        const servicesList = Array.isArray(data) ? data : (data?.results || []);
+        if (servicesList.length > 0) {
+          allServicesSchema = {
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: 'CORx Healthcare Services in Dubai',
+            description: 'From 24/7 doctor home visits and IV drip therapy to home nursing, physiotherapy, and lab tests — receive hospital-grade medical care directly in your home.',
+            itemListElement: servicesList.map((svc, idx) => ({
+              '@type': 'ListItem',
+              position: idx + 1,
+              url: `${BASE_SITE_URL}/${svc.custom_url_path ? svc.custom_url_path.replace(/^\//, '') : svc.slug}`,
+              name: svc.title || svc.name,
+              description: svc.description || svc.tagline || '',
+            })),
+          };
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+
     return {
       statusCode: 200,
       initialData: {
@@ -600,6 +626,7 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
         ogImage: DEFAULT_OG_IMAGE,
         ogType: 'website',
         canonicalUrl: `${BASE_SITE_URL}/services`,
+        ...(allServicesSchema ? { schema: allServicesSchema } : {}),
       },
     };
   }

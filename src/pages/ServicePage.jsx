@@ -497,6 +497,8 @@ function LabServicesLanding({ slug = 'lab-services' }) {
     faqs: (Array.isArray(validServiceData.faqs) && validServiceData.faqs.length > 0) ? validServiceData.faqs : (staticFallback.faqs || []),
     benefits: (Array.isArray(validServiceData.benefits) && validServiceData.benefits.length > 0) ? validServiceData.benefits : (staticFallback.benefits || []),
     lab_columns: (Array.isArray(validServiceData.lab_columns) && validServiceData.lab_columns.length > 0) ? validServiceData.lab_columns : (staticFallback.lab_columns || []),
+    schema_markup: validServiceData.schema_markup || staticFallback.schema_markup,
+    schema: validServiceData.schema || staticFallback.schema,
   } : staticFallback;
 
   useEffect(() => {
@@ -1683,8 +1685,39 @@ function SubServicesGridSection({ subServices = [], serviceTitle = '', isEditMod
 }
 
 function ServicesOverviewPage() {
+  const [overviewSchema, setOverviewSchema] = useState(null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    let isMounted = true;
+    fetch(`${API_BASE_URL}/api/services/`)
+      .then(r => r.json())
+      .then(data => {
+        if (!isMounted) return;
+        const servicesList = Array.isArray(data) ? data : (data?.results || []);
+        if (servicesList.length > 0) {
+          const itemListSchema = {
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            'name': 'CORx Healthcare Services in Dubai',
+            'description': 'From 24/7 doctor home visits and IV drip therapy to home nursing, physiotherapy, and lab tests — receive hospital-grade medical care directly in your home.',
+            'itemListElement': servicesList.map((svc, idx) => ({
+              '@type': 'ListItem',
+              'position': idx + 1,
+              'url': `https://corx.ae/${svc.custom_url_path ? svc.custom_url_path.replace(/^\//, '') : svc.slug}`,
+              'name': svc.title || svc.name,
+              'description': svc.description || svc.tagline || ''
+            }))
+          };
+          setOverviewSchema(itemListSchema);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -1693,6 +1726,7 @@ function ServicesOverviewPage() {
         title="Home Healthcare Services in Dubai | CORx Healthcare"
         description="From 24/7 doctor home visits and IV drip therapy to home nursing, physiotherapy, and lab tests — receive hospital-grade medical care directly in your home."
         canonical="https://corx.ae/services"
+        schema={overviewSchema}
       />
       <Section variant="white" className="pt-20 pb-12 md:pt-24 md:pb-16 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-b border-slate-100">
         <Container className="text-center max-w-4xl mx-auto">
