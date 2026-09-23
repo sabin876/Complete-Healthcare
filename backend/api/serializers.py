@@ -253,6 +253,7 @@ class ServiceSerializer(serializers.ModelSerializer):
     indications_section_title = serializers.SerializerMethodField()
     comprehensive_section_title = serializers.SerializerMethodField()
     faq_section_title = serializers.SerializerMethodField()
+    schema = serializers.SerializerMethodField()
 
     class Meta:
         model = Service
@@ -262,7 +263,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'benefits_title', 'benefits', 'benefits_image_file', 'benefits_image', 
             'understanding_title', 'understanding_intro', 'understanding_items', 'understanding_image_file', 'understanding_image',
             'faqs', 'locations', 'features', 'indications', 'indications_title', 'indications_description', 'lab_columns', 'lab_columns_title', 'lab_columns_description', 'reasons', 'why_choose_title', 'why_choose_desc', 'steps',
-            'meta_title', 'meta_description',
+            'meta_title', 'meta_description', 'schema_markup', 'schema',
             'about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
             'created_at', 'updated_at'
         ]
@@ -350,6 +351,23 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     def get_faq_section_title(self, obj):
         return self._get_badge_field(obj, 'faq_section_title')
+
+    def get_schema(self, obj):
+        import json
+        import re
+        markup = getattr(obj, 'schema_markup', '') or ''
+        if not markup or not isinstance(markup, str):
+            return None
+        text = markup.strip()
+        if not text:
+            return None
+        script_match = re.search(r'<script[^>]*>(.*?)</script>', text, re.DOTALL | re.IGNORECASE)
+        if script_match:
+            text = script_match.group(1).strip()
+        try:
+            return json.loads(text)
+        except Exception:
+            return text
 
     def create(self, validated_data):
         title = validated_data.get('title', 'service')

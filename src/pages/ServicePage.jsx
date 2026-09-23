@@ -545,23 +545,22 @@ function LabServicesLanding({ slug = 'lab-services' }) {
   const pageDesc = mergedData?.meta_description || mergedData?.description || mergedData?.tagline || 'Professional, reliable, and on-demand DHA-certified medical care at your doorstep across Dubai.';
   const serviceOgImage = mergedData?.image_file || mergedData?.image || 'https://corx.ae/og-image.jpg';
 
-  const serviceSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'MedicalBusiness',
-    name: 'CORx Healthcare',
-    url: `https://corx.ae/${slug}`,
-    description: pageDesc,
-    image: serviceOgImage,
-    telephone: '+97143320776',
-    priceRange: '$$',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Office 303, Royal Class Building, DIP',
-      addressLocality: 'Dubai',
-      addressCountry: 'AE',
-    },
-    serviceType: mergedData?.title || slug,
-  };
+  const serviceSchema = (() => {
+    const raw = mergedData?.schema || mergedData?.schema_markup || serviceData?.schema || serviceData?.schema_markup;
+    if (!raw) return null;
+    if (typeof raw === 'object') return raw;
+    if (typeof raw === 'string') {
+      const trimmed = raw.trim();
+      if (!trimmed) return null;
+      const cleanJson = trimmed.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '').trim();
+      try {
+        return JSON.parse(cleanJson);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  })();
 
   const formatSlugToTitle = (slug, dataObj) => {
     if (dataObj?.title) return dataObj.title;

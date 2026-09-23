@@ -177,8 +177,20 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
     lab_columns: (Array.isArray(validBackendData.lab_columns) && validBackendData.lab_columns.length > 0) ? validBackendData.lab_columns : (staticFallback.lab_columns || []),
   } : staticFallback;
 
-  const pageTitle = mergedData?.meta_title || (mergedData?.title ? `${mergedData.title} in Dubai | CORx Healthcare` : 'CORx Healthcare: Home Health Care Services in Dubai *24/7');
-  const pageDesc = mergedData?.meta_description || mergedData?.description || mergedData?.tagline || 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses 24/7.';
+  const rawSchema = validBackendData?.schema || validBackendData?.schema_markup;
+  let backendSchema = null;
+  if (rawSchema) {
+    if (typeof rawSchema === 'object') {
+      backendSchema = rawSchema;
+    } else if (typeof rawSchema === 'string') {
+      const cleanJson = rawSchema.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '').trim();
+      try {
+        backendSchema = JSON.parse(cleanJson);
+      } catch (e) {
+        backendSchema = null;
+      }
+    }
+  }
 
   const seo = {
     title: pageTitle,
@@ -186,20 +198,7 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
     ogTitle: pageTitle,
     ogDescription: pageDesc,
     canonicalUrl: `https://corx.ae/${cleanSlug}`,
-    schema: {
-      "@context": "https://schema.org",
-      "@type": "MedicalBusiness",
-      "name": "CORx Healthcare",
-      "url": `https://corx.ae/${cleanSlug}`,
-      "description": pageDesc,
-      "telephone": "+97143990800",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Dubai",
-        "addressCountry": "AE"
-      },
-      "serviceType": mergedData?.title || cleanSlug
-    }
+    ...(backendSchema ? { schema: backendSchema } : {}),
   };
 
   return {

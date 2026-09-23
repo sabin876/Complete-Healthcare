@@ -1449,6 +1449,15 @@ class ServiceAdminForm(forms.ModelForm):
         required=False,
         help_text="Detailed description of the service"
     )
+    schema_markup = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows': 8,
+            'style': 'width: 100%; max-width: 950px; font-family: Consolas, monospace; font-size: 13px; background: #0f172a; color: #38bdf8; padding: 12px; border-radius: 8px; border: 1.5px solid #0284c7;',
+            'placeholder': '{\n  "@context": "https://schema.org",\n  "@type": "MedicalBusiness",\n  "name": "CORx Healthcare",\n  "description": "..."\n}'
+        }),
+        required=False,
+        help_text="Custom JSON-LD schema structured data for this service. You can paste raw JSON or &lt;script type='application/ld+json'&gt;...&lt;/script&gt;."
+    )
 
     floating_badge = forms.JSONField(
         widget=FloatingBadgeJsonWidget(),
@@ -1785,8 +1794,8 @@ class ServiceAdmin(admin.ModelAdmin):
             'fields': ('title', 'slug', 'parent', 'theme_color', 'icon', 'image_file')
         }),
         ('🔍 SEO & OpenGraph Meta Tags', {
-            'fields': ('meta_title', 'meta_description'),
-            'description': 'Custom SEO Title and Meta Description for search engines and social media sharing previews.',
+            'fields': ('meta_title', 'meta_description', 'schema_markup'),
+            'description': 'Custom SEO Title, Meta Description, and JSON-LD Schema markup for search engines.',
         }),
         ('✨ Hero Section Content', {
             'fields': ('eyebrow', 'tagline', 'description', 'floating_badge', 'features')

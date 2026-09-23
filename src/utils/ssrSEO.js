@@ -206,6 +206,21 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
   const pageDesc = mergedData?.meta_description || mergedData?.description || mergedData?.tagline || 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses 24/7.';
   const serviceImageUrl = mergedData?.image_file || mergedData?.image || DEFAULT_OG_IMAGE;
 
+  const rawSchema = validBackendData?.schema || validBackendData?.schema_markup;
+  let backendSchema = null;
+  if (rawSchema) {
+    if (typeof rawSchema === 'object') {
+      backendSchema = rawSchema;
+    } else if (typeof rawSchema === 'string') {
+      const cleanJson = rawSchema.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '').trim();
+      try {
+        backendSchema = JSON.parse(cleanJson);
+      } catch (e) {
+        backendSchema = null;
+      }
+    }
+  }
+
   const seo = {
     title: pageTitle,
     description: pageDesc,
@@ -214,36 +229,7 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
     ogImage: serviceImageUrl,
     ogType: 'website',
     canonicalUrl: `${BASE_SITE_URL}/${cleanSlug}`,
-    schema: {
-      '@context': 'https://schema.org',
-      '@type': 'MedicalBusiness',
-      name: 'CORx Healthcare',
-      url: `${BASE_SITE_URL}/${cleanSlug}`,
-      description: pageDesc,
-      image: serviceImageUrl,
-      telephone: '+97143320776',
-      priceRange: '$$',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Office 303, Royal Class Building, DIP',
-        addressLocality: 'Dubai',
-        addressCountry: 'AE',
-      },
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: '24.9981035',
-        longitude: '55.1701128',
-      },
-      openingHoursSpecification: {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: [
-          'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-        ],
-        opens: '00:00',
-        closes: '23:59'
-      },
-      serviceType: mergedData?.title || cleanSlug,
-    },
+    ...(backendSchema ? { schema: backendSchema } : {}),
   };
 
   return {

@@ -90,15 +90,18 @@ export function SEO({
     updateMeta('meta[property="og:url"]', 'property', 'og:url', computedCanonical);
 
     // 7. Structured JSON-LD Schema
+    const scriptEl = document.querySelector('script[type="application/ld+json"][data-seo="true"]');
     if (schema) {
-      let scriptEl = document.querySelector('script[type="application/ld+json"][data-seo="true"]');
-      if (!scriptEl) {
-        scriptEl = document.createElement('script');
-        scriptEl.setAttribute('type', 'application/ld+json');
-        scriptEl.setAttribute('data-seo', 'true');
-        document.head.appendChild(scriptEl);
+      let targetScript = scriptEl;
+      if (!targetScript) {
+        targetScript = document.createElement('script');
+        targetScript.setAttribute('type', 'application/ld+json');
+        targetScript.setAttribute('data-seo', 'true');
+        document.head.appendChild(targetScript);
       }
-      scriptEl.textContent = JSON.stringify(schema);
+      targetScript.textContent = typeof schema === 'string' ? schema : JSON.stringify(schema);
+    } else if (scriptEl) {
+      scriptEl.remove();
     }
   }, [title, description, canonical, ogImage, ogType, robots, schema]);
 

@@ -322,6 +322,7 @@ class Service(models.Model):
     steps = models.JSONField(default=list, blank=True)  # [{title, desc}]
     meta_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom SEO & OpenGraph Title Tag for this Service Page")
     meta_description = models.TextField(blank=True, default='', help_text="Custom SEO & OpenGraph Meta Description for this Service Page")
+    schema_markup = models.TextField(blank=True, default='', verbose_name="Custom JSON-LD Schema", help_text="Custom JSON-LD Schema for this Service (e.g. JSON {...} or <script type='application/ld+json'>{...}</script>)")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

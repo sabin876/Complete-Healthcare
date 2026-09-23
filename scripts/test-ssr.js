@@ -55,7 +55,8 @@ function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo
   ];
 
   if (seo?.schema) {
-    const schemaJson = JSON.stringify(seo.schema).replace(/</g, '\\u003c');
+    const schemaContent = typeof seo.schema === 'string' ? seo.schema : JSON.stringify(seo.schema);
+    const schemaJson = schemaContent.replace(/</g, '\\u003c');
     headTags.push(`<script type="application/ld+json">${schemaJson}</script>`);
   }
 
