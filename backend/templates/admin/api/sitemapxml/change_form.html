@@ -1,0 +1,383 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* Full-width layout */
+.col-12.col-lg-9 { flex: 0 0 100% !important; max-width: 100% !important; }
+.card-header:has(.nav-tabs), .nav-tabs, ul.nav.nav-tabs, .card-header-tabs,
+#jazzy-actions, .col-12.col-lg-3, .submit-row, .card-footer { display: none !important; }
+fieldset.module { border: none !important; background: transparent !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }
+fieldset.module > h2, fieldset.module > .description { display: none !important; }
+
+/* Container */
+.sm-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Editor Card */
+.sm-editor-card {
+    background: #090d16;
+    border: 1.5px solid #1e293b;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    margin-bottom: 16px;
+}
+
+/* Topbar */
+.sm-topbar {
+    background: #0f172a;
+    border-bottom: 1px solid #1e293b;
+    padding: 11px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.sm-window-controls {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.sm-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.sm-dot-red    { background: #ef4444; }
+.sm-dot-yellow { background: #f59e0b; }
+.sm-dot-green  { background: #10b981; }
+
+.sm-filename {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 12.5px;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    border-left: 1px solid #1e293b;
+    border-right: 1px solid #1e293b;
+}
+
+.sm-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sm-action-btn {
+    background: rgba(255,255,255,0.06);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: Consolas, monospace;
+}
+.sm-action-btn:hover {
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+}
+
+/* Editor body */
+.sm-editor-body {
+    display: flex;
+    min-height: 500px;
+}
+
+.sm-line-numbers {
+    width: 52px;
+    background: #0c1220;
+    border-right: 1px solid #1e293b;
+    color: #334155;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13.5px;
+    line-height: 1.6;
+    text-align: right;
+    padding: 16px 10px;
+    user-select: none;
+    overflow: hidden;
+}
+
+.sm-textarea-wrap { flex: 1; }
+.sm-textarea-wrap textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    background: transparent;
+    color: #2dd4bf;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    font-size: 13.5px;
+    line-height: 1.6;
+    border: none;
+    padding: 16px 18px;
+    resize: vertical;
+    outline: none;
+    box-shadow: none;
+    white-space: pre;
+    tab-size: 2;
+    caret-color: #ffffff;
+}
+
+/* Comments in green */
+.sm-textarea-wrap textarea::selection { background: rgba(45,212,191,0.15); }
+
+/* Status bar */
+.sm-statusbar {
+    background: #0c1220;
+    border-top: 1px solid #1e293b;
+    padding: 7px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: Consolas, monospace;
+    font-size: 11.5px;
+    color: #475569;
+}
+
+.sm-stat { display: inline-flex; align-items: center; gap: 6px; margin-right: 16px; }
+.sm-stat-val { color: #2dd4bf; font-weight: 700; }
+
+/* Save bar */
+.sm-save-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.sm-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    border: none;
+    text-decoration: none;
+}
+.sm-btn-ghost {
+    background: #ffffff;
+    color: #475569;
+    border: 1.5px solid #e2e8f0;
+}
+.sm-btn-ghost:hover { background: #f8fafc; color: #0f172a; }
+
+.sm-btn-primary {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(79,70,229,0.35);
+}
+.sm-btn-primary:hover { background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%); transform: translateY(-1px); color: #ffffff; }
+
+.sm-btn-view {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1.5px solid #e2e8f0;
+}
+.sm-btn-view:hover { background: #e2e8f0; }
+
+/* Toast */
+.sm-toast {
+    display: none;
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: #0f172a;
+    color: #fff;
+    padding: 11px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    z-index: 9999;
+    align-items: center;
+    gap: 8px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="sm-container">
+
+    <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}{% if form.is_bound %}action="{{ form_url }}" {% endif %}method="post" id="{{ opts.model_name }}_form" novalidate>
+        {% csrf_token %}
+
+        <!-- Code Editor -->
+        <div class="sm-editor-card">
+
+            <!-- Topbar -->
+            <div class="sm-topbar">
+                <!-- macOS window controls -->
+                <div class="sm-window-controls">
+                    <span class="sm-dot sm-dot-red"></span>
+                    <span class="sm-dot sm-dot-yellow"></span>
+                    <span class="sm-dot sm-dot-green"></span>
+                </div>
+
+                <!-- Filename pill -->
+                <div class="sm-filename">
+                    <i class="fas fa-file-code" style="color:#475569;font-size:11px;"></i>
+                    sitemap.xml &bull; Sitemaps.org 0.9 XML Schema
+                </div>
+
+                <!-- Quick insert buttons -->
+                <div class="sm-topbar-actions">
+                    <button type="button" class="sm-action-btn" onclick="insertSnip('daily')">freq: daily</button>
+                    <button type="button" class="sm-action-btn" onclick="insertSnip('weekly')">freq: weekly</button>
+                    <button type="button" class="sm-action-btn" onclick="insertSnip('1.0')">prio: 1.0</button>
+                    <button type="button" class="sm-action-btn" onclick="insertSnip('0.8')">prio: 0.8</button>
+                    <button type="button" class="sm-action-btn" onclick="insertSnip('0.7')">prio: 0.7</button>
+                    <button type="button" class="sm-action-btn" onclick="insertUrlBlock()" style="color:#2dd4bf;border-color:rgba(45,212,191,0.3);">+ URL</button>
+                </div>
+            </div>
+
+            <!-- Editor body: line numbers + textarea -->
+            <div class="sm-editor-body">
+                <div class="sm-line-numbers" id="smLines">1</div>
+                <div class="sm-textarea-wrap">
+                    {{ adminform.form.content }}
+                </div>
+            </div>
+
+            <!-- Status bar -->
+            <div class="sm-statusbar">
+                <div>
+                    <span class="sm-stat"><span class="sm-stat-val" id="smLineCount">1</span> lines</span>
+                    <span class="sm-stat"><span class="sm-stat-val" id="smUrlCount">0</span> URLs</span>
+                    <span class="sm-stat"><span class="sm-stat-val" id="smSize">0 KB</span></span>
+                </div>
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <span id="smValidStatus" style="color:#10b981;"><i class="fas fa-check-circle"></i> Valid XML</span>
+                    <span>UTF-8 &bull; XML 1.0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="sm-save-bar">
+            <a href="/sitemap.xml" target="_blank" class="sm-btn sm-btn-view">
+                <i class="fas fa-external-link-alt"></i> View /sitemap.xml
+            </a>
+            <button type="button" class="sm-btn sm-btn-ghost" onclick="window.history.back()">
+                Cancel
+            </button>
+            <button type="submit" name="_save" class="sm-btn sm-btn-primary" id="smSaveBtn">
+                <i class="fas fa-save"></i> Save &amp; Publish
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<!-- Toast -->
+<div id="smToast" class="sm-toast">
+    <i class="fas fa-check-circle" style="color:#10b981;"></i>
+    <span id="smToastTxt">Done</span>
+</div>
+
+<script>
+(function() {
+    const ta = document.querySelector('textarea[name="content"]');
+    const lines = document.getElementById('smLines');
+    const lineCount = document.getElementById('smLineCount');
+    const urlCount = document.getElementById('smUrlCount');
+    const sizeEl = document.getElementById('smSize');
+    const validEl = document.getElementById('smValidStatus');
+
+    if (!ta) return;
+
+    function update() {
+        const txt = ta.value || '';
+        const ls = txt.split('\n');
+        const n = ls.length;
+
+        // Line numbers
+        lines.innerHTML = Array.from({length: n}, (_, i) => i+1).join('<br>');
+        lineCount.textContent = n;
+
+        // URL count (simple regex)
+        const matches = txt.match(/<url>/g);
+        urlCount.textContent = matches ? matches.length : 0;
+
+        // Size
+        const bytes = new Blob([txt]).size;
+        sizeEl.textContent = (bytes / 1024).toFixed(1) + ' KB';
+
+        // Basic XML validation
+        try {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(txt, 'text/xml');
+            if (doc.querySelector('parsererror')) throw new Error();
+            validEl.innerHTML = '<i class="fas fa-check-circle"></i> Valid XML';
+            validEl.style.color = '#10b981';
+        } catch(e) {
+            validEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> XML Error';
+            validEl.style.color = '#ef4444';
+        }
+    }
+
+    ta.addEventListener('input', update);
+    ta.addEventListener('scroll', () => { lines.scrollTop = ta.scrollTop; });
+    update();
+
+    // Insert quick snippets
+    window.insertSnip = function(val) {
+        let text = '';
+        if (val === 'daily' || val === 'weekly') text = `<changefreq>${val}</changefreq>`;
+        else text = `<priority>${val}</priority>`;
+        insertAt(text);
+    };
+
+    window.insertUrlBlock = function() {
+        const today = new Date().toISOString().split('T')[0];
+        const block = `  <url>\n    <loc>https://corx.ae/new-page</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+        const content = ta.value;
+        const closeIdx = content.lastIndexOf('</urlset>');
+        ta.value = closeIdx !== -1
+            ? content.slice(0, closeIdx) + block + content.slice(closeIdx)
+            : content + '\n' + block;
+        update();
+        toast('URL block inserted');
+    };
+
+    function insertAt(text) {
+        const s = ta.selectionStart, e = ta.selectionEnd;
+        ta.value = ta.value.slice(0,s) + text + ta.value.slice(e);
+        ta.selectionStart = ta.selectionEnd = s + text.length;
+        ta.focus();
+        update();
+    }
+
+    function toast(msg) {
+        const t = document.getElementById('smToast');
+        document.getElementById('smToastTxt').textContent = msg;
+        t.style.display = 'flex';
+        setTimeout(() => t.style.display = 'none', 2500);
+    }
+
+    // Ctrl+S to save
+    document.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            document.getElementById('smSaveBtn').click();
+        }
+    });
+})();
+</script>
+{% endblock %}

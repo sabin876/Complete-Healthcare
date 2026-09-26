@@ -4,459 +4,800 @@
 
 {% block blockclass %}{{ block.super }} dashboard{% endblock %}
 
-{% block content_title %} {% trans 'Executive Dashboard' %} {% endblock %}
+{% block content_title %} {% trans 'Dashboard' %} {% endblock %}
 
 {% block breadcrumbs %}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
-        <li class="breadcrumb-item">{% trans 'Control Center Dashboard' %}</li>
+    <ol class="breadcrumb" style="background: transparent; padding: 0 0 16px 0; margin: 0; font-size: 13px;">
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}" style="color: #08709d; font-weight: 600; text-decoration: none;"><i class="fas fa-home"></i> {% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item active" style="color: #64748b; font-weight: 600;">{% trans 'Dashboard' %}</li>
     </ol>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid" style="font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;">
-    
-    <!-- 1. Custom Welcome Hero Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div style="background: linear-gradient(135deg, #061e36 0%, #08709d 100%); color: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(8, 112, 157, 0.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-                <div>
-                    <h2 style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 26px; margin: 0 0 8px 0; letter-spacing: -0.01em;">
-                        CORx Healthcare Dubai
-                    </h2>
-                    <p style="font-size: 14.5px; opacity: 0.9; margin: 0; font-weight: 500;">
-                        Executive Management Operations & Service Control Portal
-                    </p>
-                </div>
-                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                    <!-- CMS Dropdown Button in Hero -->
-                    <div class="dropdown">
-                        <button class="btn dropdown-toggle" type="button" id="cmsHeroDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); color: #ffffff; border: 1.5px solid rgba(255, 255, 255, 0.3); font-weight: 700; border-radius: 10px; padding: 10px 18px; font-size: 13px; display: inline-flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-layer-group" style="color: #38bdf8;"></i> CMS Dropdown
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="cmsHeroDropdown" style="border-radius: 12px; border: 1px solid #e2e8f0; padding: 8px; min-width: 240px;">
-                            <li class="dropdown-header" style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; padding: 6px 12px;">CMS Content Modules</li>
-                            <li><a class="dropdown-item" href="/admin/api/blogpost/" style="border-radius: 8px; font-weight: 600; font-size: 13px; padding: 8px 12px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-newspaper" style="color: #0284c7;"></i> Blog Posts ({{ blog_count|default:"0" }})</a></li>
-                            <li><a class="dropdown-item" href="/admin/api/service/" style="border-radius: 8px; font-weight: 600; font-size: 13px; padding: 8px 12px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-briefcase-medical" style="color: #16a34a;"></i> Services Directory ({{ service_count|default:"0" }})</a></li>
-                            <li><a class="dropdown-item" href="/admin/api/teammember/" style="border-radius: 8px; font-weight: 600; font-size: 13px; padding: 8px 12px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-user-nurse" style="color: #9333ea;"></i> Team Members ({{ team_count|default:"0" }})</a></li>
-                            <li class="dropdown-divider"></li>
-                            <li class="dropdown-header" style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; padding: 6px 12px;">SEO & Web Settings</li>
-                            <li><a class="dropdown-item" href="/admin/api/robotstxt/" style="border-radius: 8px; font-weight: 600; font-size: 13px; padding: 8px 12px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-robot" style="color: #ea580c;"></i> Robots.txt Setting</a></li>
-                            <li><a class="dropdown-item" href="/admin/api/sitemapxml/" style="border-radius: 8px; font-weight: 600; font-size: 13px; padding: 8px 12px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-sitemap" style="color: #4f46e5;"></i> Sitemap.xml Setting</a></li>
-                        </ul>
-                    </div>
+<div class="container-fluid p-0 dashboard-zoom-wrapper" style="font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;">
 
-                    <a href="/admin/api/service/add/" class="btn" style="background: #10b981; color: white; font-weight: 700; border-radius: 10px; border: none; padding: 10px 18px; font-size: 13px; letter-spacing: 0.03em; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
-                        <i class="fas fa-plus"></i> Add Service
-                    </a>
-                    <a href="/admin/api/blogpost/add/" class="btn" style="background: #38bdf8; color: #061e36; font-weight: 700; border-radius: 10px; border: none; padding: 10px 18px; font-size: 13px; letter-spacing: 0.03em; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);">
-                        <i class="fas fa-edit"></i> Write Blog
-                    </a>
-                </div>
-            </div>
+    <!-- =========================================================================
+         TOP DASHBOARD HEADER
+         ========================================================================= -->
+    <div class="dashboard-header-bar">
+        <div class="header-left">
+            <h1 class="dashboard-main-title">CORx Healthcare Operations &amp; Admin</h1>
+            <p class="dashboard-main-subtitle">Control Center divided into Website CMS and Internal Content Management.</p>
+        </div>
+        <div class="header-right">
+            <a href="/" target="_blank" class="top-nav-btn btn-light-glass">
+                <i class="fas fa-globe"></i> View Live Website ↗
+            </a>
+            <a href="/dashboard" target="_blank" class="top-nav-btn btn-dark-glass">
+                <i class="fas fa-desktop"></i> React Operations Dashboard ↗
+            </a>
         </div>
     </div>
 
-    <!-- 2. CMS Navigation Bar List -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card" style="border-radius: 16px; border: 1.5px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); background: #ffffff; overflow: hidden;">
-                <!-- Navbar Header -->
-                <div style="background: #061e36; color: white; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 32px; height: 32px; background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px;">
-                            <i class="fas fa-layer-group"></i>
-                        </div>
-                        <div>
-                            <span style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #ffffff;">CMS Navigation Bar</span>
-                            <span style="font-size: 12px; color: #93c5fd; margin-left: 8px; font-weight: 500;">Content Management System & Website Portals</span>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                        <!-- CMS Dropdown Button in Navigation Bar -->
-                        <div class="dropdown">
-                            <button class="btn btn-sm dropdown-toggle" type="button" id="cmsBarDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); font-weight: 700; font-size: 12px; padding: 6px 14px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;">
-                                <i class="fas fa-list"></i> CMS Menu List
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="cmsBarDropdown" style="border-radius: 12px; border: 1px solid #e2e8f0; padding: 8px; min-width: 220px;">
-                                <li class="dropdown-header" style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; padding: 6px 12px;">Choose Module</li>
-                                <li><a class="dropdown-item" href="/admin/api/blogpost/" style="border-radius: 8px; font-weight: 600; font-size: 13px; padding: 8px 12px;"><i class="fas fa-newspaper text-info mr-2"></i> Blog Posts</a></li>
-                                <li><a class="dropdown-item" href="/admin/api/service/" style="border-radius: 8px; font-weight: 600; font-size: 13px; padding: 8px 12px;"><i class="fas fa-briefcase-medical text-success mr-2"></i> Services Directory</a></li>
-                                <li><a class="dropdown-item" href="/admin/api/teammember/" style="border-radius: 8px; font-weight: 600; font-size: 13px; padding: 8px 12px;"><i class="fas fa-user-nurse mr-2" style="color: #9333ea;"></i> Team Members</a></li>
-                                <li class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/admin/api/robotstxt/" style="border-radius: 8px; font-weight: 600; font-size: 13px; padding: 8px 12px;"><i class="fas fa-robot mr-2" style="color: #ea580c;"></i> Robots.txt</a></li>
-                                <li><a class="dropdown-item" href="/admin/api/sitemapxml/" style="border-radius: 8px; font-weight: 600; font-size: 13px; padding: 8px 12px;"><i class="fas fa-sitemap mr-2" style="color: #4f46e5;"></i> Sitemap.xml</a></li>
-                            </ul>
-                        </div>
-                        <span style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 4px;">Quick Actions:</span>
-                        <a href="/admin/api/blogpost/add/" class="btn btn-sm" style="background: #38bdf8; color: #061e36; font-weight: 700; font-size: 11.5px; padding: 5px 12px; border-radius: 6px; text-decoration: none;">+ Write Blog</a>
-                        <a href="/admin/api/service/add/" class="btn btn-sm" style="background: #10b981; color: white; font-weight: 700; font-size: 11.5px; padding: 5px 12px; border-radius: 6px; text-decoration: none;">+ Add Service</a>
-                        <a href="/admin/api/teammember/add/" class="btn btn-sm" style="background: #a855f7; color: white; font-weight: 700; font-size: 11.5px; padding: 5px 12px; border-radius: 6px; text-decoration: none;">+ Add Member</a>
-                    </div>
-                </div>
 
-                <!-- Navbar List (Interactive items) -->
-                <div style="padding: 16px 20px; background: #f8fafc;">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
-                        <!-- Blog Posts -->
-                        <a href="/admin/api/blogpost/" class="cms-nav-card" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: white; border: 1.5px solid #e2e8f0; padding: 12px 16px; border-radius: 12px; transition: all 0.2s ease;">
-                            <div style="width: 40px; height: 40px; border-radius: 10px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
-                                <i class="fas fa-newspaper"></i>
-                            </div>
-                            <div style="flex: 1; min-width: 0;">
-                                <div style="font-weight: 800; color: #0f172a; font-size: 13.5px;">Blog Posts</div>
-                                <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">{{ blog_count|default:"0" }} published articles</div>
-                            </div>
-                            <i class="fas fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
-                        </a>
-
-                        <!-- Services Directory -->
-                        <a href="/admin/api/service/" class="cms-nav-card" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: white; border: 1.5px solid #e2e8f0; padding: 12px 16px; border-radius: 12px; transition: all 0.2s ease;">
-                            <div style="width: 40px; height: 40px; border-radius: 10px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
-                                <i class="fas fa-briefcase-medical"></i>
-                            </div>
-                            <div style="flex: 1; min-width: 0;">
-                                <div style="font-weight: 800; color: #0f172a; font-size: 13.5px;">Services Directory</div>
-                                <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">{{ service_count|default:"0" }} active services</div>
-                            </div>
-                            <i class="fas fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
-                        </a>
-
-                        <!-- Team Members -->
-                        <a href="/admin/api/teammember/" class="cms-nav-card" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: white; border: 1.5px solid #e2e8f0; padding: 12px 16px; border-radius: 12px; transition: all 0.2s ease;">
-                            <div style="width: 40px; height: 40px; border-radius: 10px; background: #f3e8ff; color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
-                                <i class="fas fa-user-nurse"></i>
-                            </div>
-                            <div style="flex: 1; min-width: 0;">
-                                <div style="font-weight: 800; color: #0f172a; font-size: 13.5px;">Team Members</div>
-                                <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">{{ team_count|default:"0" }} medical staff</div>
-                            </div>
-                            <i class="fas fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
-                        </a>
-
-                        <!-- Robots.txt Setting -->
-                        <a href="/admin/api/robotstxt/" class="cms-nav-card" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: white; border: 1.5px solid #e2e8f0; padding: 12px 16px; border-radius: 12px; transition: all 0.2s ease;">
-                            <div style="width: 40px; height: 40px; border-radius: 10px; background: #ffedd5; color: #ea580c; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div style="flex: 1; min-width: 0;">
-                                <div style="font-weight: 800; color: #0f172a; font-size: 13.5px;">Robots.txt</div>
-                                <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">SEO crawler rules</div>
-                            </div>
-                            <i class="fas fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
-                        </a>
-
-                        <!-- Sitemap.xml Setting -->
-                        <a href="/admin/api/sitemapxml/" class="cms-nav-card" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: white; border: 1.5px solid #e2e8f0; padding: 12px 16px; border-radius: 12px; transition: all 0.2s ease;">
-                            <div style="width: 40px; height: 40px; border-radius: 10px; background: #e0e7ff; color: #4f46e5; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
-                                <i class="fas fa-sitemap"></i>
-                            </div>
-                            <div style="flex: 1; min-width: 0;">
-                                <div style="font-weight: 800; color: #0f172a; font-size: 13.5px;">Sitemap.xml</div>
-                                <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">Search indexing map</div>
-                            </div>
-                            <i class="fas fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Metrics Grid -->
-    <div class="row">
-        <!-- Staff Count -->
-        <div class="col-lg-3 col-md-6 col-12 mb-4">
-            <div style="background: white; border-radius: 16px; border: 1.5px solid #e2e8f0; padding: 22px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.2s ease-in-out;" class="metric-card">
-                <div style="background: rgba(8, 112, 157, 0.1); color: #08709d; width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
-                    <i class="fas fa-user-md"></i>
-                </div>
+    <!-- =========================================================================
+         SECTION 1: CMS (WEBSITE OVERVIEW & PUBLIC CONTENT)
+         ========================================================================= -->
+    <div class="two-part-section mb-4">
+        
+        <!-- Section Header with Overview Counter Pills -->
+        <div class="section-title-card cms-theme">
+            <div class="section-title-left">
+                <div class="section-icon-badge cms-icon"><i class="fas fa-globe"></i></div>
                 <div>
-                    <div style="color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Registered Staff</div>
-                    <div style="font-size: 26px; font-weight: 800; color: #0f172a;">{{ staff_count|default:"0" }}</div>
-                    <a href="/admin/api/staffprofile/" style="font-size: 11.5px; font-weight: 700; color: #08709d; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; margin-top: 4px;">Manage Staff Details →</a>
+                    <div class="section-badge-tag">SECTION 1</div>
+                    <h2 class="section-heading">CMS (Content Management System)</h2>
+                    <p class="section-subtext">Overview and management of patient-facing website content, clinical services catalog, articles &amp; SEO.</p>
+                </div>
+            </div>
+
+            <!-- Overview Mini Stats for CMS -->
+            <div class="overview-pills-row">
+                <div class="overview-pill">
+                    <span class="pill-number">{{ service_count|default:"0" }}</span>
+                    <span class="pill-title">Services</span>
+                </div>
+                <div class="overview-pill">
+                    <span class="pill-number">{{ blog_count|default:"0" }}</span>
+                    <span class="pill-title">Blog Articles</span>
+                </div>
+                <div class="overview-pill">
+                    <span class="pill-number">{{ team_count|default:"0" }}</span>
+                    <span class="pill-title">Team Members</span>
+                </div>
+                <div class="overview-pill">
+                    <span class="pill-number" style="color: #34d399;"><i class="fas fa-check-circle"></i></span>
+                    <span class="pill-title">SEO Active</span>
                 </div>
             </div>
         </div>
 
-        <!-- Pending Leaves -->
-        <div class="col-lg-3 col-md-6 col-12 mb-4">
-            <div style="background: white; border-radius: 16px; border: 1.5px solid #e2e8f0; padding: 22px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.2s ease-in-out;" class="metric-card">
-                <div style="background: rgba(244, 63, 94, 0.1); color: #f43f5e; width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
-                    <i class="fas fa-calendar-times"></i>
-                </div>
-                <div>
-                    <div style="color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Pending Leaves</div>
-                    <div style="font-size: 26px; font-weight: 800; color: #0f172a;">{{ pending_leaves|default:"0" }}</div>
-                    <a href="/admin/api/leaveapplication/?status__exact=Pending" style="font-size: 11.5px; font-weight: 700; color: #f43f5e; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; margin-top: 4px;">Review Applications →</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Active Tasks -->
-        <div class="col-lg-3 col-md-6 col-12 mb-4">
-            <div style="background: white; border-radius: 16px; border: 1.5px solid #e2e8f0; padding: 22px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.2s ease-in-out;" class="metric-card">
-                <div style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
-                    <i class="fas fa-tasks"></i>
-                </div>
-                <div>
-                    <div style="color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Active Tasks</div>
-                    <div style="font-size: 26px; font-weight: 800; color: #0f172a;">{{ active_tasks|default:"0" }}</div>
-                    <a href="/admin/api/task/?status__exact=In+Progress" style="font-size: 11.5px; font-weight: 700; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; margin-top: 4px;">Track Board →</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Services Count -->
-        <div class="col-lg-3 col-md-6 col-12 mb-4">
-            <div style="background: white; border-radius: 16px; border: 1.5px solid #e2e8f0; padding: 22px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.2s ease-in-out;" class="metric-card">
-                <div style="background: rgba(16, 185, 129, 0.1); color: #10b981; width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
-                    <i class="fas fa-briefcase-medical"></i>
-                </div>
-                <div>
-                    <div style="color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Active Services</div>
-                    <div style="font-size: 26px; font-weight: 800; color: #0f172a;">{{ service_count|default:"0" }}</div>
-                    <a href="/admin/api/service/" style="font-size: 11.5px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; margin-top: 4px;">Update Listings →</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Operations Layout (Tables and Quick links) -->
-    <div class="row">
-        <!-- Left: Tasks and Core apps -->
-        <div class="col-lg-8 col-12">
+        <!-- CMS Content Modules Cards Grid (6 Modules) -->
+        <div class="modules-grid-container">
             
-            <!-- Tasks List Card -->
-            <div class="card mb-4" style="border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.02); background: white;">
-                <div class="card-header" style="background: #ffffff; border-bottom: 1.5px solid #f1f5f9; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;">
-                    <h5 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.03em;">
-                        Recent Operational Tasks
-                    </h5>
-                    <a href="/admin/api/task/add/" class="btn btn-sm" style="background: #08709d; color: white; font-weight: 700; font-size: 11px; padding: 6px 12px; border-radius: 6px;">+ Assign Task</a>
+            <!-- 1. Home Page -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-indigo"><i class="fas fa-home"></i></div>
+                    <span class="card-pill pill-indigo">Landing &amp; SEO</span>
                 </div>
-                <div class="card-body" style="padding: 0;">
-                    <div class="table-responsive">
-                        <table class="table" style="margin: 0; border: none;">
-                            <thead>
-                                <tr>
-                                    <th style="font-size: 11px; padding: 12px 20px; background: #061e36 !important; color: white;">Task Title</th>
-                                    <th style="font-size: 11px; padding: 12px 20px; background: #061e36 !important; color: white;">Assigned To</th>
-                                    <th style="font-size: 11px; padding: 12px 20px; text-align: center; background: #061e36 !important; color: white;">Priority</th>
-                                    <th style="font-size: 11px; padding: 12px 20px; text-align: center; background: #061e36 !important; color: white;">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if recent_tasks %}
-                                    {% for task in recent_tasks %}
-                                        <tr>
-                                            <td style="padding: 14px 20px; font-weight: 700; color: #1e293b;">
-                                                <a href="/admin/api/task/{{ task.id }}/change/">{{ task.title }}</a>
-                                            </td>
-                                            <td style="padding: 14px 20px; color: #64748b; font-weight: 600;">
-                                                {{ task.assigned_to_name|default:task.assigned_to.full_name }}
-                                            </td>
-                                            <td style="padding: 14px 20px; text-align: center;">
-                                                {% if task.priority == 'High' %}
-                                                    <span class="badge" style="background: #fee2e2; color: #ef4444; font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px;">High</span>
-                                                {% elif task.priority == 'Medium' %}
-                                                    <span class="badge" style="background: #fef3c7; color: #d97706; font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px;">Medium</span>
-                                                {% else %}
-                                                    <span class="badge" style="background: #f0fdf4; color: #16a34a; font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px;">Low</span>
-                                                {% endif %}
-                                            </td>
-                                            <td style="padding: 14px 20px; text-align: center;">
-                                                {% if task.status == 'Completed' %}
-                                                    <span class="badge" style="background: #dcfce7; color: #15803d; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">✓ Done</span>
-                                                {% elif task.status == 'In Progress' %}
-                                                    <span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">● Active</span>
-                                                {% else %}
-                                                    <span class="badge" style="background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 20px;">○ Pending</span>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr>
-                                        <td colspan="4" style="text-align: center; color: #94a3b8; padding: 24px; font-style: italic;">No recent tasks assigned.</td>
-                                    </tr>
-                                {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
+                <h3 class="card-title">Home Page</h3>
+                <p class="card-desc">Hero banner headline, Google SERP simulator, JSON-LD Schema markup &amp; FAQs section.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/homepage/" class="action-btn-main">
+                        <i class="fas fa-sliders-h"></i> Manage Home Page
+                    </a>
                 </div>
             </div>
 
-            <!-- Standard Django App Listing Section -->
-            <div class="card mb-4" style="border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.02); background: white;">
-                <div class="card-header" style="background: #ffffff; border-bottom: 1.5px solid #f1f5f9; padding: 18px 24px;">
-                    <h5 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.03em;">
-                        Registered System Modules
-                    </h5>
+            <!-- 2. Services Directory -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-emerald"><i class="fas fa-briefcase-medical"></i></div>
+                    <span class="card-pill pill-emerald">{{ service_count|default:"0" }} Services</span>
                 </div>
-                <div class="card-body" style="padding: 24px;">
-                    {% get_side_menu using="app_list" as app_list %}
-                    <div class="row">
-                        {% for app in app_list %}
-                            <div class="col-md-6 col-12 mb-3">
-                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px;">
-                                    <h6 style="font-weight: 800; color: #0f172a; text-transform: uppercase; font-size: 12.5px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                        <i class="fas fa-folder-open text-[#08709d]"></i> {{ app.name }}
-                                    </h6>
-                                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
-                                        {% for model in app.models %}
-                                            <li style="display: flex; justify-content: space-between; align-items: center;">
-                                                <a href="{{ model.url }}" style="font-weight: 700; color: #334155; font-size: 13px;">{{ model.name }}</a>
-                                                <div style="display: flex; gap: 6px;">
-                                                    {% if model.add_url %}
-                                                        <a href="{{ model.add_url }}" style="background: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">+ Add</a>
-                                                    {% elif '/admin/api/blogpost/' in model.url %}
-                                                        <a href="/admin/api/blogpost/add/" style="background: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">+ Add</a>
-                                                    {% elif '/admin/api/service/' in model.url %}
-                                                        <a href="/admin/api/service/add/" style="background: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">+ Add</a>
-                                                    {% elif '/admin/api/teammember/' in model.url %}
-                                                        <a href="/admin/api/teammember/add/" style="background: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">+ Add</a>
-                                                    {% endif %}
-                                                    <a href="{{ model.url }}" style="background: #08709d; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">View</a>
-                                                </div>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                <h3 class="card-title">Services Directory</h3>
+                <p class="card-desc">Clinical packages, tests, treatment benefits, pricing, and sub-services hierarchy.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/service/" class="action-btn-main">
+                        <i class="fas fa-list"></i> View Services
+                    </a>
+                    <a href="/admin/api/service/add/" class="action-btn-add">
+                        <i class="fas fa-plus"></i> Add
+                    </a>
                 </div>
             </div>
 
-        </div>
-
-        <!-- Right: Recent Leaves & Utilities -->
-        <div class="col-lg-4 col-12">
-            
-            <!-- Leaves Review Card -->
-            <div class="card mb-4" style="border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.02); background: white;">
-                <div class="card-header" style="background: #ffffff; border-bottom: 1.5px solid #f1f5f9; padding: 18px 24px;">
-                    <h5 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.03em;">
-                        Leave Applications
-                    </h5>
+            <!-- 3. Blog Posts -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-sky"><i class="fas fa-newspaper"></i></div>
+                    <span class="card-pill pill-sky">{{ blog_count|default:"0" }} Articles</span>
                 </div>
-                <div class="card-body" style="padding: 20px;">
-                    <div style="display: flex; flex-direction: column; gap: 14px;">
-                        {% if recent_leaves %}
-                            {% for leave in recent_leaves %}
-                                <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start;" class="last-border-none">
-                                    <div>
-                                        <div style="font-weight: 700; font-size: 13.5px; color: #1e293b;">
-                                            <a href="/admin/api/leaveapplication/{{ leave.id }}/change/">{{ leave.staff_name }}</a>
-                                        </div>
-                                        <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 2px;">
-                                            {{ leave.leave_type }}
-                                        </div>
-                                        <div style="font-size: 11px; color: #94a3b8; font-weight: 600; margin-top: 4px;">
-                                            {{ leave.leave_start }} to {{ leave.leave_end }}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        {% if leave.status == 'Approved' %}
-                                            <span class="badge" style="background: #dcfce7; color: #15803d; font-weight: 700; font-size: 10px; padding: 3px 8px; border-radius: 12px;">Approved</span>
-                                        {% elif leave.status == 'Rejected' %}
-                                            <span class="badge" style="background: #fee2e2; color: #b91c1c; font-weight: 700; font-size: 10px; padding: 3px 8px; border-radius: 12px;">Rejected</span>
-                                        {% else %}
-                                            <span class="badge" style="background: #fef3c7; color: #d97706; font-weight: 700; font-size: 10px; padding: 3px 8px; border-radius: 12px;">Pending</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <div style="text-align: center; color: #94a3b8; font-style: italic; font-size: 13px;">No recent leave requests.</div>
-                        {% endif %}
-                    </div>
+                <h3 class="card-title">Blog Posts</h3>
+                <p class="card-desc">Health insight articles, patient education guides, categories, and author details.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/blogpost/" class="action-btn-main">
+                        <i class="fas fa-newspaper"></i> View Blogs
+                    </a>
+                    <a href="/admin/api/blogpost/add/" class="action-btn-add">
+                        <i class="fas fa-edit"></i> Write
+                    </a>
                 </div>
             </div>
 
-            <!-- Portal Summary & Shortcuts Card -->
-            <div class="card mb-4" style="border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.02); background: white;">
-                <div class="card-header" style="background: #ffffff; border-bottom: 1.5px solid #f1f5f9; padding: 18px 24px;">
-                    <h5 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.03em;">
-                        System Resources
-                    </h5>
+            <!-- 4. Team Members -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-purple"><i class="fas fa-user-nurse"></i></div>
+                    <span class="card-pill pill-purple">{{ team_count|default:"0" }} Staff</span>
                 </div>
-                <div class="card-body" style="padding: 20px;">
-                    <div style="background: #f8fafc; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
-                        <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                            <span style="font-weight: 600; color: #64748b;">Services Directory:</span>
-                            <span style="font-weight: 800; color: #0f172a;">{{ service_count|default:"0" }} items</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                            <span style="font-weight: 600; color: #64748b;">Blog Articles:</span>
-                            <span style="font-weight: 800; color: #0f172a;">{{ blog_count|default:"0" }} posts</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                            <span style="font-weight: 600; color: #64748b;">Active Team Members:</span>
-                            <span style="font-weight: 800; color: #0f172a;">{{ team_count|default:"0" }} nurses/staff</span>
-                        </div>
-                    </div>
+                <h3 class="card-title">Team Members</h3>
+                <p class="card-desc">Licensed doctors, home-care registered nurses, medical specialists &amp; biographies.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/teammember/" class="action-btn-main">
+                        <i class="fas fa-users"></i> View Team
+                    </a>
+                    <a href="/admin/api/teammember/add/" class="action-btn-add">
+                        <i class="fas fa-plus"></i> Add
+                    </a>
+                </div>
+            </div>
 
-                    <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px;">
-                        <a href="/dashboard" target="_blank" class="btn" style="background: #0f172a; color: #38bdf8; border: none; font-weight: 700; width: 100%; border-radius: 10px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px;">
-                            <i class="fas fa-desktop"></i> React Operations Dashboard
-                        </a>
-                        <a href="/" target="_blank" class="btn" style="background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; font-weight: 700; width: 100%; border-radius: 10px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px;">
-                            <i class="fas fa-globe"></i> View Live Website
-                        </a>
-                    </div>
+            <!-- 5. Robots.txt Setting -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-amber"><i class="fas fa-robot"></i></div>
+                    <span class="card-pill pill-amber">SEO Crawlers</span>
+                </div>
+                <h3 class="card-title">Robots.txt Setting</h3>
+                <p class="card-desc">Search engine crawler directives, bot allow/disallow permissions, and indexing rules.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/robotstxt/" class="action-btn-main">
+                        <i class="fas fa-cog"></i> Configure Robots.txt
+                    </a>
+                </div>
+            </div>
+
+            <!-- 6. Sitemap.xml Setting -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-blue"><i class="fas fa-sitemap"></i></div>
+                    <span class="card-pill pill-blue">Index Sync</span>
+                </div>
+                <h3 class="card-title">Sitemap.xml Setting</h3>
+                <p class="card-desc">Search console indexing map, canonical priority levels, and dynamic page discovery.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/sitemapxml/" class="action-btn-main">
+                        <i class="fas fa-sitemap"></i> Configure Sitemap
+                    </a>
                 </div>
             </div>
 
         </div>
     </div>
+
+
+    <!-- =========================================================================
+         SECTION 2: CONTENT MANAGEMENT (STAFF, OPERATIONS & LOGISTICS)
+         ========================================================================= -->
+    <div class="two-part-section mb-4">
+        
+        <!-- Section Header with Overview Counter Pills -->
+        <div class="section-title-card ops-theme">
+            <div class="section-title-left">
+                <div class="section-icon-badge ops-icon"><i class="fas fa-hospital-user"></i></div>
+                <div>
+                    <div class="section-badge-tag ops-badge">SECTION 2</div>
+                    <h2 class="section-heading">Content Management (Operations &amp; Staff)</h2>
+                    <p class="section-subtext">Management of clinical staff profiles, operational duty tasks, leaves, shift swaps, overtime &amp; payroll.</p>
+                </div>
+            </div>
+
+            <!-- Overview Mini Stats for Operations -->
+            <div class="overview-pills-row">
+                <div class="overview-pill">
+                    <span class="pill-number">{{ staff_count|default:"0" }}</span>
+                    <span class="pill-title">Staff Members</span>
+                </div>
+                <div class="overview-pill">
+                    <span class="pill-number">{{ active_tasks|default:"0" }}</span>
+                    <span class="pill-title">Active Tasks</span>
+                </div>
+                <div class="overview-pill">
+                    <span class="pill-number" {% if pending_leaves > 0 %}style="color: #f43f5e;"{% endif %}>{{ pending_leaves|default:"0" }}</span>
+                    <span class="pill-title">Pending Leaves</span>
+                </div>
+                <div class="overview-pill">
+                    <span class="pill-number">{{ pending_swaps|default:"0" }}</span>
+                    <span class="pill-title">Shift Swaps</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Operations Content Modules Cards Grid (8 Modules) -->
+        <div class="modules-grid-container">
+            
+            <!-- 1. Staff Details -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-purple"><i class="fas fa-user-md"></i></div>
+                    <span class="card-pill pill-purple">{{ staff_count|default:"0" }} Profiles</span>
+                </div>
+                <h3 class="card-title">Staff Details</h3>
+                <p class="card-desc">Clinical personnel profiles, DHA licensing, department assignments, and contact data.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/staffprofile/" class="action-btn-main">
+                        <i class="fas fa-id-card"></i> View Staff
+                    </a>
+                    <a href="/admin/api/staffprofile/add/" class="action-btn-add">
+                        <i class="fas fa-plus"></i> Add
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2. Tasks -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-amber"><i class="fas fa-tasks"></i></div>
+                    <span class="card-pill pill-amber">{{ active_tasks|default:"0" }} In Progress</span>
+                </div>
+                <h3 class="card-title">Tasks</h3>
+                <p class="card-desc">Field nurse visit assignments, patient dispatch instructions, priority tracking, and due dates.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/task/" class="action-btn-main">
+                        <i class="fas fa-list-check"></i> Task Board
+                    </a>
+                    <a href="/admin/api/task/add/" class="action-btn-add">
+                        <i class="fas fa-plus"></i> Assign
+                    </a>
+                </div>
+            </div>
+
+            <!-- 3. Leave applications -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-rose"><i class="fas fa-calendar-times"></i></div>
+                    <span class="card-pill {% if pending_leaves > 0 %}pill-rose{% else %}pill-emerald{% endif %}">
+                        {{ pending_leaves|default:"0" }} Pending
+                    </span>
+                </div>
+                <h3 class="card-title">Leave Applications</h3>
+                <p class="card-desc">Staff time-off requests, annual vacations, emergency sick leaves, and approvals workflow.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/leaveapplication/" class="action-btn-main">
+                        <i class="fas fa-check-double"></i> Review Leaves
+                    </a>
+                    <a href="/admin/api/leaveapplication/add/" class="action-btn-add">
+                        <i class="fas fa-plus"></i> Submit
+                    </a>
+                </div>
+            </div>
+
+            <!-- 4. Duty Schedule Swaps -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-blue"><i class="fas fa-exchange-alt"></i></div>
+                    <span class="card-pill pill-blue">{{ pending_swaps|default:"0" }} Requests</span>
+                </div>
+                <h3 class="card-title">Duty Schedule Swaps</h3>
+                <p class="card-desc">Nurse shift coverage exchanges, roster substitutions, and supervisor approvals.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/dutyapplication/" class="action-btn-main">
+                        <i class="fas fa-calendar-alt"></i> View Swaps
+                    </a>
+                    <a href="/admin/api/dutyapplication/add/" class="action-btn-add">
+                        <i class="fas fa-plus"></i> Request
+                    </a>
+                </div>
+            </div>
+
+            <!-- 5. Ot applications -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-amber"><i class="fas fa-user-clock"></i></div>
+                    <span class="card-pill pill-amber">{{ pending_ot|default:"0" }} Pending</span>
+                </div>
+                <h3 class="card-title">Ot applications (Overtime)</h3>
+                <p class="card-desc">Extended patient care hours, emergency overtime logging, and supervisor verification.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/otapplication/" class="action-btn-main">
+                        <i class="fas fa-clock"></i> View OT Claims
+                    </a>
+                    <a href="/admin/api/otapplication/add/" class="action-btn-add">
+                        <i class="fas fa-plus"></i> Log OT
+                    </a>
+                </div>
+            </div>
+
+            <!-- 6. Driver Schedules -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-emerald"><i class="fas fa-route"></i></div>
+                    <span class="card-pill pill-emerald">Transport</span>
+                </div>
+                <h3 class="card-title">Driver Schedules</h3>
+                <p class="card-desc">Patient pick-ups, home nursing transportation routes, driver dispatches, and vehicles.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/driverschedule/" class="action-btn-main">
+                        <i class="fas fa-car-side"></i> View Routes
+                    </a>
+                    <a href="/admin/api/driverschedule/add/" class="action-btn-add">
+                        <i class="fas fa-plus"></i> Schedule
+                    </a>
+                </div>
+            </div>
+
+            <!-- 7. Monthly Salary Slips -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-emerald"><i class="fas fa-money-check-alt"></i></div>
+                    <span class="card-pill pill-emerald">Payroll</span>
+                </div>
+                <h3 class="card-title">Monthly Salary Slips</h3>
+                <p class="card-desc">Monthly staff compensation records, salary slips generation, allowances, and downloads.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/salaryapplication/" class="action-btn-main">
+                        <i class="fas fa-file-invoice"></i> View Slips
+                    </a>
+                    <a href="/admin/api/salaryapplication/add/" class="action-btn-add">
+                        <i class="fas fa-plus"></i> Issue
+                    </a>
+                </div>
+            </div>
+
+            <!-- 8. Notices & Announcements -->
+            <div class="clean-module-card">
+                <div class="card-head">
+                    <div class="card-icon-box icon-sky"><i class="fas fa-bullhorn"></i></div>
+                    <span class="card-pill pill-sky">{{ notices_count|default:"0" }} Notices</span>
+                </div>
+                <h3 class="card-title">Notices &amp; Announcements</h3>
+                <p class="card-desc">Internal staff memos, medical safety bulletins, holiday notices, and clinical alerts.</p>
+                <div class="card-actions">
+                    <a href="/admin/api/noticeapplication/" class="action-btn-main">
+                        <i class="fas fa-bell"></i> View Notices
+                    </a>
+                    <a href="/admin/api/noticeapplication/add/" class="action-btn-add">
+                        <i class="fas fa-plus"></i> Post
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- =========================================================================
+         SYSTEM AUTHENTICATION & ACCESS (COMPACT FOOTER STRIP)
+         ========================================================================= -->
+    <div class="auth-footer-bar">
+        <div class="auth-bar-left">
+            <span class="auth-bar-title"><i class="fas fa-shield-alt text-cyan"></i> Authentication and Authorization:</span>
+            <a href="/admin/auth/user/" class="auth-link"><i class="fas fa-user-shield"></i> Users</a>
+            <span class="auth-sep">•</span>
+            <a href="/admin/auth/group/" class="auth-link"><i class="fas fa-users-cog"></i> Groups</a>
+        </div>
+        <div class="auth-bar-right">
+            <span>CORx Healthcare Portal &bull; All Systems Operational</span>
+        </div>
+    </div>
+
 </div>
 
+<!-- =========================================================================
+     TWO-SECTION CLEAN DASHBOARD STYLES (ZOOMED IN & SPACIOUS)
+     ========================================================================= -->
 <style>
-.metric-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(8, 112, 157, 0.08) !important;
-    border-color: #08709d !important;
+/* Hide standard Jazzmin header */
+.dashboard .content-header {
+    display: none !important;
 }
-.cms-nav-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(8, 112, 157, 0.12) !important;
-    border-color: #08709d !important;
-    background: #ffffff !important;
+
+/* Smooth Native Zoom & Proportion Scale */
+.dashboard-zoom-wrapper {
+    zoom: 1.08;
+    -moz-transform: scale(1.08);
+    -moz-transform-origin: 0 0;
 }
-.cms-nav-card:hover i.fa-chevron-right {
+
+/* 1. Top Dashboard Header */
+.dashboard-header-bar {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 24px 30px;
+    margin-bottom: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.dashboard-main-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.01em;
+}
+
+.dashboard-main-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+}
+
+.header-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.top-nav-btn {
+    text-decoration: none !important;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-light-glass {
+    background: #f1f5f9;
+    color: #0f172a !important;
+    border: 1.5px solid #cbd5e1;
+}
+
+.btn-light-glass:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.btn-dark-glass {
+    background: #0f172a;
+    color: #38bdf8 !important;
+    border: 1.5px solid #1e293b;
+}
+
+.btn-dark-glass:hover {
+    background: #1e293b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+/* 2. Two-Part Section Cards */
+.two-part-section {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+}
+
+/* Section 1 Header (CMS Theme - Rich Navy to Cyan) */
+.section-title-card {
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 22px;
+    border-bottom: 1.5px solid #e2e8f0;
+}
+
+.section-title-card.cms-theme {
+    background: linear-gradient(135deg, #061e36 0%, #08709d 100%);
+    color: #ffffff;
+}
+
+/* Section 2 Header (Operations Theme - Slate to Deep Teal) */
+.section-title-card.ops-theme {
+    background: linear-gradient(135deg, #091e30 0%, #0d9488 100%);
+    color: #ffffff;
+}
+
+.section-title-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.section-icon-badge {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.cms-icon {
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    border: 1.5px solid rgba(56, 189, 248, 0.35);
+}
+
+.ops-icon {
+    background: rgba(45, 212, 191, 0.2);
+    color: #2dd4bf;
+    border: 1.5px solid rgba(45, 212, 191, 0.35);
+}
+
+.section-badge-tag {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    color: #e0f2fe;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+.ops-badge {
+    background: rgba(45, 212, 191, 0.25);
+    color: #ccfbf1;
+}
+
+.section-heading {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 21px;
+    font-weight: 800;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.section-subtext {
+    font-size: 13.5px;
+    color: #e2e8f0;
+    opacity: 0.92;
+    margin: 4px 0 0 0;
+}
+
+/* Overview Mini Stats row in Section Header */
+.overview-pills-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.overview-pill {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 18px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pill-number {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.pill-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #cbd5e1;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* 3. Clean Modules Grid (Zoomed & Spacious) */
+.modules-grid-container {
+    padding: 28px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 22px;
+    background: #f8fafc;
+}
+
+.clean-module-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+}
+
+.clean-module-card:hover {
+    transform: translateY(-3px);
+    border-color: #08709d;
+    box-shadow: 0 10px 28px rgba(8, 112, 157, 0.12);
+}
+
+.card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.card-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.icon-emerald { background: #dcfce7; color: #16a34a; }
+.icon-sky { background: #e0f2fe; color: #0284c7; }
+.icon-indigo { background: #e0e7ff; color: #4f46e5; }
+.icon-purple { background: #f3e8ff; color: #9333ea; }
+.icon-amber { background: #fef3c7; color: #d97706; }
+.icon-rose { background: #ffe4e6; color: #e11d48; }
+.icon-blue { background: #e0f2fe; color: #0369a1; }
+
+.card-pill {
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.pill-emerald { background: #dcfce7; color: #15803d; }
+.pill-sky { background: #e0f2fe; color: #0369a1; }
+.pill-indigo { background: #e0e7ff; color: #4338ca; }
+.pill-purple { background: #f3e8ff; color: #7e22ce; }
+.pill-amber { background: #fef3c7; color: #b45309; }
+.pill-rose { background: #fee2e2; color: #b91c1c; }
+.pill-blue { background: #e0e7ff; color: #0369a1; }
+
+.card-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 8px 0;
+}
+
+.card-desc {
+    font-size: 13.5px;
+    color: #64748b;
+    line-height: 1.55;
+    margin: 0 0 18px 0;
+    flex-grow: 1;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.action-btn-main {
+    flex: 1;
+    background: #f1f5f9;
+    color: #1e293b !important;
+    border: 1.5px solid #cbd5e1;
+    text-decoration: none !important;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 11px;
+    text-align: center;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-btn-main:hover {
+    background: #08709d;
+    color: #ffffff !important;
+    border-color: #08709d;
+    box-shadow: 0 4px 14px rgba(8, 112, 157, 0.25);
+}
+
+.action-btn-add {
+    background: #10b981;
+    color: white !important;
+    text-decoration: none !important;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 11px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-btn-add:hover {
+    background: #059669;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+/* 4. Auth & System Footer Strip */
+.auth-footer-bar {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 13.5px;
+    color: #64748b;
+}
+
+.auth-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.auth-bar-title {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.auth-link {
+    font-weight: 700;
     color: #08709d !important;
-    transform: translateX(3px);
-    transition: transform 0.2s ease;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
-.last-border-none:last-of-type {
-    border-bottom: none !important;
-    padding-bottom: 0 !important;
+
+.auth-link:hover {
+    text-decoration: underline !important;
+}
+
+.auth-sep {
+    color: #cbd5e1;
+}
+
+.auth-bar-right {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .dashboard-header-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .section-title-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .overview-pills-row {
+        justify-content: flex-start;
+    }
+    .modules-grid-container {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Robust dropdown toggle fallback
-    document.querySelectorAll('.dropdown-toggle').forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const parent = this.closest('.dropdown');
-            const menu = parent ? parent.querySelector('.dropdown-menu') : null;
-            if (menu) {
-                const isShown = menu.classList.contains('show');
-                document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
-                if (!isShown) {
-                    menu.classList.add('show');
-                }
-            }
-        });
-    });
-
-    document.addEventListener('click', function() {
-        document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
-    });
-});
-</script>
 {% endblock %}

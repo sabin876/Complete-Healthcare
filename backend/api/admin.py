@@ -1439,6 +1439,11 @@ class ServiceAdminForm(forms.ModelForm):
         required=False,
         help_text="Custom title for 'FAQs' section. Leaves empty to use default '{Title} FAQs'"
     )
+    faq_description = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 2, 'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
+        required=False,
+        help_text="Custom description for 'FAQs' section. Leaves empty to use default description."
+    )
     tagline = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 2, 'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
         required=False,
@@ -1448,15 +1453,6 @@ class ServiceAdminForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'rows': 4, 'style': 'width: 100%; max-width: 950px; font-size: 15px; padding: 10px 14px; border-radius: 6px; font-family: inherit;'}),
         required=False,
         help_text="Detailed description of the service"
-    )
-    schema_markup = forms.CharField(
-        widget=forms.Textarea(attrs={
-            'rows': 8,
-            'style': 'width: 100%; max-width: 950px; font-family: Consolas, monospace; font-size: 13px; background: #0f172a; color: #38bdf8; padding: 12px; border-radius: 8px; border: 1.5px solid #0284c7;',
-            'placeholder': '{\n  "@context": "https://schema.org",\n  "@type": "MedicalBusiness",\n  "name": "CORx Healthcare",\n  "description": "..."\n}'
-        }),
-        required=False,
-        help_text="Custom JSON-LD schema structured data for this service. You can paste raw JSON or &lt;script type='application/ld+json'&gt;...&lt;/script&gt;."
     )
 
     floating_badge = forms.JSONField(
@@ -1643,7 +1639,8 @@ class ServiceAdminForm(forms.ModelForm):
                 self.fields['about_description'].initial = badge.get('about_description', '')
                 self.fields['indications_section_title'].initial = badge.get('indications_section_title', '')
                 self.fields['comprehensive_section_title'].initial = badge.get('comprehensive_section_title', '')
-                self.fields['faq_section_title'].initial = badge.get('faq_section_title', '')
+                self.fields['faq_section_title'].initial = self.instance.faq_title or badge.get('faq_section_title', '')
+                self.fields['faq_description'].initial = self.instance.faq_description or badge.get('faq_description', '')
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -1660,7 +1657,15 @@ class ServiceAdminForm(forms.ModelForm):
         badge['about_description'] = self.cleaned_data.get('about_description', '') or ''
         badge['indications_section_title'] = self.cleaned_data.get('indications_section_title', '') or ''
         badge['comprehensive_section_title'] = self.cleaned_data.get('comprehensive_section_title', '') or ''
-        badge['faq_section_title'] = self.cleaned_data.get('faq_section_title', '') or ''
+        
+        faq_title_val = self.cleaned_data.get('faq_section_title', '') or ''
+        faq_desc_val = self.cleaned_data.get('faq_description', '') or ''
+        
+        badge['faq_section_title'] = faq_title_val
+        badge['faq_description'] = faq_desc_val
+        
+        instance.faq_title = faq_title_val
+        instance.faq_description = faq_desc_val
         
         instance.floating_badge = badge
         if commit:
@@ -1705,6 +1710,16 @@ class BlogPostAdminForm(forms.ModelForm):
         required=False,
         help_text="Full article body content: Use formatting toolbar for Headings, Bold, Lists, Pull Quotes, Links & Images."
     )
+    meta_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 14.5px; padding: 10px 14px; border-radius: 8px;', 'placeholder': 'e.g. Expert Health Tips | CORx Healthcare Dubai'}),
+        required=False,
+        help_text="Custom SEO & OpenGraph Title Tag (Recommended 50-60 characters)"
+    )
+    meta_description = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 14px; padding: 10px 14px; border-radius: 8px; font-family: inherit;', 'placeholder': 'e.g. Discover expert medical guidance from CORx Healthcare on preventive care and clinical wellness in Dubai.'}),
+        required=False,
+        help_text="Custom SEO & OpenGraph Meta Description (Recommended 140-160 characters)"
+    )
 
     class Meta:
         model = BlogPost
@@ -1724,6 +1739,7 @@ class SubServiceInline(admin.TabularInline):
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     form = ServiceAdminForm
+    change_form_template = "admin/api/service/change_form.html"
     inlines = [SubServiceInline]
     list_display = ('title', 'service_hierarchy', 'sub_services_count', 'view_public_button', 'edit_button', 'delete_button')
     search_fields = ('title', 'slug', 'tagline', 'description')
@@ -1794,8 +1810,8 @@ class ServiceAdmin(admin.ModelAdmin):
             'fields': ('title', 'slug', 'parent', 'theme_color', 'icon', 'image_file')
         }),
         ('🔍 SEO & OpenGraph Meta Tags', {
-            'fields': ('meta_title', 'meta_description', 'schema_markup'),
-            'description': 'Custom SEO Title, Meta Description, and JSON-LD Schema markup for search engines.',
+            'fields': ('meta_title', 'meta_description'),
+            'description': 'Custom SEO Title and Meta Description for search engines and social media sharing previews.',
         }),
         ('✨ Hero Section Content', {
             'fields': ('eyebrow', 'tagline', 'description', 'floating_badge', 'features')
@@ -1827,11 +1843,17 @@ class ServiceAdmin(admin.ModelAdmin):
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
     form = BlogPostAdminForm
-    list_display = ('title', 'category', 'author', 'date')
+    change_form_template = "admin/api/blogpost/change_form.html"
+    list_display = ('title', 'category', 'author', 'date', 'view_public_button')
     list_filter = ('category', 'created_at')
     search_fields = ('title', 'content', 'category', 'author', 'slug')
     prepopulated_fields = {"slug": ("title",)}
     readonly_fields = ('created_at', 'updated_at')
+
+    def view_public_button(self, obj):
+        slug = obj.slug or obj.id
+        return mark_safe(f'<a href="/blog/{slug}" target="_blank" style="background: #10b981; color: white; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 11px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">🌐 View Live</a>')
+    view_public_button.short_description = "Live Article"
 
     fieldsets = (
         ('📰 Article Header & Info', {
@@ -1843,6 +1865,13 @@ class BlogPostAdmin(admin.ModelAdmin):
         ('✍️ Main Article Content (Rich Visual Editor)', {
             'fields': ('content',)
         }),
+        ('🔍 SEO & OpenGraph Meta Tags', {
+            'fields': ('meta_title', 'meta_description')
+        }),
+        ('🕒 Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
+        }),
     )
 
 
@@ -1853,13 +1882,56 @@ class TeamMemberAdmin(admin.ModelAdmin):
     search_fields = ('name', 'post')
 
 
+class TaskInline(admin.TabularInline):
+    model = Task
+    fk_name = 'assigned_to'
+    extra = 0
+    fields = ('title', 'priority', 'status', 'due_date')
+    classes = ('collapse',)
+
+
+class LeaveApplicationInline(admin.TabularInline):
+    model = LeaveApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('leave_type', 'leave_start', 'leave_end', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
+class OtApplicationInline(admin.TabularInline):
+    model = OtApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('ot_type', 'ot_date', 'ot_hours', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
+class DutyApplicationInline(admin.TabularInline):
+    model = DutyApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('duty_date', 'shift_timing', 'shift_type', 'duty_replacement', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
+class SalaryApplicationInline(admin.TabularInline):
+    model = SalaryApplication
+    fk_name = 'staff'
+    extra = 0
+    fields = ('description', 'image', 'status', 'submitted_at')
+    readonly_fields = ('submitted_at',)
+    classes = ('collapse',)
+
+
 class StaffProfileForm(forms.ModelForm):
     confirm_password = forms.CharField(
         label="Re-type Password (Portal)",
         required=False,
         widget=forms.TextInput(attrs={
             'placeholder': 'Re-type password to confirm',
-            'class': 'staff-input-control',
             'style': 'font-family: Consolas, monospace;'
         }),
         help_text="Re-enter the portal login password to confirm."
@@ -1871,24 +1943,21 @@ class StaffProfileForm(forms.ModelForm):
         widgets = {
             'full_name': forms.TextInput(attrs={
                 'placeholder': 'e.g. Dr. Sarah Jenkins, RN',
-                'class': 'staff-input-control',
+                'style': 'font-weight: 600;'
             }),
             'department': forms.TextInput(attrs={
                 'placeholder': 'Enter Department (e.g. Home Nursing, Doctor on Call, HR, Lab, etc.)',
-                'class': 'staff-input-control',
+                'style': 'font-weight: 600;'
             }),
             'position': forms.TextInput(attrs={
                 'placeholder': 'e.g. Senior DHA Registered Nurse / Consultant Physician',
-                'class': 'staff-input-control',
             }),
             'staff_id': forms.TextInput(attrs={
                 'placeholder': 'e.g. STF-101 or ADMIN-001',
-                'class': 'staff-input-control',
-                'style': 'font-family: Consolas, monospace; letter-spacing: 0.05em;'
+                'style': 'font-weight: 700; font-family: Consolas, monospace; letter-spacing: 0.05em;'
             }),
             'password': forms.TextInput(attrs={
                 'placeholder': 'Enter Portal Login Password (e.g. Staff@2024)',
-                'class': 'staff-input-control',
                 'style': 'font-family: Consolas, monospace;'
             }),
         }
@@ -1920,7 +1989,7 @@ class StaffProfileForm(forms.ModelForm):
 @admin.register(StaffProfile)
 class StaffProfileAdmin(admin.ModelAdmin):
     form = StaffProfileForm
-    change_form_template = "admin/api/staffprofile/change_form.html"
+    inlines = [TaskInline, LeaveApplicationInline, OtApplicationInline, DutyApplicationInline, SalaryApplicationInline]
     list_display = ('passport_photo_thumbnail', 'full_name', 'staff_id_badge', 'department_badge', 'position', 'actions_buttons')
     list_display_links = ('passport_photo_thumbnail', 'full_name')
     search_fields = ('staff_id', 'full_name', 'position', 'department')
@@ -3744,13 +3813,89 @@ class DriverScheduleAdmin(admin.ModelAdmin):
 
 from django.shortcuts import redirect
 from django.contrib.sites.models import Site
-from .models import RobotsTxt, SitemapXml
+from .models import RobotsTxt, SitemapXml, HomePage
 
 # Completely remove Site / Add site from Django Admin
 try:
     admin.site.unregister(Site)
 except Exception:
     pass
+
+class HomePageAdminForm(forms.ModelForm):
+    faqs = forms.JSONField(
+        widget=FAQJsonWidget(),
+        required=False,
+        help_text="User-Friendly FAQ Builder: Add, edit, or remove Question & Answer cards without writing JSON."
+    )
+
+    def clean_faqs(self):
+        val = self.cleaned_data.get('faqs')
+        if not val or val == '':
+            return []
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return []
+        return val
+
+    class Meta:
+        model = HomePage
+        fields = '__all__'
+
+
+@admin.register(HomePage)
+class HomePageAdmin(admin.ModelAdmin):
+    form = HomePageAdminForm
+    change_form_template = "admin/api/homepage/change_form.html"
+    list_display = ('title', 'meta_title', 'canonical_url', 'updated_at')
+    fieldsets = (
+        ('Page Identification', {
+            'fields': ('title', 'canonical_url'),
+            'description': 'Configure the basic identification and canonical URL for the main homepage.'
+        }),
+        ('Search Engine Optimization (SEO) & Social Sharing', {
+            'fields': ('meta_title', 'meta_description', 'schema_markup', 'og_title', 'og_description', 'og_image', 'og_image_file'),
+            'description': 'Primary SEO meta tags, Google rich snippet JSON-LD schema markup, and OpenGraph social media sharing configuration.'
+        }),
+        ('Homepage Hero Section', {
+            'fields': ('hero_eyebrow', 'hero_title', 'hero_tagline'),
+            'description': 'Text content displayed on the main hero banner of the homepage.'
+        }),
+        ('Frequently Asked Questions (FAQ Section)', {
+            'fields': ('faq_eyebrow', 'faq_title', 'faq_description', 'faqs'),
+            'description': 'Configure the FAQ section on the home page with custom title, subtitle description, and interactive accordion questions.'
+        }),
+    )
+
+    def has_add_permission(self, request):
+        return not HomePage.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        obj, _ = HomePage.objects.get_or_create(id=1)
+        return redirect(f'/admin/api/homepage/{obj.id}/change/')
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name in ['meta_description', 'og_description', 'hero_tagline', 'faq_description']:
+            formfield.widget.attrs.update({
+                'rows': 3,
+                'style': 'width: 100%; max-width: 900px; border-radius: 8px; border: 1.5px solid #cbd5e1; padding: 10px; font-size: 14px;'
+            })
+        elif db_field.name == 'schema_markup':
+            formfield.widget.attrs.update({
+                'rows': 12,
+                'style': 'font-family: Consolas, monospace; font-size: 13.5px; line-height: 1.5; background: #0b1329; color: #38bdf8; border: 1.5px solid #1e293b; padding: 14px; border-radius: 10px; width: 100%; max-width: 900px;'
+            })
+        elif db_field.name in ['title', 'meta_title', 'canonical_url', 'og_title', 'og_image', 'hero_title', 'hero_eyebrow', 'faq_title', 'faq_eyebrow']:
+            formfield.widget.attrs.update({
+                'style': 'width: 100%; max-width: 900px; border-radius: 8px; border: 1.5px solid #cbd5e1; padding: 10px; font-size: 14px;'
+            })
+        return formfield
+
 
 @admin.register(RobotsTxt)
 class RobotsTxtAdmin(admin.ModelAdmin):
@@ -3797,9 +3942,28 @@ class SitemapXmlAdmin(admin.ModelAdmin):
         if db_field.name == 'content':
             formfield.widget.attrs.update({
                 'rows': 24,
-                'style': 'font-family: Consolas, monospace; font-size: 13.5px; line-height: 1.5; background: #0b1329; color: #34d399; border: 1.5px solid #1e293b; padding: 14px; border-radius: 10px; width: 100%; max-width: 950px;'
+                'style': 'font-family: Consolas, monospace; font-size: 13.5px; line-height: 1.5; background: #0b1329; color: #34d399; border: 1.5px solid #1e293b; padding: 14px; border-radius: 10px; width: 100%;'
             })
         return formfield
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        if extra_context is None:
+            extra_context = {}
+        try:
+            from .models import Service, BlogPost
+            extra_context['services_count'] = Service.objects.count()
+            extra_context['blogs_count'] = BlogPost.objects.count()
+            extra_context['services_list'] = [
+                {'title': s.title, 'slug': s.slug} 
+                for s in Service.objects.all() if s.slug
+            ]
+            extra_context['blogs_list'] = [
+                {'title': b.title, 'slug': b.slug or str(b.id)} 
+                for b in BlogPost.objects.all()
+            ]
+        except Exception:
+            pass
+        return super().change_view(request, object_id, form_url, extra_context=extra_context)
 
 
 # ----------------------------------------------------------------------
@@ -3814,14 +3978,19 @@ def custom_admin_index(request, extra_context=None):
     try:
         extra_context['staff_count'] = StaffProfile.objects.count()
         extra_context['pending_leaves'] = LeaveApplication.objects.filter(status='Pending').count()
+        extra_context['total_leaves'] = LeaveApplication.objects.count()
         extra_context['active_tasks'] = Task.objects.filter(status='In Progress').count()
+        extra_context['completed_tasks'] = Task.objects.filter(status='Completed').count()
         extra_context['service_count'] = Service.objects.count()
         extra_context['blog_count'] = BlogPost.objects.count()
         extra_context['team_count'] = TeamMember.objects.count()
+        extra_context['pending_swaps'] = DutyApplication.objects.filter(status='Pending').count()
+        extra_context['pending_ot'] = OTApplication.objects.filter(status='Pending').count()
+        extra_context['notices_count'] = NoticeApplication.objects.count()
         
-        # Recent data for tables
-        extra_context['recent_tasks'] = Task.objects.order_by('-created_at')[:5]
-        extra_context['recent_leaves'] = LeaveApplication.objects.order_by('-submitted_at')[:5]
+        # Recent operational records
+        extra_context['recent_tasks'] = Task.objects.order_by('-created_at')[:6]
+        extra_context['recent_leaves'] = LeaveApplication.objects.order_by('-submitted_at')[:6]
     except Exception:
         pass
         

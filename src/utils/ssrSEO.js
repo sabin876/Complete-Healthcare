@@ -370,39 +370,64 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
 
   // 1. Homepage ("/")
   if (cleanPath === '/') {
+    let homeData = null;
+    try {
+      const res = await fetch(`${backendUrl}/api/homepage/`);
+      if (res.ok) {
+        homeData = await res.json();
+      }
+    } catch (e) {
+      // fallback to standard defaults
+    }
+
+    const title = homeData?.meta_title?.trim() || 'CORX Healthcare: Home Health Care Services in Dubai *24/7';
+    const description = homeData?.meta_description?.trim() || 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.';
+    const canonical = homeData?.canonical_url?.trim() || `${BASE_SITE_URL}/`;
+    const ogTitle = homeData?.og_title?.trim() || title;
+    const ogDescription = homeData?.og_description?.trim() || description;
+    const ogImage = homeData?.og_image?.trim() || DEFAULT_OG_IMAGE;
+
+    let schema = {
+      '@context': 'https://schema.org',
+      '@type': 'MedicalBusiness',
+      name: 'CORx Healthcare',
+      url: `${BASE_SITE_URL}/`,
+      logo: 'https://corx.ae/favicon.webp',
+      description: description,
+      telephone: '+97143320776',
+      priceRange: '$$',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Office 303, Royal Class Building, DIP',
+        addressLocality: 'Dubai',
+        addressCountry: 'AE',
+      },
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: '00:00',
+        closes: '23:59',
+      },
+    };
+
+    if (homeData?.schema_markup?.trim()) {
+      try {
+        schema = JSON.parse(homeData.schema_markup);
+      } catch (e) {}
+    }
+
     return {
       statusCode: 200,
-      initialData: null,
+      initialData: homeData,
       seo: {
-        title: 'CORX Healthcare: Home Health Care Services in Dubai *24/7',
-        description: 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.',
-        ogTitle: 'CORX Healthcare: Home Health Care Services in Dubai *24/7',
-        ogDescription: 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.',
-        ogImage: DEFAULT_OG_IMAGE,
+        title,
+        description,
+        ogTitle,
+        ogDescription,
+        ogImage,
         ogType: 'website',
-        canonicalUrl: `${BASE_SITE_URL}/`,
-        schema: {
-          '@context': 'https://schema.org',
-          '@type': 'MedicalBusiness',
-          name: 'CORx Healthcare',
-          url: `${BASE_SITE_URL}/`,
-          logo: 'https://corx.ae/favicon.webp',
-          description: 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.',
-          telephone: '+97143320776',
-          priceRange: '$$',
-          address: {
-            '@type': 'PostalAddress',
-            streetAddress: 'Office 303, Royal Class Building, DIP',
-            addressLocality: 'Dubai',
-            addressCountry: 'AE',
-          },
-          openingHoursSpecification: {
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            opens: '00:00',
-            closes: '23:59',
-          },
-        },
+        canonicalUrl: canonical,
+        schema,
       },
     };
   }

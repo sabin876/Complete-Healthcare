@@ -308,6 +308,8 @@ class Service(models.Model):
     understanding_items = models.JSONField(default=list, blank=True)  # [{num, title, desc}]
     understanding_image_file = models.FileField(upload_to='service_images/', null=True, blank=True, help_text="Upload custom illustration for Understanding Section")
     faqs = models.JSONField(default=list, blank=True)  # [{q, a}]
+    faq_title = models.CharField(max_length=300, blank=True, default='', verbose_name="FAQ Section Title", help_text="Custom Heading for FAQ Section")
+    faq_description = models.TextField(blank=True, default='', verbose_name="FAQ Section Description", help_text="Custom Subheading Description for FAQ Section")
     locations = models.JSONField(default=list, blank=True)  # [{label}]
     features = models.JSONField(default=list, blank=True)  # [{title}]
     indications = models.JSONField(default=list, blank=True)  # [str]
@@ -347,6 +349,112 @@ class TeamMember(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class HomePage(models.Model):
+    title = models.CharField(max_length=250, default="Home Page", verbose_name="Page Title")
+    meta_title = models.CharField(
+        max_length=300, 
+        default="CORX Healthcare: Home Health Care Services in Dubai *24/7", 
+        verbose_name="Meta Title Tag", 
+        help_text="Custom SEO & OpenGraph Title Tag for the Home Page"
+    )
+    meta_description = models.TextField(
+        default="Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.", 
+        verbose_name="Meta Description", 
+        help_text="Custom SEO & OpenGraph Meta Description for the Home Page"
+    )
+    canonical_url = models.CharField(
+        max_length=300, 
+        default="https://corx.ae/", 
+        verbose_name="Canonical URL", 
+        help_text="Canonical URL for search engines (e.g. https://corx.ae/)"
+    )
+    og_title = models.CharField(
+        max_length=300, 
+        blank=True, 
+        default="", 
+        verbose_name="OG Title", 
+        help_text="Custom OpenGraph Title (leave blank to use Meta Title)"
+    )
+    og_description = models.TextField(
+        blank=True, 
+        default="", 
+        verbose_name="OG Description", 
+        help_text="Custom OpenGraph Description (leave blank to use Meta Description)"
+    )
+    og_image = models.CharField(
+        max_length=500, 
+        blank=True, 
+        default="https://corx.ae/og-image.webp", 
+        verbose_name="OG Image URL", 
+        help_text="Social sharing preview image URL"
+    )
+    og_image_file = models.FileField(
+        upload_to='home_images/', 
+        null=True, 
+        blank=True, 
+        verbose_name="Upload OG Image File", 
+        help_text="Upload custom social preview image file from your computer"
+    )
+    hero_title = models.CharField(
+        max_length=300, 
+        blank=True, 
+        default="Home Healthcare Services in Dubai", 
+        verbose_name="Hero Title"
+    )
+    hero_eyebrow = models.CharField(
+        max_length=250, 
+        blank=True, 
+        default="24/7 DHA-LICENSED CLINICAL CARE", 
+        verbose_name="Hero Eyebrow"
+    )
+    hero_tagline = models.TextField(
+        blank=True, 
+        default="DHA-licensed doctors, nurses, and physiotherapists at your home, hotel, or office in 30-45 minutes.", 
+        verbose_name="Hero Tagline / Description"
+    )
+    schema_markup = models.TextField(
+        blank=True, 
+        default="", 
+        verbose_name="Custom JSON-LD Schema", 
+        help_text="Custom JSON-LD Schema (leave empty to use default MedicalBusiness schema)"
+    )
+    faq_eyebrow = models.CharField(
+        max_length=200, 
+        blank=True, 
+        default="⊙ Common Questions", 
+        verbose_name="FAQ Eyebrow Tag",
+        help_text="Eyebrow tag above the FAQ section title"
+    )
+    faq_title = models.CharField(
+        max_length=300, 
+        blank=True, 
+        default="Frequently Asked Questions", 
+        verbose_name="FAQ Section Title",
+        help_text="Main heading for the FAQ section on the home page"
+    )
+    faq_description = models.TextField(
+        blank=True, 
+        default="Find answers to the most common questions about our home healthcare services in Dubai.", 
+        verbose_name="FAQ Section Description / Subtitle",
+        help_text="Subheading description displayed below the FAQ section title"
+    )
+    faqs = models.JSONField(
+        default=list, 
+        blank=True, 
+        verbose_name="FAQ Items List", 
+        help_text="List of questions and answers: [{'q': '...', 'a': '...'}]"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Home Page"
+        verbose_name_plural = "Home Page"
+
+    def __str__(self):
+        return f"{self.title} (SEO & Metadata)"
 
 
 class RobotsTxt(models.Model):

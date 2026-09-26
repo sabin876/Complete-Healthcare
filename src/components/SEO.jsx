@@ -16,62 +16,128 @@ export function SEO({
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // 1. Update Document Title
+    // 1. Strict Document Title & Title Element Deduplication
     if (title) {
       document.title = title;
+      const titleEls = document.querySelectorAll('title');
+      for (let i = 1; i < titleEls.length; i++) {
+        titleEls[i].remove();
+      }
     }
 
-    // Helper to safely set/update a <meta> tag
-    const updateMeta = (selector, attrName, attrVal, contentVal) => {
+    // Helper to strictly update a <meta> tag, removing ANY existing duplicate tags
+    const updateMetaStrict = (querySelectors, primaryAttr, attrVal, contentVal) => {
       if (!contentVal) return;
-      let el = document.querySelector(selector);
-      if (!el) {
-        el = document.createElement('meta');
-        el.setAttribute(attrName, attrVal);
-        document.head.appendChild(el);
+      const matches = document.querySelectorAll(querySelectors);
+      let targetEl = matches[0];
+
+      // Remove all duplicate tags beyond the first
+      for (let i = 1; i < matches.length; i++) {
+        matches[i].remove();
       }
-      el.setAttribute('content', contentVal);
+
+      if (!targetEl) {
+        targetEl = document.createElement('meta');
+        targetEl.setAttribute(primaryAttr, attrVal);
+        document.head.appendChild(targetEl);
+      } else {
+        targetEl.setAttribute(primaryAttr, attrVal);
+      }
+      targetEl.setAttribute('content', contentVal);
     };
 
-    // 2. Meta Description
+    // 2. Meta Description (Strictly Single Tag)
     if (description) {
-      updateMeta('meta[name="description"]', 'name', 'description', description);
+      updateMetaStrict(
+        'meta[name="description"], meta[property="description"]',
+        'name',
+        'description',
+        description
+      );
     }
 
-    // 3. Robots
+    // 3. Robots Tag (Strictly Single Tag, or removed if public)
     if (robots) {
-      updateMeta('meta[name="robots"]', 'name', 'robots', robots);
+      updateMetaStrict('meta[name="robots"]', 'name', 'robots', robots);
+    } else {
+      const robotsEls = document.querySelectorAll('meta[name="robots"]');
+      robotsEls.forEach(el => el.remove());
     }
 
-    // 4. OpenGraph Tags
+    // 4. OpenGraph Tags (Strictly Single Tag for each property)
     const ogTitle = title;
     const ogDesc = description;
     if (ogTitle) {
-      updateMeta('meta[property="og:title"]', 'property', 'og:title', ogTitle);
+      updateMetaStrict(
+        'meta[property="og:title"], meta[name="og:title"]',
+        'property',
+        'og:title',
+        ogTitle
+      );
     }
     if (ogDesc) {
-      updateMeta('meta[property="og:description"]', 'property', 'og:description', ogDesc);
+      updateMetaStrict(
+        'meta[property="og:description"], meta[name="og:description"]',
+        'property',
+        'og:description',
+        ogDesc
+      );
     }
     if (ogType) {
-      updateMeta('meta[property="og:type"]', 'property', 'og:type', ogType);
+      updateMetaStrict(
+        'meta[property="og:type"], meta[name="og:type"]',
+        'property',
+        'og:type',
+        ogType
+      );
     }
-    updateMeta('meta[property="og:site_name"]', 'property', 'og:site_name', 'CORx Healthcare');
+    updateMetaStrict(
+      'meta[property="og:site_name"], meta[name="og:site_name"]',
+      'property',
+      'og:site_name',
+      'CORx Healthcare'
+    );
 
     const defaultImage = 'https://corx.ae/og-image.jpg';
     const finalImage = ogImage || defaultImage;
-    updateMeta('meta[property="og:image"]', 'property', 'og:image', finalImage);
+    updateMetaStrict(
+      'meta[property="og:image"], meta[name="og:image"]',
+      'property',
+      'og:image',
+      finalImage
+    );
 
-    // 5. Twitter Card Tags
-    updateMeta('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
+    // 5. Twitter Card Tags (Strictly Single Tag for each property)
+    updateMetaStrict(
+      'meta[name="twitter:card"], meta[property="twitter:card"]',
+      'name',
+      'twitter:card',
+      'summary_large_image'
+    );
     if (ogTitle) {
-      updateMeta('meta[name="twitter:title"]', 'name', 'twitter:title', ogTitle);
+      updateMetaStrict(
+        'meta[name="twitter:title"], meta[property="twitter:title"]',
+        'name',
+        'twitter:title',
+        ogTitle
+      );
     }
     if (ogDesc) {
-      updateMeta('meta[name="twitter:description"]', 'name', 'twitter:description', ogDesc);
+      updateMetaStrict(
+        'meta[name="twitter:description"], meta[property="twitter:description"]',
+        'name',
+        'twitter:description',
+        ogDesc
+      );
     }
-    updateMeta('meta[name="twitter:image"]', 'name', 'twitter:image', finalImage);
+    updateMetaStrict(
+      'meta[name="twitter:image"], meta[property="twitter:image"]',
+      'name',
+      'twitter:image',
+      finalImage
+    );
 
-    // 6. Canonical URL
+    // 6. Canonical URL (Strictly Single Tag)
     const cleanPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/'
       ? window.location.pathname.slice(0, -1)
       : window.location.pathname;
@@ -80,19 +146,32 @@ export function SEO({
       : 'https://corx.ae';
     const computedCanonical = canonical || `${origin}${cleanPath}`;
 
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    const canonicalEls = document.querySelectorAll('link[rel="canonical"]');
+    let canonicalLink = canonicalEls[0];
+    for (let i = 1; i < canonicalEls.length; i++) {
+      canonicalEls[i].remove();
+    }
     if (!canonicalLink) {
       canonicalLink = document.createElement('link');
       canonicalLink.setAttribute('rel', 'canonical');
       document.head.appendChild(canonicalLink);
     }
     canonicalLink.setAttribute('href', computedCanonical);
-    updateMeta('meta[property="og:url"]', 'property', 'og:url', computedCanonical);
 
-    // 7. Structured JSON-LD Schema
-    const scriptEl = document.querySelector('script[type="application/ld+json"][data-seo="true"]');
+    updateMetaStrict(
+      'meta[property="og:url"], meta[name="og:url"]',
+      'property',
+      'og:url',
+      computedCanonical
+    );
+
+    // 7. Structured JSON-LD Schema (Strictly Single Tag)
+    const scriptEls = document.querySelectorAll('script[type="application/ld+json"][data-seo="true"]');
     if (schema) {
-      let targetScript = scriptEl;
+      let targetScript = scriptEls[0];
+      for (let i = 1; i < scriptEls.length; i++) {
+        scriptEls[i].remove();
+      }
       if (!targetScript) {
         targetScript = document.createElement('script');
         targetScript.setAttribute('type', 'application/ld+json');
@@ -100,8 +179,8 @@ export function SEO({
         document.head.appendChild(targetScript);
       }
       targetScript.textContent = typeof schema === 'string' ? schema : JSON.stringify(schema);
-    } else if (scriptEl) {
-      scriptEl.remove();
+    } else {
+      scriptEls.forEach(el => el.remove());
     }
   }, [title, description, canonical, ogImage, ogType, robots, schema]);
 

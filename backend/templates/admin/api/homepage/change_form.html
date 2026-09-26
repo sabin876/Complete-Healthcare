@@ -1,0 +1,778 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* ==========================================================================
+   CLEANING UP JAZZMIN / DJANGO ADMIN CHROME (FULL WIDTH MODERN LAYOUT)
+   ========================================================================== */
+
+.col-12.col-lg-9 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+.card-header:has(.nav-tabs),
+.nav-tabs,
+ul.nav.nav-tabs,
+.card-header-tabs,
+#jazzy-actions,
+.col-12.col-lg-3,
+.submit-row,
+#salary-submit-bar,
+.card-footer {
+    display: none !important;
+}
+
+fieldset.module {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 16px 0 !important;
+}
+
+fieldset.module > h2,
+fieldset.module > .description {
+    display: none !important;
+}
+
+/* ==========================================================================
+   MODERN WIZARD CONTAINER & STEPPER HEADER (MATCHING BLOG POST DESIGN)
+   ========================================================================== */
+
+.homepage-wizard-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 24px 0 !important;
+    font-family: inherit !important;
+}
+
+.homepage-stepper-bar {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr !important;
+    align-items: center !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 16px 24px !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    gap: 12px !important;
+}
+
+.homepage-step-tab {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 10px 16px !important;
+    border-radius: 14px !important;
+    border: 1.5px solid transparent !important;
+    background: #f8fafc !important;
+}
+
+.homepage-step-tab:hover {
+    background: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+}
+
+.homepage-step-tab.active {
+    background: #f0f9ff !important;
+    border-color: #08709d !important;
+    box-shadow: 0 4px 16px rgba(8, 112, 157, 0.12) !important;
+}
+
+.homepage-step-tab.completed {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+}
+
+.homepage-step-bubble {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    background: #e2e8f0 !important;
+    color: #64748b !important;
+    font-weight: 800 !important;
+    font-size: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    transition: all 0.25s ease !important;
+}
+
+.homepage-step-tab.active .homepage-step-bubble {
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(8, 112, 157, 0.35) !important;
+    transform: scale(1.05) !important;
+}
+
+.homepage-step-tab.completed .homepage-step-bubble {
+    background: #059669 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3) !important;
+}
+
+.homepage-step-info {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.homepage-step-num {
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: #94a3b8 !important;
+}
+
+.homepage-step-tab.active .homepage-step-num {
+    color: #08709d !important;
+}
+
+.homepage-step-title {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: #334155 !important;
+}
+
+.homepage-step-tab.active .homepage-step-title {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+}
+
+.homepage-step-divider {
+    height: 2px !important;
+    width: 24px !important;
+    background: #e2e8f0 !important;
+}
+
+/* ==========================================================================
+   WIZARD PANELS & FORM CARDS (MATCHING BLOG POST CARD DESIGN)
+   ========================================================================== */
+
+.homepage-panel {
+    display: none !important;
+    animation: fadeInSlide 0.3s ease forwards !important;
+}
+
+.homepage-panel.active {
+    display: block !important;
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.homepage-card {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 28px 32px !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+}
+
+.homepage-card-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    margin-bottom: 24px !important;
+    padding-bottom: 18px !important;
+    border-bottom: 1.5px solid #f1f5f9 !important;
+}
+
+.homepage-card-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%) !important;
+    color: #08709d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    flex-shrink: 0 !important;
+    box-shadow: 0 4px 12px rgba(8, 112, 157, 0.15) !important;
+}
+
+.homepage-card-title {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+}
+
+.homepage-card-desc {
+    font-size: 13px !important;
+    color: #64748b !important;
+    margin: 3px 0 0 0 !important;
+}
+
+/* ==========================================================================
+   INPUTS & FIELDSETS (MATCHING BLOG POST FORM CONTROLS)
+   ========================================================================== */
+
+.homepage-form-group {
+    margin-bottom: 20px !important;
+}
+
+.homepage-label {
+    display: block !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    margin-bottom: 7px !important;
+}
+
+.homepage-label .required-star {
+    color: #ef4444 !important;
+    margin-left: 3px !important;
+}
+
+.homepage-help {
+    font-size: 12px !important;
+    color: #64748b !important;
+    margin-top: 5px !important;
+    line-height: 1.4 !important;
+}
+
+.homepage-input,
+.homepage-wizard-container input[type="text"],
+.homepage-wizard-container textarea,
+.homepage-wizard-container select {
+    width: 100% !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    color: #0f172a !important;
+    background: #ffffff !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) inset !important;
+}
+
+.homepage-input:focus,
+.homepage-wizard-container input[type="text"]:focus,
+.homepage-wizard-container textarea:focus,
+.homepage-wizard-container select:focus {
+    border-color: #08709d !important;
+    outline: none !important;
+    box-shadow: 0 0 0 4px rgba(8, 112, 157, 0.15) !important;
+}
+
+/* ==========================================================================
+   GOOGLE SERP LIVE PREVIEW BOX
+   ========================================================================== */
+
+.serp-box {
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    margin-top: 16px !important;
+}
+
+.serp-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 12px !important;
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #64748b !important;
+}
+
+.serp-card {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    padding: 18px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+.serp-site-info {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 6px !important;
+}
+
+.serp-favicon {
+    width: 22px !important;
+    height: 22px !important;
+    border-radius: 50% !important;
+    background: #08709d !important;
+    color: white !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+}
+
+.serp-site-name {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #202124 !important;
+}
+
+.serp-url {
+    font-size: 11px !important;
+    color: #5f6368 !important;
+    font-family: monospace !important;
+}
+
+.serp-title {
+    font-size: 17px !important;
+    color: #1a0dab !important;
+    font-weight: 500 !important;
+    line-height: 1.35 !important;
+    margin-bottom: 4px !important;
+    cursor: pointer !important;
+}
+
+.serp-snippet {
+    font-size: 13px !important;
+    color: #4d5156 !important;
+    line-height: 1.5 !important;
+}
+
+/* ==========================================================================
+   STICKY ACTIONS BAR (MATCHING BLOG POST BOTTOM BAR)
+   ========================================================================== */
+
+.homepage-action-bar {
+    position: sticky !important;
+    bottom: 20px !important;
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 22px !important;
+    padding: 16px 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35) !important;
+    margin-top: 32px !important;
+    z-index: 100 !important;
+}
+
+.homepage-bar-left, .homepage-bar-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.homepage-btn-next,
+.homepage-btn-prev {
+    padding: 10px 22px !important;
+    border-radius: 12px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.homepage-btn-next {
+    background: #0284c7 !important;
+    color: white !important;
+}
+
+.homepage-btn-next:hover {
+    background: #0369a1 !important;
+    transform: translateX(2px) !important;
+}
+
+.homepage-btn-prev {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #cbd5e1 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.homepage-btn-prev:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+.homepage-btn-save {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: white !important;
+    padding: 12px 28px !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    font-size: 14px !important;
+    border: none !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+.homepage-btn-save:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45) !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="homepage-wizard-container">
+
+    <!-- Top Stepper Header -->
+    <div class="homepage-stepper-bar">
+        <div class="homepage-step-tab active" data-step="1" onclick="switchHomepageStep(1)">
+            <div class="homepage-step-bubble">1</div>
+            <div class="homepage-step-info">
+                <span class="homepage-step-num">Step 1</span>
+                <span class="homepage-step-title">Page Identity</span>
+            </div>
+        </div>
+
+        <div class="homepage-step-divider"></div>
+
+        <div class="homepage-step-tab" data-step="2" onclick="switchHomepageStep(2)">
+            <div class="homepage-step-bubble">2</div>
+            <div class="homepage-step-info">
+                <span class="homepage-step-num">Step 2</span>
+                <span class="homepage-step-title">SEO &amp; Social</span>
+            </div>
+        </div>
+
+        <div class="homepage-step-divider"></div>
+
+        <div class="homepage-step-tab" data-step="3" onclick="switchHomepageStep(3)">
+            <div class="homepage-step-bubble">3</div>
+            <div class="homepage-step-info">
+                <span class="homepage-step-num">Step 3</span>
+                <span class="homepage-step-title">Hero Banner</span>
+            </div>
+        </div>
+
+        <div class="homepage-step-divider"></div>
+
+        <div class="homepage-step-tab" data-step="4" onclick="switchHomepageStep(4)">
+            <div class="homepage-step-bubble">4</div>
+            <div class="homepage-step-info">
+                <span class="homepage-step-num">Step 4</span>
+                <span class="homepage-step-title">FAQs Section</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Original Django Form wrapper -->
+    <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form" novalidate>
+        {% csrf_token %}
+        {% block form_top %}{% endblock %}
+
+        <!-- STEP 1: Page Identity -->
+        <div class="homepage-panel active" id="homepage-panel-1">
+            <div class="homepage-card">
+                <div class="homepage-card-header">
+                    <div class="homepage-card-icon"><i class="fas fa-home"></i></div>
+                    <div>
+                        <h3 class="homepage-card-title">Homepage Identity &amp; URLs</h3>
+                        <p class="homepage-card-desc">Set internal administrative name and primary canonical URL</p>
+                    </div>
+                </div>
+
+                <div class="homepage-form-group">
+                    <label class="homepage-label">Page Administrative Label <span class="required-star">*</span></label>
+                    {{ adminform.form.title }}
+                    <div class="homepage-help">Internal name for this record in Django Admin (e.g. "Home Page")</div>
+                </div>
+
+                <div class="homepage-form-group">
+                    <label class="homepage-label">Canonical URL <span class="required-star">*</span></label>
+                    {{ adminform.form.canonical_url }}
+                    <div class="homepage-help">Official canonical URL that search engines will index (default: https://corx.ae/)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: SEO, SERP & Social Sharing (Combined Step 2 + Step 3) -->
+        <div class="homepage-panel" id="homepage-panel-2">
+            <div class="homepage-card">
+                <div class="homepage-card-header">
+                    <div class="homepage-card-icon" style="background: #e0f2fe; color: #0284c7;"><i class="fas fa-search"></i></div>
+                    <div>
+                        <h3 class="homepage-card-title">Search Engine Optimization (SEO)</h3>
+                        <p class="homepage-card-desc">Target Google, Bing, and search crawlers with custom meta tags &amp; schema</p>
+                    </div>
+                </div>
+
+                <div class="homepage-form-group">
+                    <label class="homepage-label">Meta Title Tag <span class="required-star">*</span></label>
+                    {{ adminform.form.meta_title }}
+                    <div class="homepage-help">Primary &lt;title&gt; tag shown in browser tabs and Google search results (50-60 characters recommended).</div>
+                </div>
+
+                <div class="homepage-form-group">
+                    <label class="homepage-label">Meta Description Tag <span class="required-star">*</span></label>
+                    {{ adminform.form.meta_description }}
+                    <div class="homepage-help">Primary &lt;meta name="description"&gt; snippet indexed by search engines (150-160 characters recommended).</div>
+                </div>
+
+                <!-- Structured Data / JSON-LD Schema in SEO Section -->
+                <div class="homepage-form-group" style="margin-top: 20px;">
+                    <label class="homepage-label" style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-code" style="color: #0284c7;"></i>
+                            <span>JSON-LD Schema Markup (Structured Data)</span>
+                        </span>
+                        <span style="font-size: 11px; font-weight: 600; color: #64748b;">MedicalBusiness / Organization</span>
+                    </label>
+                    {{ adminform.form.schema_markup }}
+                    <div class="homepage-help">Custom JSON-LD schema markup for Google Rich Snippets. Leave empty to automatically use the standard MedicalBusiness schema.</div>
+                </div>
+
+                <!-- Live SERP Simulator -->
+                <div class="serp-box">
+                    <div class="serp-header">
+                        <span><i class="fab fa-google mr-1"></i> Live Google SERP Simulation</span>
+                        <span style="color: #10b981;"><i class="fas fa-check-circle"></i> Clean 1:1 Tag</span>
+                    </div>
+                    <div class="serp-card">
+                        <div class="serp-site-info">
+                            <div class="serp-favicon">C</div>
+                            <span class="serp-site-name">CORx Healthcare Dubai</span>
+                            <span style="color: #94a3b8;">›</span>
+                            <span class="serp-url" id="serp-live-url">https://corx.ae/</span>
+                        </div>
+                        <div class="serp-title" id="serp-live-title">{{ adminform.form.meta_title.value|default:"CORX Healthcare: Home Health Care Services in Dubai *24/7" }}</div>
+                        <div class="serp-snippet" id="serp-live-desc">{{ adminform.form.meta_description.value|default:"Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7." }}</div>
+                    </div>
+                </div>
+
+                <!-- Social Media & OpenGraph Sharing (Inside Step 2) -->
+                <div style="margin-top: 32px; padding-top: 24px; border-top: 1.5px solid #e2e8f0;">
+                    <div class="homepage-card-header" style="margin-bottom: 18px;">
+                        <div class="homepage-card-icon" style="background: #f3e8ff; color: #9333ea;"><i class="fas fa-share-alt"></i></div>
+                        <div>
+                            <h3 class="homepage-card-title">Social Media &amp; OpenGraph Sharing</h3>
+                            <p class="homepage-card-desc">Control how the homepage appears when shared on WhatsApp, Facebook, LinkedIn, etc.</p>
+                        </div>
+                    </div>
+
+                    <div class="homepage-form-group">
+                        <label class="homepage-label">OpenGraph Title (Optional)</label>
+                        {{ adminform.form.og_title }}
+                        <div class="homepage-help">Custom title for social cards. Leave empty to automatically use the Meta Title.</div>
+                    </div>
+
+                    <div class="homepage-form-group">
+                        <label class="homepage-label">OpenGraph Description (Optional)</label>
+                        {{ adminform.form.og_description }}
+                        <div class="homepage-help">Custom description for social cards. Leave empty to automatically use the Meta Description.</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 homepage-form-group">
+                            <label class="homepage-label">OpenGraph Image URL</label>
+                            {{ adminform.form.og_image }}
+                            <div class="homepage-help">Direct public URL of social sharing banner (default: https://corx.ae/og-image.webp)</div>
+                        </div>
+                        <div class="col-md-6 homepage-form-group">
+                            <label class="homepage-label">Upload OG Image File</label>
+                            {{ adminform.form.og_image_file }}
+                            <div class="homepage-help">Upload a local media file from your computer (optional).</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: Hero Banner -->
+        <div class="homepage-panel" id="homepage-panel-3">
+            <div class="homepage-card">
+                <div class="homepage-card-header">
+                    <div class="homepage-card-icon" style="background: #ecfdf5; color: #059669;"><i class="fas fa-layer-group"></i></div>
+                    <div>
+                        <h3 class="homepage-card-title">Homepage Hero Banner Section</h3>
+                        <p class="homepage-card-desc">Text banner content above the fold (eyebrow pill, main headline, and description tagline)</p>
+                    </div>
+                </div>
+
+                <div class="homepage-form-group">
+                    <label class="homepage-label">Hero Section Eyebrow / Tag</label>
+                    {{ adminform.form.hero_eyebrow }}
+                    <div class="homepage-help">Pill badge text above the main hero headline (e.g. "24/7 DHA-LICENSED CLINICAL CARE")</div>
+                </div>
+
+                <div class="homepage-form-group">
+                    <label class="homepage-label">Hero Main Title</label>
+                    {{ adminform.form.hero_title }}
+                    <div class="homepage-help">Main prominent H1 headline on the home page (e.g. "Home Healthcare Services in Dubai")</div>
+                </div>
+
+                <div class="homepage-form-group">
+                    <label class="homepage-label">Hero Tagline / Description</label>
+                    {{ adminform.form.hero_tagline }}
+                    <div class="homepage-help">Supporting subtitle text beneath the main headline</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 4: Frequently Asked Questions (FAQ Section) -->
+        <div class="homepage-panel" id="homepage-panel-4">
+            <div class="homepage-card">
+                <div class="homepage-card-header">
+                    <div class="homepage-card-icon" style="background: #fdf2f8; color: #db2777;"><i class="fas fa-question-circle"></i></div>
+                    <div>
+                        <h3 class="homepage-card-title">Frequently Asked Questions (FAQ Section)</h3>
+                        <p class="homepage-card-desc">Configure the FAQ eyebrow tag, section title, description subtitle, and interactive question/answer accordion items.</p>
+                    </div>
+                </div>
+
+                <div class="homepage-form-group">
+                    <label class="homepage-label">FAQ Section Eyebrow Tag</label>
+                    {{ adminform.form.faq_eyebrow }}
+                    <div class="homepage-help">Small badge tag text shown directly above the main FAQ section title (e.g. "⊙ Common Questions")</div>
+                </div>
+
+                <div class="homepage-form-group">
+                    <label class="homepage-label">FAQ Section Main Title</label>
+                    {{ adminform.form.faq_title }}
+                    <div class="homepage-help">Primary headline for the FAQ section (e.g. "Frequently Asked Questions")</div>
+                </div>
+
+                <div class="homepage-form-group">
+                    <label class="homepage-label">FAQ Section Description / Subtitle</label>
+                    {{ adminform.form.faq_description }}
+                    <div class="homepage-help">Introductory explanation displayed underneath the title (e.g. "Find answers to the most common questions about our home healthcare services in Dubai.")</div>
+                </div>
+
+                <div class="homepage-form-group" style="margin-top: 24px;">
+                    <label class="homepage-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span>Interactive FAQ Questions &amp; Answers List</span>
+                        <span style="font-size: 11.5px; color: #64748b; font-weight: 600;">Drag or click dropdown to edit each question and answer</span>
+                    </label>
+                    {{ adminform.form.faqs }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Bottom Action Bar -->
+        <div class="homepage-action-bar">
+            <div class="homepage-bar-left">
+                <button type="button" class="homepage-btn-prev" id="btnHomepagePrev" onclick="prevHomepageStep()" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <a href="/admin/api/homepage/" class="homepage-btn-prev" style="text-decoration: none;">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+
+            <div class="homepage-bar-right">
+                <button type="button" class="homepage-btn-next" id="btnHomepageNext" onclick="nextHomepageStep()">
+                    Next Step <i class="fas fa-arrow-right"></i>
+                </button>
+
+                <button type="submit" name="_save" class="homepage-btn-save">
+                    <i class="fas fa-check"></i> Save Home Page Changes
+                </button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+let currentHomepageStep = 1;
+const totalHomepageSteps = 4;
+
+function switchHomepageStep(step) {
+    if (step < 1 || step > totalHomepageSteps) return;
+    currentHomepageStep = step;
+
+    // Update Step Tabs
+    document.querySelectorAll('.homepage-step-tab').forEach(tab => {
+        const s = parseInt(tab.getAttribute('data-step'));
+        tab.classList.remove('active', 'completed');
+        if (s === currentHomepageStep) {
+            tab.classList.add('active');
+        } else if (s < currentHomepageStep) {
+            tab.classList.add('completed');
+        }
+    });
+
+    // Update Panels
+    document.querySelectorAll('.homepage-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    const activePanel = document.getElementById('homepage-panel-' + currentHomepageStep);
+    if (activePanel) activePanel.classList.add('active');
+
+    // Update Nav Buttons
+    const btnPrev = document.getElementById('btnHomepagePrev');
+    const btnNext = document.getElementById('btnHomepageNext');
+
+    if (btnPrev) btnPrev.style.display = (currentHomepageStep === 1) ? 'none' : 'inline-flex';
+    if (btnNext) btnNext.style.display = (currentHomepageStep === totalHomepageSteps) ? 'none' : 'inline-flex';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextHomepageStep() {
+    if (currentHomepageStep < totalHomepageSteps) {
+        switchHomepageStep(currentHomepageStep + 1);
+    }
+}
+
+function prevHomepageStep() {
+    if (currentHomepageStep > 1) {
+        switchHomepageStep(currentHomepageStep - 1);
+    }
+}
+
+// Live SERP Preview Bindings
+document.addEventListener('DOMContentLoaded', function() {
+    const titleInput = document.querySelector('input[name="meta_title"]');
+    const descInput = document.querySelector('textarea[name="meta_description"]');
+    const urlInput = document.querySelector('input[name="canonical_url"]');
+
+    const liveTitle = document.getElementById('serp-live-title');
+    const liveDesc = document.getElementById('serp-live-desc');
+    const liveUrl = document.getElementById('serp-live-url');
+
+    if (titleInput && liveTitle) {
+        titleInput.addEventListener('input', function() {
+            liveTitle.textContent = this.value || 'CORX Healthcare: Home Health Care Services in Dubai *24/7';
+        });
+    }
+
+    if (descInput && liveDesc) {
+        descInput.addEventListener('input', function() {
+            liveDesc.textContent = this.value || 'Get premium home health care services in Dubai with Corx Healthcare...';
+        });
+    }
+
+    if (urlInput && liveUrl) {
+        urlInput.addEventListener('input', function() {
+            liveUrl.textContent = this.value || 'https://corx.ae/';
+        });
+    }
+});
+</script>
+{% endblock %}

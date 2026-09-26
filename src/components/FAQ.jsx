@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { API_BASE_URL } from "../config/api";
 
 const faqs = [
   {
@@ -231,8 +232,55 @@ const styles = `
   .faq-footer a:hover { border-bottom-color: #08709d; }
 `;
 
-export default function FAQ() {
+export default function FAQ({ eyebrow, title, subtitle, description, faqs: propFaqs, items }) {
   const [openIndex, setOpenIndex] = useState(null);
+
+  const [activeEyebrow, setActiveEyebrow] = useState(eyebrow || "⊙ Common Questions");
+  const [activeTitle, setActiveTitle] = useState(title || "Frequently Asked Questions");
+  const [activeDesc, setActiveDesc] = useState(
+    description || subtitle || "Find answers to the most common questions about our home healthcare services in Dubai."
+  );
+  const [faqList, setFaqList] = useState(
+    (Array.isArray(propFaqs) && propFaqs.length > 0)
+      ? propFaqs
+      : ((Array.isArray(items) && items.length > 0) ? items : faqs)
+  );
+
+  useEffect(() => {
+    // If props were passed directly, keep them
+    if (eyebrow) setActiveEyebrow(eyebrow);
+    if (title) setActiveTitle(title);
+    if (description || subtitle) setActiveDesc(description || subtitle);
+    if (Array.isArray(propFaqs) && propFaqs.length > 0) {
+      setFaqList(propFaqs);
+      return;
+    }
+    if (Array.isArray(items) && items.length > 0) {
+      setFaqList(items);
+      return;
+    }
+
+    // Otherwise load from backend /api/homepage/
+    let isMounted = true;
+    fetch(`${API_BASE_URL}/api/homepage/`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (!isMounted || !data) return;
+        if (data.faq_eyebrow?.trim()) setActiveEyebrow(data.faq_eyebrow.trim());
+        if (data.faq_title?.trim()) setActiveTitle(data.faq_title.trim());
+        if (data.faq_description?.trim()) setActiveDesc(data.faq_description.trim());
+        if (Array.isArray(data.faqs) && data.faqs.length > 0) {
+          setFaqList(data.faqs);
+        }
+      })
+      .catch(() => {
+        // Fallback gracefully to default static faqs
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [eyebrow, title, subtitle, description, propFaqs, items]);
 
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
 
@@ -242,16 +290,15 @@ export default function FAQ() {
       <style>{styles}</style>
       <div className="faq-wrap">
         <div className="faq-eyebrow">
-          ⊙ Common Questions
+          {activeEyebrow}
         </div>
-        <h2 className="faq-title">Frequently Asked Questions</h2>
+        <h2 className="faq-title">{activeTitle}</h2>
         <p className="faq-sub">
-          Find answers to the most common questions about our home healthcare
-          services in Dubai.
+          {activeDesc}
         </p>
 
         <div className="faq-list">
-          {faqs.map((faq, i) => {
+          {faqList.map((faq, i) => {
             const isOpen = openIndex === i;
             return (
               <div

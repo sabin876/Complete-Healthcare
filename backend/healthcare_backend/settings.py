@@ -190,6 +190,7 @@ JAZZMIN_SETTINGS = {
             "name": "CMS",
             "icon": "fas fa-folder-open",
             "children": [
+                {"name": "Home Page", "url": "/admin/api/homepage/", "permissions": ["api.view_homepage"]},
                 {"name": "Blog Posts", "url": "/admin/api/blogpost/", "permissions": ["api.view_blogpost"]},
                 {"name": "Services", "url": "/admin/api/service/", "permissions": ["api.view_service"]},
                 {"name": "Team Members", "url": "/admin/api/teammember/", "permissions": ["api.view_teammember"]},
@@ -206,6 +207,7 @@ JAZZMIN_SETTINGS = {
     "order_with_respect_to": ["cms", "api", "auth"],
     "custom_links": {
         "CMS": [
+            {"name": "Home Page", "url": "/admin/api/homepage/", "icon": "fas fa-home", "permissions": ["api.view_homepage"]},
             {"name": "Blog Posts", "url": "/admin/api/blogpost/", "icon": "fas fa-newspaper", "permissions": ["api.view_blogpost"]},
             {"name": "Services", "url": "/admin/api/service/", "icon": "fas fa-briefcase-medical", "permissions": ["api.view_service"]},
             {"name": "Team Members", "url": "/admin/api/teammember/", "icon": "fas fa-user-nurse", "permissions": ["api.view_teammember"]},
@@ -214,6 +216,7 @@ JAZZMIN_SETTINGS = {
         ]
     },
     "hide_models": [
+        "api.homepage",
         "api.blogpost",
         "api.service",
         "api.teammember",
@@ -237,6 +240,7 @@ JAZZMIN_SETTINGS = {
         "api.noticeapplication": "fas fa-bullhorn",
         "api.dutyapplication": "fas fa-exchange-alt",
         "api.driverschedule": "fas fa-route",
+        "api.homepage": "fas fa-home",
         "api.blogpost": "fas fa-newspaper",
         "api.service": "fas fa-briefcase-medical",
         "api.teammember": "fas fa-user-nurse",
@@ -247,6 +251,9 @@ JAZZMIN_SETTINGS = {
     "changeform_format_overrides": {
         "api.salaryapplication": "single",
         "api.driverschedule": "single",
+        "api.homepage": "single",
+        "api.robotstxt": "single",
+        "api.sitemapxml": "single",
     },
 }
 

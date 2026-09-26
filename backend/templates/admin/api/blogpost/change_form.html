@@ -1,0 +1,1700 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* ==========================================================================
+   CLEANING UP JAZZMIN / DJANGO ADMIN CHROME (FULL WIDTH MODERN LAYOUT)
+   ========================================================================== */
+
+/* Full width layout without clunky sidebar */
+.col-12.col-lg-9 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+/* Hide duplicate Jazzmin tab headers, jazzy actions sidebar, and default submit rows */
+.card-header:has(.nav-tabs),
+.nav-tabs,
+ul.nav.nav-tabs,
+.card-header-tabs,
+#jazzy-actions,
+.col-12.col-lg-3,
+.submit-row,
+#salary-submit-bar,
+.card-footer {
+    display: none !important;
+}
+
+fieldset.module {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 16px 0 !important;
+}
+
+fieldset.module > h2,
+fieldset.module > .description {
+    display: none !important;
+}
+
+/* ==========================================================================
+   MODERN WIZARD CONTAINER & STEPPER HEADER (DRIVER SCHEDULE MATCHED)
+   ========================================================================== */
+
+.blog-wizard-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 24px 0 !important;
+    font-family: inherit !important;
+}
+
+/* Top Stepper Bar */
+.blog-stepper-bar {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr auto 1fr !important;
+    align-items: center !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 16px 24px !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    gap: 16px !important;
+}
+
+.blog-step-tab {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 10px 18px !important;
+    border-radius: 14px !important;
+    border: 1.5px solid transparent !important;
+    background: #f8fafc !important;
+}
+
+.blog-step-tab:hover {
+    background: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+}
+
+.blog-step-tab.active {
+    background: #f0f9ff !important;
+    border-color: #08709d !important;
+    box-shadow: 0 4px 16px rgba(8, 112, 157, 0.12) !important;
+}
+
+.blog-step-tab.completed {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+}
+
+.blog-step-bubble {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    background: #e2e8f0 !important;
+    color: #64748b !important;
+    font-weight: 800 !important;
+    font-size: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    transition: all 0.25s ease !important;
+}
+
+.blog-step-tab.active .blog-step-bubble {
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(8, 112, 157, 0.35) !important;
+    transform: scale(1.05) !important;
+}
+
+.blog-step-tab.completed .blog-step-bubble {
+    background: #059669 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3) !important;
+}
+
+.blog-step-info {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+}
+
+.blog-step-title {
+    font-weight: 800 !important;
+    font-size: 14px !important;
+    color: #0f172a !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.blog-step-subtitle {
+    font-size: 11.5px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.blog-step-tab.active .blog-step-title {
+    color: #08709d !important;
+}
+
+.blog-step-tab.completed .blog-step-title {
+    color: #065f46 !important;
+}
+
+.blog-step-divider {
+    height: 2px !important;
+    width: 32px !important;
+    background: #e2e8f0 !important;
+    border-radius: 999px !important;
+    transition: background 0.25s ease !important;
+}
+
+.blog-step-divider.completed {
+    background: #059669 !important;
+}
+
+/* ==========================================================================
+   STEP CARD WRAPPERS
+   ========================================================================== */
+
+.blog-wizard-section {
+    display: none;
+}
+
+.blog-wizard-section.active-section {
+    display: block !important;
+    animation: blogFadeIn 0.25s ease-out !important;
+}
+
+@keyframes blogFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.blog-step-card-box {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 28px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 24px !important;
+}
+
+.blog-step-card-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 22px !important;
+    border-bottom: 1.5px solid #f1f5f9 !important;
+    flex-wrap: wrap !important;
+}
+
+.blog-step-card-header-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.blog-step-card-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+    background: #e0f2fe !important;
+    color: #08709d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+}
+
+.blog-step-card-title {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    letter-spacing: -0.01em !important;
+}
+
+.blog-step-card-desc {
+    font-size: 12.5px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    margin-top: 2px !important;
+}
+
+/* ==========================================================================
+   FORM CONTAINER & GRID ROWS (DRIVER SCHEDULE FORM DESIGN)
+   ========================================================================== */
+
+.blog-form-container {
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 18px !important;
+    padding: 26px !important;
+    margin-bottom: 24px !important;
+    box-sizing: border-box !important;
+}
+
+.blog-fields-row-1 {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    margin-bottom: 22px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.blog-fields-row-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+    margin-bottom: 22px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.blog-fields-row-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+    margin-bottom: 22px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.blog-form-group {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+}
+
+.blog-label {
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #334155 !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.blog-label-text {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.blog-label .req-star {
+    color: #ef4444 !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+}
+
+.blog-input-control,
+.blog-form-container input[type="text"],
+.blog-form-container input[type="url"],
+.blog-form-container select {
+    width: 100% !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    outline: none !important;
+}
+
+.blog-form-container textarea {
+    width: 100% !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #0f172a !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    outline: none !important;
+    font-family: inherit !important;
+    line-height: 1.5 !important;
+}
+
+.blog-input-control:focus,
+.blog-form-container input:focus,
+.blog-form-container select:focus,
+.blog-form-container textarea:focus {
+    border-color: #08709d !important;
+    box-shadow: 0 0 0 3.5px rgba(8, 112, 157, 0.15) !important;
+    background: #ffffff !important;
+}
+
+.blog-help {
+    font-size: 11.5px !important;
+    color: #64748b !important;
+    font-weight: 500 !important;
+    margin-top: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+/* Category Suggestions Pills */
+.blog-category-pills {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    margin-top: 8px !important;
+}
+
+.blog-cat-pill {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 3px 10px !important;
+    border-radius: 20px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #475569 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+}
+
+.blog-cat-pill:hover {
+    background: #e0f2fe !important;
+    color: #0369a1 !important;
+    border-color: #bae6fd !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Action Quick Helper Buttons */
+.blog-quick-btn {
+    background: #e0f2fe !important;
+    color: #0369a1 !important;
+    border: 1px solid #bae6fd !important;
+    border-radius: 8px !important;
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+.blog-quick-btn:hover {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+}
+
+/* Media Dropzone & Preview Box */
+.blog-media-card {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+}
+
+.blog-media-preview-container {
+    width: 100% !important;
+    height: 180px !important;
+    border-radius: 12px !important;
+    background: #f1f5f9 !important;
+    border: 2px dashed #cbd5e1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    margin-top: 10px !important;
+    position: relative !important;
+}
+
+.blog-media-preview-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: none;
+}
+
+.blog-media-empty-placeholder {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 6px !important;
+    color: #94a3b8 !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    padding: 12px !important;
+}
+
+/* ==========================================================================
+   NAVIGATION ACTION BUTTONS (DRIVER SCHEDULE EXACT MATCH)
+   ========================================================================== */
+
+.blog-nav-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    margin-top: 28px !important;
+    padding-top: 22px !important;
+    border-top: 1.5px solid #e2e8f0 !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+}
+
+.blog-btn-primary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    padding: 13px 32px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 18px rgba(8, 112, 157, 0.35) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+}
+
+.blog-btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(8, 112, 157, 0.45) !important;
+    color: #ffffff !important;
+}
+
+.blog-btn-secondary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    padding: 12px 24px !important;
+    border-radius: 14px !important;
+    background: #f8fafc !important;
+    color: #334155 !important;
+    border: 1.5px solid #cbd5e1 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    text-decoration: none !important;
+}
+
+.blog-btn-secondary:hover {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+.blog-btn-send {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    padding: 14px 40px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-decoration: none !important;
+}
+
+.blog-btn-send:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 28px rgba(16, 185, 129, 0.55) !important;
+    color: #ffffff !important;
+}
+
+.blog-btn-delete {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    border: 1px solid #fecaca !important;
+    padding: 12px 20px !important;
+    border-radius: 14px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    transition: all 0.15s ease !important;
+}
+
+.blog-btn-delete:hover {
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    border-color: #fca5a5 !important;
+}
+
+/* ==========================================================================
+   STEP 3: LIVE PREVIEW CARDS (SERP + BLOG ARTICLE CARD)
+   ========================================================================== */
+
+.blog-preview-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    margin-top: 20px !important;
+}
+
+/* Google SERP Preview */
+.google-serp-card {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    padding: 22px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+}
+
+.google-serp-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+}
+
+.google-serp-favicon {
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 50% !important;
+    background: #e0f2fe !important;
+    color: #08709d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+}
+
+.google-serp-domain {
+    font-size: 13px !important;
+    color: #202124 !important;
+    font-weight: 500 !important;
+}
+
+.google-serp-path {
+    font-size: 11.5px !important;
+    color: #5f6368 !important;
+}
+
+.google-serp-title {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #1a0dab !important;
+    line-height: 1.3 !important;
+    margin-bottom: 6px !important;
+    cursor: pointer !important;
+    word-break: break-word !important;
+}
+
+.google-serp-desc {
+    font-size: 13.5px !important;
+    color: #4d5156 !important;
+    line-height: 1.55 !important;
+    word-break: break-word !important;
+}
+
+/* Front-End Blog Card Preview */
+.live-article-card {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05) !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.live-card-media {
+    position: relative !important;
+    height: 190px !important;
+    background: #061e36 !important;
+    overflow: hidden !important;
+}
+
+.live-card-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.live-card-badge {
+    position: absolute !important;
+    top: 14px !important;
+    left: 14px !important;
+    background: rgba(8, 112, 157, 0.9) !important;
+    backdrop-filter: blur(6px) !important;
+    color: #ffffff !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+}
+
+.live-card-time {
+    position: absolute !important;
+    bottom: 12px !important;
+    right: 14px !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    color: #ffffff !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+}
+
+.live-card-body {
+    padding: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+}
+
+.live-card-meta {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    font-size: 12px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    margin-bottom: 10px !important;
+}
+
+.live-card-title {
+    font-size: 16.5px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    line-height: 1.35 !important;
+    margin-bottom: 8px !important;
+}
+
+.live-card-excerpt {
+    font-size: 13px !important;
+    color: #64748b !important;
+    line-height: 1.5 !important;
+    flex: 1 !important;
+    margin-bottom: 16px !important;
+}
+
+.live-card-footer {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    border-top: 1px solid #f1f5f9 !important;
+    padding-top: 14px !important;
+}
+
+.live-card-author {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.live-author-avatar {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: #e0f2fe !important;
+    color: #08709d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+.live-author-name {
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+}
+
+/* Checklist Card */
+.blog-checklist-card {
+    background: #f0fdf4 !important;
+    border: 1.5px solid #bbf7d0 !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    margin-top: 22px !important;
+}
+
+.blog-checklist-title {
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    color: #166534 !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.blog-checklist-items {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.blog-check-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    color: #334155 !important;
+}
+
+.blog-check-item.ready {
+    color: #15803d !important;
+}
+
+.blog-check-item.warning {
+    color: #d97706 !important;
+}
+
+/* Alert Toast */
+.blog-alert-popup {
+    display: none;
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: #ef4444;
+    color: #ffffff;
+    padding: 16px 26px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 12px 36px rgba(239, 68, 68, 0.4);
+    z-index: 999999;
+    align-items: center;
+    gap: 12px;
+    animation: blogSlideIn 0.25s ease-out;
+}
+
+@keyframes blogSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media screen and (max-width: 900px) {
+    .blog-stepper-bar {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        padding: 14px !important;
+    }
+    .blog-step-divider {
+        display: none !important;
+    }
+    .blog-fields-row-3,
+    .blog-fields-row-2,
+    .blog-preview-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .blog-nav-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    .blog-nav-bar > * {
+        width: 100% !important;
+        text-align: center !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block field_sets %}
+<div class="col-12" style="padding: 0 !important;">
+    <!-- Top Stepper Navigation (Driver Schedule Layout) -->
+    <div class="blog-wizard-container">
+        <div class="blog-stepper-bar" id="blog-stepper-bar">
+            <div class="blog-step-tab active" data-step="1" id="blog-tab-1">
+                <div class="blog-step-bubble" id="blog-bubble-1">1</div>
+                <div class="blog-step-info">
+                    <div class="blog-step-title">1. Article Details</div>
+                    <div class="blog-step-subtitle">Title, Category & Author</div>
+                </div>
+            </div>
+
+            <div class="blog-step-divider" id="blog-divider-1"></div>
+
+            <div class="blog-step-tab" data-step="2" id="blog-tab-2">
+                <div class="blog-step-bubble" id="blog-bubble-2">2</div>
+                <div class="blog-step-info">
+                    <div class="blog-step-title">2. Media & Story Content</div>
+                    <div class="blog-step-subtitle">Cover, Excerpt & Rich Editor</div>
+                </div>
+            </div>
+
+            <div class="blog-step-divider" id="blog-divider-2"></div>
+
+            <div class="blog-step-tab" data-step="3" id="blog-tab-3">
+                <div class="blog-step-bubble" id="blog-bubble-3">3</div>
+                <div class="blog-step-info">
+                    <div class="blog-step-title">3. SEO & Live Publish</div>
+                    <div class="blog-step-subtitle">Google Snippet & Dispatch</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Popup -->
+    <div id="blog-alert-popup" class="blog-alert-popup">
+        <i class="fas fa-exclamation-circle" style="font-size: 20px;"></i>
+        <span id="blog-alert-text">Please enter an Article Title before continuing!</span>
+    </div>
+
+    <!-- =====================================================================
+         STEP 1: ARTICLE DETAILS & TAXONOMY
+         ===================================================================== -->
+    <div id="blog-section-1" class="blog-wizard-section blog-step-card-box active-section">
+        <div class="blog-step-card-header">
+            <div class="blog-step-card-header-left">
+                <div class="blog-step-card-icon">
+                    <i class="fas fa-feather-pointed"></i>
+                </div>
+                <div>
+                    <div class="blog-step-card-title">Step 1: Article Headline, URL & Taxonomy</div>
+                    <div class="blog-step-card-desc">Define the main headline, auto-generated URL slug, article category, author, and reading time.</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 11px;">STEP 1 OF 3</span>
+            </div>
+        </div>
+
+        <div class="blog-form-container">
+            <!-- Row 1: Article Title -->
+            <div class="blog-fields-row-1">
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_title">
+                        <span class="blog-label-text">
+                            <i class="fas fa-heading" style="color: #08709d;"></i>
+                            <span>Article Headline / Title</span>
+                            <span class="req-star">*</span>
+                        </span>
+                        <span id="title-char-count" style="font-size: 11px; color: #94a3b8; font-weight: 600;">0 chars</span>
+                    </label>
+                    {{ adminform.form.title }}
+                    <div class="blog-help">
+                        <span>Enter an engaging, clinical or educational headline for your blog readers.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Slug and Category -->
+            <div class="blog-fields-row-2">
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_slug">
+                        <span class="blog-label-text">
+                            <i class="fas fa-link" style="color: #08709d;"></i>
+                            <span>URL Slug (Web Address)</span>
+                        </span>
+                        <button type="button" id="btn-auto-slug" class="blog-quick-btn">
+                            <i class="fas fa-magic"></i> Auto-Generate
+                        </button>
+                    </label>
+                    {{ adminform.form.slug }}
+                    <div class="blog-help">
+                        <span>e.g. <code>cardiac-health-checkup-dubai</code> (used for public URL: /blog/slug)</span>
+                    </div>
+                </div>
+
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_category">
+                        <span class="blog-label-text">
+                            <i class="fas fa-tags" style="color: #08709d;"></i>
+                            <span>Category / Topic</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.category }}
+                    <div class="blog-category-pills">
+                        <span class="blog-cat-pill" data-cat="Medical Care">🏥 Medical Care</span>
+                        <span class="blog-cat-pill" data-cat="Home Healthcare">🩺 Home Healthcare</span>
+                        <span class="blog-cat-pill" data-cat="Lab & Diagnostics">🔬 Lab Tests</span>
+                        <span class="blog-cat-pill" data-cat="Health & Wellness">🥗 Wellness & Diet</span>
+                        <span class="blog-cat-pill" data-cat="Cardiology">❤️ Cardiology</span>
+                        <span class="blog-cat-pill" data-cat="Pediatrics">👶 Pediatrics</span>
+                        <span class="blog-cat-pill" data-cat="Elderly Care">👴 Elderly Care</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Author, Publication Date, Read Time -->
+            <div class="blog-fields-row-3">
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_author">
+                        <span class="blog-label-text">
+                            <i class="fas fa-user-doctor" style="color: #08709d;"></i>
+                            <span>Author Name</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.author }}
+                    <div class="blog-help">e.g. CORx Medical Team, Dr. Ahmed, etc.</div>
+                </div>
+
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_date">
+                        <span class="blog-label-text">
+                            <i class="fas fa-calendar-day" style="color: #059669;"></i>
+                            <span>Publication Date</span>
+                        </span>
+                        <button type="button" id="btn-set-today" class="blog-quick-btn">
+                            <i class="fas fa-calendar-check"></i> Today
+                        </button>
+                    </label>
+                    {{ adminform.form.date }}
+                    <div class="blog-help">Display date, e.g. Oct 24, 2026</div>
+                </div>
+
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_read_time">
+                        <span class="blog-label-text">
+                            <i class="fas fa-clock" style="color: #059669;"></i>
+                            <span>Estimated Read Time</span>
+                        </span>
+                        <button type="button" id="btn-calc-readtime" class="blog-quick-btn">
+                            <i class="fas fa-calculator"></i> Estimate
+                        </button>
+                    </label>
+                    {{ adminform.form.read_time }}
+                    <div class="blog-help">e.g. 4 min read</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="blog-nav-bar">
+            <a href="{% url opts|admin_urlname:'changelist' %}" class="blog-btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+            <button type="button" id="blog-next-to-2" class="blog-btn-primary">
+                <span>Next: Media & Content</span> <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         STEP 2: FEATURED MEDIA & RICH ARTICLE CONTENT
+         ===================================================================== -->
+    <div id="blog-section-2" class="blog-wizard-section blog-step-card-box">
+        <div class="blog-step-card-header">
+            <div class="blog-step-card-header-left">
+                <div class="blog-step-card-icon">
+                    <i class="fas fa-photo-film"></i>
+                </div>
+                <div>
+                    <div class="blog-step-card-title">Step 2: Featured Media, Excerpt & Rich Visual Story</div>
+                    <div class="blog-step-card-desc">Upload a high-resolution cover image, write an engaging teaser snippet, and compose the rich body.</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 11px;">STEP 2 OF 3</span>
+            </div>
+        </div>
+
+        <div class="blog-form-container">
+            <!-- Featured Media Grid -->
+            <div class="blog-fields-row-2">
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_image_file">
+                        <span class="blog-label-text">
+                            <i class="fas fa-cloud-arrow-up" style="color: #08709d;"></i>
+                            <span>Upload Cover Image (From Device)</span>
+                        </span>
+                    </label>
+                    <div class="blog-media-card">
+                        {{ adminform.form.image_file }}
+                        <div class="blog-help" style="margin-top: 8px;">Upload high-res JPG, PNG, or WebP (Recommended 1200x630px)</div>
+                    </div>
+                </div>
+
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_image">
+                        <span class="blog-label-text">
+                            <i class="fas fa-globe" style="color: #08709d;"></i>
+                            <span>Or External Image URL (Fallback)</span>
+                        </span>
+                    </label>
+                    <div class="blog-media-card">
+                        {{ adminform.form.image }}
+                        <div class="blog-help" style="margin-top: 8px;">Direct web link (e.g. Unsplash or Cloud CDN)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instant Image Preview Box -->
+            <div style="margin-bottom: 24px;">
+                <div class="blog-label">
+                    <span class="blog-label-text">
+                        <i class="fas fa-eye" style="color: #08709d;"></i>
+                        <span>Cover Image Live Preview</span>
+                    </span>
+                </div>
+                <div class="blog-media-preview-container" id="blog-media-preview-container">
+                    <img id="blog-media-preview-img" class="blog-media-preview-img" alt="Cover Preview" />
+                    <div id="blog-media-placeholder" class="blog-media-empty-placeholder">
+                        <i class="fas fa-image" style="font-size: 32px; color: #cbd5e1;"></i>
+                        <span>No image uploaded or linked yet. Selected cover will preview here.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article Excerpt -->
+            <div class="blog-fields-row-1">
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_excerpt">
+                        <span class="blog-label-text">
+                            <i class="fas fa-quote-left" style="color: #08709d;"></i>
+                            <span>Article Summary Snippet / Excerpt</span>
+                        </span>
+                        <span id="excerpt-char-count" style="font-size: 11px; color: #94a3b8; font-weight: 600;">0 / 160 chars</span>
+                    </label>
+                    {{ adminform.form.excerpt }}
+                    <div class="blog-help">A concise 2-3 sentence overview that appears on article preview cards and social shares.</div>
+                </div>
+            </div>
+
+            <!-- Main Rich Article Content -->
+            <div class="blog-fields-row-1" style="margin-bottom: 0;">
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_content">
+                        <span class="blog-label-text">
+                            <i class="fas fa-file-pen" style="color: #08709d;"></i>
+                            <span>Full Article Body (Rich Visual Content Editor)</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.content }}
+                </div>
+            </div>
+        </div>
+
+        <div class="blog-nav-bar">
+            <button type="button" id="blog-back-to-1" class="blog-btn-secondary">
+                <i class="fas fa-arrow-left"></i> <span>Back: Article Details</span>
+            </button>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="blog-btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="button" id="blog-next-to-3" class="blog-btn-primary">
+                    <span>Next: SEO & Live Preview</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         STEP 3: SEO OPTIMIZATION, LIVE PREVIEWS & PUBLISH
+         ===================================================================== -->
+    <div id="blog-section-3" class="blog-wizard-section blog-step-card-box">
+        <div class="blog-step-card-header">
+            <div class="blog-step-card-header-left">
+                <div class="blog-step-card-icon" style="background: #ecfdf5; color: #059669;">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div>
+                    <div class="blog-step-card-title">Step 3: Search Engine Preview & Live Dispatch</div>
+                    <div class="blog-step-card-desc">Inspect Google Search Engine snippet, check the website card layout, and publish the article.</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #ecfdf5; color: #059669; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 11px;">STEP 3 OF 3</span>
+            </div>
+        </div>
+
+        <div class="blog-form-container">
+            <!-- SEO Fields -->
+            <div class="blog-fields-row-2">
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_meta_title">
+                        <span class="blog-label-text">
+                            <i class="fab fa-google" style="color: #0284c7;"></i>
+                            <span>Custom SEO Title Tag</span>
+                        </span>
+                        <button type="button" id="btn-copy-title-seo" class="blog-quick-btn">
+                            <i class="fas fa-copy"></i> Copy Title
+                        </button>
+                    </label>
+                    {{ adminform.form.meta_title }}
+                    <div class="blog-help">
+                        <span id="seo-title-count">0 / 60 chars (Optimal: 50-60 characters)</span>
+                    </div>
+                </div>
+
+                <div class="blog-form-group">
+                    <label class="blog-label" for="id_meta_description">
+                        <span class="blog-label-text">
+                            <i class="fas fa-magnifying-glass" style="color: #0284c7;"></i>
+                            <span>SEO Meta Description</span>
+                        </span>
+                        <button type="button" id="btn-copy-excerpt-seo" class="blog-quick-btn">
+                            <i class="fas fa-copy"></i> Copy Excerpt
+                        </button>
+                    </label>
+                    {{ adminform.form.meta_description }}
+                    <div class="blog-help">
+                        <span id="seo-desc-count">0 / 160 chars (Optimal: 140-160 characters)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-Column Previews: Google SERP + Website Card -->
+            <div class="blog-preview-grid">
+                <!-- Left: Google Search Result Snippet -->
+                <div>
+                    <div class="blog-label" style="margin-bottom: 10px;">
+                        <span class="blog-label-text">
+                            <i class="fab fa-google" style="color: #4285f4;"></i>
+                            <span>Google Search Result Snippet</span>
+                        </span>
+                    </div>
+                    <div class="google-serp-card">
+                        <div class="google-serp-header">
+                            <div class="google-serp-favicon">C</div>
+                            <div>
+                                <div class="google-serp-domain">corxhealthcare.com</div>
+                                <div class="google-serp-path" id="serp-breadcrumb">https://corxhealthcare.com › blog › article-slug</div>
+                            </div>
+                        </div>
+                        <div class="google-serp-title" id="serp-title-display">Your Article Title | CORx Healthcare Dubai</div>
+                        <div class="google-serp-desc" id="serp-desc-display">Your meta description will appear here as a snippet for search engine users searching on Google or Bing...</div>
+                    </div>
+                </div>
+
+                <!-- Right: Website Card Mockup Preview -->
+                <div>
+                    <div class="blog-label" style="margin-bottom: 10px;">
+                        <span class="blog-label-text">
+                            <i class="fas fa-desktop" style="color: #08709d;"></i>
+                            <span>Public Website Card Mockup</span>
+                        </span>
+                    </div>
+                    <div class="live-article-card">
+                        <div class="live-card-media">
+                            <img id="live-card-preview-img" class="live-card-img" src="" alt="Post Header" style="display: none;" />
+                            <div id="live-card-img-placeholder" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.4); font-size: 13px; font-weight: 700;">
+                                <i class="fas fa-image" style="margin-right: 8px;"></i> No Cover Attached
+                            </div>
+                            <span class="live-card-badge" id="live-card-badge">Medical Care</span>
+                            <span class="live-card-time" id="live-card-time"><i class="fas fa-clock"></i> 5 min read</span>
+                        </div>
+                        <div class="live-card-body">
+                            <div class="live-card-meta">
+                                <span id="live-card-date"><i class="fas fa-calendar-alt"></i> Today</span>
+                            </div>
+                            <div class="live-card-title" id="live-card-title">Article Headline Goes Here</div>
+                            <div class="live-card-excerpt" id="live-card-excerpt">Article summary excerpt will appear here, enticing patients and visitors to read more...</div>
+                            <div class="live-card-footer">
+                                <div class="live-card-author">
+                                    <div class="live-author-avatar" id="live-author-avatar">C</div>
+                                    <div class="live-author-name" id="live-author-name">Corx</div>
+                                </div>
+                                <span style="color: #08709d; font-weight: 800; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                                    Read Article <i class="fas fa-arrow-right" style="font-size: 10px;"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pre-Flight Readiness Checklist -->
+            <div class="blog-checklist-card">
+                <div class="blog-checklist-title">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Article Publishing Readiness Checklist</span>
+                </div>
+                <div class="blog-checklist-items">
+                    <div class="blog-check-item" id="check-title">
+                        <i class="fas fa-circle-question" style="color: #94a3b8;"></i>
+                        <span>Title headline provided</span>
+                    </div>
+                    <div class="blog-check-item" id="check-slug">
+                        <i class="fas fa-circle-question" style="color: #94a3b8;"></i>
+                        <span>Clean URL slug set</span>
+                    </div>
+                    <div class="blog-check-item" id="check-category">
+                        <i class="fas fa-circle-question" style="color: #94a3b8;"></i>
+                        <span>Category assigned</span>
+                    </div>
+                    <div class="blog-check-item" id="check-image">
+                        <i class="fas fa-circle-question" style="color: #94a3b8;"></i>
+                        <span>Cover image attached</span>
+                    </div>
+                    <div class="blog-check-item" id="check-excerpt">
+                        <i class="fas fa-circle-question" style="color: #94a3b8;"></i>
+                        <span>Card summary excerpt</span>
+                    </div>
+                    <div class="blog-check-item" id="check-seo">
+                        <i class="fas fa-circle-question" style="color: #94a3b8;"></i>
+                        <span>SEO meta tags filled</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="blog-nav-bar">
+            <button type="button" id="blog-back-to-2" class="blog-btn-secondary">
+                <i class="fas fa-arrow-left"></i> <span>Back: Media & Content</span>
+            </button>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                {% if show_delete_link and original %}
+                    {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
+                    <a href="{% add_preserved_filters delete_url %}" class="blog-btn-delete">
+                        <i class="fas fa-trash-alt"></i> Delete Article
+                    </a>
+                {% endif %}
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="blog-btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" name="_save" class="blog-btn-send" id="blog-btn-submit-final">
+                    <i class="fas fa-paper-plane" style="font-size: 16px;"></i>
+                    <span>Publish Blog Post</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+{{ block.super }}
+<script>
+(function() {
+    let currentStep = 1;
+
+    // Toast Alert Popup
+    function showAlert(message) {
+        const popup = document.getElementById('blog-alert-popup');
+        const text = document.getElementById('blog-alert-text');
+        if (popup && text) {
+            text.textContent = message;
+            popup.style.display = 'flex';
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 3200);
+        } else {
+            alert(message);
+        }
+    }
+
+    // Step UI Switcher
+    function updateStepUI(stepNumber) {
+        currentStep = stepNumber;
+
+        for (let i = 1; i <= 3; i++) {
+            const tab = document.getElementById('blog-tab-' + i);
+            const bubble = document.getElementById('blog-bubble-' + i);
+            const divider = document.getElementById('blog-divider-' + i);
+
+            if (tab && bubble) {
+                tab.classList.remove('active', 'completed');
+                if (i < currentStep) {
+                    tab.classList.add('completed');
+                    bubble.innerHTML = '<i class="fas fa-check" style="font-size: 14px;"></i>';
+                } else if (i === currentStep) {
+                    tab.classList.add('active');
+                    bubble.textContent = i;
+                } else {
+                    bubble.textContent = i;
+                }
+            }
+
+            if (divider) {
+                if (i < currentStep) {
+                    divider.classList.add('completed');
+                } else {
+                    divider.classList.remove('completed');
+                }
+            }
+        }
+
+        const section1 = document.getElementById('blog-section-1');
+        const section2 = document.getElementById('blog-section-2');
+        const section3 = document.getElementById('blog-section-3');
+
+        if (section1) section1.classList.toggle('active-section', currentStep === 1);
+        if (section2) section2.classList.toggle('active-section', currentStep === 2);
+        if (section3) section3.classList.toggle('active-section', currentStep === 3);
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (currentStep === 3) {
+            refreshLivePreviews();
+        }
+    }
+
+    function isTitleValid() {
+        const titleInput = document.getElementById('id_title');
+        return Boolean(titleInput && titleInput.value && titleInput.value.trim() !== '');
+    }
+
+    // Slug Generator
+    function generateSlug(text) {
+        return text
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/&/g, '-and-')
+            .replace(/[\s\W-]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
+    // Image preview helper
+    let currentImageSrc = '';
+
+    function updateImagePreview(src) {
+        currentImageSrc = src;
+        const previewImg = document.getElementById('blog-media-preview-img');
+        const placeholder = document.getElementById('blog-media-placeholder');
+        const liveCardImg = document.getElementById('live-card-preview-img');
+        const liveCardPlaceholder = document.getElementById('live-card-img-placeholder');
+
+        if (src) {
+            if (previewImg) {
+                previewImg.src = src;
+                previewImg.style.display = 'block';
+            }
+            if (placeholder) placeholder.style.display = 'none';
+
+            if (liveCardImg) {
+                liveCardImg.src = src;
+                liveCardImg.style.display = 'block';
+            }
+            if (liveCardPlaceholder) liveCardPlaceholder.style.display = 'none';
+        } else {
+            if (previewImg) previewImg.style.display = 'none';
+            if (placeholder) placeholder.style.display = 'flex';
+
+            if (liveCardImg) liveCardImg.style.display = 'none';
+            if (liveCardPlaceholder) liveCardPlaceholder.style.display = 'flex';
+        }
+    }
+
+    // Live SERP & Card Preview Updater
+    function refreshLivePreviews() {
+        const titleVal = (document.getElementById('id_title')?.value || '').trim();
+        const slugVal = (document.getElementById('id_slug')?.value || '').trim() || generateSlug(titleVal) || 'article-slug';
+        const metaTitleVal = (document.getElementById('id_meta_title')?.value || '').trim() || (titleVal ? `${titleVal} | CORx Healthcare Dubai` : 'Article Title | CORx Healthcare Dubai');
+        const excerptVal = (document.getElementById('id_excerpt')?.value || '').trim();
+        const metaDescVal = (document.getElementById('id_meta_description')?.value || '').trim() || excerptVal || 'Your article summary snippet will display here in Google search engine result snippets...';
+        const categoryVal = (document.getElementById('id_category')?.value || '').trim() || 'Medical Care';
+        const authorVal = (document.getElementById('id_author')?.value || '').trim() || 'Corx Medical Team';
+        const dateVal = (document.getElementById('id_date')?.value || '').trim() || 'Today';
+        const readTimeVal = (document.getElementById('id_read_time')?.value || '').trim() || '5 min read';
+
+        // Update SERP
+        const serpBreadcrumb = document.getElementById('serp-breadcrumb');
+        const serpTitle = document.getElementById('serp-title-display');
+        const serpDesc = document.getElementById('serp-desc-display');
+
+        if (serpBreadcrumb) serpBreadcrumb.textContent = `https://corxhealthcare.com › blog › ${slugVal}`;
+        if (serpTitle) serpTitle.textContent = metaTitleVal;
+        if (serpDesc) serpDesc.textContent = metaDescVal;
+
+        // Update Live Card
+        const cardTitle = document.getElementById('live-card-title');
+        const cardExcerpt = document.getElementById('live-card-excerpt');
+        const cardBadge = document.getElementById('live-card-badge');
+        const cardDate = document.getElementById('live-card-date');
+        const cardTime = document.getElementById('live-card-time');
+        const cardAuthorName = document.getElementById('live-author-name');
+        const cardAuthorAvatar = document.getElementById('live-author-avatar');
+
+        if (cardTitle) cardTitle.textContent = titleVal || 'Article Headline Goes Here';
+        if (cardExcerpt) cardExcerpt.textContent = excerptVal || 'Article summary excerpt will appear here, enticing patients and visitors to read more...';
+        if (cardBadge) cardBadge.textContent = categoryVal;
+        if (cardDate) cardDate.innerHTML = `<i class="fas fa-calendar-alt"></i> ${dateVal}`;
+        if (cardTime) cardTime.innerHTML = `<i class="fas fa-clock"></i> ${readTimeVal}`;
+        if (cardAuthorName) cardAuthorName.textContent = authorVal;
+        if (cardAuthorAvatar) cardAuthorAvatar.textContent = authorVal.charAt(0).toUpperCase() || 'C';
+
+        // Checklists
+        updateChecklistItem('check-title', Boolean(titleVal));
+        updateChecklistItem('check-slug', Boolean(slugVal && slugVal !== 'article-slug'));
+        updateChecklistItem('check-category', Boolean(categoryVal));
+        updateChecklistItem('check-image', Boolean(currentImageSrc));
+        updateChecklistItem('check-excerpt', Boolean(excerptVal));
+        updateChecklistItem('check-seo', Boolean(metaTitleVal && metaDescVal));
+    }
+
+    function updateChecklistItem(id, isOk) {
+        const item = document.getElementById(id);
+        if (!item) return;
+        if (isOk) {
+            item.className = 'blog-check-item ready';
+            item.querySelector('i').className = 'fas fa-circle-check';
+            item.querySelector('i').style.color = '#16a34a';
+        } else {
+            item.className = 'blog-check-item warning';
+            item.querySelector('i').className = 'fas fa-circle-exclamation';
+            item.querySelector('i').style.color = '#f59e0b';
+        }
+    }
+
+    // Character counters
+    function updateCounters() {
+        const titleInput = document.getElementById('id_title');
+        const titleCount = document.getElementById('title-char-count');
+        if (titleInput && titleCount) {
+            titleCount.textContent = `${titleInput.value.length} chars`;
+        }
+
+        const excerptInput = document.getElementById('id_excerpt');
+        const excerptCount = document.getElementById('excerpt-char-count');
+        if (excerptInput && excerptCount) {
+            excerptCount.textContent = `${excerptInput.value.length} / 160 chars`;
+        }
+
+        const metaTitleInput = document.getElementById('id_meta_title');
+        const seoTitleCount = document.getElementById('seo-title-count');
+        if (metaTitleInput && seoTitleCount) {
+            const len = metaTitleInput.value.length;
+            seoTitleCount.textContent = `${len} / 60 chars ${len >= 50 && len <= 60 ? '✓ Ideal' : ''}`;
+            seoTitleCount.style.color = (len >= 50 && len <= 60) ? '#16a34a' : (len > 65 ? '#dc2626' : '#64748b');
+        }
+
+        const metaDescInput = document.getElementById('id_meta_description');
+        const seoDescCount = document.getElementById('seo-desc-count');
+        if (metaDescInput && seoDescCount) {
+            const len = metaDescInput.value.length;
+            seoDescCount.textContent = `${len} / 160 chars ${len >= 135 && len <= 160 ? '✓ Ideal' : ''}`;
+            seoDescCount.style.color = (len >= 135 && len <= 160) ? '#16a34a' : (len > 165 ? '#dc2626' : '#64748b');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab clicks
+        for (let i = 1; i <= 3; i++) {
+            const tab = document.getElementById('blog-tab-' + i);
+            if (tab) {
+                tab.addEventListener('click', function() {
+                    const targetStep = parseInt(this.getAttribute('data-step'));
+                    if (targetStep > 1 && !isTitleValid()) {
+                        showAlert('Please enter an Article Title before advancing!');
+                        return;
+                    }
+                    updateStepUI(targetStep);
+                });
+            }
+        }
+
+        // Navigation buttons
+        const btnNextTo2 = document.getElementById('blog-next-to-2');
+        if (btnNextTo2) {
+            btnNextTo2.addEventListener('click', function() {
+                if (!isTitleValid()) {
+                    showAlert('Please enter an Article Title before proceeding!');
+                    document.getElementById('id_title')?.focus();
+                    return;
+                }
+                updateStepUI(2);
+            });
+        }
+
+        const btnBackTo1 = document.getElementById('blog-back-to-1');
+        if (btnBackTo1) {
+            btnBackTo1.addEventListener('click', function() {
+                updateStepUI(1);
+            });
+        }
+
+        const btnNextTo3 = document.getElementById('blog-next-to-3');
+        if (btnNextTo3) {
+            btnNextTo3.addEventListener('click', function() {
+                updateStepUI(3);
+            });
+        }
+
+        const btnBackTo2 = document.getElementById('blog-back-to-2');
+        if (btnBackTo2) {
+            btnBackTo2.addEventListener('click', function() {
+                updateStepUI(2);
+            });
+        }
+
+        // Auto Slug
+        const btnAutoSlug = document.getElementById('btn-auto-slug');
+        const titleInput = document.getElementById('id_title');
+        const slugInput = document.getElementById('id_slug');
+        if (btnAutoSlug && titleInput && slugInput) {
+            btnAutoSlug.addEventListener('click', function() {
+                if (titleInput.value) {
+                    slugInput.value = generateSlug(titleInput.value);
+                } else {
+                    showAlert('Type an article title first to generate a slug!');
+                }
+            });
+
+            titleInput.addEventListener('input', function() {
+                updateCounters();
+                if (!slugInput.value || slugInput.value.trim() === '') {
+                    slugInput.value = generateSlug(titleInput.value);
+                }
+            });
+        }
+
+        // Category pills
+        const categoryInput = document.getElementById('id_category');
+        document.querySelectorAll('.blog-cat-pill').forEach(pill => {
+            pill.addEventListener('click', function() {
+                if (categoryInput) {
+                    categoryInput.value = this.getAttribute('data-cat');
+                }
+            });
+        });
+
+        // Set Today date button
+        const btnToday = document.getElementById('btn-set-today');
+        const dateInput = document.getElementById('id_date');
+        if (btnToday && dateInput) {
+            btnToday.addEventListener('click', function() {
+                const now = new Date();
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                dateInput.value = now.toLocaleDateString('en-US', options);
+            });
+            if (!dateInput.value) {
+                const now = new Date();
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                dateInput.value = now.toLocaleDateString('en-US', options);
+            }
+        }
+
+        // Calculate Read Time button
+        const btnCalc = document.getElementById('btn-calc-readtime');
+        const readTimeInput = document.getElementById('id_read_time');
+        if (btnCalc && readTimeInput) {
+            btnCalc.addEventListener('click', function() {
+                const contentEl = document.querySelector('[contenteditable="true"]') || document.getElementById('id_content');
+                const text = contentEl ? (contentEl.innerText || contentEl.value || '') : '';
+                const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+                const minutes = Math.max(1, Math.ceil(wordCount / 200));
+                readTimeInput.value = `${minutes} min read`;
+                showAlert(`Estimated read time: ${minutes} min read (${wordCount} words)`);
+            });
+        }
+
+        // Image file preview
+        const imageFileInput = document.getElementById('id_image_file');
+        if (imageFileInput) {
+            imageFileInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        updateImagePreview(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // External image URL preview
+        const imageUrlInput = document.getElementById('id_image');
+        if (imageUrlInput) {
+            imageUrlInput.addEventListener('input', function() {
+                if (this.value && this.value.trim() !== '') {
+                    updateImagePreview(this.value.trim());
+                } else if (!imageFileInput || !imageFileInput.files[0]) {
+                    updateImagePreview('');
+                }
+            });
+            if (imageUrlInput.value && imageUrlInput.value.trim() !== '') {
+                updateImagePreview(imageUrlInput.value.trim());
+            }
+        }
+
+        // Check if existing file link is present (Django FileField link)
+        const fileLink = imageFileInput?.closest('.blog-media-card')?.querySelector('a');
+        if (fileLink && fileLink.href && (!imageUrlInput || !imageUrlInput.value)) {
+            updateImagePreview(fileLink.href);
+        }
+
+        // Copy Title & Excerpt to SEO
+        const btnCopyTitle = document.getElementById('btn-copy-title-seo');
+        const metaTitleInput = document.getElementById('id_meta_title');
+        if (btnCopyTitle && metaTitleInput && titleInput) {
+            btnCopyTitle.addEventListener('click', function() {
+                metaTitleInput.value = titleInput.value ? `${titleInput.value} | CORx Healthcare` : '';
+                updateCounters();
+                refreshLivePreviews();
+            });
+        }
+
+        const btnCopyExcerpt = document.getElementById('btn-copy-excerpt-seo');
+        const excerptInput = document.getElementById('id_excerpt');
+        const metaDescInput = document.getElementById('id_meta_description');
+        if (btnCopyExcerpt && excerptInput && metaDescInput) {
+            btnCopyExcerpt.addEventListener('click', function() {
+                metaDescInput.value = excerptInput.value;
+                updateCounters();
+                refreshLivePreviews();
+            });
+        }
+
+        // Listeners for live counters
+        if (excerptInput) excerptInput.addEventListener('input', updateCounters);
+        if (metaTitleInput) metaTitleInput.addEventListener('input', updateCounters);
+        if (metaDescInput) metaDescInput.addEventListener('input', updateCounters);
+
+        updateCounters();
+    });
+})();
+</script>
+{% endblock %}

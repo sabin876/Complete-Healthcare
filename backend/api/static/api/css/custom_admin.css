@@ -22,6 +22,8 @@ h1, h2, h3, h4, h5, h6, .brand-text, .main-header .navbar-brand {
 }
 
 /* Navbar Top Styling */
+#jazzy-navbar,
+.app-header.navbar,
 .main-header.navbar {
   background: linear-gradient(135deg, #061e36 0%, #08709d 60%, #0d9488 100%) !important;
   border-bottom: 2px solid rgba(13, 148, 136, 0.4) !important;
@@ -29,13 +31,17 @@ h1, h2, h3, h4, h5, h6, .brand-text, .main-header .navbar-brand {
   padding: 8px 16px !important;
 }
 
+#jazzy-navbar .nav-link,
+.app-header.navbar .nav-link,
 .main-header .nav-link {
-  color: #e2e8f0 !important;
+  color: #f8fafc !important;
   font-weight: 600 !important;
-  font-size: 13px !important;
+  font-size: 13.5px !important;
   transition: all 0.2s ease !important;
 }
 
+#jazzy-navbar .nav-link:hover,
+.app-header.navbar .nav-link:hover,
 .main-header .nav-link:hover {
   color: #38bdf8 !important;
   transform: translateY(-1px);

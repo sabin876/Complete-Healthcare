@@ -231,6 +231,8 @@ const StaffDashboard = () => {
   /* ── Notice form state ── */
   const [noticeTitle, setNoticeTitle] = useState('');
   const [noticePriority, setNoticePriority] = useState('normal');
+  const [noticeCategory, setNoticeCategory] = useState('Internal Staff Notice');
+  const [noticeTargetAudience, setNoticeTargetAudience] = useState('all');
   const [noticeTarget, setNoticeTarget] = useState('all');
   const [noticeDepartment, setNoticeDepartment] = useState('');
   const [noticeMessage, setNoticeMessage] = useState('');
@@ -238,6 +240,7 @@ const StaffDashboard = () => {
   const noticeFileRef = useRef(null);
 
   /* ── Salary form state ── */
+  const [incType, setIncType] = useState('Merit-Based Performance Review');
   const [incAmount, setIncAmount] = useState('');
   const [incJustification, setIncJustification] = useState('');
   const [incFile, setIncFile] = useState(null);

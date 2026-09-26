@@ -1,0 +1,308 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* Clean up Jazzmin / Django admin chrome */
+.col-12.col-lg-9 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+.card-header:has(.nav-tabs),
+.nav-tabs,
+ul.nav.nav-tabs,
+.card-header-tabs,
+#jazzy-actions,
+.col-12.col-lg-3,
+.submit-row,
+.card-footer {
+    display: none !important;
+}
+
+fieldset.module {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+fieldset.module > h2,
+fieldset.module > .description {
+    display: none !important;
+}
+
+.robots-editor-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 10px auto 30px auto !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+/* Editor Card */
+.editor-card {
+    background: #090d16 !important;
+    border: 1.5px solid #1e293b !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3) !important;
+    margin-bottom: 16px !important;
+}
+
+.editor-topbar {
+    background: #0f172a !important;
+    border-bottom: 1px solid #1e293b !important;
+    padding: 14px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.editor-window-controls {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.control-dot {
+    width: 11px !important;
+    height: 11px !important;
+    border-radius: 50% !important;
+}
+.control-red { background: #ef4444 !important; }
+.control-yellow { background: #f59e0b !important; }
+.control-green { background: #10b981 !important; }
+
+.editor-filename {
+    font-family: Consolas, Monaco, monospace !important;
+    font-size: 13px !important;
+    color: #94a3b8 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-left: 6px !important;
+}
+
+.editor-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.editor-action-btn {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #cbd5e1 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding: 6px 14px !important;
+    border-radius: 8px !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+}
+
+.editor-action-btn:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+}
+
+.editor-save-btn {
+    background: linear-gradient(135deg, #08709d 0%, #0369a1 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid #38bdf8 !important;
+    padding: 6px 16px !important;
+    border-radius: 8px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    box-shadow: 0 2px 8px rgba(8, 112, 157, 0.35) !important;
+    margin-left: 6px !important;
+}
+
+.editor-save-btn:hover {
+    background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Editor Body & Textarea */
+.editor-body-wrapper {
+    position: relative !important;
+    display: flex !important;
+    min-height: 440px !important;
+    background: #090d16 !important;
+}
+
+.editor-line-numbers {
+    width: 48px !important;
+    padding: 16px 0 !important;
+    background: #0c1220 !important;
+    border-right: 1px solid #1e293b !important;
+    color: #475569 !important;
+    font-family: Consolas, Monaco, monospace !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    text-align: right !important;
+    padding-right: 12px !important;
+    user-select: none !important;
+}
+
+.editor-textarea-container {
+    flex: 1 !important;
+    padding: 0 !important;
+    position: relative !important;
+}
+
+.editor-textarea-container textarea {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 440px !important;
+    background: transparent !important;
+    color: #38bdf8 !important;
+    font-family: Consolas, Monaco, "Courier New", monospace !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    border: none !important;
+    padding: 16px 18px !important;
+    resize: vertical !important;
+    outline: none !important;
+    box-shadow: none !important;
+    white-space: pre !important;
+    tab-size: 2 !important;
+}
+
+/* Toast */
+.toast-msg {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    background: #0f172a !important;
+    color: #ffffff !important;
+    padding: 12px 20px !important;
+    border-radius: 12px !important;
+    border: 1px solid #1e293b !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+    display: none !important;
+    align-items: center !important;
+    gap: 10px !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    z-index: 99999 !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="robots-editor-wrap">
+    <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}{% if form.is_bound %}action="{{ form_url }}" {% endif %}method="post" id="{{ opts.model_name }}_form" novalidate>
+        {% csrf_token %}
+
+        <!-- Code Editor Card -->
+        <div class="editor-card">
+            <div class="editor-topbar">
+                <div class="editor-window-controls">
+                    <span class="control-dot control-red"></span>
+                    <span class="control-dot control-yellow"></span>
+                    <span class="control-dot control-green"></span>
+                    <span class="editor-filename">
+                        <i class="fas fa-file-code"></i> robots.txt &bull; UTF-8
+                    </span>
+                </div>
+                <div class="editor-actions">
+                    <button type="button" class="editor-action-btn" onclick="insertDirective('User-agent: *')">+ User-agent</button>
+                    <button type="button" class="editor-action-btn" onclick="insertDirective('Disallow: /admin/')">+ Disallow</button>
+                    <button type="button" class="editor-action-btn" onclick="insertDirective('Allow: /')">+ Allow</button>
+                    <button type="button" class="editor-action-btn" onclick="insertDirective('Sitemap: https://corx.ae/sitemap.xml')">+ Sitemap</button>
+                    <button type="submit" name="_save" class="editor-save-btn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+
+            <div class="editor-body-wrapper">
+                <div class="editor-line-numbers" id="editorLineNumbers">1</div>
+                <div class="editor-textarea-container">
+                    {{ adminform.form.content }}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Floating Toast Notification -->
+<div id="studioToast" class="toast-msg">
+    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+    <span id="toastText">Directive inserted</span>
+</div>
+
+<script>
+(function() {
+    const textarea = document.querySelector('textarea[name="content"]');
+    const lineNumbers = document.getElementById('editorLineNumbers');
+
+    if (!textarea) return;
+
+    function updateLineNumbers() {
+        const text = textarea.value || '';
+        const lines = text.split('\n');
+        const count = lines.length || 1;
+
+        let numsHtml = '';
+        for (let i = 1; i <= count; i++) {
+            numsHtml += i + '<br>';
+        }
+        lineNumbers.innerHTML = numsHtml;
+    }
+
+    textarea.addEventListener('input', updateLineNumbers);
+    textarea.addEventListener('scroll', function() {
+        lineNumbers.scrollTop = textarea.scrollTop;
+    });
+
+    updateLineNumbers();
+
+    window.insertDirective = function(directiveText) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const val = textarea.value;
+
+        const before = val.substring(0, start);
+        const after = val.substring(end);
+
+        const needsNewlineBefore = before.length > 0 && !before.endsWith('\n');
+        const prefix = needsNewlineBefore ? '\n' : '';
+
+        textarea.value = before + prefix + directiveText + '\n' + after;
+        textarea.focus();
+
+        const newPos = start + prefix.length + directiveText.length + 1;
+        textarea.setSelectionRange(newPos, newPos);
+
+        updateLineNumbers();
+        showToast('Inserted: ' + directiveText);
+    };
+
+    function showToast(text) {
+        const toast = document.getElementById('studioToast');
+        const txt = document.getElementById('toastText');
+        if (!toast || !txt) return;
+        txt.textContent = text;
+        toast.style.display = 'flex';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 2500);
+    }
+
+    // Ctrl+S / Cmd+S shortcut
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            const form = document.getElementById('{{ opts.model_name }}_form');
+            if (form) form.submit();
+        }
+    });
+})();
+</script>
+{% endblock %}

@@ -1,4 +1,5 @@
 import json
+import os
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
@@ -10,12 +11,12 @@ from django.conf import settings
 from .models import (
     StaffProfile, Task, LeaveApplication,
     OtApplication, SalaryApplication, NoticeApplication, DutyApplication,
-    BlogPost, Service, TeamMember, RobotsTxt, SitemapXml, DriverSchedule
+    BlogPost, Service, TeamMember, RobotsTxt, SitemapXml, DriverSchedule, HomePage
 )
 from .serializers import (
     StaffProfileSerializer, TaskSerializer, LeaveApplicationSerializer,
     OtApplicationSerializer, SalaryApplicationSerializer, NoticeApplicationSerializer, DutyApplicationSerializer,
-    BlogPostSerializer, ServiceSerializer, TeamMemberSerializer, DriverScheduleSerializer
+    BlogPostSerializer, ServiceSerializer, TeamMemberSerializer, DriverScheduleSerializer, HomePageSerializer
 )
 
 def robots_txt_view(request):
@@ -48,8 +49,23 @@ def sitemap_xml_view(request):
     <priority>1.0</priority>
   </url>
 </urlset>"""
+
+    if content and 'xml-stylesheet' not in content:
+        if '<?xml' in content:
+            content = content.replace('?>', '?>\n<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>', 1)
+        else:
+            content = '<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n' + content
     
     return HttpResponse(content, content_type="application/xml; charset=utf-8")
+
+
+def sitemap_xsl_view(request):
+    xsl_path = os.path.join(settings.BASE_DIR, '..', 'public', 'sitemap.xsl')
+    if os.path.exists(xsl_path):
+        with open(xsl_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        return HttpResponse(content, content_type="application/xml; charset=utf-8")
+    return HttpResponse("", content_type="application/xml")
 
 @api_view(['POST'])
 def login_view(request):
@@ -394,6 +410,16 @@ class DriverScheduleViewSet(viewsets.ModelViewSet):
         if status_param:
             queryset = queryset.filter(status__iexact=status_param.strip())
         return queryset
+
+
+class HomePageViewSet(viewsets.ModelViewSet):
+    queryset = HomePage.objects.all()
+    serializer_class = HomePageSerializer
+
+    def list(self, request, *args, **kwargs):
+        obj, _ = HomePage.objects.get_or_create(id=1)
+        serializer = self.get_serializer(obj)
+        return Response(serializer.data)
 
 
 class BlogPostViewSet(viewsets.ModelViewSet):

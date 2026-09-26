@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import (
     StaffProfile, Task, LeaveApplication,
     OtApplication, SalaryApplication, NoticeApplication, DutyApplication,
-    BlogPost, Service, TeamMember, DriverSchedule, DriverRouteStop
+    BlogPost, Service, TeamMember, DriverSchedule, DriverRouteStop, HomePage
 )
 from django.utils.text import slugify
 
@@ -215,6 +215,19 @@ class BlogPostSerializer(serializers.ModelSerializer):
         return value
 
 
+class HomePageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HomePage
+        fields = [
+            'id', 'title', 'meta_title', 'meta_description', 'canonical_url',
+            'og_title', 'og_description', 'og_image', 'og_image_file',
+            'hero_title', 'hero_eyebrow', 'hero_tagline', 'schema_markup',
+            'faq_eyebrow', 'faq_title', 'faq_description', 'faqs',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+
 class SubServiceSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='title', read_only=True)
     path = serializers.SerializerMethodField()
@@ -262,7 +275,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'eyebrow', 'tagline', 'description', 'icon', 'theme_color', 'image_file', 'image', 'floating_badge', 
             'benefits_title', 'benefits', 'benefits_image_file', 'benefits_image', 
             'understanding_title', 'understanding_intro', 'understanding_items', 'understanding_image_file', 'understanding_image',
-            'faqs', 'locations', 'features', 'indications', 'indications_title', 'indications_description', 'lab_columns', 'lab_columns_title', 'lab_columns_description', 'reasons', 'why_choose_title', 'why_choose_desc', 'steps',
+            'faqs', 'faq_title', 'faq_description', 'locations', 'features', 'indications', 'indications_title', 'indications_description', 'lab_columns', 'lab_columns_title', 'lab_columns_description', 'reasons', 'why_choose_title', 'why_choose_desc', 'steps',
             'meta_title', 'meta_description', 'schema_markup', 'schema',
             'about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
             'created_at', 'updated_at'
@@ -350,6 +363,8 @@ class ServiceSerializer(serializers.ModelSerializer):
         return self._get_badge_field(obj, 'comprehensive_section_title')
 
     def get_faq_section_title(self, obj):
+        if getattr(obj, 'faq_title', None):
+            return obj.faq_title
         return self._get_badge_field(obj, 'faq_section_title')
 
     def get_schema(self, obj):

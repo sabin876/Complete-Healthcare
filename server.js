@@ -29,9 +29,9 @@ function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo
   // 2. Clean existing metadata tags from template to prevent duplicates (regardless of attribute ordering or format)
   html = html
     .replace(/<title\b[^>]*>[\s\S]*?<\/title>/gi, '')
-    .replace(/<meta\b[^>]*?\b(?:name|property)=["'](?:description|og:[^"']+|twitter:[^"']+|robots)["'][^>]*\/?>/gi, '')
-    .replace(/<link\b[^>]*?\brel=["']canonical["'][^>]*\/?>/gi, '')
-    .replace(/<script\b[^>]*?\btype=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi, '');
+    .replace(/<meta\b[^>]*?\b(?:name|property)\s*=\s*["']?(?:description|og:[^"'\s>]+|twitter:[^"'\s>]+|robots)["']?[^>]*\/?>/gi, '')
+    .replace(/<link\b[^>]*?\brel\s*=\s*["']?canonical["']?[^>]*\/?>/gi, '')
+    .replace(/<script\b[^>]*?\btype\s*=\s*["']?application\/ld\+json["']?[^>]*>[\s\S]*?<\/script>/gi, '');
 
   const activeTitle = seo?.title || 'CORX Healthcare: Home Health Care Services in Dubai *24/7';
   const activeDesc = seo?.description || 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.';
@@ -119,7 +119,14 @@ async function createServer() {
       const backendUrl = process.env.VITE_API_BASE_URL || 'http://localhost:8000';
       const response = await fetch(`${backendUrl}/api/sitemap.xml`);
       if (response.ok) {
-        const xml = await response.text();
+        let xml = await response.text();
+        if (!xml.includes('xml-stylesheet')) {
+          if (xml.includes('<?xml')) {
+            xml = xml.replace('?>', '?>\n<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>');
+          } else {
+            xml = '<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n' + xml;
+          }
+        }
         res.type('application/xml').send(xml);
       } else {
         res.sendFile(path.resolve(__dirname, 'public/sitemap.xml'));
@@ -128,6 +135,10 @@ async function createServer() {
       console.error('Error fetching sitemap.xml from backend:', e);
       res.sendFile(path.resolve(__dirname, 'public/sitemap.xml'));
     }
+  });
+
+  app.get('/sitemap.xsl', (req, res) => {
+    res.type('application/xml').sendFile(path.resolve(__dirname, 'public/sitemap.xsl'));
   });
 
   let vite;

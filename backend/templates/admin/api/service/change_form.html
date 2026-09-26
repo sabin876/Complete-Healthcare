@@ -1,0 +1,1776 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* ==========================================================================
+   CLEANING UP JAZZMIN / DJANGO ADMIN CHROME (FULL WIDTH MODERN LAYOUT)
+   ========================================================================== */
+
+.col-12.col-lg-9 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+.card-header:has(.nav-tabs),
+.nav-tabs,
+ul.nav.nav-tabs,
+.card-header-tabs,
+#jazzy-actions,
+.col-12.col-lg-3,
+.submit-row,
+#salary-submit-bar,
+.card-footer {
+    display: none !important;
+}
+
+fieldset.module {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 16px 0 !important;
+}
+
+fieldset.module > h2,
+fieldset.module > .description {
+    display: none !important;
+}
+
+/* ==========================================================================
+   MODERN WIZARD CONTAINER & STEPPER HEADER (MATCHING BLOG DESIGN)
+   ========================================================================== */
+
+.service-wizard-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 24px 0 !important;
+    font-family: inherit !important;
+}
+
+.service-stepper-bar {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr !important;
+    align-items: center !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 16px 24px !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    gap: 12px !important;
+}
+
+.service-step-tab {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 10px 16px !important;
+    border-radius: 14px !important;
+    border: 1.5px solid transparent !important;
+    background: #f8fafc !important;
+}
+
+.service-step-tab:hover {
+    background: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+}
+
+.service-step-tab.active {
+    background: #f0f9ff !important;
+    border-color: #08709d !important;
+    box-shadow: 0 4px 16px rgba(8, 112, 157, 0.12) !important;
+}
+
+.service-step-tab.completed {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+}
+
+.service-step-bubble {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    background: #e2e8f0 !important;
+    color: #64748b !important;
+    font-weight: 800 !important;
+    font-size: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    transition: all 0.25s ease !important;
+}
+
+.service-step-tab.active .service-step-bubble {
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(8, 112, 157, 0.35) !important;
+    transform: scale(1.05) !important;
+}
+
+.service-step-tab.completed .service-step-bubble {
+    background: #059669 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3) !important;
+}
+
+.service-step-info {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+}
+
+.service-step-title {
+    font-weight: 800 !important;
+    font-size: 13.5px !important;
+    color: #0f172a !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.service-step-subtitle {
+    font-size: 11px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.service-step-tab.active .service-step-title {
+    color: #08709d !important;
+}
+
+.service-step-tab.completed .service-step-title {
+    color: #065f46 !important;
+}
+
+.service-step-divider {
+    height: 2px !important;
+    width: 24px !important;
+    background: #e2e8f0 !important;
+    border-radius: 999px !important;
+    transition: background 0.25s ease !important;
+}
+
+.service-step-divider.completed {
+    background: #059669 !important;
+}
+
+/* ==========================================================================
+   STEP CARD BOXES
+   ========================================================================== */
+
+.service-wizard-section {
+    display: none;
+}
+
+.service-wizard-section.active-section {
+    display: block !important;
+    animation: serviceFadeIn 0.25s ease-out !important;
+}
+
+@keyframes serviceFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.service-step-card-box {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 28px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 24px !important;
+}
+
+.service-step-card-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 22px !important;
+    border-bottom: 1.5px solid #f1f5f9 !important;
+    flex-wrap: wrap !important;
+}
+
+.service-step-card-header-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.service-step-card-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+    background: #e0f2fe !important;
+    color: #08709d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+}
+
+.service-step-card-title {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    letter-spacing: -0.01em !important;
+}
+
+.service-step-card-desc {
+    font-size: 12.5px !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    margin-top: 2px !important;
+}
+
+/* ==========================================================================
+   FORM CONTAINER & GRID ROWS (DRIVER SCHEDULE & BLOG MATCHED)
+   ========================================================================== */
+
+.service-form-container {
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 18px !important;
+    padding: 24px !important;
+    margin-bottom: 24px !important;
+    box-sizing: border-box !important;
+}
+
+.service-fields-row-1 {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    margin-bottom: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.service-fields-row-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+    margin-bottom: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.service-fields-row-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+    margin-bottom: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.service-form-group {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+}
+
+.service-label {
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #334155 !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.service-label-text {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.service-label .req-star {
+    color: #ef4444 !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+}
+
+.service-form-container input[type="text"],
+.service-form-container input[type="url"],
+.service-form-container select {
+    width: 100% !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    outline: none !important;
+}
+
+.service-form-container textarea {
+    width: 100% !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #0f172a !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    outline: none !important;
+    font-family: inherit !important;
+    line-height: 1.5 !important;
+}
+
+.service-form-container input:focus,
+.service-form-container select:focus,
+.service-form-container textarea:focus {
+    border-color: #08709d !important;
+    box-shadow: 0 0 0 3.5px rgba(8, 112, 157, 0.15) !important;
+    background: #ffffff !important;
+}
+
+.service-help {
+    font-size: 11.5px !important;
+    color: #64748b !important;
+    font-weight: 500 !important;
+    margin-top: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+/* Quick Action Helper Buttons */
+.service-quick-btn {
+    background: #e0f2fe !important;
+    color: #0369a1 !important;
+    border: 1px solid #bae6fd !important;
+    border-radius: 8px !important;
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+.service-quick-btn:hover {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+}
+
+.service-pills-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    margin-top: 8px !important;
+}
+
+.service-pill-btn {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 3px 10px !important;
+    border-radius: 20px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #475569 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+}
+
+.service-pill-btn:hover {
+    background: #e0f2fe !important;
+    color: #0369a1 !important;
+    border-color: #bae6fd !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Media preview card */
+.service-media-card {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+}
+
+.service-media-preview-box {
+    width: 100% !important;
+    height: 160px !important;
+    border-radius: 12px !important;
+    background: #f1f5f9 !important;
+    border: 2px dashed #cbd5e1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    margin-top: 10px !important;
+    position: relative !important;
+}
+
+.service-media-preview-box img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: none;
+}
+
+/* ==========================================================================
+   NAVIGATION ACTION BUTTONS (IDENTICAL TO BLOG SECTION)
+   ========================================================================== */
+
+.service-nav-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    margin-top: 28px !important;
+    padding-top: 22px !important;
+    border-top: 1.5px solid #e2e8f0 !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+}
+
+.service-btn-primary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    padding: 13px 32px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #08709d 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 18px rgba(8, 112, 157, 0.35) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+}
+
+.service-btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(8, 112, 157, 0.45) !important;
+    color: #ffffff !important;
+}
+
+.service-btn-secondary {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    padding: 12px 24px !important;
+    border-radius: 14px !important;
+    background: #f8fafc !important;
+    color: #334155 !important;
+    border: 1.5px solid #cbd5e1 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    text-decoration: none !important;
+}
+
+.service-btn-secondary:hover {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+.service-btn-save {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    padding: 14px 40px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-decoration: none !important;
+}
+
+.service-btn-save:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 28px rgba(16, 185, 129, 0.55) !important;
+    color: #ffffff !important;
+}
+
+.service-btn-delete {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    border: 1px solid #fecaca !important;
+    padding: 12px 20px !important;
+    border-radius: 14px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    transition: all 0.15s ease !important;
+}
+
+.service-btn-delete:hover {
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    border-color: #fca5a5 !important;
+}
+
+/* ==========================================================================
+   GOOGLE SERP PREVIEW & READINESS CHECKLIST
+   ========================================================================== */
+
+.google-serp-card {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    padding: 22px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+    margin-bottom: 24px !important;
+}
+
+.google-serp-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+}
+
+.google-serp-favicon {
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 50% !important;
+    background: #e0f2fe !important;
+    color: #08709d !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+}
+
+.google-serp-domain {
+    font-size: 13px !important;
+    color: #202124 !important;
+    font-weight: 500 !important;
+}
+
+.google-serp-path {
+    font-size: 11.5px !important;
+    color: #5f6368 !important;
+}
+
+.google-serp-title {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #1a0dab !important;
+    line-height: 1.3 !important;
+    margin-bottom: 6px !important;
+    cursor: pointer !important;
+    word-break: break-word !important;
+}
+
+.google-serp-desc {
+    font-size: 13.5px !important;
+    color: #4d5156 !important;
+    line-height: 1.55 !important;
+    word-break: break-word !important;
+}
+
+.service-checklist-card {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    padding: 20px 24px !important;
+    margin-top: 24px !important;
+}
+
+.service-checklist-title {
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: #0f172a !important;
+    margin-bottom: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.service-checklist-items {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+    gap: 12px !important;
+}
+
+.service-check-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+    transition: color 0.2s ease !important;
+}
+
+.service-check-item.ready {
+    color: #059669 !important;
+}
+
+.service-check-item.warning {
+    color: #d97706 !important;
+}
+
+/* Alert Toast */
+.service-alert-popup {
+    display: none;
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: #ef4444;
+    color: #ffffff;
+    padding: 16px 26px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 12px 36px rgba(239, 68, 68, 0.4);
+    z-index: 999999;
+    align-items: center;
+    gap: 12px;
+    animation: serviceSlideIn 0.25s ease-out;
+}
+
+@keyframes serviceSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Sub-Services Inlines Card Customization */
+.service-inlines-card {
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    margin-top: 24px !important;
+}
+
+/* Responsive */
+@media screen and (max-width: 900px) {
+    .service-stepper-bar {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        padding: 14px !important;
+    }
+    .service-step-divider {
+        display: none !important;
+    }
+    .service-fields-row-3,
+    .service-fields-row-2 {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .service-nav-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    .service-nav-bar > * {
+        width: 100% !important;
+        text-align: center !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block field_sets %}
+<div class="col-12" style="padding: 0 !important;">
+
+    <!-- Top Stepper Navigation Bar (Matching Blog Design) -->
+    <div class="service-wizard-container">
+        <div class="service-stepper-bar" id="service-stepper-bar">
+            
+            <!-- Step 1 -->
+            <div class="service-step-tab active" data-step="1" id="service-tab-1">
+                <div class="service-step-bubble" id="service-bubble-1">1</div>
+                <div class="service-step-info">
+                    <div class="service-step-title">1. Identity & Hierarchy</div>
+                    <div class="service-step-subtitle">Title, Slug, Category & Media</div>
+                </div>
+            </div>
+
+            <div class="service-step-divider" id="service-divider-1"></div>
+
+            <!-- Step 2 -->
+            <div class="service-step-tab" data-step="2" id="service-tab-2">
+                <div class="service-step-bubble" id="service-bubble-2">2</div>
+                <div class="service-step-info">
+                    <div class="service-step-title">2. Hero & Presentation</div>
+                    <div class="service-step-subtitle">Tagline, Badges & Highlights</div>
+                </div>
+            </div>
+
+            <div class="service-step-divider" id="service-divider-2"></div>
+
+            <!-- Step 3 -->
+            <div class="service-step-tab" data-step="3" id="service-tab-3">
+                <div class="service-step-bubble" id="service-bubble-3">3</div>
+                <div class="service-step-info">
+                    <div class="service-step-title">3. Clinical Suites & Benefits</div>
+                    <div class="service-step-subtitle">Tests, Stages, Reasons & Process</div>
+                </div>
+            </div>
+
+            <div class="service-step-divider" id="service-divider-3"></div>
+
+            <!-- Step 4 -->
+            <div class="service-step-tab" data-step="4" id="service-tab-4">
+                <div class="service-step-bubble" id="service-bubble-4">4</div>
+                <div class="service-step-info">
+                    <div class="service-step-title">4. SEO, FAQs & Publish</div>
+                    <div class="service-step-subtitle">SERP Preview & Sub-Services</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Alert Popup -->
+    <div id="service-alert-popup" class="service-alert-popup">
+        <i class="fas fa-exclamation-circle" style="font-size: 20px;"></i>
+        <span id="service-alert-text">Please enter a Service Title before continuing!</span>
+    </div>
+
+    <!-- =====================================================================
+         STEP 1: SERVICE IDENTITY & HIERARCHY
+         ===================================================================== -->
+    <div id="service-section-1" class="service-wizard-section service-step-card-box active-section">
+        <div class="service-step-card-header">
+            <div class="service-step-card-header-left">
+                <div class="service-step-card-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div>
+                    <div class="service-step-card-title">Step 1: Service Title, URL & Parent Hierarchy</div>
+                    <div class="service-step-card-desc">Define the service name, auto-generated URL slug, parent category hierarchy, brand theme, and icon.</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 11px;">STEP 1 OF 4</span>
+            </div>
+        </div>
+
+        <div class="service-form-container">
+            <!-- Row 1: Title -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_title">
+                        <span class="service-label-text">
+                            <i class="fas fa-heading" style="color: #08709d;"></i>
+                            <span>Service Title</span>
+                            <span class="req-star">*</span>
+                        </span>
+                        <span id="title-char-count" style="font-size: 11px; color: #94a3b8; font-weight: 600;">0 chars</span>
+                    </label>
+                    {{ adminform.form.title }}
+                    <div class="service-help">
+                        <span>e.g. Lab Services | Blood Test at Home or Doctor on Call in Dubai</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Slug and Parent Category -->
+            <div class="service-fields-row-2">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_slug">
+                        <span class="service-label-text">
+                            <i class="fas fa-link" style="color: #08709d;"></i>
+                            <span>URL Slug (Web Address)</span>
+                            <span class="req-star">*</span>
+                        </span>
+                        <button type="button" id="btn-auto-slug" class="service-quick-btn">
+                            <i class="fas fa-magic"></i> Auto-Generate
+                        </button>
+                    </label>
+                    {{ adminform.form.slug }}
+                    <div class="service-help">
+                        <span>e.g. <code>lab-services</code> or <code>blood-test-at-home</code> (Public: /slug)</span>
+                    </div>
+                </div>
+
+                <div class="service-form-group">
+                    <label class="service-label" for="id_parent">
+                        <span class="service-label-text">
+                            <i class="fas fa-sitemap" style="color: #08709d;"></i>
+                            <span>Parent Category (Navbar Hierarchy)</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.parent }}
+                    <div class="service-help">
+                        <span>Leave empty for a <strong>Top-Level Navbar Parent</strong>, or select a parent for a nested sub-service.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Theme Color, Icon, Media -->
+            <div class="service-fields-row-2">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_theme_color">
+                        <span class="service-label-text">
+                            <i class="fas fa-palette" style="color: #08709d;"></i>
+                            <span>Theme Color Hex</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.theme_color }}
+                    <div class="service-pills-row">
+                        <span class="service-pill-btn" data-color="#08709d" style="color: #08709d;">■ Ocean (#08709d)</span>
+                        <span class="service-pill-btn" data-color="#0ea5e9" style="color: #0ea5e9;">■ Sky (#0ea5e9)</span>
+                        <span class="service-pill-btn" data-color="#059669" style="color: #059669;">■ Emerald (#059669)</span>
+                        <span class="service-pill-btn" data-color="#6366f1" style="color: #6366f1;">■ Indigo (#6366f1)</span>
+                        <span class="service-pill-btn" data-color="#f59e0b" style="color: #f59e0b;">■ Amber (#f59e0b)</span>
+                    </div>
+                </div>
+
+                <div class="service-form-group">
+                    <label class="service-label" for="id_icon">
+                        <span class="service-label-text">
+                            <i class="fas fa-icons" style="color: #08709d;"></i>
+                            <span>Lucide Icon Name</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.icon }}
+                    <div class="service-pills-row">
+                        <span class="service-pill-btn" data-icon="Activity">Activity</span>
+                        <span class="service-pill-btn" data-icon="Stethoscope">Stethoscope</span>
+                        <span class="service-pill-btn" data-icon="HeartPulse">HeartPulse</span>
+                        <span class="service-pill-btn" data-icon="Droplets">Droplets</span>
+                        <span class="service-pill-btn" data-icon="Users">Users</span>
+                        <span class="service-pill-btn" data-icon="ShieldCheck">ShieldCheck</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Image Upload -->
+            <div class="service-fields-row-1" style="margin-bottom: 0;">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_image_file">
+                        <span class="service-label-text">
+                            <i class="fas fa-image" style="color: #08709d;"></i>
+                            <span>Service Hero / Featured Image</span>
+                        </span>
+                    </label>
+                    <div class="service-media-card">
+                        {{ adminform.form.image_file }}
+                        <div class="service-media-preview-box" id="service-image-preview-box">
+                            <img id="service-image-preview-img" alt="Service Preview" />
+                            <div id="service-image-placeholder" style="color: #94a3b8; font-size: 12.5px; font-weight: 600; text-align: center;">
+                                <i class="fas fa-image" style="font-size: 28px; margin-bottom: 6px; display: block; color: #cbd5e1;"></i>
+                                No image uploaded yet. Selected image will preview here.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-nav-bar">
+            <a href="{% url opts|admin_urlname:'changelist' %}" class="service-btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+            <button type="button" id="service-next-to-2" class="service-btn-primary">
+                <span>Next: Hero & Presentation</span> <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         STEP 2: HERO SECTION & PRESENTATION
+         ===================================================================== -->
+    <div id="service-section-2" class="service-wizard-section service-step-card-box">
+        <div class="service-step-card-header">
+            <div class="service-step-card-header-left">
+                <div class="service-step-card-icon">
+                    <i class="fas fa-sparkles"></i>
+                </div>
+                <div>
+                    <div class="service-step-card-title">Step 2: Hero Section & Page Overview</div>
+                    <div class="service-step-card-desc">Compose the top eyebrow badge, catchy tagline, full clinical description, and floating badge.</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 11px;">STEP 2 OF 4</span>
+            </div>
+        </div>
+
+        <div class="service-form-container">
+            <!-- Eyebrow -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_eyebrow">
+                        <span class="service-label-text">
+                            <i class="fas fa-certificate" style="color: #08709d;"></i>
+                            <span>Top Eyebrow Badge Text</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.eyebrow }}
+                    <div class="service-help">e.g. DHA-Licensed Home Sample Collection Across Dubai</div>
+                </div>
+            </div>
+
+            <!-- Tagline -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_tagline">
+                        <span class="service-label-text">
+                            <i class="fas fa-quote-left" style="color: #08709d;"></i>
+                            <span>Tagline / Catchy Summary</span>
+                        </span>
+                        <span id="tagline-char-count" style="font-size: 11px; color: #94a3b8; font-weight: 600;">0 chars</span>
+                    </label>
+                    {{ adminform.form.tagline }}
+                    <div class="service-help">e.g. Get an Accurate Lab Result at Your Doorsteps within 24 Hours</div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_description">
+                        <span class="service-label-text">
+                            <i class="fas fa-align-left" style="color: #08709d;"></i>
+                            <span>Detailed Service Overview Description</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.description }}
+                </div>
+            </div>
+
+            <!-- Floating Badge Widget -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_floating_badge">
+                        <span class="service-label-text">
+                            <i class="fas fa-id-badge" style="color: #08709d;"></i>
+                            <span>Hero Floating Badge Builder</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.floating_badge }}
+                </div>
+            </div>
+
+            <!-- Features Highlights -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_features">
+                        <span class="service-label-text">
+                            <i class="fas fa-check-double" style="color: #08709d;"></i>
+                            <span>Hero Key Highlights Checklist</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.features }}
+                </div>
+            </div>
+
+            <!-- Custom Section Titles & Headings Overrides -->
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 20px; margin-top: 10px;">
+                <div style="font-weight: 800; font-size: 13px; color: #1e293b; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-pen-nib" style="color: #08709d;"></i>
+                    <span>Optional Custom Section Headings & About Content Overrides</span>
+                </div>
+
+                <div class="service-fields-row-2">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_about_section_title">
+                            <span>About Section Heading</span>
+                        </label>
+                        {{ adminform.form.about_section_title }}
+                    </div>
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_comprehensive_section_title">
+                            <span>Comprehensive Services Heading</span>
+                        </label>
+                        {{ adminform.form.comprehensive_section_title }}
+                    </div>
+                </div>
+
+                <div class="service-fields-row-2">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_indications_section_title">
+                            <span>Who May Need Section Heading</span>
+                        </label>
+                        {{ adminform.form.indications_section_title }}
+                    </div>
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_faq_section_title">
+                            <span>FAQs Section Heading</span>
+                        </label>
+                        {{ adminform.form.faq_section_title }}
+                    </div>
+                </div>
+
+                <div class="service-fields-row-1" style="margin-bottom: 0;">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_about_description">
+                            <span>About the Service Full Narrative</span>
+                        </label>
+                        {{ adminform.form.about_description }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-nav-bar">
+            <button type="button" id="service-back-to-1" class="service-btn-secondary">
+                <i class="fas fa-arrow-left"></i> <span>Back: Identity & Hierarchy</span>
+            </button>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="service-btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="button" id="service-next-to-3" class="service-btn-primary">
+                    <span>Next: Clinical Suites & Benefits</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         STEP 3: CLINICAL SUITES, TESTS & BENEFITS
+         ===================================================================== -->
+    <div id="service-section-3" class="service-wizard-section service-step-card-box">
+        <div class="service-step-card-header">
+            <div class="service-step-card-header-left">
+                <div class="service-step-card-icon">
+                    <i class="fas fa-microscope"></i>
+                </div>
+                <div>
+                    <div class="service-step-card-title">Step 3: Clinical Care Suites, Process & Benefits</div>
+                    <div class="service-step-card-desc">Configure who may need the service, test packages, why choose CORx cards, 3-step process, and benefits.</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 11px;">STEP 3 OF 4</span>
+            </div>
+        </div>
+
+        <div class="service-form-container">
+            <!-- Indications / Who May Need -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_indications">
+                        <span class="service-label-text">
+                            <i class="fas fa-user-check" style="color: #08709d;"></i>
+                            <span>Clinical Indications / Who May Need List Builder</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.indications }}
+                </div>
+            </div>
+
+            <!-- Lab Columns / Categorized Test Suites -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_lab_columns">
+                        <span class="service-label-text">
+                            <i class="fas fa-vial" style="color: #08709d;"></i>
+                            <span>Diagnostic Test Packages & Column Builder</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.lab_columns }}
+                </div>
+            </div>
+
+            <!-- Why Choose CORx Feature Cards -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_reasons">
+                        <span class="service-label-text">
+                            <i class="fas fa-star" style="color: #08709d;"></i>
+                            <span>Why Choose CORx Healthcare Cards</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.reasons }}
+                </div>
+            </div>
+
+            <!-- 3-Step Process (How It Works) -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_steps">
+                        <span class="service-label-text">
+                            <i class="fas fa-list-ol" style="color: #08709d;"></i>
+                            <span>3-Step Process ('How It Works')</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.steps }}
+                </div>
+            </div>
+
+            <!-- Benefits & Custom Benefits Image -->
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 20px; margin-bottom: 20px;">
+                <div style="font-weight: 800; font-size: 13px; color: #1e293b; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-award" style="color: #08709d;"></i>
+                    <span>Service Benefits & Clinical Graphic</span>
+                </div>
+
+                <div class="service-fields-row-1">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_benefits_title">
+                            <span>Benefits Section Title</span>
+                        </label>
+                        {{ adminform.form.benefits_title }}
+                    </div>
+                </div>
+
+                <div class="service-fields-row-1">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_benefits">
+                            <span>Benefits List Builder</span>
+                        </label>
+                        {{ adminform.form.benefits }}
+                    </div>
+                </div>
+
+                <div class="service-fields-row-1" style="margin-bottom: 0;">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_benefits_image_file">
+                            <span>Upload Custom Benefits Illustration Image</span>
+                        </label>
+                        <div class="service-media-card">
+                            {{ adminform.form.benefits_image_file }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Understanding & Condition Stages Section -->
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 20px;">
+                <div style="font-weight: 800; font-size: 13px; color: #1e293b; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-book-medical" style="color: #08709d;"></i>
+                    <span>Understanding & Condition Stages Builder</span>
+                </div>
+
+                <div class="service-fields-row-1">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_understanding_title">
+                            <span>Understanding Section Heading</span>
+                        </label>
+                        {{ adminform.form.understanding_title }}
+                    </div>
+                </div>
+
+                <div class="service-fields-row-1">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_understanding_intro">
+                            <span>Introductory Medical Narrative</span>
+                        </label>
+                        {{ adminform.form.understanding_intro }}
+                    </div>
+                </div>
+
+                <div class="service-fields-row-1">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_understanding_items">
+                            <span>Numbered Stages List Builder</span>
+                        </label>
+                        {{ adminform.form.understanding_items }}
+                    </div>
+                </div>
+
+                <div class="service-fields-row-1" style="margin-bottom: 0;">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_understanding_image_file">
+                            <span>Upload Condition Stages Illustration Image</span>
+                        </label>
+                        <div class="service-media-card">
+                            {{ adminform.form.understanding_image_file }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-nav-bar">
+            <button type="button" id="service-back-to-2" class="service-btn-secondary">
+                <i class="fas fa-arrow-left"></i> <span>Back: Hero & Presentation</span>
+            </button>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="service-btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="button" id="service-next-to-4" class="service-btn-primary">
+                    <span>Next: SEO & Publish</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         STEP 4: SEO, LIVE PREVIEWS, FAQS & PUBLISH
+         ===================================================================== -->
+    <div id="service-section-4" class="service-wizard-section service-step-card-box">
+        <div class="service-step-card-header">
+            <div class="service-step-card-header-left">
+                <div class="service-step-card-icon" style="background: #ecfdf5; color: #059669;">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div>
+                    <div class="service-step-card-title">Step 4: SEO Metadata, Google SERP Preview & Publish</div>
+                    <div class="service-step-card-desc">Fine-tune Google search snippet, configure FAQs, manage nested sub-services, and save service.</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 11px;">STEP 4 OF 4</span>
+            </div>
+        </div>
+
+        <div class="service-form-container">
+            <!-- SEO Inputs -->
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_meta_title">
+                        <span class="service-label-text">
+                            <i class="fas fa-magnifying-glass" style="color: #08709d;"></i>
+                            <span>SEO & OpenGraph Meta Title</span>
+                        </span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span id="seo-title-count" style="font-size: 11px; color: #64748b; font-weight: 600;">0 / 60 chars</span>
+                            <button type="button" id="btn-copy-title-seo" class="service-quick-btn">
+                                <i class="fas fa-copy"></i> Use Service Title
+                            </button>
+                        </div>
+                    </label>
+                    {{ adminform.form.meta_title }}
+                    <div class="service-help">Recommended 50–60 characters for optimum Google desktop & mobile display.</div>
+                </div>
+            </div>
+
+            <div class="service-fields-row-1">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_meta_description">
+                        <span class="service-label-text">
+                            <i class="fas fa-file-lines" style="color: #08709d;"></i>
+                            <span>SEO & OpenGraph Meta Description</span>
+                        </span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span id="seo-desc-count" style="font-size: 11px; color: #64748b; font-weight: 600;">0 / 160 chars</span>
+                            <button type="button" id="btn-copy-tagline-seo" class="service-quick-btn">
+                                <i class="fas fa-copy"></i> Use Tagline
+                            </button>
+                        </div>
+                    </label>
+                    {{ adminform.form.meta_description }}
+                    <div class="service-help">Recommended 140–160 characters for search result snippets and WhatsApp/LinkedIn link cards.</div>
+                </div>
+            </div>
+
+            <!-- Google Search Snippet Live Preview -->
+            <div class="google-serp-card">
+                <div class="google-serp-header">
+                    <div class="google-serp-favicon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <div>
+                        <div class="google-serp-domain">corxhealthcare.com</div>
+                        <div class="google-serp-path" id="serp-breadcrumb">https://corxhealthcare.com › services › service-slug</div>
+                    </div>
+                </div>
+                <div class="google-serp-title" id="serp-title-display">Service Title | CORx Healthcare Dubai</div>
+                <div class="google-serp-desc" id="serp-desc-display">Explore professional healthcare and clinical solutions at your doorstep in Dubai with CORx Healthcare.</div>
+            </div>
+
+            <!-- JSON-LD Schema Markup in SEO Section -->
+            <div class="service-fields-row-1" style="margin-top: 20px;">
+                <div class="service-form-group">
+                    <label class="service-label" for="id_schema_markup">
+                        <span class="service-label-text">
+                            <i class="fas fa-code" style="color: #08709d;"></i>
+                            <span>JSON-LD Schema Markup (Structured Data)</span>
+                        </span>
+                        <span style="font-size: 11px; font-weight: 600; color: #64748b;">MedicalProcedure / WebPage</span>
+                    </label>
+                    {{ adminform.form.schema_markup }}
+                    <div class="service-help">
+                        <span>Custom JSON-LD structured data for this service (e.g. JSON {...} or &lt;script type='application/ld+json'&gt;{...}&lt;/script&gt;).</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="service-fields-row-1" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 16px; padding: 20px; margin-bottom: 24px;">
+                <div style="font-weight: 800; font-size: 13.5px; color: #08709d; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-circle-question"></i>
+                    <span>Frequently Asked Questions (FAQ Section &amp; Builder)</span>
+                </div>
+
+                <div class="service-fields-row-2" style="margin-bottom: 16px;">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_faq_section_title">
+                            <span class="service-label-text">
+                                <i class="fas fa-heading" style="color: #08709d;"></i>
+                                <span>FAQ Section Title</span>
+                            </span>
+                        </label>
+                        {{ adminform.form.faq_section_title }}
+                        <div class="service-help">e.g. "Frequently Asked Questions" (leave empty to use default "{Title} FAQs")</div>
+                    </div>
+
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_faq_description">
+                            <span class="service-label-text">
+                                <i class="fas fa-paragraph" style="color: #08709d;"></i>
+                                <span>FAQ Section Subtitle / Description</span>
+                            </span>
+                        </label>
+                        {{ adminform.form.faq_description }}
+                        <div class="service-help">Subtitle explanation displayed under the FAQ heading</div>
+                    </div>
+                </div>
+
+                <div class="service-form-group">
+                    <label class="service-label" for="id_faqs">
+                        <span class="service-label-text">
+                            <i class="fas fa-list-check" style="color: #08709d;"></i>
+                            <span>Interactive Question &amp; Answer Items</span>
+                        </span>
+                    </label>
+                    {{ adminform.form.faqs }}
+                </div>
+            </div>
+
+            <!-- Nested Sub-Services Inlines -->
+            <div class="service-inlines-card">
+                <div style="font-weight: 800; font-size: 13px; color: #1e293b; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-sitemap" style="color: #08709d;"></i>
+                    <span>Nested Sub-Services Management</span>
+                </div>
+                {% for inline_admin_formset in inline_admin_formsets %}
+                    {% include inline_admin_formset.opts.template %}
+                {% endfor %}
+            </div>
+
+            <!-- Pre-Flight Readiness Checklist -->
+            <div class="service-checklist-card">
+                <div class="service-checklist-title">
+                    <i class="fas fa-clipboard-check" style="color: #059669;"></i>
+                    <span>Service Pre-Flight Readiness Checklist</span>
+                </div>
+                <div class="service-checklist-items">
+                    <div class="service-check-item" id="check-title">
+                        <i class="fas fa-circle-question" style="color: #94a3b8;"></i>
+                        <span>Service Title Provided</span>
+                    </div>
+                    <div class="service-check-item" id="check-slug">
+                        <i class="fas fa-circle-question" style="color: #94a3b8;"></i>
+                        <span>Clean URL Slug Configured</span>
+                    </div>
+                    <div class="service-check-item" id="check-tagline">
+                        <i class="fas fa-circle-question" style="color: #94a3b8;"></i>
+                        <span>Catchy Tagline Filled</span>
+                    </div>
+                    <div class="service-check-item" id="check-seo">
+                        <i class="fas fa-circle-question" style="color: #94a3b8;"></i>
+                        <span>SEO Meta Tags Configured</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-nav-bar">
+            <button type="button" id="service-back-to-3" class="service-btn-secondary">
+                <i class="fas fa-arrow-left"></i> <span>Back: Clinical Suites & Benefits</span>
+            </button>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                {% if show_delete_link and original %}
+                    {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
+                    <a href="{% add_preserved_filters delete_url %}" class="service-btn-delete">
+                        <i class="fas fa-trash-alt"></i> Delete Service
+                    </a>
+                {% endif %}
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="service-btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" name="_continue" class="service-btn-secondary" style="background: #ffffff; border-color: #08709d; color: #08709d;">
+                    <i class="fas fa-save"></i> Save & Continue
+                </button>
+                <button type="submit" name="_save" class="service-btn-save" id="service-btn-submit-final">
+                    <i class="fas fa-check-circle" style="font-size: 16px;"></i>
+                    <span>Save Service</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block inline_field_sets %}
+{# Inlines rendered inside Step 4 card above #}
+{% endblock %}
+
+{% block extrajs %}
+{{ block.super }}
+<script>
+(function() {
+    let currentStep = 1;
+
+    // Toast Alert Popup
+    function showAlert(message) {
+        const popup = document.getElementById('service-alert-popup');
+        const text = document.getElementById('service-alert-text');
+        if (popup && text) {
+            text.textContent = message;
+            popup.style.display = 'flex';
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 3200);
+        } else {
+            alert(message);
+        }
+    }
+
+    // Step UI Switcher
+    function updateStepUI(stepNumber) {
+        currentStep = stepNumber;
+
+        for (let i = 1; i <= 4; i++) {
+            const tab = document.getElementById('service-tab-' + i);
+            const bubble = document.getElementById('service-bubble-' + i);
+            const divider = document.getElementById('service-divider-' + i);
+
+            if (tab && bubble) {
+                tab.classList.remove('active', 'completed');
+                if (i < currentStep) {
+                    tab.classList.add('completed');
+                    bubble.innerHTML = '<i class="fas fa-check" style="font-size: 13px;"></i>';
+                } else if (i === currentStep) {
+                    tab.classList.add('active');
+                    bubble.textContent = i;
+                } else {
+                    bubble.textContent = i;
+                }
+            }
+
+            if (divider) {
+                if (i < currentStep) {
+                    divider.classList.add('completed');
+                } else {
+                    divider.classList.remove('completed');
+                }
+            }
+        }
+
+        for (let i = 1; i <= 4; i++) {
+            const section = document.getElementById('service-section-' + i);
+            if (section) {
+                section.classList.toggle('active-section', currentStep === i);
+            }
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (currentStep === 4) {
+            refreshLivePreviews();
+        }
+    }
+
+    function isTitleValid() {
+        const titleInput = document.getElementById('id_title');
+        return Boolean(titleInput && titleInput.value && titleInput.value.trim() !== '');
+    }
+
+    // Slug Generator
+    function generateSlug(text) {
+        return text
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/&/g, '-and-')
+            .replace(/[\s\W-]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
+    // Image preview helper
+    function updateImagePreview(src) {
+        const previewImg = document.getElementById('service-image-preview-img');
+        const placeholder = document.getElementById('service-image-placeholder');
+        if (src) {
+            if (previewImg) {
+                previewImg.src = src;
+                previewImg.style.display = 'block';
+            }
+            if (placeholder) placeholder.style.display = 'none';
+        } else {
+            if (previewImg) previewImg.style.display = 'none';
+            if (placeholder) placeholder.style.display = 'block';
+        }
+    }
+
+    // Live SERP Preview Updater
+    function refreshLivePreviews() {
+        const titleVal = (document.getElementById('id_title')?.value || '').trim();
+        const slugVal = (document.getElementById('id_slug')?.value || '').trim() || generateSlug(titleVal) || 'service-slug';
+        const taglineVal = (document.getElementById('id_tagline')?.value || '').trim();
+        const metaTitleVal = (document.getElementById('id_meta_title')?.value || '').trim() || (titleVal ? `${titleVal} | CORx Healthcare Dubai` : 'Service Title | CORx Healthcare Dubai');
+        const metaDescVal = (document.getElementById('id_meta_description')?.value || '').trim() || taglineVal || 'Explore professional healthcare and clinical solutions at your doorstep in Dubai with CORx Healthcare.';
+
+        const serpBreadcrumb = document.getElementById('serp-breadcrumb');
+        const serpTitle = document.getElementById('serp-title-display');
+        const serpDesc = document.getElementById('serp-desc-display');
+
+        if (serpBreadcrumb) serpBreadcrumb.textContent = `https://corxhealthcare.com › services › ${slugVal}`;
+        if (serpTitle) serpTitle.textContent = metaTitleVal;
+        if (serpDesc) serpDesc.textContent = metaDescVal;
+
+        // Checklists
+        updateChecklistItem('check-title', Boolean(titleVal));
+        updateChecklistItem('check-slug', Boolean(slugVal && slugVal !== 'service-slug'));
+        updateChecklistItem('check-tagline', Boolean(taglineVal));
+        updateChecklistItem('check-seo', Boolean(metaTitleVal && metaDescVal));
+    }
+
+    function updateChecklistItem(id, isOk) {
+        const item = document.getElementById(id);
+        if (!item) return;
+        if (isOk) {
+            item.className = 'service-check-item ready';
+            item.querySelector('i').className = 'fas fa-circle-check';
+            item.querySelector('i').style.color = '#16a34a';
+        } else {
+            item.className = 'service-check-item warning';
+            item.querySelector('i').className = 'fas fa-circle-exclamation';
+            item.querySelector('i').style.color = '#f59e0b';
+        }
+    }
+
+    // Live Character Counters
+    function updateCounters() {
+        const titleInput = document.getElementById('id_title');
+        const titleCount = document.getElementById('title-char-count');
+        if (titleInput && titleCount) {
+            titleCount.textContent = `${titleInput.value.length} chars`;
+        }
+
+        const taglineInput = document.getElementById('id_tagline');
+        const taglineCount = document.getElementById('tagline-char-count');
+        if (taglineInput && taglineCount) {
+            taglineCount.textContent = `${taglineInput.value.length} chars`;
+        }
+
+        const metaTitleInput = document.getElementById('id_meta_title');
+        const seoTitleCount = document.getElementById('seo-title-count');
+        if (metaTitleInput && seoTitleCount) {
+            const len = metaTitleInput.value.length;
+            seoTitleCount.textContent = `${len} / 60 chars ${len >= 50 && len <= 60 ? '✓ Ideal' : ''}`;
+            seoTitleCount.style.color = (len >= 50 && len <= 60) ? '#16a34a' : (len > 65 ? '#dc2626' : '#64748b');
+        }
+
+        const metaDescInput = document.getElementById('id_meta_description');
+        const seoDescCount = document.getElementById('seo-desc-count');
+        if (metaDescInput && seoDescCount) {
+            const len = metaDescInput.value.length;
+            seoDescCount.textContent = `${len} / 160 chars ${len >= 135 && len <= 160 ? '✓ Ideal' : ''}`;
+            seoDescCount.style.color = (len >= 135 && len <= 160) ? '#16a34a' : (len > 165 ? '#dc2626' : '#64748b');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab clicks
+        for (let i = 1; i <= 4; i++) {
+            const tab = document.getElementById('service-tab-' + i);
+            if (tab) {
+                tab.addEventListener('click', function() {
+                    const targetStep = parseInt(this.getAttribute('data-step'));
+                    if (targetStep > 1 && !isTitleValid()) {
+                        showAlert('Please enter a Service Title before advancing!');
+                        return;
+                    }
+                    updateStepUI(targetStep);
+                });
+            }
+        }
+
+        // Stepper Navigation Buttons
+        const btnNextTo2 = document.getElementById('service-next-to-2');
+        if (btnNextTo2) {
+            btnNextTo2.addEventListener('click', function() {
+                if (!isTitleValid()) {
+                    showAlert('Please enter a Service Title before proceeding!');
+                    document.getElementById('id_title')?.focus();
+                    return;
+                }
+                updateStepUI(2);
+            });
+        }
+
+        const btnBackTo1 = document.getElementById('service-back-to-1');
+        if (btnBackTo1) {
+            btnBackTo1.addEventListener('click', function() {
+                updateStepUI(1);
+            });
+        }
+
+        const btnNextTo3 = document.getElementById('service-next-to-3');
+        if (btnNextTo3) {
+            btnNextTo3.addEventListener('click', function() {
+                updateStepUI(3);
+            });
+        }
+
+        const btnBackTo2 = document.getElementById('service-back-to-2');
+        if (btnBackTo2) {
+            btnBackTo2.addEventListener('click', function() {
+                updateStepUI(2);
+            });
+        }
+
+        const btnNextTo4 = document.getElementById('service-next-to-4');
+        if (btnNextTo4) {
+            btnNextTo4.addEventListener('click', function() {
+                updateStepUI(4);
+            });
+        }
+
+        const btnBackTo3 = document.getElementById('service-back-to-3');
+        if (btnBackTo3) {
+            btnBackTo3.addEventListener('click', function() {
+                updateStepUI(3);
+            });
+        }
+
+        // Auto Slug
+        const btnAutoSlug = document.getElementById('btn-auto-slug');
+        const titleInput = document.getElementById('id_title');
+        const slugInput = document.getElementById('id_slug');
+        if (btnAutoSlug && titleInput && slugInput) {
+            btnAutoSlug.addEventListener('click', function() {
+                if (titleInput.value) {
+                    slugInput.value = generateSlug(titleInput.value);
+                } else {
+                    showAlert('Type a service title first to generate a slug!');
+                }
+            });
+
+            titleInput.addEventListener('input', function() {
+                updateCounters();
+                if (!slugInput.value || slugInput.value.trim() === '') {
+                    slugInput.value = generateSlug(titleInput.value);
+                }
+            });
+        }
+
+        // Color pills
+        const colorInput = document.getElementById('id_theme_color');
+        document.querySelectorAll('.service-pill-btn[data-color]').forEach(pill => {
+            pill.addEventListener('click', function() {
+                if (colorInput) {
+                    colorInput.value = this.getAttribute('data-color');
+                }
+            });
+        });
+
+        // Icon pills
+        const iconInput = document.getElementById('id_icon');
+        document.querySelectorAll('.service-pill-btn[data-icon]').forEach(pill => {
+            pill.addEventListener('click', function() {
+                if (iconInput) {
+                    iconInput.value = this.getAttribute('data-icon');
+                }
+            });
+        });
+
+        // Image file preview
+        const imageFileInput = document.getElementById('id_image_file');
+        if (imageFileInput) {
+            imageFileInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        updateImagePreview(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            // Check existing file link
+            const fileLink = imageFileInput.closest('.service-media-card')?.querySelector('a');
+            if (fileLink && fileLink.href) {
+                updateImagePreview(fileLink.href);
+            }
+        }
+
+        // Copy Title to SEO
+        const btnCopyTitle = document.getElementById('btn-copy-title-seo');
+        const metaTitleInput = document.getElementById('id_meta_title');
+        if (btnCopyTitle && metaTitleInput && titleInput) {
+            btnCopyTitle.addEventListener('click', function() {
+                metaTitleInput.value = titleInput.value ? `${titleInput.value} | CORx Healthcare Dubai` : '';
+                updateCounters();
+                refreshLivePreviews();
+            });
+        }
+
+        // Copy Tagline to SEO
+        const btnCopyTagline = document.getElementById('btn-copy-tagline-seo');
+        const taglineInput = document.getElementById('id_tagline');
+        const metaDescInput = document.getElementById('id_meta_description');
+        if (btnCopyTagline && taglineInput && metaDescInput) {
+            btnCopyTagline.addEventListener('click', function() {
+                metaDescInput.value = taglineInput.value;
+                updateCounters();
+                refreshLivePreviews();
+            });
+        }
+
+        // Input listeners for live counters
+        if (taglineInput) taglineInput.addEventListener('input', updateCounters);
+        if (metaTitleInput) metaTitleInput.addEventListener('input', updateCounters);
+        if (metaDescInput) metaDescInput.addEventListener('input', updateCounters);
+
+        updateCounters();
+    });
+})();
+</script>
+{% endblock %}

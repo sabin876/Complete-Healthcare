@@ -194,11 +194,17 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
     }
   }
 
+  const pageTitle = validBackendData?.meta_title || staticFallback.meta_title || `${mergedData.title || cleanSlug} | CORx Healthcare Dubai`;
+  const pageDesc = validBackendData?.meta_description || staticFallback.meta_description || mergedData.description || '24/7 DHA-licensed healthcare services at home in Dubai by CORx Healthcare.';
+  const serviceImageUrl = mergedData?.image_file || mergedData?.image || 'https://corx.ae/og-image.jpg';
+
   const seo = {
     title: pageTitle,
     description: pageDesc,
     ogTitle: pageTitle,
     ogDescription: pageDesc,
+    ogImage: serviceImageUrl,
+    ogType: 'website',
     canonicalUrl: `https://corx.ae/${cleanSlug}`,
     ...(backendSchema ? { schema: backendSchema } : {}),
   };
