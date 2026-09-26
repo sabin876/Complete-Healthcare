@@ -25,6 +25,13 @@
             <p class="dashboard-main-subtitle">Control Center divided into Website CMS and Internal Content Management.</p>
         </div>
         <div class="header-right">
+            <div class="zoom-controls-bar">
+                <span class="zoom-label"><i class="fas fa-search"></i> Zoom</span>
+                <button type="button" class="zoom-btn" id="btn-zoom-out" title="Zoom Out"><i class="fas fa-minus"></i></button>
+                <span class="zoom-value" id="zoom-level-text">90%</span>
+                <button type="button" class="zoom-btn" id="btn-zoom-in" title="Zoom In"><i class="fas fa-plus"></i></button>
+                <button type="button" class="zoom-btn zoom-reset" id="btn-zoom-reset" title="Reset Zoom (90%)"><i class="fas fa-undo"></i></button>
+            </div>
             <a href="/" target="_blank" class="top-nav-btn btn-light-glass">
                 <i class="fas fa-globe"></i> View Live Website ↗
             </a>
@@ -396,9 +403,75 @@
 
 /* Smooth Native Zoom & Proportion Scale */
 .dashboard-zoom-wrapper {
-    zoom: 1.08;
-    -moz-transform: scale(1.08);
+    zoom: 0.90;
+    -moz-transform: scale(0.90);
     -moz-transform-origin: 0 0;
+    transition: zoom 0.15s ease;
+}
+
+/* Zoom Controls Bar */
+.zoom-controls-bar {
+    display: inline-flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 4px 8px;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.zoom-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    padding-left: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.zoom-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
+}
+
+.zoom-btn:hover {
+    background: #08709d;
+    color: #ffffff;
+    border-color: #08709d;
+    transform: translateY(-1px);
+}
+
+.zoom-value {
+    font-size: 12px;
+    font-weight: 800;
+    color: #08709d;
+    min-width: 38px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.zoom-btn.zoom-reset {
+    font-size: 10px;
+    color: #64748b;
+}
+
+.zoom-btn.zoom-reset:hover {
+    background: #64748b;
+    color: #ffffff;
+    border-color: #64748b;
 }
 
 /* 1. Top Dashboard Header */
@@ -800,4 +873,56 @@
     }
 }
 </style>
+
+<script>
+(function() {
+    const wrapper = document.querySelector('.dashboard-zoom-wrapper');
+    const zoomText = document.getElementById('zoom-level-text');
+    const btnOut = document.getElementById('btn-zoom-out');
+    const btnIn = document.getElementById('btn-zoom-in');
+    const btnReset = document.getElementById('btn-zoom-reset');
+
+    const DEFAULT_ZOOM = 0.90;
+    const stored = localStorage.getItem('corx_admin_zoom');
+    let currentZoom = stored !== null ? parseFloat(stored) : DEFAULT_ZOOM;
+    if (isNaN(currentZoom) || currentZoom < 0.6 || currentZoom > 1.4) {
+        currentZoom = DEFAULT_ZOOM;
+    }
+
+    function applyZoom(val) {
+        currentZoom = Math.round(Math.min(Math.max(val, 0.70), 1.25) * 100) / 100;
+        if (wrapper) {
+            wrapper.style.zoom = currentZoom;
+            wrapper.style.MozTransform = 'scale(' + currentZoom + ')';
+            wrapper.style.MozTransformOrigin = '0 0';
+        }
+        if (zoomText) {
+            zoomText.textContent = Math.round(currentZoom * 100) + '%';
+        }
+        localStorage.setItem('corx_admin_zoom', currentZoom.toFixed(2));
+    }
+
+    // Initialize with currentZoom
+    applyZoom(currentZoom);
+
+    if (btnOut) {
+        btnOut.addEventListener('click', function(e) {
+            e.preventDefault();
+            applyZoom(currentZoom - 0.05);
+        });
+    }
+    if (btnIn) {
+        btnIn.addEventListener('click', function(e) {
+            e.preventDefault();
+            applyZoom(currentZoom + 0.05);
+        });
+    }
+    if (btnReset) {
+        btnReset.addEventListener('click', function(e) {
+            e.preventDefault();
+            applyZoom(DEFAULT_ZOOM);
+        });
+    }
+})();
+</script>
 {% endblock %}
