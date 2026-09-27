@@ -2662,7 +2662,8 @@ class OtApplicationAdmin(admin.ModelAdmin):
 
 
 # ----------------------------------------------------------------------
-# Staff Single Recipient Picker Widget (For Salary Slip)
+# ----------------------------------------------------------------------
+# Staff Single Recipient Picker Widget (Dropdown with Checkbox)
 # ----------------------------------------------------------------------
 class StaffSingleRecipientPickerWidget(forms.Widget):
     def render(self, name, value, attrs=None, renderer=None):
@@ -2680,42 +2681,44 @@ class StaffSingleRecipientPickerWidget(forms.Widget):
         # Extract unique departments for filter chips
         departments = sorted(list(set([s.department for s in staff_list if s.department])))
 
-        dept_chips_html = '<button type="button" class="salary-dept-filter active" data-dept="all" style="padding: 7px 18px; font-size: 13px; font-weight: 700; border-radius: 999px; border: 1.5px solid #08709d; background: #08709d; color: #ffffff; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;"><span>All Employees</span> <span style=\"background: rgba(255,255,255,0.25); font-size: 11px; padding: 1px 7px; border-radius: 999px;\">' + str(len(staff_list)) + '</span></button>'
+        dept_chips_html = '<button type="button" class="salary-dept-filter active" data-dept="all"><span>All (' + str(len(staff_list)) + ')</span></button>'
         for d in departments:
             count = len([s for s in staff_list if s.department == d])
-            dept_chips_html += f'<button type="button" class="salary-dept-filter" data-dept="{d.lower()}" style="padding: 7px 16px; font-size: 13px; font-weight: 700; border-radius: 999px; border: 1.5px solid #e2e8f0; background: #ffffff; color: #475569; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;"><span>{d}</span> <span style=\"background: #f1f5f9; color: #64748b; font-size: 11px; padding: 1px 7px; border-radius: 999px;\">{count}</span></button>'
+            dept_chips_html += f'<button type="button" class="salary-dept-filter" data-dept="{d.lower()}"><span>{d} ({count})</span></button>'
 
-        selected_banner_html = ""
+        # Trigger initial preview
         if selected_staff_obj:
             s_init = "".join([w[0].upper() for w in selected_staff_obj.full_name.split() if w])[:2] if selected_staff_obj.full_name else "??"
-            s_photo = f'<img src="{selected_staff_obj.photo.url}" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 2.5px solid #059669; box-shadow: 0 4px 12px rgba(5,150,105,0.2);" />' if selected_staff_obj.photo else f'<div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(5,150,105,0.2);">{s_init}</div>'
-            selected_banner_html = f"""
-            <div id="salary-staff-selected-banner" style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: #f0fdf4; border: 2px solid #059669; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 6px 18px rgba(5,150,105,0.1);">
-                {s_photo}
-                <div style="flex: 1; min-width: 0;">
-                    <div style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">✓ Selected Staff Member</div>
-                    <div style="font-size: 16px; font-weight: 800; color: #0f172a;">{selected_staff_obj.full_name} <span style="font-size: 12px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 2px 9px; border-radius: 8px; margin-left: 6px;">ID: {selected_staff_obj.staff_id}</span></div>
-                    <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 2px;">{selected_staff_obj.position or 'Staff'} • {selected_staff_obj.department or 'General'}</div>
+            s_photo = f'<img src="{selected_staff_obj.photo.url}" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover; border: 2px solid #059669; flex-shrink: 0;" />' if selected_staff_obj.photo else f'<div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">{s_init}</div>'
+            trigger_content_html = f"""
+                <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;">
+                    {s_photo}
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 800; font-size: 15px; color: #0f172a; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <span>{selected_staff_obj.full_name}</span>
+                            <span style="font-size: 11.5px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 2px 8px; border-radius: 6px; font-family: monospace;">ID: {selected_staff_obj.staff_id}</span>
+                            <span style="font-size: 10.5px; font-weight: 800; color: #059669; background: #dcfce7; padding: 2px 8px; border-radius: 999px; text-transform: uppercase;">✓ Selected</span>
+                        </div>
+                        <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 2px;">{selected_staff_obj.position or 'Staff'} • {selected_staff_obj.department or 'General'}</div>
+                    </div>
                 </div>
-                <div style="width: 36px; height: 36px; border-radius: 50%; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 2px 8px rgba(5,150,105,0.3);">
-                    <i class="fas fa-check"></i>
-                </div>
-            </div>
             """
+            trigger_extra_class = "has-value"
+            clear_btn_style = "display: inline-flex;"
         else:
-            selected_banner_html = f"""
-            <div id="salary-staff-selected-banner" style="display: none; align-items: center; gap: 16px; padding: 16px 20px; background: #f0fdf4; border: 2px solid #059669; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 6px 18px rgba(5,150,105,0.1);">
-                <div id="salary-banner-avatar"></div>
-                <div style="flex: 1; min-width: 0;">
-                    <div style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">✓ Selected Staff Member</div>
-                    <div id="salary-banner-name" style="font-size: 16px; font-weight: 800; color: #0f172a;"></div>
-                    <div id="salary-banner-dept" style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 2px;"></div>
+            trigger_content_html = """
+                <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: #f1f5f9; color: #08709d; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; border: 1.5px dashed #cbd5e1;">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 700; font-size: 14.5px; color: #334155;">Click to Choose a Staff Member from Dropdown...</div>
+                        <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Select the employee who will receive this Monthly Salary Slip</div>
+                    </div>
                 </div>
-                <div style="width: 36px; height: 36px; border-radius: 50%; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 2px 8px rgba(5,150,105,0.3);">
-                    <i class="fas fa-check"></i>
-                </div>
-            </div>
             """
+            trigger_extra_class = ""
+            clear_btn_style = "display: none;"
 
         output = [f"""
         <style>
@@ -2723,113 +2726,361 @@ class StaffSingleRecipientPickerWidget(forms.Widget):
             .field-staff label, .field-staff .control-label {{ display: none !important; }}
             .field-staff .related-widget-wrapper-link {{ display: none !important; }}
             .field-staff .related-widget-wrapper {{ width: 100% !important; max-width: 100% !important; display: block !important; }}
-            
-            .salary-staff-card:hover {{
-                border-color: #08709d !important;
-                transform: translateY(-2px);
-                box-shadow: 0 10px 25px rgba(8, 112, 157, 0.12) !important;
+
+            .salary-dropdown-wrapper {{
+                position: relative;
+                width: 100%;
+                font-family: inherit;
             }}
+
+            .salary-dropdown-trigger {{
+                background: #ffffff;
+                border: 2px solid #cbd5e1;
+                border-radius: 16px;
+                padding: 14px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                cursor: pointer;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                user-select: none;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            }}
+
+            .salary-dropdown-trigger:hover {{
+                border-color: #08709d;
+                box-shadow: 0 4px 16px rgba(8, 112, 157, 0.1);
+            }}
+
+            .salary-dropdown-trigger.open {{
+                border-color: #08709d;
+                box-shadow: 0 0 0 3px rgba(8, 112, 157, 0.15);
+            }}
+
+            .salary-dropdown-trigger.has-value {{
+                border-color: #059669;
+                background: #f0fdf4;
+            }}
+
+            .salary-trigger-caret {{
+                font-size: 14px;
+                color: #64748b;
+                transition: transform 0.25s ease;
+            }}
+
+            .salary-dropdown-trigger.open .salary-trigger-caret {{
+                transform: rotate(180deg);
+                color: #08709d;
+            }}
+
+            .salary-clear-btn {{
+                background: #fee2e2;
+                color: #dc2626;
+                border: none;
+                border-radius: 8px;
+                width: 28px;
+                height: 28px;
+                align-items: center;
+                justify-content: center;
+                font-size: 13px;
+                cursor: pointer;
+                transition: all 0.15s ease;
+            }}
+
+            .salary-clear-btn:hover {{
+                background: #fecaca;
+                transform: scale(1.05);
+            }}
+
+            /* Dropdown Menu Box */
+            .salary-dropdown-menu {{
+                position: absolute;
+                top: calc(100% + 8px);
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                border: 2px solid #cbd5e1;
+                border-radius: 18px;
+                box-shadow: 0 18px 48px rgba(0, 0, 0, 0.14);
+                z-index: 99999;
+                padding: 16px;
+                display: none;
+                animation: salaryDropdownSlide 0.2s ease-out;
+            }}
+
+            @keyframes salaryDropdownSlide {{
+                from {{
+                    opacity: 0;
+                    transform: translateY(-8px);
+                }}
+                to {{
+                    opacity: 1;
+                    transform: translateY(0);
+                }}
+            }}
+
+            /* Search inside Dropdown */
+            .salary-dropdown-search-wrap {{
+                position: relative;
+                margin-bottom: 12px;
+            }}
+
+            .salary-dropdown-search-wrap input {{
+                width: 100%;
+                padding: 11px 16px 11px 40px;
+                font-size: 13.5px;
+                border-radius: 12px;
+                border: 1.5px solid #cbd5e1;
+                outline: none;
+                background: #f8fafc;
+                transition: all 0.2s;
+                box-sizing: border-box;
+            }}
+
+            .salary-dropdown-search-wrap input:focus {{
+                border-color: #08709d;
+                background: #ffffff;
+                box-shadow: 0 0 0 3px rgba(8, 112, 157, 0.12);
+            }}
+
+            .salary-dropdown-search-wrap i {{
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #94a3b8;
+                font-size: 14px;
+            }}
+
+            /* Filter Chips */
+            .salary-dropdown-filters {{
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                margin-bottom: 10px;
+                border-bottom: 1.5px solid #f1f5f9;
+            }}
+
+            .salary-dept-filter {{
+                padding: 5px 12px;
+                font-size: 11.5px;
+                font-weight: 700;
+                border-radius: 999px;
+                border: 1.5px solid #e2e8f0;
+                background: #ffffff;
+                color: #64748b;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                white-space: nowrap;
+            }}
+
             .salary-dept-filter:hover {{
-                border-color: #08709d !important;
-                color: #08709d !important;
+                border-color: #08709d;
+                color: #08709d;
             }}
+
             .salary-dept-filter.active {{
-                background: #08709d !important;
-                border-color: #08709d !important;
-                color: #ffffff !important;
+                background: #08709d;
+                border-color: #08709d;
+                color: #ffffff;
             }}
-            .salary-dept-filter.active span:last-child {{
-                background: rgba(255, 255, 255, 0.25) !important;
-                color: #ffffff !important;
+
+            /* Scrollable items list */
+            .salary-dropdown-list {{
+                max-height: 340px;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                padding-right: 4px;
+            }}
+
+            .salary-dropdown-item {{
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 14px;
+                border-radius: 12px;
+                border: 1.5px solid transparent;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                user-select: none;
+            }}
+
+            .salary-dropdown-item:hover {{
+                background: #f8fafc;
+                border-color: #e2e8f0;
+            }}
+
+            .salary-dropdown-item.selected {{
+                background: #f0fdf4;
+                border-color: #86efac;
+            }}
+
+            /* Checkbox */
+            .salary-checkbox {{
+                width: 22px;
+                height: 22px;
+                border-radius: 6px;
+                border: 2px solid #cbd5e1;
+                background: #ffffff;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px;
+                flex-shrink: 0;
+                transition: all 0.15s ease;
+            }}
+
+            .salary-dropdown-item:hover .salary-checkbox {{
+                border-color: #08709d;
+            }}
+
+            .salary-checkbox.checked {{
+                border-color: #059669 !important;
+                background: #059669 !important;
             }}
         </style>
-        <div class="salary-staff-picker" style="width: 100%; box-sizing: border-box;">
+
+        <div class="salary-dropdown-wrapper" id="salary-dropdown-wrapper">
             <input type="hidden" name="{name}" id="id_{name}_selected" value="{selected_val}" />
             
-            {selected_banner_html}
+            <!-- Hidden banner for external template scripts -->
+            <div id="salary-staff-selected-banner" style="display: none;">
+                <div id="salary-banner-avatar"></div>
+                <div id="salary-banner-name"></div>
+                <div id="salary-banner-dept"></div>
+            </div>
 
-            <!-- Top Search & Filter Bar -->
-            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 18px 20px; margin-bottom: 20px;">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px;">
-                    <div>
-                        <div style="font-weight: 800; font-size: 15px; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-users" style="color: #08709d;"></i>
-                            <span>Staff Employee Directory</span>
-                        </div>
-                        <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 2px;">Click an employee card to choose as salary slip recipient</div>
-                    </div>
-
-                    <div style="position: relative; min-width: 280px; flex: 1; max-width: 420px;">
-                        <input type="text" id="salary-staff-search" placeholder="Search by name, ID, department, role..." style="width: 100%; padding: 10px 16px 10px 40px; font-size: 13.5px; border-radius: 12px; border: 1.5px solid #cbd5e1; outline: none; background: #ffffff; transition: all 0.2s; box-sizing: border-box; box-shadow: 0 1px 3px rgba(0,0,0,0.03);" />
-                        <i class="fas fa-search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
-                    </div>
+            <!-- Modern Interactive Dropdown Trigger -->
+            <div class="salary-dropdown-trigger {trigger_extra_class}" id="salary-dropdown-trigger" tabindex="0">
+                <div id="salary-trigger-inner" style="flex: 1; min-width: 0;">
+                    {trigger_content_html}
                 </div>
-
-                <!-- Department Filter Chips -->
-                <div style="display: flex; align-items: center; gap: 8px; overflow-x: auto; padding-bottom: 2px;">
-                    {dept_chips_html}
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button type="button" id="salary-clear-btn" class="salary-clear-btn" style="{clear_btn_style}" title="Clear selection">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <i class="fas fa-chevron-down salary-trigger-caret"></i>
                 </div>
             </div>
 
-            <!-- Staff Grid -->
-            <div id="salary-staff-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; max-height: 480px; overflow-y: auto; padding: 4px; box-sizing: border-box;">
+            <!-- Dropdown Menu Panel -->
+            <div class="salary-dropdown-menu" id="salary-dropdown-menu">
+                <!-- Search bar -->
+                <div class="salary-dropdown-search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="salary-staff-search" placeholder="Type to search staff by name, ID, or department..." autocomplete="off" />
+                </div>
+
+                <!-- Department filter chips -->
+                <div class="salary-dropdown-filters">
+                    {dept_chips_html}
+                </div>
+
+                <!-- Staff items with checkboxes list -->
+                <div class="salary-dropdown-list" id="salary-staff-list">
         """]
 
         for s in staff_list:
             is_selected = (selected_val == str(s.id) or selected_val == str(s.staff_id))
-            border_col = "#059669" if is_selected else "#e2e8f0"
-            bg_col = "#f0fdf4" if is_selected else "#ffffff"
+            item_class = "salary-dropdown-item salary-staff-card selected" if is_selected else "salary-dropdown-item salary-staff-card"
+            chk_class = "salary-checkbox checked" if is_selected else "salary-checkbox"
+            chk_icon_style = "display: block;" if is_selected else "display: none;"
+            
             initials = "".join([w[0].upper() for w in s.full_name.split() if w])[:2] if s.full_name else "??"
             dept_str = s.department if s.department else "General"
             dept_lower = dept_str.lower()
+            photo_url = s.photo.url if s.photo else ""
 
-            photo_html = f'<img src="{s.photo.url}" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; flex-shrink: 0; border: 1.5px solid #cbd5e1;" />' if s.photo else f'<div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); color: #08709d; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1.5px solid #bae6fd;">{initials}</div>'
+            photo_html = f'<img src="{photo_url}" style="width: 40px; height: 40px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 1.5px solid #cbd5e1;" />' if photo_url else f'<div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); color: #08709d; font-weight: 800; font-size: 13.5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1.5px solid #bae6fd;">{initials}</div>'
 
             output.append(f"""
-                <div class="salary-staff-card" data-staff-id="{s.staff_id}" data-name="{s.full_name}" data-dept="{s.position or 'Staff'} • {dept_str}" data-dept-raw="{dept_lower}" data-initials="{initials}" data-photo="{s.photo.url if s.photo else ''}" data-search-text="{s.full_name.lower()} {s.staff_id.lower()} {s.department.lower()} {s.position.lower()}" style="display: flex; align-items: center; gap: 14px; padding: 16px; border: 2px solid {border_col}; background: {bg_col}; border-radius: 16px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); user-select: none; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                <div class="{item_class}" data-staff-id="{s.staff_id}" data-name="{s.full_name}" data-dept="{s.position or 'Staff'} • {dept_str}" data-dept-raw="{dept_lower}" data-initials="{initials}" data-photo="{photo_url}" data-search-text="{s.full_name.lower()} {s.staff_id.lower()} {dept_lower} {(s.position or '').lower()}">
+                    <div class="{chk_class}">
+                        <i class="fas fa-check" style="{chk_icon_style}"></i>
+                    </div>
                     {photo_html}
                     <div style="flex: 1; min-width: 0;">
-                        <div style="font-weight: 800; font-size: 14.5px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{s.full_name}</div>
-                        <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap;">
-                            <span style="font-size: 11px; color: #08709d; font-weight: 700; background: #e0f2fe; padding: 1px 8px; border-radius: 6px; font-family: monospace;">{s.staff_id}</span>
-                            <span style="font-size: 11.5px; color: #64748b; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{dept_str}</span>
+                        <div style="font-weight: 700; font-size: 14px; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                            <span>{s.full_name}</span>
+                            <span style="font-size: 11px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 1px 7px; border-radius: 5px; font-family: monospace;">{s.staff_id}</span>
                         </div>
-                        <div style="font-size: 12px; color: #059669; font-weight: 600; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{s.position or 'Staff'}</div>
-                    </div>
-                    <div class="check-circle-wrapper" style="width: 26px; height: 26px; border-radius: 50%; border: 2px solid {'#059669' if is_selected else '#cbd5e1'}; background: {'#059669' if is_selected else '#ffffff'}; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; transition: all 0.2s;">
-                        <i class="fas fa-check" style="display: {'block' if is_selected else 'none'};"></i>
+                        <div style="font-size: 12px; color: #64748b; font-weight: 500; margin-top: 2px;">{s.position or 'Staff'} • {dept_str}</div>
                     </div>
                 </div>
             """)
 
         output.append(f"""
+                </div>
             </div>
+
             <script>
             (function() {{
+                const wrapper = document.getElementById('salary-dropdown-wrapper');
+                const trigger = document.getElementById('salary-dropdown-trigger');
+                const menu = document.getElementById('salary-dropdown-menu');
+                const triggerInner = document.getElementById('salary-trigger-inner');
+                const clearBtn = document.getElementById('salary-clear-btn');
                 const hiddenInput = document.getElementById('id_{name}_selected');
-                const cards = document.querySelectorAll('.salary-staff-card');
+                const items = document.querySelectorAll('.salary-dropdown-item');
                 const searchInput = document.getElementById('salary-staff-search');
                 const deptFilters = document.querySelectorAll('.salary-dept-filter');
-                const banner = document.getElementById('salary-staff-selected-banner');
-                const bannerAvatar = document.getElementById('salary-banner-avatar');
                 const bannerName = document.getElementById('salary-banner-name');
                 const bannerDept = document.getElementById('salary-banner-dept');
 
                 let currentDeptFilter = 'all';
 
-                function filterCards() {{
-                    const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
-                    cards.forEach(card => {{
-                        const text = card.getAttribute('data-search-text') || '';
-                        const cardDept = card.getAttribute('data-dept-raw') || '';
-                        const matchesQuery = !query || text.includes(query);
-                        const matchesDept = (currentDeptFilter === 'all') || (cardDept === currentDeptFilter);
-                        card.style.display = (matchesQuery && matchesDept) ? 'flex' : 'none';
+                function openDropdown() {{
+                    menu.style.display = 'block';
+                    trigger.classList.add('open');
+                    setTimeout(() => {{
+                        if (searchInput) searchInput.focus();
+                    }}, 50);
+                }}
+
+                function closeDropdown() {{
+                    menu.style.display = 'none';
+                    trigger.classList.remove('open');
+                }}
+
+                function toggleDropdown(e) {{
+                    if (e.target.closest('#salary-clear-btn')) return;
+                    if (menu.style.display === 'block') {{
+                        closeDropdown();
+                    }} else {{
+                        openDropdown();
+                    }}
+                }}
+
+                if (trigger) {{
+                    trigger.addEventListener('click', toggleDropdown);
+                    trigger.addEventListener('keydown', function(e) {{
+                        if (e.key === 'Enter' || e.key === ' ') {{
+                            e.preventDefault();
+                            toggleDropdown(e);
+                        }}
                     }});
                 }}
 
-                cards.forEach(card => {{
-                    card.addEventListener('click', function() {{
+                function filterItems() {{
+                    const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+                    items.forEach(item => {{
+                        const text = item.getAttribute('data-search-text') || '';
+                        const itemDept = item.getAttribute('data-dept-raw') || '';
+                        const matchesQuery = !query || text.includes(query);
+                        const matchesDept = (currentDeptFilter === 'all') || (itemDept === currentDeptFilter);
+                        item.style.display = (matchesQuery && matchesDept) ? 'flex' : 'none';
+                    }});
+                }}
+
+                items.forEach(item => {{
+                    item.addEventListener('click', function(e) {{
+                        e.stopPropagation();
                         const sId = this.getAttribute('data-staff-id');
                         const sName = this.getAttribute('data-name');
                         const sDept = this.getAttribute('data-dept');
@@ -2837,68 +3088,116 @@ class StaffSingleRecipientPickerWidget(forms.Widget):
                         const sPhoto = this.getAttribute('data-photo');
 
                         hiddenInput.value = sId;
-                        
-                        cards.forEach(c => {{
-                            c.style.borderColor = '#e2e8f0';
-                            c.style.background = '#ffffff';
-                            const chk = c.querySelector('.check-circle-wrapper');
+
+                        // Update checkboxes in all items
+                        items.forEach(it => {{
+                            it.classList.remove('selected');
+                            const chk = it.querySelector('.salary-checkbox');
                             if (chk) {{
-                                chk.style.borderColor = '#cbd5e1';
-                                chk.style.background = '#ffffff';
-                                const icon = chk.querySelector('i');
-                                if (icon) icon.style.display = 'none';
+                                chk.classList.remove('checked');
+                                const ic = chk.querySelector('i');
+                                if (ic) ic.style.display = 'none';
                             }}
                         }});
 
-                        this.style.borderColor = '#059669';
-                        this.style.background = '#f0fdf4';
-                        const myChk = this.querySelector('.check-circle-wrapper');
+                        this.classList.add('selected');
+                        const myChk = this.querySelector('.salary-checkbox');
                         if (myChk) {{
-                            myChk.style.borderColor = '#059669';
-                            myChk.style.background = '#059669';
-                            const icon = myChk.querySelector('i');
-                            if (icon) icon.style.display = 'block';
+                            myChk.classList.add('checked');
+                            const ic = myChk.querySelector('i');
+                            if (ic) ic.style.display = 'block';
                         }}
 
-                        if (banner) {{
-                            banner.style.display = 'flex';
-                            if (bannerAvatar) {{
-                                if (sPhoto) {{
-                                    bannerAvatar.innerHTML = '<img src="' + sPhoto + '" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 2.5px solid #059669;" />';
-                                }} else {{
-                                    bannerAvatar.innerHTML = '<div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center;">' + sInit + '</div>';
-                                }}
-                            }}
-                            if (bannerName) bannerName.innerHTML = sName + ' <span style="font-size: 12px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 2px 9px; border-radius: 8px; margin-left: 6px;">ID: ' + sId + '</span>';
-                            if (bannerDept) bannerDept.innerText = sDept;
-                        }}
+                        // Update trigger display with selected staff
+                        const avatarHtml = sPhoto
+                            ? '<img src="' + sPhoto + '" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover; border: 2px solid #059669; flex-shrink: 0;" />'
+                            : '<div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #ffffff; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">' + sInit + '</div>';
 
-                        // Trigger change event on input for external listeners
+                        triggerInner.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;">
+                                ${{avatarHtml}}
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="font-weight: 800; font-size: 15px; color: #0f172a; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                        <span>${{sName}}</span>
+                                        <span style="font-size: 11.5px; font-weight: 700; color: #08709d; background: #e0f2fe; padding: 2px 8px; border-radius: 6px; font-family: monospace;">ID: ${{sId}}</span>
+                                        <span style="font-size: 10.5px; font-weight: 800; color: #059669; background: #dcfce7; padding: 2px 8px; border-radius: 999px; text-transform: uppercase;">✓ Selected</span>
+                                    </div>
+                                    <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-top: 2px;">${{sDept}}</div>
+                                </div>
+                            </div>
+                        `;
+
+                        trigger.classList.add('has-value');
+                        if (clearBtn) clearBtn.style.display = 'inline-flex';
+
+                        if (bannerName) bannerName.innerText = sName;
+                        if (bannerDept) bannerDept.innerText = sDept;
+
+                        closeDropdown();
                         hiddenInput.dispatchEvent(new Event('change'));
                     }});
                 }});
 
-                deptFilters.forEach(btn => {{
-                    btn.addEventListener('click', function() {{
-                        deptFilters.forEach(b => {{
-                            b.classList.remove('active');
-                            b.style.background = '#ffffff';
-                            b.style.borderColor = '#e2e8f0';
-                            b.style.color = '#475569';
+                // Clear selection
+                if (clearBtn) {{
+                    clearBtn.addEventListener('click', function(e) {{
+                        e.stopPropagation();
+                        hiddenInput.value = '';
+                        items.forEach(it => {{
+                            it.classList.remove('selected');
+                            const chk = it.querySelector('.salary-checkbox');
+                            if (chk) {{
+                                chk.classList.remove('checked');
+                                const ic = chk.querySelector('i');
+                                if (ic) ic.style.display = 'none';
+                            }}
                         }});
-                        this.classList.add('active');
-                        this.style.background = '#08709d';
-                        this.style.borderColor = '#08709d';
-                        this.style.color = '#ffffff';
 
+                        triggerInner.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;">
+                                <div style="width: 44px; height: 44px; border-radius: 12px; background: #f1f5f9; color: #08709d; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; border: 1.5px dashed #cbd5e1;">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="font-weight: 700; font-size: 14.5px; color: #334155;">Click to Choose a Staff Member from Dropdown...</div>
+                                    <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Select the employee who will receive this Monthly Salary Slip</div>
+                                </div>
+                            </div>
+                        `;
+                        trigger.classList.remove('has-value');
+                        clearBtn.style.display = 'none';
+
+                        if (bannerName) bannerName.innerText = '';
+                        if (bannerDept) bannerDept.innerText = '';
+
+                        hiddenInput.dispatchEvent(new Event('change'));
+                    }});
+                }}
+
+                // Department filter chips
+                deptFilters.forEach(btn => {{
+                    btn.addEventListener('click', function(e) {{
+                        e.stopPropagation();
+                        deptFilters.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
                         currentDeptFilter = this.getAttribute('data-dept');
-                        filterCards();
+                        filterItems();
                     }});
                 }});
 
                 if (searchInput) {{
-                    searchInput.addEventListener('input', filterCards);
+                    searchInput.addEventListener('input', filterItems);
+                    searchInput.addEventListener('click', function(e) {{
+                        e.stopPropagation();
+                    }});
                 }}
+
+                // Close dropdown on outside click
+                document.addEventListener('click', function(e) {{
+                    if (wrapper && !wrapper.contains(e.target)) {{
+                        closeDropdown();
+                    }}
+                }});
             }})();
             </script>
         </div>
