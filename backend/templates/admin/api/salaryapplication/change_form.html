@@ -448,6 +448,12 @@ fieldset.module {
 
 {% block field_sets %}
 <div class="col-12" style="padding: 0 !important;">
+    {% if salary_hero_html %}
+    <div class="salary-details-hero-box" style="margin-bottom: 24px;">
+        {{ salary_hero_html|safe }}
+    </div>
+    {% endif %}
+
     <!-- Top Stepper Navigation -->
     <div class="salary-wizard-container">
         <div class="salary-stepper-bar" id="salary-stepper-bar">

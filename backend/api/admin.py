@@ -2931,13 +2931,9 @@ class SalaryApplicationAdmin(admin.ModelAdmin):
     list_filter = ('submitted_at', 'status', 'staff_dep')
     search_fields = ('staff_name', 'staff__staff_id', 'description', 'staff_dep', 'staff_position')
     list_per_page = 20
-    readonly_fields = ('salary_details_hero', 'submitted_at')
+    readonly_fields = ('submitted_at',)
 
     fieldsets = (
-        ('💵 Monthly Salary Slip Overview', {
-            'fields': ('salary_details_hero',),
-            'description': mark_safe('<span style="color: #059669; font-weight: 700; font-size: 13px;">View full summary of issued monthly salary slip document and staff recipient.</span>')
-        }),
         ('👤 1. Choose Staff Member', {
             'fields': ('staff',),
             'description': mark_safe('<span style="color: #08709d; font-weight: 700; font-size: 13.5px;">Select the staff member who will receive this Monthly Salary Slip.</span>')
@@ -2951,6 +2947,16 @@ class SalaryApplicationAdmin(admin.ModelAdmin):
             'description': mark_safe('<span style="color: #059669; font-weight: 700; font-size: 13px;">Attach the monthly salary slip image or document for the staff.</span>')
         }),
     )
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        try:
+            obj = self.get_object(request, object_id)
+            if obj:
+                extra_context['salary_hero_html'] = self.salary_details_hero(obj)
+        except Exception:
+            pass
+        return super().change_view(request, object_id, form_url, extra_context=extra_context)
 
     def save_model(self, request, obj, form, change):
         if obj.staff:
