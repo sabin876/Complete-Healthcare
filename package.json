@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
-    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir dist --emptyOutDir false",
+    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir dist --emptyOutDir false && node scripts/prerender.js",
+    "prerender": "node scripts/prerender.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "node server.js"

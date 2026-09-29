@@ -36,8 +36,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 4. Build Vite React application
+      # 4. Build Vite React application with SSG pre-rendering
       - name: Build React application
+        env:
+          VITE_API_BASE_URL: https://api.corx.ae
         run: npm run build
 
       # 5. Deploy dist/ contents directly to Hostinger corx directory

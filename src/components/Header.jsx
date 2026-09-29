@@ -204,17 +204,6 @@ const Header = () => {
     },
     { name: 'Book Appointment', path: '/book-an-appointment', icon: Calendar, accent: '#f59e0b' },
     { name: 'Contact us', path: '/book-an-appointment', icon: Phone, accent: '#08709d' },
-
-    { 
-      name: 'Language', 
-      path: '#',
-      icon: Globe,
-      accent: '#63b158',
-      dropdown: [
-        { name: 'English', path: '#', code: 'EN', flag: '🇬🇧' },
-        { name: 'Arabic', path: '#', code: 'AR', flag: '🇦🇪' },
-      ]
-    },
   ];
 
   return (
@@ -500,39 +489,7 @@ const Header = () => {
                   </AnimatePresence>
                 )}
 
-                {/* Updated Language dropdown matching Services design */}
-                {link.dropdown && link.name === 'Language' && (
-                  <AnimatePresence>
-                    {activeDropdown === 'Language' && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 12, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 8, scale: 0.95, transition: { duration: 0.15 } }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="absolute top-[calc(100%+8px)] right-0 z-[100] bg-[#0c361d] rounded-[24px] border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.55)] text-white"
-                        style={{ padding: '24px', width: '200px' }}
-                      >
-                        <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#63e8a0] border-b border-white/10 mb-1 flex items-center gap-1.5">
-                          <Globe size={13} /> Select Language
-                        </div>
-                        {link.dropdown.map((lang) => (
-                          <Link
-                            key={lang.name}
-                            to="#"
-                            onClick={(e) => { e.preventDefault(); setActiveDropdown(null); }}
-                            className="flex items-center justify-between w-full rounded-[18px] transition-all duration-200 text-[15.5px] font-semibold tracking-wide text-white/95 hover:text-white hover:bg-white/10 py-3.5 px-6"
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <span className="text-base">{lang.flag}</span>
-                              <span>{lang.name}</span>
-                            </div>
-                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-white/70 uppercase">{lang.code}</span>
-                          </Link>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                )}
+
               </li>
             ))}
           </ul>
