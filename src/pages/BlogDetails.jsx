@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import { API_BASE_URL } from "../config/api";
-import { slugifyTitle } from "./Blog";
+import { slugifyTitle, getCategoryFallbackImage, DUMMY_IMAGE } from "./Blog";
 import { useSSRData } from "../context/SSRDataContext";
 import SEO from "../components/SEO";
 
@@ -142,7 +142,7 @@ export default function BlogDetails() {
               author: data.author || 'Corx',
               authorBio: 'Corx writes on regenerative medicine, home healthcare, and recovery-focused treatment options.',
               date: data.date || 'May 22, 2026',
-              heroImage: data.image && !data.image.includes('placeholder') ? data.image : 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80',
+              heroImage: data.image && !data.image.includes('placeholder') ? data.image : getCategoryFallbackImage(data.tag || data.category),
               tags: [data.tag || data.category || 'Healthcare'],
               content: data.content || `<p>${data.excerpt}</p>`,
               excerpt: data.excerpt || undefined,
@@ -531,7 +531,15 @@ export default function BlogDetails() {
             By <strong>{post.author}</strong> • {post.date} • {post.category}
           </div>
 
-          <img src={post.heroImage} alt={post.title} className="article-hero" />
+          <img 
+            src={post.heroImage || getCategoryFallbackImage(post?.category)} 
+            alt={post.title} 
+            className="article-hero"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = getCategoryFallbackImage(post?.category);
+            }} 
+          />
 
           <div 
             className="article-body" 

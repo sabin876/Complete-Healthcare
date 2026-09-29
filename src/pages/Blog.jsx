@@ -5,8 +5,27 @@ import { API_BASE_URL } from "../config/api";
 import SEO from "../components/SEO";
 
 
-const DUMMY_IMAGE =
+export const DUMMY_IMAGE =
   "https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop";
+
+export const CATEGORY_FALLBACK_IMAGES = {
+  "PHYSIOTHERAPY": "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=800&auto=format&fit=crop",
+  "KNEE": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800&auto=format&fit=crop",
+  "IMPLANT": "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?q=80&w=800&auto=format&fit=crop",
+  "STEM CELL": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=800&auto=format&fit=crop",
+  "NURSING": "https://images.unsplash.com/photo-1581056771107-24ca5f033842?q=80&w=800&auto=format&fit=crop",
+  "DOCTOR": "https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop",
+  "IV": "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=800&auto=format&fit=crop",
+  "CARE": "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?q=80&w=800&auto=format&fit=crop",
+};
+
+export const getCategoryFallbackImage = (tag = "") => {
+  const upper = String(tag || "").toUpperCase();
+  for (const [key, url] of Object.entries(CATEGORY_FALLBACK_IMAGES)) {
+    if (upper.includes(key)) return url;
+  }
+  return DUMMY_IMAGE;
+};
 
 export const slugifyTitle = (title) => {
   if (!title) return '';
@@ -115,8 +134,13 @@ function ArticleCard({ article }) {
       {/* Thumbnail */}
       <div style={{ position: "relative", height: "200px", width: "100%", backgroundColor: "#f1f5f9", overflow: "hidden" }}>
         <img
-          src={article.image}
+          src={article.image || getCategoryFallbackImage(article.tag)}
           alt={article.title}
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = getCategoryFallbackImage(article.tag);
+          }}
           style={{
             width: "100%",
             height: "100%",
@@ -248,7 +272,7 @@ export default function OrthopedicArticlesPage() {
             excerpt: item.excerpt || item.title,
             author: item.author || 'Dr. Ulhas Sonar',
             date: item.date || '2026-05-30',
-            image: item.image && !item.image.includes('placeholder') ? item.image : DUMMY_IMAGE,
+            image: item.image && !item.image.includes('placeholder') ? item.image : getCategoryFallbackImage(item.tag || item.category),
           }));
           setBlogPostsList(formatted);
         }
