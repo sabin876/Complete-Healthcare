@@ -166,7 +166,7 @@ export function SEO({
     );
 
     // 7. Structured JSON-LD Schema (Strictly Single Tag)
-    const scriptEls = document.querySelectorAll('script[type="application/ld+json"][data-seo="true"]');
+    const scriptEls = document.querySelectorAll('script[type="application/ld+json"]');
     if (schema) {
       let targetScript = scriptEls[0];
       for (let i = 1; i < scriptEls.length; i++) {

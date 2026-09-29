@@ -110,6 +110,36 @@ export function slugifyText(text) {
 }
 
 /**
+ * Normalize backend URL to IPv4 (127.0.0.1) on local environments
+ * to avoid IPv6 timeout delays on Windows Node.js.
+ */
+export function resolveBackendUrl(apiBaseUrl) {
+  const url = apiBaseUrl || process.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+  return url.replace('http://localhost:', 'http://127.0.0.1:').replace(/\/+$/, '');
+}
+
+/**
+ * Resilient JSON fetch with timeout and graceful null fallback.
+ */
+export async function safeFetchJson(url, timeoutMs = 1500) {
+  try {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timeoutId = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
+    const res = await fetch(url, {
+      signal: controller ? controller.signal : undefined,
+      headers: { Accept: 'application/json' },
+    });
+    if (timeoutId) clearTimeout(timeoutId);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch {
+    // Graceful fallback on network timeout/failure
+  }
+  return null;
+}
+
+/**
  * Find static fallback data for a service slug.
  */
 export function getStaticServiceData(slug) {
@@ -137,7 +167,7 @@ export function getStaticServiceData(slug) {
 /**
  * Load service data from API with static fallback.
  */
-export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000') {
+export async function loadServiceData(slug, apiBaseUrl = 'http://127.0.0.1:8000') {
   if (!slug) {
     return {
       slug: '',
@@ -159,28 +189,12 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
     cleanSlug === 'iv-therapy' ? 'iv-therapy-iv-drip' : (cleanSlug === 'iv-therapy-iv-drip' ? 'iv-therapy' : null),
   ].filter((val, idx, arr) => Boolean(val) && arr.indexOf(val) === idx);
 
-  const baseUrl = (apiBaseUrl || 'http://localhost:8000').replace(/\/+$/, '');
+  const baseUrl = resolveBackendUrl(apiBaseUrl);
   for (const candidate of candidateSlugs) {
-    try {
-      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      const timeoutId = controller ? setTimeout(() => controller.abort(), 1200) : null;
-
-      const res = await fetch(`${baseUrl}/api/services/${candidate}/`, {
-        signal: controller ? controller.signal : undefined,
-        headers: { Accept: 'application/json' },
-      });
-
-      if (timeoutId) clearTimeout(timeoutId);
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data && typeof data === 'object' && !Array.isArray(data)) {
-          backendData = data;
-          break;
-        }
-      }
-    } catch {
-      // Fallback to static data on timeout / network failure
+    const data = await safeFetchJson(`${baseUrl}/api/services/${candidate}/`, 1200);
+    if (data && typeof data === 'object' && !Array.isArray(data)) {
+      backendData = data;
+      break;
     }
   }
 
@@ -242,7 +256,7 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
 /**
  * Load single blog post data from API with static fallback.
  */
-export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://localhost:8000') {
+export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://127.0.0.1:8000') {
   if (!slugOrId) return null;
   const target = slugOrId.toString().toLowerCase().trim();
 
@@ -273,40 +287,24 @@ export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://localhost:
   }
 
   // Attempt to fetch fresh data from backend
-  const baseUrl = (apiBaseUrl || 'http://localhost:8000').replace(/\/+$/, '');
-  try {
-    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    const timeoutId = controller ? setTimeout(() => controller.abort(), 1200) : null;
-
-    const res = await fetch(`${baseUrl}/api/blogs/${target}/`, {
-      signal: controller ? controller.signal : undefined,
-      headers: { Accept: 'application/json' },
-    });
-
-    if (timeoutId) clearTimeout(timeoutId);
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.title) {
-        post = {
-          id: data.id || (post ? post.id : 1),
-          slug: data.slug || slugifyText(data.title),
-          category: data.tag || data.category || (post ? post.category : 'Home Healthcare'),
-          title: data.title,
-          author: data.author || 'Corx',
-          authorBio: 'Corx writes on regenerative medicine, home healthcare, and recovery-focused treatment options.',
-          date: data.date || (post ? post.date : 'May 22, 2026'),
-          heroImage: data.image && !data.image.includes('placeholder') ? data.image : (data.image_file || (post ? post.heroImage : DEFAULT_OG_IMAGE)),
-          tags: [data.tag || data.category || 'Healthcare'],
-          content: data.content || (post ? post.content : ''),
-          excerpt: data.excerpt || (post ? post.excerpt : ''),
-          meta_title: data.meta_title || '',
-          meta_description: data.meta_description || '',
-        };
-      }
-    }
-  } catch {
-    // Keep static fallback
+  const baseUrl = resolveBackendUrl(apiBaseUrl);
+  const data = await safeFetchJson(`${baseUrl}/api/blogs/${target}/`, 1200);
+  if (data && data.title) {
+    post = {
+      id: data.id || (post ? post.id : 1),
+      slug: data.slug || slugifyText(data.title),
+      category: data.tag || data.category || (post ? post.category : 'Home Healthcare'),
+      title: data.title,
+      author: data.author || 'Corx',
+      authorBio: 'Corx writes on regenerative medicine, home healthcare, and recovery-focused treatment options.',
+      date: data.date || (post ? post.date : 'May 22, 2026'),
+      heroImage: data.image && !data.image.includes('placeholder') ? data.image : (data.image_file || (post ? post.heroImage : DEFAULT_OG_IMAGE)),
+      tags: [data.tag || data.category || 'Healthcare'],
+      content: data.content || (post ? post.content : ''),
+      excerpt: data.excerpt || (post ? post.excerpt : ''),
+      meta_title: data.meta_title || '',
+      meta_description: data.meta_description || '',
+    };
   }
 
   if (!post) {
@@ -364,21 +362,14 @@ export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://localhost:
  * @param {string} backendUrl 
  * @returns {Promise<{ statusCode: number, initialData: object | null, seo: object }>}
  */
-export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localhost:8000') {
+export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://127.0.0.1:8000') {
   const cleanPath = (pathname || '/').split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
   const segments = cleanPath.split('/').filter(Boolean);
+  const baseUrl = resolveBackendUrl(backendUrl);
 
   // 1. Homepage ("/")
   if (cleanPath === '/') {
-    let homeData = null;
-    try {
-      const res = await fetch(`${backendUrl}/api/homepage/`);
-      if (res.ok) {
-        homeData = await res.json();
-      }
-    } catch (e) {
-      // fallback to standard defaults
-    }
+    const homeData = await safeFetchJson(`${baseUrl}/api/homepage/`, 1500);
 
     const title = homeData?.meta_title?.trim() || 'CORX Healthcare: Home Health Care Services in Dubai *24/7';
     const description = homeData?.meta_description?.trim() || 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.';
@@ -418,7 +409,7 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
 
     return {
       statusCode: 200,
-      initialData: homeData,
+      initialData: { isHomepage: true, ...homeData },
       seo: {
         title,
         description,
@@ -432,13 +423,13 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     };
   }
 
-  // 2. Static Core Pages
   const first = segments[0] ? segments[0].toLowerCase() : '';
 
+  // 2. Static Core Pages: About Us
   if (first === 'about-us') {
     return {
       statusCode: 200,
-      initialData: null,
+      initialData: { page: 'about-us' },
       seo: {
         title: 'About Us | DHA-Licensed Home Healthcare in Dubai | CORx Healthcare',
         description: "Learn about CORx Healthcare, Dubai's premier DHA-licensed home healthcare provider offering 24/7 doctor home visits, home nursing, physiotherapy, and lab services.",
@@ -458,10 +449,16 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     };
   }
 
+  // 3. Contact & Booking
   if (first === 'contact-us' || first === 'contact' || first === 'book-an-appointment') {
+    const rawServices = await safeFetchJson(`${baseUrl}/api/services/`, 1200);
+    const serviceTitles = (Array.isArray(rawServices) ? rawServices : (rawServices?.results || []))
+      .map(s => s.title)
+      .filter(Boolean);
+
     return {
       statusCode: 200,
-      initialData: null,
+      initialData: { page: 'contact', services: serviceTitles },
       seo: {
         title: 'Book an Appointment | Contact CORx Home Healthcare Dubai 24/7',
         description: 'Book an appointment with CORx Home Healthcare in Dubai. Contact our 24/7 medical team for doctor home visits, nursing, lab tests, and physiotherapy.',
@@ -481,10 +478,13 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     };
   }
 
+  // 4. Team Page
   if (first === 'team') {
+    const teamData = await safeFetchJson(`${baseUrl}/api/team/`, 1500);
+
     return {
       statusCode: 200,
-      initialData: null,
+      initialData: { isTeam: true, team: Array.isArray(teamData) ? teamData : [] },
       seo: {
         title: 'Our Medical Team | DHA Licensed Doctors & Nurses | CORx Healthcare',
         description: 'Meet the expert medical team at CORx Healthcare Dubai. Our DHA-licensed doctors, registered nurses, and specialized physiotherapists provide 24/7 home care.',
@@ -493,14 +493,22 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
         ogImage: DEFAULT_OG_IMAGE,
         ogType: 'website',
         canonicalUrl: `${BASE_SITE_URL}/team`,
+        schema: {
+          '@context': 'https://schema.org',
+          '@type': 'MedicalOrganization',
+          name: 'CORx Healthcare Dubai Medical Team',
+          url: `${BASE_SITE_URL}/team`,
+          description: 'DHA-licensed medical professionals and clinical caregivers delivering home healthcare in Dubai.',
+        },
       },
     };
   }
 
+  // 5. Career Page
   if (first === 'career') {
     return {
       statusCode: 200,
-      initialData: null,
+      initialData: { page: 'career' },
       seo: {
         title: 'Careers | Join CORx Healthcare Medical Team in Dubai',
         description: 'Explore healthcare careers at CORx Healthcare Dubai. We are hiring DHA-licensed doctors, registered nurses, physiotherapists, and clinical coordinators.',
@@ -513,10 +521,11 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     };
   }
 
+  // 6. Privacy Policy Page
   if (first === 'privacy-policy') {
     return {
       statusCode: 200,
-      initialData: null,
+      initialData: { page: 'privacy-policy' },
       seo: {
         title: 'Privacy Policy | CORx Healthcare Dubai',
         description: 'Read the official privacy policy of CORx Healthcare Dubai regarding how we protect, process, and handle your confidential health and medical records.',
@@ -529,10 +538,19 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     };
   }
 
+  // 7. Sitemap Page
   if (first === 'sitemap') {
+    const [rawServices, rawBlogs] = await Promise.all([
+      safeFetchJson(`${baseUrl}/api/services/`, 1500),
+      safeFetchJson(`${baseUrl}/api/blogs/`, 1500),
+    ]);
+
+    const services = Array.isArray(rawServices) ? rawServices : (rawServices?.results || []);
+    const blogs = Array.isArray(rawBlogs) ? rawBlogs : (rawBlogs?.results || []);
+
     return {
       statusCode: 200,
-      initialData: null,
+      initialData: { isSitemap: true, services, blogs },
       seo: {
         title: 'HTML Website Sitemap | CORx Healthcare Dubai',
         description: 'Browse the complete structure and pages of CORx Healthcare Dubai including all medical services, care guides, and official resources.',
@@ -545,10 +563,11 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     };
   }
 
+  // 8. Social Media Page
   if (first === 'social-media' || first === 'socials' || first === 'connect') {
     return {
       statusCode: 200,
-      initialData: null,
+      initialData: { page: 'social-media' },
       seo: {
         title: 'Connect & Official Social Media | CORx Healthcare Dubai',
         description: 'Connect with CORx Healthcare Dubai across official platforms: WhatsApp, Instagram, LinkedIn, Facebook, and Google Maps.',
@@ -561,13 +580,28 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     };
   }
 
-  // 3. Blog Routes
+  // 9. Blog Routes
   if (first === 'blog') {
     // List /blog
     if (segments.length === 1) {
+      const rawBlogs = await safeFetchJson(`${baseUrl}/api/blogs/`, 1500);
+      let blogPosts = null;
+      if (Array.isArray(rawBlogs) && rawBlogs.length > 0) {
+        blogPosts = rawBlogs.map(item => ({
+          id: item.id,
+          slug: item.slug || slugifyText(item.title),
+          tag: item.tag || item.category || 'HEALTHCARE',
+          title: item.title,
+          excerpt: item.excerpt || item.title,
+          author: item.author || 'Dr. Ulhas Sonar',
+          date: item.date || '2026-05-30',
+          image: item.image && !item.image.includes('placeholder') ? item.image : (item.image_file || DEFAULT_OG_IMAGE),
+        }));
+      }
+
       return {
         statusCode: 200,
-        initialData: null,
+        initialData: { isBlogList: true, blogPosts },
         seo: {
           title: 'CORx Healthcare Blog — Health Tips, Care Guides & Medical Advice Dubai',
           description: 'Explore the CORx Healthcare blog for expert health tips, home care advice, physiotherapy insights, and wellness guides across Dubai.',
@@ -576,6 +610,13 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
           ogImage: DEFAULT_OG_IMAGE,
           ogType: 'website',
           canonicalUrl: `${BASE_SITE_URL}/blog`,
+          schema: {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'CORx Healthcare Blog',
+            description: 'Expert health tips, care guides, and medical advice from DHA-licensed clinicians in Dubai.',
+            url: `${BASE_SITE_URL}/blog`,
+          },
         },
       };
     }
@@ -587,6 +628,7 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
       return {
         statusCode: 200,
         initialData: {
+          isBlogDetail: true,
           blogPost: loadedBlog.blogPost,
         },
         seo: loadedBlog.seo,
@@ -594,11 +636,11 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     }
   }
 
-  // 4. Portal / Dashboard (Private -> noindex, nofollow)
+  // 10. Portal / Dashboard (Private -> noindex, nofollow)
   if (first === 'portal' || first === 'dashboard') {
     return {
       statusCode: 200,
-      initialData: null,
+      initialData: { isPortal: true },
       seo: {
         title: 'Staff & Admin Portal | CORx Healthcare',
         description: 'Secure staff and clinical management portal for CORx Healthcare.',
@@ -608,32 +650,26 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     };
   }
 
-  // 5. Services Routes
+  // 11. Services Overview Route (/services)
   if (first === 'services' && segments.length === 1) {
     let allServicesSchema = null;
-    try {
-      const res = await fetch(`${backendUrl}/api/services/`);
-      if (res.ok) {
-        const data = await res.json();
-        const servicesList = Array.isArray(data) ? data : (data?.results || []);
-        if (servicesList.length > 0) {
-          allServicesSchema = {
-            '@context': 'https://schema.org',
-            '@type': 'ItemList',
-            name: 'CORx Healthcare Services in Dubai',
-            description: 'From 24/7 doctor home visits and IV drip therapy to home nursing, physiotherapy, and lab tests — receive hospital-grade medical care directly in your home.',
-            itemListElement: servicesList.map((svc, idx) => ({
-              '@type': 'ListItem',
-              position: idx + 1,
-              url: `${BASE_SITE_URL}/${svc.custom_url_path ? svc.custom_url_path.replace(/^\//, '') : svc.slug}`,
-              name: svc.title || svc.name,
-              description: svc.description || svc.tagline || '',
-            })),
-          };
-        }
-      }
-    } catch (e) {
-      // ignore
+    let servicesList = [];
+    const data = await safeFetchJson(`${baseUrl}/api/services/`, 1500);
+    servicesList = Array.isArray(data) ? data : (data?.results || []);
+    if (servicesList.length > 0) {
+      allServicesSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'CORx Healthcare Services in Dubai',
+        description: 'From 24/7 doctor home visits and IV drip therapy to home nursing, physiotherapy, and lab tests — receive hospital-grade medical care directly in your home.',
+        itemListElement: servicesList.map((svc, idx) => ({
+          '@type': 'ListItem',
+          position: idx + 1,
+          url: `${BASE_SITE_URL}/${svc.custom_url_path ? svc.custom_url_path.replace(/^\//, '') : svc.slug}`,
+          name: svc.title || svc.name,
+          description: svc.description || svc.tagline || '',
+        })),
+      };
     }
 
     return {
@@ -642,6 +678,8 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
         isOverview: true,
         slug: null,
         serviceData: null,
+        servicesList,
+        servicesOverviewSchema: allServicesSchema,
       },
       seo: {
         title: 'Home Healthcare Services in Dubai | CORx Healthcare',
@@ -656,13 +694,17 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     };
   }
 
-  // /services/:slug or flat /:slug
+  // 12. Service Detail Routes (/services/:slug, /services/:parent/:slug, /lab-test-at-home, etc.)
   let targetServiceSlug = null;
   if ((first === 'services' || first === 'service') && segments.length >= 2) {
     targetServiceSlug = segments[segments.length - 1].toLowerCase();
   } else if (segments.length === 1 && !first.includes('.') && !first.startsWith('api')) {
     targetServiceSlug = first;
   }
+
+  // Handle aliases
+  if (targetServiceSlug === 'elderly-care') targetServiceSlug = 'elderly-home-care';
+  if (targetServiceSlug === 'physiotherapy') targetServiceSlug = 'physiotherapy-at-home-in-dubai';
 
   if (targetServiceSlug) {
     const loaded = await loadServiceData(targetServiceSlug, backendUrl);
@@ -679,10 +721,10 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://localh
     }
   }
 
-  // 6. 404 Not Found Page
+  // 13. 404 Not Found Page
   return {
     statusCode: 404,
-    initialData: null,
+    initialData: { is404: true },
     seo: {
       title: '404 - Page Not Found | CORx Healthcare Dubai',
       description: 'The requested page could not be found. Explore our 24/7 home healthcare services in Dubai at CORx Healthcare.',

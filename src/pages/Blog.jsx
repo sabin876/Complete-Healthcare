@@ -3,6 +3,7 @@ import { User, Calendar, ArrowRight, Tag, BookOpen } from "lucide-react";
 import { Link } from "react-router";
 import { API_BASE_URL } from "../config/api";
 import SEO from "../components/SEO";
+import { useSSRData } from "../context/SSRDataContext";
 
 
 export const DUMMY_IMAGE =
@@ -242,7 +243,12 @@ function ArticleCard({ article }) {
 }
 
 export default function OrthopedicArticlesPage() {
-  const [blogPostsList, setBlogPostsList] = useState(articles);
+  const ssrData = useSSRData();
+  const initialBlogs = (ssrData && Array.isArray(ssrData.blogPosts) && ssrData.blogPosts.length > 0)
+    ? ssrData.blogPosts
+    : articles;
+
+  const [blogPostsList, setBlogPostsList] = useState(initialBlogs);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
 
@@ -257,6 +263,11 @@ export default function OrthopedicArticlesPage() {
   };
 
   React.useEffect(() => {
+    // If SSR data already loaded dynamic blog posts, skip duplicate initial fetch
+    if (ssrData?.blogPosts && Array.isArray(ssrData.blogPosts) && ssrData.blogPosts.length > 0) {
+      return;
+    }
+
     fetch(`${API_BASE_URL}/api/blogs/`)
       .then(res => {
         if (!res.ok) return null;
@@ -278,7 +289,7 @@ export default function OrthopedicArticlesPage() {
         }
       })
       .catch(err => console.log('Django API offline, using default articles:', err));
-  }, []);
+  }, [ssrData]);
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "'Poppins', 'Inter', sans-serif", paddingTop: "120px", paddingBottom: "50px" }}>

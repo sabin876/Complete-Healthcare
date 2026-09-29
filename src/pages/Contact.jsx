@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { API_BASE_URL, SEND_EMAIL_URL } from "../config/api";
 import SEO from "../components/SEO";
+import { useSSRData } from "../context/SSRDataContext";
 
 const PhoneIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -99,7 +100,12 @@ const faqData = [
 
 export default function Contact() {
   const [activeIndex, setActiveIndex] = useState(null);
-  const [servicesList, setServicesList] = useState([
+  const ssrData = useSSRData();
+  const initialServices = (ssrData?.services && Array.isArray(ssrData.services) && ssrData.services.length > 0)
+    ? ssrData.services
+    : null;
+
+  const [servicesList, setServicesList] = useState(initialServices || [
     "Home Physiotherapy",
     "IV Therapy / IV Drip at Home",
     "Home Nursing Care",
@@ -112,6 +118,7 @@ export default function Contact() {
   ]);
 
   useEffect(() => {
+    if (initialServices) return;
     fetch(`${API_BASE_URL}/api/services/`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
@@ -123,7 +130,7 @@ export default function Contact() {
         }
       })
       .catch(() => {});
-  }, []);
+  }, [initialServices]);
 
   const [formData, setFormData] = useState({
     fullName: "",

@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { Calendar, GraduationCap, IdCard, MapPin, Award, Clock } from 'lucide-react';
 import SEO from '../components/SEO';
 import { API_BASE_URL } from '../config/api';
+import { useSSRData } from '../context/SSRDataContext';
 import kajalPhoto from '../assets/kajal.png';
 import teamHero from '../assets/team_hero.png';
 
@@ -262,17 +263,20 @@ const departments = [
 ];
 
 const Team = () => {
+  const ssrData = useSSRData();
+  const initialDbTeam = (ssrData && Array.isArray(ssrData.team)) ? ssrData.team : [];
   const [selectedDept, setSelectedDept] = useState("All");
-  const [dbTeam, setDbTeam] = useState([]);
+  const [dbTeam, setDbTeam] = useState(initialDbTeam);
 
   useEffect(() => {
+    if (initialDbTeam.length > 0) return;
     fetch(`${API_BASE_URL}/api/team/`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (Array.isArray(data)) setDbTeam(data);
       })
       .catch(() => {});
-  }, []);
+  }, [initialDbTeam.length]);
 
   const mappedDbTeam = dbTeam.map(member => {
     let dept = "Nursing";

@@ -1685,10 +1685,13 @@ function SubServicesGridSection({ subServices = [], serviceTitle = '', isEditMod
 }
 
 function ServicesOverviewPage() {
-  const [overviewSchema, setOverviewSchema] = useState(null);
+  const ssrData = useSSRData();
+  const [overviewSchema, setOverviewSchema] = useState(() => ssrData?.servicesOverviewSchema || null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    if (ssrData?.servicesOverviewSchema) return;
 
     let isMounted = true;
     fetch(`${API_BASE_URL}/api/services/`)
@@ -1718,7 +1721,7 @@ function ServicesOverviewPage() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [ssrData?.servicesOverviewSchema]);
 
   return (
     <div className="bg-white min-h-screen">

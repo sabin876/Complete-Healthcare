@@ -9,23 +9,32 @@ import {
 } from 'lucide-react';
 import { API_BASE_URL } from '../config/api';
 import SEO from '../components/SEO';
+import { useSSRData } from '../context/SSRDataContext';
 
 const Sitemap = () => {
-  const [dynamicServices, setDynamicServices] = useState([]);
-  const [dynamicBlogs, setDynamicBlogs] = useState([]);
+  const ssrData = useSSRData();
+  const initialServices = (ssrData?.services && Array.isArray(ssrData.services)) ? ssrData.services : [];
+  const initialBlogs = (ssrData?.blogs && Array.isArray(ssrData.blogs)) ? ssrData.blogs : [];
+
+  const [dynamicServices, setDynamicServices] = useState(initialServices);
+  const [dynamicBlogs, setDynamicBlogs] = useState(initialBlogs);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/services/`)
-      .then(res => res.ok ? res.json() : null)
-      .then(data => { if (Array.isArray(data) && data.length > 0) setDynamicServices(data); })
-      .catch(() => {});
+    if (initialServices.length === 0) {
+      fetch(`${API_BASE_URL}/api/services/`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => { if (Array.isArray(data) && data.length > 0) setDynamicServices(data); })
+        .catch(() => {});
+    }
 
-    fetch(`${API_BASE_URL}/api/blogs/`)
-      .then(res => res.ok ? res.json() : null)
-      .then(data => { if (Array.isArray(data) && data.length > 0) setDynamicBlogs(data); })
-      .catch(() => {});
-  }, []);
+    if (initialBlogs.length === 0) {
+      fetch(`${API_BASE_URL}/api/blogs/`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => { if (Array.isArray(data) && data.length > 0) setDynamicBlogs(data); })
+        .catch(() => {});
+    }
+  }, [initialServices.length, initialBlogs.length]);
 
   const mainPages = [
     { name: "Home", path: "/", icon: Home },

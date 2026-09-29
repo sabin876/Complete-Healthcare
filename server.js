@@ -19,8 +19,15 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
+function getBackendUrl() {
+  const url = process.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+  return url.replace('http://localhost:', 'http://127.0.0.1:').replace(/\/+$/, '');
+}
+
 function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo }) {
-  let html = htmlTemplate.replace('<!--ssr-outlet-->', renderedHtml || '');
+  let html = htmlTemplate.includes('<!--ssr-outlet-->')
+    ? htmlTemplate.replace('<!--ssr-outlet-->', renderedHtml || '')
+    : htmlTemplate.replace('<div id="root"></div>', `<div id="root">${renderedHtml || ''}</div>`);
 
   // 1. Inject serialized initialData for React client hydration
   const serialized = initialData ? JSON.stringify(initialData).replace(/</g, '\\u003c') : 'null';
@@ -61,7 +68,7 @@ function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo
   if (seo?.schema) {
     const schemaContent = typeof seo.schema === 'string' ? seo.schema : JSON.stringify(seo.schema);
     const schemaJson = schemaContent.replace(/</g, '\\u003c');
-    headTags.push(`<script type="application/ld+json">${schemaJson}</script>`);
+    headTags.push(`<script type="application/ld+json" data-seo="true">${schemaJson}</script>`);
   }
 
   headTags.push(hydrationScript);
@@ -100,7 +107,7 @@ async function createServer() {
   // Dynamic SEO routes fetched live from Django Backend
   app.get('/robots.txt', async (req, res) => {
     try {
-      const backendUrl = process.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const backendUrl = getBackendUrl();
       const response = await fetch(`${backendUrl}/api/robots.txt`);
       if (response.ok) {
         const text = await response.text();
@@ -116,7 +123,7 @@ async function createServer() {
 
   app.get('/sitemap.xml', async (req, res) => {
     try {
-      const backendUrl = process.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const backendUrl = getBackendUrl();
       const response = await fetch(`${backendUrl}/api/sitemap.xml`);
       if (response.ok) {
         let xml = await response.text();
@@ -160,7 +167,7 @@ async function createServer() {
       const parsedUrl = new URL(url, `http://${req.headers.host || 'localhost'}`);
       const pathname = parsedUrl.pathname;
 
-      const backendUrl = process.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const backendUrl = getBackendUrl();
 
       // 1. Comprehensive Route Matching & Data Loading for SSR & SEO
       const { statusCode, initialData, seo } = await matchRouteAndLoadSEO(pathname, backendUrl);

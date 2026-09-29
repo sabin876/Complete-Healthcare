@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { API_BASE_URL } from "../config/api";
+import { useSSRData } from "../context/SSRDataContext";
 
 const faqs = [
   {
@@ -233,17 +234,24 @@ const styles = `
 `;
 
 export default function FAQ({ eyebrow, title, subtitle, description, faqs: propFaqs, items }) {
+  const ssrData = useSSRData();
+  const serverHomeFaqs = (ssrData && ssrData.isHomepage && Array.isArray(ssrData.faqs) && ssrData.faqs.length > 0) ? ssrData.faqs : null;
+
   const [openIndex, setOpenIndex] = useState(null);
 
-  const [activeEyebrow, setActiveEyebrow] = useState(eyebrow || "⊙ Common Questions");
-  const [activeTitle, setActiveTitle] = useState(title || "Frequently Asked Questions");
+  const [activeEyebrow, setActiveEyebrow] = useState(
+    eyebrow || (ssrData?.isHomepage && ssrData?.faq_eyebrow) || "⊙ Common Questions"
+  );
+  const [activeTitle, setActiveTitle] = useState(
+    title || (ssrData?.isHomepage && ssrData?.faq_title) || "Frequently Asked Questions"
+  );
   const [activeDesc, setActiveDesc] = useState(
-    description || subtitle || "Find answers to the most common questions about our home healthcare services in Dubai."
+    description || subtitle || (ssrData?.isHomepage && ssrData?.faq_description) || "Find answers to the most common questions about our home healthcare services in Dubai."
   );
   const [faqList, setFaqList] = useState(
     (Array.isArray(propFaqs) && propFaqs.length > 0)
       ? propFaqs
-      : ((Array.isArray(items) && items.length > 0) ? items : faqs)
+      : ((Array.isArray(items) && items.length > 0) ? items : (serverHomeFaqs || faqs))
   );
 
   useEffect(() => {
@@ -257,6 +265,11 @@ export default function FAQ({ eyebrow, title, subtitle, description, faqs: propF
     }
     if (Array.isArray(items) && items.length > 0) {
       setFaqList(items);
+      return;
+    }
+
+    // If SSR data already provided dynamic homepage FAQs, avoid redundant network request
+    if (serverHomeFaqs) {
       return;
     }
 
@@ -280,7 +293,7 @@ export default function FAQ({ eyebrow, title, subtitle, description, faqs: propF
     return () => {
       isMounted = false;
     };
-  }, [eyebrow, title, subtitle, description, propFaqs, items]);
+  }, [eyebrow, title, subtitle, description, propFaqs, items, serverHomeFaqs]);
 
   const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
 
