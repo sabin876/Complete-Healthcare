@@ -68,6 +68,7 @@ SITE_ID = 1
 
 
 MIDDLEWARE = [
+    'api.middleware.AutoSchemaSyncMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
