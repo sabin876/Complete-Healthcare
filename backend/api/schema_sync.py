@@ -118,6 +118,11 @@ def auto_sync_schema():
                 if 'faqs' not in cols:
                     safe_execute(cursor, f"ALTER TABLE api_homepage ADD COLUMN faqs {text_type}")
 
+                if is_mysql:
+                    safe_execute(cursor, "ALTER TABLE api_homepage CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+                    safe_execute(cursor, "ALTER TABLE api_homepage MODIFY COLUMN faq_eyebrow VARCHAR(200) NOT NULL DEFAULT 'Common Questions'")
+                    safe_execute(cursor, "UPDATE api_homepage SET faq_eyebrow = 'Common Questions' WHERE faq_eyebrow LIKE '%Common Questions%'")
+
             # -----------------------------------------------------------------
             # 3. Mark migrations in django_migrations table if present
             # -----------------------------------------------------------------

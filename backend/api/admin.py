@@ -4180,7 +4180,30 @@ class HomePageAdmin(admin.ModelAdmin):
         return False
 
     def changelist_view(self, request, extra_context=None):
-        obj, _ = HomePage.objects.get_or_create(id=1)
+        try:
+            obj, _ = HomePage.objects.get_or_create(id=1, defaults={
+                'title': 'Home Page',
+                'meta_title': 'CORX Healthcare: Home Health Care Services in Dubai *24/7',
+                'meta_description': 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.',
+                'canonical_url': 'https://corx.ae/',
+                'hero_title': 'Home Healthcare Services in Dubai',
+                'hero_eyebrow': '24/7 DHA-LICENSED CLINICAL CARE',
+                'hero_tagline': 'DHA-licensed doctors, nurses, and physiotherapists at your home, hotel, or office in 30-45 minutes.',
+                'faq_eyebrow': 'Common Questions',
+                'faq_title': 'Frequently Asked Questions',
+                'faq_description': 'Find answers to the most common questions about our home healthcare services in Dubai.',
+                'faqs': [],
+            })
+        except Exception:
+            obj = HomePage.objects.first()
+            if not obj:
+                obj = HomePage(
+                    id=1,
+                    title='Home Page',
+                    faq_eyebrow='Common Questions',
+                    faq_title='Frequently Asked Questions'
+                )
+                obj.save()
         return redirect(f'/admin/api/homepage/{obj.id}/change/')
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):

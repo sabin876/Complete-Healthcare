@@ -423,7 +423,7 @@ class HomePage(models.Model):
     faq_eyebrow = models.CharField(
         max_length=200, 
         blank=True, 
-        default="⊙ Common Questions", 
+        default="Common Questions", 
         verbose_name="FAQ Eyebrow Tag",
         help_text="Eyebrow tag above the FAQ section title"
     )
