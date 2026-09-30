@@ -28,10 +28,10 @@ function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo
 
   // 2. Clean existing metadata tags from template to prevent duplicates
   html = html
-    .replace(/<title\b[^>]*>[\s\S]*?<\/title>/gi, '')
-    .replace(/<meta\b[^>]*?\b(?:name|property)\s*=\s*["']?(?:description|og:[^"'\s>]+|twitter:[^"'\s>]+|robots)["']?[^>]*\/?>/gi, '')
-    .replace(/<link\b[^>]*?\brel\s*=\s*["']?canonical["']?[^>]*\/?>/gi, '')
-    .replace(/<script\b[^>]*?\btype\s*=\s*["']?application\/ld\+json["']?[^>]*>[\s\S]*?<\/script>/gi, '');
+    .replace(/^[ \t]*<title\b[^>]*>[\s\S]*?<\/title>[ \t]*(?:\r?\n)?/gim, '')
+    .replace(/^[ \t]*<meta\b[^>]*?\b(?:name|property)\s*=\s*["']?(?:description|og:[^"'\s>]+|twitter:[^"'\s>]+|robots)["']?[^>]*\/?>[ \t]*(?:\r?\n)?/gim, '')
+    .replace(/^[ \t]*<link\b[^>]*?\brel\s*=\s*["']?canonical["']?[^>]*\/?>[ \t]*(?:\r?\n)?/gim, '')
+    .replace(/^[ \t]*<script\b[^>]*?\btype\s*=\s*["']?application\/ld\+json["']?[^>]*>[\s\S]*?<\/script>[ \t]*(?:\r?\n)?/gim, '');
 
   const activeTitle = seo?.title || 'CORX Healthcare: Home Health Care Services in Dubai *24/7';
   const activeDesc = seo?.description || 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.';
@@ -67,7 +67,9 @@ function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo
   headTags.push(hydrationScript);
 
   const headContent = headTags.filter(Boolean).join('\n    ');
-  if (html.includes('</head>')) {
+  if (/<meta\b[^>]*?\bname=["']viewport["'][^>]*\/?>/i.test(html)) {
+    html = html.replace(/(<meta\b[^>]*?\bname=["']viewport["'][^>]*\/?>)/i, `$1\n    ${headContent}`);
+  } else if (html.includes('</head>')) {
     html = html.replace('</head>', `    ${headContent}\n  </head>`);
   } else if (html.includes('</body>')) {
     html = html.replace('</body>', `    ${headContent}\n  </body>`);
