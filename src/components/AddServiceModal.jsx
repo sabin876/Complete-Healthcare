@@ -122,8 +122,19 @@ export default function AddServiceModal({ isOpen, onClose, onServiceAdded }) {
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.detail || JSON.stringify(data) || 'Failed to create service');
+        const data = await res.json().catch(() => null);
+        let msg = 'Failed to create service';
+        if (data) {
+          if (data.detail) {
+            msg = data.detail;
+          } else if (typeof data === 'object') {
+            const messages = Object.entries(data).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`);
+            msg = messages.join(' | ') || JSON.stringify(data);
+          }
+        } else {
+          msg = `HTTP ${res.status}: ${res.statusText || 'Server Error'}`;
+        }
+        throw new Error(msg);
       }
 
       const created = await res.json();

@@ -46,9 +46,6 @@ DEBUG = os.getenv('DEBUG', 'True').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-
 
 
 # Application definition
@@ -163,15 +160,39 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # CORS configuration
+from corsheaders.defaults import default_headers, default_methods
+
 CORS_ALLOW_ALL_ORIGINS = os.getenv('CORS_ALLOW_ALL_ORIGINS', 'True').lower() in ('true', '1', 't')
 raw_cors = os.getenv('CORS_ALLOWED_ORIGINS', 'https://corx.ae,https://www.corx.ae,https://api.corx.ae,https://www.api.corx.ae,http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173')
-CORS_ALLOWED_ORIGINS = [
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in raw_cors.split(',') if origin.strip()]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = list(default_headers) + ['x-requested-with', 'x-csrftoken']
+CORS_ALLOW_METHODS = list(default_methods)
+
+# CSRF configuration for Production / Hosting (Hostinger, VPS, etc.)
+raw_csrf = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+CSRF_TRUSTED_ORIGINS = [
     "https://corx.ae",
     "https://www.corx.ae",
+    "https://api.corx.ae",
+    "https://www.api.corx.ae",
     "http://localhost:5173",
-    "http://localhost:3000",
     "http://127.0.0.1:5173",
+    "http://localhost:3000",
 ]
+if raw_csrf:
+    CSRF_TRUSTED_ORIGINS.extend([origin.strip() for origin in raw_csrf.split(',') if origin.strip()])
+for origin in CORS_ALLOWED_ORIGINS:
+    if origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(origin)
+
+# REST Framework settings (stateless API - prevent SessionAuthentication CSRF rejection on SPA fetch requests)
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
 
 JAZZMIN_SETTINGS = {
     "site_title": "CORx Healthcare Operations & Admin",

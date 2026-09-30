@@ -62,6 +62,7 @@ This generates a production-ready `dist/` folder. Notice that `dist/.htaccess` i
    DEBUG=False
    ALLOWED_HOSTS=api.yourdomain.com,yourdomain.com,127.0.0.1
    CORS_ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+   CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
    
    DB_ENGINE=django.db.backends.mysql
    DB_NAME=u123456789_healthcare

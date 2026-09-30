@@ -727,7 +727,11 @@ export default function Dashboard() {
     }
 
     if (!selectedParentId) {
-      showToast('error', 'Validation Error', 'Please choose a parent category for this service.');
+      if (parentServices.length === 0) {
+        showToast('error', 'No Parent Category Found', 'No parent categories exist yet. Please go to the "Parent Categories" tab first to create one.');
+      } else {
+        showToast('error', 'Validation Error', 'Please choose a parent category for this service.');
+      }
       return;
     }
 
@@ -762,8 +766,19 @@ export default function Dashboard() {
       }
 
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.detail || JSON.stringify(errData) || 'Failed to save sub-service');
+        const errData = await res.json().catch(() => null);
+        let message = 'Failed to save sub-service';
+        if (errData) {
+          if (errData.detail) {
+            message = errData.detail;
+          } else if (typeof errData === 'object') {
+            const messages = Object.entries(errData).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`);
+            message = messages.join(' | ') || JSON.stringify(errData);
+          }
+        } else {
+          message = `HTTP ${res.status}: ${res.statusText || 'Server Error'}`;
+        }
+        throw new Error(message);
       }
 
       const saved = await res.json();
@@ -796,8 +811,9 @@ export default function Dashboard() {
         }
         loadServices();
       } else {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.detail || 'Could not delete service');
+        const errData = await res.json().catch(() => null);
+        const errMsg = errData?.detail || `HTTP ${res.status}: ${res.statusText || 'Could not delete service'}`;
+        throw new Error(errMsg);
       }
     } catch (err) {
       console.error('Error deleting service:', err);
@@ -847,8 +863,19 @@ export default function Dashboard() {
       }
 
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.detail || JSON.stringify(errData) || 'Failed to save parent service');
+        const errData = await res.json().catch(() => null);
+        let message = 'Failed to save parent service';
+        if (errData) {
+          if (errData.detail) {
+            message = errData.detail;
+          } else if (typeof errData === 'object') {
+            const messages = Object.entries(errData).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`);
+            message = messages.join(' | ') || JSON.stringify(errData);
+          }
+        } else {
+          message = `HTTP ${res.status}: ${res.statusText || 'Server Error'}`;
+        }
+        throw new Error(message);
       }
 
       const saved = await res.json();
@@ -1417,15 +1444,32 @@ export default function Dashboard() {
                         onChange={(e) => setSelectedParentId(e.target.value)}
                         className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white font-bold text-xs focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner transition-all cursor-pointer"
                       >
-                        {parentServices.map((p) => {
-                          const count = servicesData.filter((s) => s.parent === p.id).length;
-                          return (
-                            <option key={p.id} value={p.id}>
-                              {p.name || p.title} ({count} existing sub-services)
-                            </option>
-                          );
-                        })}
+                        {parentServices.length === 0 ? (
+                          <option value="">No Parent Categories Found (Create One First)</option>
+                        ) : (
+                          parentServices.map((p) => {
+                            const count = servicesData.filter((s) => s.parent === p.id).length;
+                            return (
+                              <option key={p.id} value={p.id}>
+                                {p.name || p.title} ({count} existing sub-services)
+                              </option>
+                            );
+                          })
+                        )}
                       </select>
+                      {parentServices.length === 0 && (
+                        <p className="mt-1 text-[11px] text-amber-400">
+                          ⚠️ No parent categories exist. Please switch to the{' '}
+                          <button
+                            type="button"
+                            onClick={() => setActiveTab('parents')}
+                            className="underline font-bold text-cyan-400 cursor-pointer hover:text-cyan-300"
+                          >
+                            Parent Categories tab
+                          </button>{' '}
+                          to create one first.
+                        </p>
+                      )}
                     </div>
 
                     {/* Sub-Service Title */}

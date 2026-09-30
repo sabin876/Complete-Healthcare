@@ -281,7 +281,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at'
         ]
         extra_kwargs = {
-            'slug': {'required': False, 'allow_blank': True},
+            'slug': {'required': False, 'allow_blank': True, 'validators': []},
             'custom_url_path': {'required': False, 'allow_blank': True},
             'title': {'required': True},
         }
@@ -385,21 +385,43 @@ class ServiceSerializer(serializers.ModelSerializer):
             return text
 
     def create(self, validated_data):
-        title = validated_data.get('title', 'service')
-        provided_slug = validated_data.get('slug', '').strip()
-        if not provided_slug:
-            base_slug = slugify(title)
-            slug = base_slug
-            count = 1
-            while Service.objects.filter(slug=slug).exists():
-                slug = f"{base_slug}-{count}"
-                count += 1
-            validated_data['slug'] = slug
+        title = validated_data.get('title') or 'service'
+        raw_slug = validated_data.get('slug')
+        provided_slug = str(raw_slug).strip() if raw_slug else ''
+        if provided_slug:
+            base_slug = slugify(provided_slug) or 'service'
+        else:
+            base_slug = slugify(title) or 'service'
+
+        slug = base_slug
+        count = 1
+        while Service.objects.filter(slug=slug).exists():
+            slug = f"{base_slug}-{count}"
+            count += 1
+        validated_data['slug'] = slug
 
         if not validated_data.get('eyebrow'):
             validated_data['eyebrow'] = 'DHA-Licensed Healthcare Service Across Dubai'
 
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        raw_slug = validated_data.get('slug')
+        if raw_slug is not None:
+            provided_slug = str(raw_slug).strip()
+            if provided_slug:
+                base_slug = slugify(provided_slug) or instance.slug or 'service'
+            else:
+                base_slug = instance.slug or slugify(validated_data.get('title', instance.title)) or 'service'
+
+            slug = base_slug
+            count = 1
+            while Service.objects.filter(slug=slug).exclude(id=instance.id).exists():
+                slug = f"{base_slug}-{count}"
+                count += 1
+            validated_data['slug'] = slug
+
+        return super().update(instance, validated_data)
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):
