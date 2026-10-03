@@ -122,6 +122,9 @@ def auto_sync_schema():
                     safe_execute(cursor, "ALTER TABLE api_homepage CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
                     safe_execute(cursor, "ALTER TABLE api_homepage MODIFY COLUMN faq_eyebrow VARCHAR(200) NOT NULL DEFAULT 'Common Questions'")
                     safe_execute(cursor, "UPDATE api_homepage SET faq_eyebrow = 'Common Questions' WHERE faq_eyebrow LIKE '%Common Questions%'")
+                    safe_execute(cursor, "ALTER TABLE django_admin_log CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+                    safe_execute(cursor, "ALTER TABLE api_noticeapplication CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+                    safe_execute(cursor, "ALTER TABLE api_noticeapplication_selected_staff CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
 
             # -----------------------------------------------------------------
             # 3. Mark migrations in django_migrations table if present
@@ -132,7 +135,9 @@ def auto_sync_schema():
                 for mig_name in [
                     '0037_service_schema_markup',
                     '0038_homepage',
-                    '0039_homepage_faq_description_homepage_faq_eyebrow_and_more'
+                    '0039_homepage_faq_description_homepage_faq_eyebrow_and_more',
+                    '0040_alter_homepage_faq_eyebrow',
+                    '0041_alter_noticeapplication_priority_and_more'
                 ]:
                     if mig_name not in applied:
                         safe_execute(

@@ -1736,8 +1736,71 @@ class SubServiceInline(admin.TabularInline):
     show_change_link = True
 
 
+class SafeLogAdminMixin:
+    """
+    Safeguards Django Admin log actions against MySQL 1366 DataError
+    caused by 4-byte UTF-8 emojis/symbols when django_admin_log
+    or related tables use utf8/latin1 charset.
+    """
+    def log_addition(self, request, object, message):
+        try:
+            return super().log_addition(request, object, message)
+        except Exception:
+            try:
+                from django.contrib.admin.models import ADDITION, LogEntry
+                from django.contrib.admin.options import get_content_type_for_model
+                safe_repr = "".join(c for c in str(object) if ord(c) < 128)[:200]
+                return LogEntry.objects.log_action(
+                    user_id=request.user.pk,
+                    content_type_id=get_content_type_for_model(object).pk,
+                    object_id=object.pk,
+                    object_repr=safe_repr or str(object.pk),
+                    action_flag=ADDITION,
+                    change_message="".join(c for c in str(message) if ord(c) < 128)[:200],
+                )
+            except Exception:
+                return None
+
+    def log_change(self, request, object, message):
+        try:
+            return super().log_change(request, object, message)
+        except Exception:
+            try:
+                from django.contrib.admin.models import CHANGE, LogEntry
+                from django.contrib.admin.options import get_content_type_for_model
+                safe_repr = "".join(c for c in str(object) if ord(c) < 128)[:200]
+                return LogEntry.objects.log_action(
+                    user_id=request.user.pk,
+                    content_type_id=get_content_type_for_model(object).pk,
+                    object_id=object.pk,
+                    object_repr=safe_repr or str(object.pk),
+                    action_flag=CHANGE,
+                    change_message="".join(c for c in str(message) if ord(c) < 128)[:200],
+                )
+            except Exception:
+                return None
+
+    def log_deletion(self, request, object, object_repr):
+        try:
+            return super().log_deletion(request, object, object_repr)
+        except Exception:
+            try:
+                from django.contrib.admin.models import DELETION, LogEntry
+                from django.contrib.admin.options import get_content_type_for_model
+                safe_repr = "".join(c for c in str(object_repr) if ord(c) < 128)[:200]
+                return LogEntry.objects.log_action(
+                    user_id=request.user.pk,
+                    content_type_id=get_content_type_for_model(object).pk,
+                    object_id=object.pk,
+                    object_repr=safe_repr or str(object.pk),
+                    action_flag=DELETION,
+                )
+            except Exception:
+                return None
+
+
 @admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
+class ServiceAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     form = ServiceAdminForm
     change_form_template = "admin/api/service/change_form.html"
     inlines = [SubServiceInline]
@@ -1841,7 +1904,7 @@ class ServiceAdmin(admin.ModelAdmin):
 
 
 @admin.register(BlogPost)
-class BlogPostAdmin(admin.ModelAdmin):
+class BlogPostAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     form = BlogPostAdminForm
     change_form_template = "admin/api/blogpost/change_form.html"
     list_display = ('title', 'category', 'author', 'date', 'view_public_button')
@@ -1877,7 +1940,7 @@ class BlogPostAdmin(admin.ModelAdmin):
 
 
 @admin.register(TeamMember)
-class TeamMemberAdmin(admin.ModelAdmin):
+class TeamMemberAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     list_display = ('name', 'post', 'photo')
     search_fields = ('name', 'post')
 
@@ -1987,7 +2050,7 @@ class StaffProfileForm(forms.ModelForm):
 
 
 @admin.register(StaffProfile)
-class StaffProfileAdmin(admin.ModelAdmin):
+class StaffProfileAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     form = StaffProfileForm
     inlines = []
     list_display = ('passport_photo_thumbnail', 'full_name', 'staff_id_badge', 'department_badge', 'position', 'actions_buttons')
@@ -2077,7 +2140,7 @@ class StaffProfileAdmin(admin.ModelAdmin):
 
 
 @admin.register(Task)
-class TaskAdmin(admin.ModelAdmin):
+class TaskAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     list_display = ('title', 'assigned_to_name', 'priority', 'status', 'due_date')
     list_filter = ('priority', 'status')
     search_fields = ('title', 'assigned_to_name')
@@ -2088,7 +2151,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 @admin.register(LeaveApplication)
-class LeaveApplicationAdmin(admin.ModelAdmin):
+class LeaveApplicationAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     list_display = (
         'staff_card',
         'submitted_at_fmt',
@@ -2387,7 +2450,7 @@ class LeaveApplicationAdmin(admin.ModelAdmin):
 
 
 @admin.register(OtApplication)
-class OtApplicationAdmin(admin.ModelAdmin):
+class OtApplicationAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     list_display = (
         'staff_card',
         'ot_type_badge',
@@ -3222,7 +3285,7 @@ class SalarySlipAdminForm(forms.ModelForm):
 
 
 @admin.register(SalaryApplication)
-class SalaryApplicationAdmin(admin.ModelAdmin):
+class SalaryApplicationAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     form = SalarySlipAdminForm
     change_form_template = 'admin/api/salaryapplication/change_form.html'
     list_display = ('staff_card', 'description_summary', 'image_preview', 'status_badge', 'submitted_at_fmt', 'quick_actions')
@@ -3521,7 +3584,7 @@ class NoticeApplicationForm(forms.ModelForm):
 
 
 @admin.register(NoticeApplication)
-class NoticeApplicationAdmin(admin.ModelAdmin):
+class NoticeApplicationAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     form = NoticeApplicationForm
     list_display = ('title', 'recipients_badge', 'submitted_at', 'actions_buttons')
     list_display_links = ('title',)
@@ -3562,10 +3625,10 @@ class NoticeApplicationAdmin(admin.ModelAdmin):
         total_staff = StaffProfile.objects.count()
         count = obj.selected_staff.count()
         if obj.target_audience == 'all' or count == 0 or count >= total_staff:
-            return mark_safe('<span style="background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 6px;">📢 All Staff Members</span>')
+            return mark_safe('<span style="background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 6px;"><i class="fas fa-bullhorn"></i> All Staff Members</span>')
         names = ", ".join([s.full_name for s in obj.selected_staff.all()[:2]])
         extra = f" +{count - 2} more" if count > 2 else ""
-        return mark_safe(f'<span style="background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 6px;">👤 {names}{extra}</span>')
+        return mark_safe(f'<span style="background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 6px;"><i class="fas fa-user"></i> {names}{extra}</span>')
     recipients_badge.short_description = "Recipients"
 
     def actions_buttons(self, obj):
@@ -3585,7 +3648,7 @@ class NoticeApplicationAdmin(admin.ModelAdmin):
 
 
 @admin.register(DutyApplication)
-class DutyApplicationAdmin(admin.ModelAdmin):
+class DutyApplicationAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     list_display = (
         'staff_card',
         'swap_with_badge',
@@ -4034,7 +4097,7 @@ class DriverRouteStopInline(admin.StackedInline):
 
 
 @admin.register(DriverSchedule)
-class DriverScheduleAdmin(admin.ModelAdmin):
+class DriverScheduleAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     form = DriverScheduleForm
     inlines = [DriverRouteStopInline]
     change_form_template = "admin/api/driverschedule/change_form.html"
@@ -4150,7 +4213,7 @@ class HomePageAdminForm(forms.ModelForm):
 
 
 @admin.register(HomePage)
-class HomePageAdmin(admin.ModelAdmin):
+class HomePageAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     form = HomePageAdminForm
     change_form_template = "admin/api/homepage/change_form.html"
     list_display = ('title', 'meta_title', 'canonical_url', 'updated_at')
@@ -4226,7 +4289,7 @@ class HomePageAdmin(admin.ModelAdmin):
 
 
 @admin.register(RobotsTxt)
-class RobotsTxtAdmin(admin.ModelAdmin):
+class RobotsTxtAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     list_display = ('__str__', 'updated_at')
     fields = ('content',)
 
@@ -4251,7 +4314,7 @@ class RobotsTxtAdmin(admin.ModelAdmin):
 
 
 @admin.register(SitemapXml)
-class SitemapXmlAdmin(admin.ModelAdmin):
+class SitemapXmlAdmin(SafeLogAdminMixin, admin.ModelAdmin):
     list_display = ('__str__', 'updated_at')
     fields = ('content',)
 

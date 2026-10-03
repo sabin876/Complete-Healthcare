@@ -141,14 +141,14 @@ class SalaryApplication(models.Model):
 
 class NoticeApplication(models.Model):
     TARGET_AUDIENCE_CHOICES = [
-        ('all', '📢 Broadcast to All Staff Members'),
-        ('specific_staff', '👤 Select Specific Staff Members'),
-        ('specific_dept', '🏢 Select by Department'),
+        ('all', 'Broadcast to All Staff Members'),
+        ('specific_staff', 'Select Specific Staff Members'),
+        ('specific_dept', 'Select by Department'),
     ]
     PRIORITY_CHOICES = [
-        ('normal', '🟢 Normal Notice'),
-        ('important', '🟡 Important Announcement'),
-        ('urgent', '🔴 Urgent / High Priority'),
+        ('normal', 'Normal Notice'),
+        ('important', 'Important Announcement'),
+        ('urgent', 'Urgent / High Priority'),
     ]
 
     title = models.CharField(
@@ -220,7 +220,10 @@ class NoticeApplication(models.Model):
         ordering = ['-submitted_at']
 
     def __str__(self):
-        return f"{self.title} ({self.get_target_audience_display()})"
+        raw_repr = f"{self.title} ({self.get_target_audience_display()})"
+        # Strip any 4-byte UTF-8 emojis/symbols to prevent MySQL 1366 errors on utf8mb3 tables
+        clean_repr = "".join(c for c in raw_repr if ord(c) <= 0xFFFF)
+        return clean_repr[:200]
 
 class DutyApplication(models.Model):
     SHIFT_TIMING_CHOICES = [
