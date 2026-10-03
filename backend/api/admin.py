@@ -1989,7 +1989,7 @@ class StaffProfileForm(forms.ModelForm):
 @admin.register(StaffProfile)
 class StaffProfileAdmin(admin.ModelAdmin):
     form = StaffProfileForm
-    inlines = [TaskInline, LeaveApplicationInline, OtApplicationInline, DutyApplicationInline, SalaryApplicationInline]
+    inlines = []
     list_display = ('passport_photo_thumbnail', 'full_name', 'staff_id_badge', 'department_badge', 'position', 'actions_buttons')
     list_display_links = ('passport_photo_thumbnail', 'full_name')
     search_fields = ('staff_id', 'full_name', 'position', 'department')

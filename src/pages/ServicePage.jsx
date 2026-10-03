@@ -508,9 +508,12 @@ function LabServicesLanding({ slug = 'lab-services' }) {
       cleanSlug,
       cleanSlug.replace('doctor', 'docotor'),
       cleanSlug === 'doctor-on-call' ? 'docotor-on-call' : null,
-      cleanSlug === 'lab-services' ? 'lab-test-at-home' : (cleanSlug === 'lab-test-at-home' ? 'lab-services' : null),
-      cleanSlug === 'elderly-care' ? 'elderly-home-care' : (cleanSlug === 'elderly-home-care' ? 'elderly-care' : null),
-      cleanSlug === 'iv-therapy' ? 'iv-therapy-iv-drip' : (cleanSlug === 'iv-therapy-iv-drip' ? 'iv-therapy' : null),
+      ...(cleanSlug.includes('lab') ? ['lab-services', 'lab-test-at-home', 'lab-test-at-home-dubai'] : []),
+      ...(cleanSlug.includes('elder') ? ['elderly-home-care', 'elderly-care'] : []),
+      ...(cleanSlug.includes('iv') ? ['iv-therapy-iv-drip', 'iv-therapy'] : []),
+      ...(cleanSlug.includes('physio') ? ['physiotherapy', 'physiotherapy-at-home-in-dubai'] : []),
+      ...(cleanSlug.includes('nurs') ? ['home-nursing', 'nursing'] : []),
+      ...(cleanSlug.includes('doctor') ? ['doctor-on-call', 'doctor-at-home'] : []),
     ].filter((val, idx, arr) => Boolean(val) && arr.indexOf(val) === idx);
 
     let isMounted = true;
@@ -923,15 +926,39 @@ function LabServicesLanding({ slug = 'lab-services' }) {
                 transitionDelay: "0.2s"
               }}
             >
-              {(mergedData?.image_file || mergedData?.image || cleanSlug.includes('doctor')) ? (
-                <img 
-                  src={mergedData?.image_file || mergedData?.image || "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80"} 
-                  alt={mergedData?.title || "Doctor On Call Services"} 
-                  className="w-full h-[380px] sm:h-[480px] lg:h-[540px] rounded-[32px] shadow-2xl object-cover border-[6px] border-white/90 ring-1 ring-slate-900/10 hover:scale-[1.01] transition-transform duration-500" 
-                />
-              ) : (
-                <LabIllustration />
-              )}
+              <img 
+                src={(() => {
+                  const raw = mergedData?.image || mergedData?.image_file;
+                  if (raw && typeof raw === 'string' && raw.trim()) {
+                    const trimmed = raw.trim();
+                    if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:') || trimmed.startsWith('blob:')) {
+                      return trimmed;
+                    }
+                    if (trimmed.startsWith('/media/')) {
+                      return `${API_BASE_URL}${trimmed}`;
+                    }
+                    return trimmed;
+                  }
+                  if (cleanSlug.includes('lab') || cleanSlug.includes('blood')) {
+                    return "/lab_test_hero.png";
+                  }
+                  if (cleanSlug.includes('iv') || cleanSlug.includes('drip')) {
+                    return "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=800&q=80";
+                  }
+                  if (cleanSlug.includes('nurs')) {
+                    return "https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80";
+                  }
+                  if (cleanSlug.includes('elder')) {
+                    return "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&q=80";
+                  }
+                  if (cleanSlug.includes('physio')) {
+                    return "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80";
+                  }
+                  return "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80";
+                })()} 
+                alt={mergedData?.title || "Home Healthcare Services Dubai"} 
+                className="w-full h-[380px] sm:h-[480px] lg:h-[540px] rounded-[32px] shadow-2xl object-cover border-[6px] border-white/90 ring-1 ring-slate-900/10 hover:scale-[1.01] transition-transform duration-500" 
+              />
             </div>
           </div>
         </Container>

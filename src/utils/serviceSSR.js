@@ -126,9 +126,12 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
     cleanSlug,
     cleanSlug.replace('doctor', 'docotor'),
     cleanSlug === 'doctor-on-call' ? 'docotor-on-call' : null,
-    cleanSlug === 'lab-services' ? 'lab-test-at-home' : (cleanSlug === 'lab-test-at-home' ? 'lab-services' : null),
-    cleanSlug === 'elderly-care' ? 'elderly-home-care' : (cleanSlug === 'elderly-home-care' ? 'elderly-care' : null),
-    cleanSlug === 'iv-therapy' ? 'iv-therapy-iv-drip' : (cleanSlug === 'iv-therapy-iv-drip' ? 'iv-therapy' : null),
+    ...(cleanSlug.includes('lab') ? ['lab-services', 'lab-test-at-home', 'lab-test-at-home-dubai'] : []),
+    ...(cleanSlug.includes('elder') ? ['elderly-home-care', 'elderly-care'] : []),
+    ...(cleanSlug.includes('iv') ? ['iv-therapy-iv-drip', 'iv-therapy'] : []),
+    ...(cleanSlug.includes('physio') ? ['physiotherapy', 'physiotherapy-at-home-in-dubai'] : []),
+    ...(cleanSlug.includes('nurs') ? ['home-nursing', 'nursing'] : []),
+    ...(cleanSlug.includes('doctor') ? ['doctor-on-call', 'doctor-at-home'] : []),
   ].filter((val, idx, arr) => Boolean(val) && arr.indexOf(val) === idx);
 
   // Attempt to fetch from backend API with timeout

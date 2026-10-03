@@ -304,6 +304,7 @@ export const servicesData = {
     eyebrow: "Standardized home blood collection & diagnostics",
     tagline: "Professional blood tests and sample collection in the comfort of your home.",
     description: "Need diagnostic screening or a routine blood check? Arrange your medical laboratory tests at home without clinical lines or stressful travel. Our DHA-licensed nurses will visit you to collect samples, transport them safely, and deliver 100% accurate results directly from accredited labs.",
+    image: "/lab_test_hero.png",
     icon: "Activity",
     themeColor: "#08709d",
     floatingBadge: {

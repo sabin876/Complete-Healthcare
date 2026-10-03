@@ -434,16 +434,25 @@ fieldset.module > .description {
         {% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}" />{% endif %}
 
         {% if errors %}
-            <div class="alert alert-danger" style="border-radius: 14px; margin-bottom: 24px; font-weight: 600; padding: 16px 20px; box-shadow: 0 4px 16px rgba(220, 38, 38, 0.1);">
-                <div style="font-weight: 800; font-size: 15px; margin-bottom: 6px;">
-                    <i class="fas fa-exclamation-triangle"></i> Please correct the error{{ errors|length|pluralize }} below:
+            <div class="alert alert-danger" style="border-radius: 14px; margin-bottom: 24px; font-weight: 600; padding: 16px 20px; box-shadow: 0 4px 16px rgba(220, 38, 38, 0.1); background: #fef2f2; border: 1.5px solid #fecaca; color: #991b1b;">
+                <div style="font-weight: 800; font-size: 15px; margin-bottom: 8px; color: #991b1b; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-exclamation-circle" style="font-size: 18px;"></i> Please correct the error{{ errors|length|pluralize }} below:
                 </div>
-                {{ adminform.form.non_field_errors }}
+                {% if adminform.form.non_field_errors %}
+                    <div style="font-size: 13.5px; margin-bottom: 6px; color: #b91c1c;">{{ adminform.form.non_field_errors }}</div>
+                {% endif %}
+                <ul style="margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.6;">
                 {% for field in adminform.form %}
                     {% if field.errors %}
-                        <div style="font-size: 13px; margin-top: 4px;">• <strong>{{ field.label }}:</strong> {{ field.errors|striptags }}</div>
+                        <li><strong>{{ field.label }}:</strong> {{ field.errors|striptags }}</li>
                     {% endif %}
                 {% endfor %}
+                {% for inline_admin_formset in inline_admin_formsets %}
+                    {% for error in inline_admin_formset.formset.non_form_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                </ul>
             </div>
         {% endif %}
 
@@ -469,6 +478,11 @@ fieldset.module > .description {
                             Full Medical Name <span class="req-star">*</span>
                         </label>
                         {{ adminform.form.full_name }}
+                        {% if adminform.form.full_name.errors %}
+                            <div style="color: #dc2626; font-size: 12px; font-weight: 700; margin-top: 5px;">
+                                <i class="fas fa-exclamation-triangle"></i> {{ adminform.form.full_name.errors|striptags }}
+                            </div>
+                        {% endif %}
                         <div class="staff-help">e.g. Dr. Sarah Jenkins, RN / Consultant Physician</div>
                     </div>
 
@@ -477,6 +491,11 @@ fieldset.module > .description {
                             Department <span class="req-star">*</span>
                         </label>
                         {{ adminform.form.department }}
+                        {% if adminform.form.department.errors %}
+                            <div style="color: #dc2626; font-size: 12px; font-weight: 700; margin-top: 5px;">
+                                <i class="fas fa-exclamation-triangle"></i> {{ adminform.form.department.errors|striptags }}
+                            </div>
+                        {% endif %}
                         <div class="staff-help">e.g. Home Nursing, Doctor on Call, Lab, HR</div>
                     </div>
 
@@ -485,6 +504,11 @@ fieldset.module > .description {
                             Position / Title <span class="req-star">*</span>
                         </label>
                         {{ adminform.form.position }}
+                        {% if adminform.form.position.errors %}
+                            <div style="color: #dc2626; font-size: 12px; font-weight: 700; margin-top: 5px;">
+                                <i class="fas fa-exclamation-triangle"></i> {{ adminform.form.position.errors|striptags }}
+                            </div>
+                        {% endif %}
                         <div class="staff-help">e.g. Senior DHA Registered Nurse</div>
                     </div>
                 </div>
@@ -494,6 +518,11 @@ fieldset.module > .description {
                     <div class="staff-form-group">
                         <label class="staff-label">Role / Access Level</label>
                         {{ adminform.form.role }}
+                        {% if adminform.form.role.errors %}
+                            <div style="color: #dc2626; font-size: 12px; font-weight: 700; margin-top: 5px;">
+                                <i class="fas fa-exclamation-triangle"></i> {{ adminform.form.role.errors|striptags }}
+                            </div>
+                        {% endif %}
                         <div class="staff-help">Clinical staff member vs Administrator</div>
                     </div>
                 </div>
@@ -523,6 +552,11 @@ fieldset.module > .description {
                             Username / Staff ID <span class="req-star">*</span>
                         </label>
                         {{ adminform.form.staff_id }}
+                        {% if adminform.form.staff_id.errors %}
+                            <div style="color: #dc2626; font-size: 12px; font-weight: 700; margin-top: 5px;">
+                                <i class="fas fa-exclamation-triangle"></i> {{ adminform.form.staff_id.errors|striptags }}
+                            </div>
+                        {% endif %}
                         <div class="staff-help">Unique ID for Portal login (e.g. STF-101, DOC-202)</div>
                     </div>
 
@@ -531,6 +565,11 @@ fieldset.module > .description {
                             Portal Password <span class="req-star">*</span>
                         </label>
                         {{ adminform.form.password }}
+                        {% if adminform.form.password.errors %}
+                            <div style="color: #dc2626; font-size: 12px; font-weight: 700; margin-top: 5px;">
+                                <i class="fas fa-exclamation-triangle"></i> {{ adminform.form.password.errors|striptags }}
+                            </div>
+                        {% endif %}
                         <div class="staff-help">Password used to authenticate at /portal</div>
                     </div>
 
@@ -539,6 +578,11 @@ fieldset.module > .description {
                             Confirm Password <span class="req-star">*</span>
                         </label>
                         {{ adminform.form.confirm_password }}
+                        {% if adminform.form.confirm_password.errors %}
+                            <div style="color: #dc2626; font-size: 12px; font-weight: 700; margin-top: 5px;">
+                                <i class="fas fa-exclamation-triangle"></i> {{ adminform.form.confirm_password.errors|striptags }}
+                            </div>
+                        {% endif %}
                         <div class="staff-help">Re-enter password to avoid typos</div>
                     </div>
                 </div>
@@ -584,6 +628,11 @@ fieldset.module > .description {
                     <div class="staff-photo-upload-controls">
                         <label class="staff-label">Choose Photograph File</label>
                         {{ adminform.form.photo }}
+                        {% if adminform.form.photo.errors %}
+                            <div style="color: #dc2626; font-size: 12px; font-weight: 700; margin-top: 5px;">
+                                <i class="fas fa-exclamation-triangle"></i> {{ adminform.form.photo.errors|striptags }}
+                            </div>
+                        {% endif %}
                         <div class="staff-help">
                             Recommended size: 300x400px (Passport aspect ratio). Supported formats: JPG, PNG, WEBP.
                         </div>

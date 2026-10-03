@@ -537,6 +537,26 @@ class ServiceViewSet(viewsets.ModelViewSet):
                 self.check_object_permissions(self.request, item)
                 return item
 
+        # 2.5 Well-known aliases (e.g. lab-test-at-home-dubai -> lab-services)
+        SERVICE_ALIASES = {
+            'lab-test-at-home-dubai': 'lab-services',
+            'lab-test-at-home': 'lab-services',
+            'home-blood-test': 'lab-services',
+            'physiotherapy-at-home-in-dubai': 'physiotherapy',
+            'elderly-home-care': 'elderly-care',
+            'iv-therapy-iv-drip': 'iv-therapy',
+            'home-nursing': 'nursing',
+            'doctor-at-home': 'doctor-on-call',
+            'doctor-at-hotel': 'doctor-on-call',
+            'doctor-at-office': 'doctor-on-call',
+        }
+        target_alias = SERVICE_ALIASES.get(slug_val)
+        if target_alias:
+            alias_obj = queryset.filter(slug=target_alias).first()
+            if alias_obj:
+                self.check_object_permissions(self.request, alias_obj)
+                return alias_obj
+
         # 3. Keyword / Substring / Multi-word match (e.g. 'elderly-care' -> 'elderly-home-care')
         if len(slug_val) >= 3:
             slug_words = [w for w in re.split(r'[^a-z0-9]+', slug_val) if len(w) >= 3]
