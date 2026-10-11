@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ServiceHighlightsBar from '../components/ServiceHighlightsBar';
+import SEO from '../components/SEO';
+import { useSSRData } from '../context/SSRDataContext';
 import {
   Container,
   Section,
@@ -581,6 +583,11 @@ export default function ElderlyCareHomePage() {
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
+      <SEO
+        title="Elderly Home Care in Dubai | CORx Healthcare"
+        description="Compassionate elderly care at home in Dubai. DHA-licensed nurses and care assistants providing 24/7 personal care, dementia support, and medical monitoring."
+        canonical="https://corx.ae/elderly-home-care"
+      />
 
       {/* ══════════════════════════════════════════════════════════════
           SECTION 1 — HERO

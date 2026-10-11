@@ -82,14 +82,14 @@ const Sitemap = () => {
     : defaultServices;
 
   const defaultBlogArticles = [
-    { title: "Alignment concept: Total Knee Replacement", path: "/blog/alignment-concept-total-knee-replacement" },
-    { title: "The Evolution of TKR Implants", path: "/blog/evolution-of-tkr-implants" },
-    { title: "Steps in Total Knee Replacement", path: "/blog/steps-in-total-knee-replacement" },
-    { title: "Post-Surgical Kinematic Alignment", path: "/blog/post-surgical-kinematic-alignment-in-tkr" },
+    { title: "Alignment concept: Total Knee Replacement", path: "/alignment-concept-total-knee-replacement" },
+    { title: "The Evolution of TKR Implants", path: "/the-evolution-of-tkr-implants" },
+    { title: "Steps in Total Knee Replacement", path: "/steps-in-total-knee-replacement" },
+    { title: "Post-Surgical Kinematic Alignment", path: "/post-surgical-kinematic-alignment-in-tkr" },
   ];
 
   const blogArticles = dynamicBlogs.length > 0
-    ? dynamicBlogs.map(b => ({ title: b.title, path: b.slug ? `/blog/${b.slug}` : `/blog/${b.id}` }))
+    ? dynamicBlogs.map(b => ({ title: b.title, path: b.slug ? `/${b.slug}` : `/${b.id}` }))
     : defaultBlogArticles;
 
   const backendLinks = [

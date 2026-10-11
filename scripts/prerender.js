@@ -20,7 +20,7 @@ function escapeHtml(str) {
 function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo }) {
   let html = htmlTemplate.includes('<!--ssr-outlet-->')
     ? htmlTemplate.replace('<!--ssr-outlet-->', renderedHtml || '')
-    : htmlTemplate.replace('<div id="root"></div>', `<div id="root">${renderedHtml || ''}</div>`);
+    : htmlTemplate.replace(/<div id="root">[\s\S]*?<\/div>/, `<div id="root">${renderedHtml || ''}</div>`);
 
   // 1. Inject serialized initialData for React client hydration
   const serialized = initialData ? JSON.stringify(initialData).replace(/</g, '\\u003c') : 'null';

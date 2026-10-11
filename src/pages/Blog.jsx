@@ -40,44 +40,61 @@ export const slugifyTitle = (title) => {
 
 const articles = [
   {
-    id: 1,
-    slug: "alignment-concept-total-knee-replacement",
-    tag: "KNEE-REPLACEMENT",
-    title: "Alignment concept: Total Knee Replacement",
-    excerpt: "alignment-concept-total-knee-replacement",
-    author: "Dr. Ulhas Sonar",
-    date: "2026-05-30",
+    id: 50,
+    slug: "what-is-physiotherapy-a-comprehensive-guide",
+    tag: "PHYSIOTHERAPY",
+    title: "WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE",
+    excerpt: "Comprehensive guide to home physiotherapy, mobility restoration, and clinical physical therapy.",
+    author: "Corx",
+    date: "2026-04-16",
     image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800&auto=format&fit=crop",
   },
   {
-    id: 2,
-    slug: "evolution-of-tkr-implants",
+    id: 49,
+    slug: "steps-in-total-knee-replacement",
+    tag: "TOTAL KNEE REPLACEMENT (TKR)",
+    title: "Steps in Total Knee Replacement",
+    excerpt: "Steps in Total Knee Replacement A Surgical Overview by Dr. Ulhas Sonar. Total Knee Replacement (TKR) is a complex yet transformative procedure.",
+    author: "Dr. Ulhas Sonar",
+    date: "2026-05-30",
+    image: DUMMY_IMAGE,
+  },
+  {
+    id: 48,
+    slug: "the-evolution-of-tkr-implants",
     tag: "TKR IMPLANTS",
     title: "The Evolution of TKR Implants",
-    excerpt:
-      "The Evolution of TKR Implants Advancing Toward Precision and Performance Total Knee Replacement (TKR) implants have come a lon…",
+    excerpt: "The Evolution of TKR Implants Advancing Toward Precision and Performance. Total Knee Replacement implants have come a long way.",
     author: "Dr. Ulhas Sonar",
     date: "2026-05-30",
     image: "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?q=80&w=800&auto=format&fit=crop",
   },
   {
-    id: 3,
-    slug: "steps-in-total-knee-replacement",
-    tag: "TOTAL KNEE REPLACEMENT (TKR)",
-    title: "Steps in Total Knee Replacement",
-    excerpt:
-      "Steps in Total Knee Replacement A Surgical Overview by Dr. Ulhas Sonar Total Knee Replacement (TKR) is a complex yet…",
+    id: 47,
+    slug: "alignment-concept-total-knee-replacement",
+    tag: "KNEE-REPLACEMENT",
+    title: "Alignment concept: Total Knee Replacement",
+    excerpt: "Exploring kinematic, mechanical, and anatomical alignment concepts in Total Knee Replacement for natural joint movement.",
     author: "Dr. Ulhas Sonar",
     date: "2026-05-30",
-    image: DUMMY_IMAGE,
+    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: 46,
+    slug: "advantages-of-stem-cells-regenerative-medicine-supports-healing-and-recovery",
+    tag: "STEM CELL",
+    title: "Advantages of Stem Cells: Regenerative Medicine Supports Healing and Recovery",
+    excerpt: "How stem cell therapies and regenerative medicine support natural tissue healing, cellular renewal, and recovery.",
+    author: "Corx",
+    date: "2026-05-22",
+    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: 4,
     slug: "post-surgical-kinematic-alignment-in-tkr",
     tag: "KNEE-REPLACEMENT",
     title: "Post-Surgical Kinematic Alignment in TKR",
-    excerpt:
-      "Understanding kinematic alignment techniques to preserve ligament balance and natural joint motion for knee replacement patients.",
+    excerpt: "Understanding kinematic alignment techniques to preserve ligament balance and natural joint motion for knee replacement patients.",
     author: "Dr. Ulhas Sonar",
     date: "2026-06-14",
     image: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=800&auto=format&fit=crop",
@@ -87,8 +104,7 @@ const articles = [
     slug: "patient-specific-implants-3d-precision",
     tag: "TKR IMPLANTS",
     title: "Patient-Specific Implants & 3D Precision",
-    excerpt:
-      "Discover how 3D anatomical modeling and patient-specific TKR implant designs improve longevity and patient comfort.",
+    excerpt: "Discover how 3D anatomical modeling and patient-specific TKR implant designs improve longevity and patient comfort.",
     author: "Dr. Ulhas Sonar",
     date: "2026-06-25",
     image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=800&auto=format&fit=crop",
@@ -98,15 +114,14 @@ const articles = [
     slug: "recovery-timeline-rehabilitation-milestones",
     tag: "TOTAL KNEE REPLACEMENT (TKR)",
     title: "Recovery Timeline & Rehabilitation Milestones",
-    excerpt:
-      "A complete guide to post-operative knee recovery, milestone achievements, home nursing support, and physical therapy exercises.",
+    excerpt: "A complete guide to post-operative knee recovery, milestone achievements, home nursing support, and physical therapy exercises.",
     author: "Dr. Ulhas Sonar",
     date: "2026-07-02",
     image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?q=80&w=800&auto=format&fit=crop",
   },
 ];
 
-const categories = ["ALL", "KNEE-REPLACEMENT", "TKR IMPLANTS", "TOTAL KNEE REPLACEMENT (TKR)"];
+const categories = ["ALL", "PHYSIOTHERAPY", "KNEE-REPLACEMENT", "TKR IMPLANTS", "TOTAL KNEE REPLACEMENT (TKR)", "STEM CELL"];
 
 function ArticleCard({ article }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -114,7 +129,7 @@ function ArticleCard({ article }) {
 
   return (
     <Link
-      to={`/blog/${targetSlug}`}
+      to={`/${targetSlug}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{

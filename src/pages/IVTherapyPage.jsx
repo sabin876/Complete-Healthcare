@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ServiceHighlightsBar from '../components/ServiceHighlightsBar';
+import SEO from '../components/SEO';
+import { useSSRData } from '../context/SSRDataContext';
 import {
   Container,
   Section,
@@ -482,6 +484,11 @@ export default function IVTherapyPage() {
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
+      <SEO
+        title="IV Therapy at Home in Dubai | CORx Healthcare"
+        description="Fast, medical-grade IV drip therapy at your home, hotel, or office in Dubai. Hydration, immunity boost, hangover recovery, and vitamin infusions delivered 24/7."
+        canonical="https://corx.ae/iv-therapy"
+      />
 
       {/* ═══════════════════════════════════════════════
           SECTION 1 — HERO

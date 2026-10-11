@@ -11,6 +11,9 @@ import { servicesData as staticServicesData } from '../data/servicesData';
 import { useSSRData } from '../context/SSRDataContext';
 import SEO from '../components/SEO';
 import NotFound from './NotFound';
+import ElderlyCareHomePage from './ElderlyCareHomePage';
+import HomeNursingPage from './HomeNursingPage';
+import IVTherapyPage from './IVTherapyPage';
 import { 
   Check, 
   Home, 
@@ -1802,5 +1805,16 @@ export default function ServicePage({ serviceId }) {
                   'lab-test-at-home';
 
   const activeSlug = rawSlug.toLowerCase();
+
+  if (activeSlug === 'elderly-home-care' || activeSlug === 'elderly-care') {
+    return <ElderlyCareHomePage />;
+  }
+  if (activeSlug === 'home-nursing' || activeSlug === 'nursing') {
+    return <HomeNursingPage />;
+  }
+  if (activeSlug === 'iv-therapy' || activeSlug === 'iv-drip' || activeSlug === 'iv-therapy-iv-drip') {
+    return <IVTherapyPage />;
+  }
+
   return <LabServicesLanding slug={activeSlug} />;
 }

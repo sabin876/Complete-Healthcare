@@ -3162,7 +3162,7 @@ export default function Dashboard() {
                                 <tr key={blog.id} className="hover:bg-[#0f172a] transition-colors group">
                                   <td className="py-4 px-4">
                                     <a
-                                      href={`/blog/${blog.slug || blog.id}`}
+                                      href={`/${blog.slug || blog.id}`}
                                       target="_blank"
                                       rel="noreferrer"
                                       className="font-extrabold text-white text-sm hover:text-purple-300 transition-colors block line-clamp-1"

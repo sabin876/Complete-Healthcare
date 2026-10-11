@@ -144,7 +144,10 @@ export function SEO({
     const origin = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
       ? window.location.origin
       : 'https://corx.ae';
-    const computedCanonical = canonical || `${origin}${cleanPath}`;
+    let computedCanonical = canonical || `${origin}${cleanPath}`;
+    if ((origin.includes('localhost') || origin.includes('127.0.0.1')) && computedCanonical.startsWith('https://corx.ae')) {
+      computedCanonical = computedCanonical.replace('https://corx.ae', origin);
+    }
 
     const canonicalEls = document.querySelectorAll('link[rel="canonical"]');
     let canonicalLink = canonicalEls[0];

@@ -7,8 +7,78 @@ export const DEFAULT_OG_IMAGE = 'https://corx.ae/og-image.jpg';
 // Static fallback detailed blogs
 const staticBlogDatabase = [
   {
-    id: 1,
-    slug: 'advantages-of-stem-cells-regenerative-medicine',
+    id: 50,
+    slug: 'what-is-physiotherapy-a-comprehensive-guide',
+    category: 'Home Physiotherapy',
+    title: 'WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE',
+    author: 'Corx',
+    authorBio: 'Corx writes on physical therapy, mobility restoration, and post-surgical rehabilitation.',
+    date: 'April 16, 2026',
+    heroImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80',
+    tags: ['Home Physiotherapy', 'Rehabilitation', 'Recovery'],
+    excerpt: 'Comprehensive guide to home physiotherapy in Dubai, covering exercise therapy, post-op rehabilitation, pain relief, and mobility restoration.',
+    meta_title: 'WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE | CORx Healthcare Blog Dubai',
+    meta_description: 'Discover the complete guide to physiotherapy at home in Dubai: benefits, conditions treated, and how specialized physiotherapists restore mobility.',
+    content: `
+      <p>Physiotherapy is a primary healthcare profession that promotes wellness, mobility, and independence. It assists patients of all ages who are affected by injury, illness, or disability through movement, exercise, manual therapy, and education.</p>
+      <h2>Key Benefits of Physiotherapy</h2>
+      <p>Physiotherapy helps patients regain full function, manage chronic pain, avoid surgery, and recover quickly after major orthopedic procedures.</p>
+    `
+  },
+  {
+    id: 49,
+    slug: 'steps-in-total-knee-replacement',
+    category: 'TOTAL KNEE REPLACEMENT (TKR)',
+    title: 'Steps in Total Knee Replacement',
+    author: 'Dr. Ulhas Sonar',
+    authorBio: 'Dr. Ulhas Sonar is a senior orthopedic consultant specializing in precision knee replacement.',
+    date: 'May 30, 2026',
+    heroImage: 'https://images.unsplash.com/photo-1580281657527-47f249e8f4df?w=1200&q=80',
+    tags: ['Orthopedics', 'Knee Replacement', 'Surgery'],
+    excerpt: 'Steps in Total Knee Replacement A Surgical Overview by Dr. Ulhas Sonar Total Knee Replacement (TKR) is a complex yet transformative procedure.',
+    meta_title: 'Steps in Total Knee Replacement | CORx Healthcare Blog Dubai',
+    meta_description: 'Understand the precision surgical steps involved in Total Knee Replacement, from joint preparation to implant alignment.',
+    content: `
+      <p>Total Knee Replacement (TKR) is a transformative surgical procedure designed to alleviate severe pain and restore mobility in patients with end-stage arthritis.</p>
+    `
+  },
+  {
+    id: 48,
+    slug: 'the-evolution-of-tkr-implants',
+    category: 'TKR IMPLANTS',
+    title: 'The Evolution of TKR Implants',
+    author: 'Dr. Ulhas Sonar',
+    authorBio: 'Dr. Ulhas Sonar specializes in joint reconstruction and implant biomechanics.',
+    date: 'May 30, 2026',
+    heroImage: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1200&q=80',
+    tags: ['Implant Technology', 'Knee Replacement', 'Orthopedics'],
+    excerpt: 'The Evolution of TKR Implants Advancing Toward Precision and Performance Total Knee Replacement implants have come a long way.',
+    meta_title: 'The Evolution of TKR Implants | CORx Healthcare Blog Dubai',
+    meta_description: 'Explore the history and technological evolution of modern total knee replacement implants and biomaterials.',
+    content: `
+      <p>Total Knee Replacement implants have advanced significantly over recent decades, moving from simple hinged mechanisms to highly sophisticated anatomical designs that mimic natural kinematics.</p>
+    `
+  },
+  {
+    id: 47,
+    slug: 'alignment-concept-total-knee-replacement',
+    category: 'KNEE-REPLACEMENT',
+    title: 'Alignment concept: Total Knee Replacement',
+    author: 'Dr. Ulhas Sonar',
+    authorBio: 'Dr. Ulhas Sonar writes on joint kinematics and surgical biomechanics.',
+    date: 'May 30, 2026',
+    heroImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80',
+    tags: ['Alignment', 'Surgical Technique', 'Knee Replacement'],
+    excerpt: 'Exploring kinematic, mechanical, and anatomical alignment concepts in Total Knee Replacement for natural joint movement.',
+    meta_title: 'Alignment concept: Total Knee Replacement | CORx Healthcare Blog Dubai',
+    meta_description: 'Discover the critical alignment concepts in total knee replacement, comparing kinematic vs mechanical approaches.',
+    content: `
+      <p>Exploring modern alignment strategies in total knee replacement to achieve optimal stability and natural patient joint feel.</p>
+    `
+  },
+  {
+    id: 46,
+    slug: 'advantages-of-stem-cells-regenerative-medicine-supports-healing-and-recovery',
     category: 'Home Healthcare',
     title: 'Advantages of Stem Cells: Regenerative Medicine Supports Healing and Recovery',
     author: 'Corx',
@@ -20,48 +90,56 @@ const staticBlogDatabase = [
     meta_title: 'Advantages of Stem Cells: Regenerative Medicine | CORx Healthcare Dubai',
     meta_description: 'Explore how stem cell therapies and regenerative medicine support natural tissue healing, cellular renewal, and recovery in modern healthcare.',
     content: `
-      <p>Stem cells are probably one of the most significant breakthroughs in modern regenerative medicine because they have this incredible ability to help repair tissue, renew cells, and aid the healing process within the body. Unlike regular cells, stem cells can actually regenerate themselves, and they can even turn into different kinds of specialized cells, such as muscle cells, cartilage cells, nerve cells, blood cells, and heart cells, to name a few.</p>
-      <p>This is one of the big reasons why the benefits of stem cells are being talked about all over the healthcare world, in regenerative medicine, orthopedics, neurology, sports medicine, and chronic disease research. Rather than just treating the symptoms of a condition, stem cell therapy is increasingly being looked at as a possible way to actually help the body fix itself, by supporting recovery, tissue repair, and regulation of inflammation.</p>
-    `
-  },
-  {
-    id: 2,
-    slug: 'what-is-physiotherapy-comprehensive-guide',
-    category: 'Home Physiotherapy',
-    title: 'WHAT IS PHYSIOTHERAPY? A COMPREHENSIVE GUIDE',
-    author: 'Corx',
-    authorBio: 'Corx writes on physical therapy, mobility restoration, and post-surgical rehabilitation.',
-    date: 'April 16, 2026',
-    heroImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80',
-    tags: ['Home Physiotherapy', 'Rehabilitation', 'Recovery'],
-    excerpt: 'Comprehensive guide to home physiotherapy in Dubai, covering exercise therapy, post-op rehabilitation, pain relief, and mobility restoration.',
-    meta_title: 'What is Physiotherapy? Comprehensive Guide | CORx Healthcare Dubai',
-    meta_description: 'Discover the complete guide to physiotherapy at home in Dubai: benefits, conditions treated, and how specialized physiotherapists restore mobility.',
-    content: `
-      <p>Physiotherapy is a primary healthcare profession that promotes wellness, mobility, and independence. It assists patients of all ages who are affected by injury, illness, or disability through movement, exercise, manual therapy, and education.</p>
-      <h2>Key Benefits of Physiotherapy</h2>
-      <p>Physiotherapy helps patients regain full function, manage chronic pain, avoid surgery, and recover quickly after major orthopedic procedures.</p>
-    `
-  },
-  {
-    id: 3,
-    slug: 'burnout-in-working-professionals-signs-solutions',
-    category: 'Home Healthcare',
-    title: 'Burnout in Working Professionals: Signs & Solutions',
-    author: 'Corx',
-    authorBio: 'Corx writes on wellness, executive health assessment, and preventative medicine.',
-    date: 'March 18, 2026',
-    heroImage: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1200&q=80',
-    tags: ['Healthcare', 'Wellness', 'Workplace Health'],
-    excerpt: 'Recognize the critical signs of executive burnout and discover medical and lifestyle solutions to restore energy and cognitive performance.',
-    meta_title: 'Burnout in Working Professionals: Signs & Solutions | CORx Healthcare',
-    meta_description: 'Learn how to identify and manage professional burnout in Dubai. Explore executive wellness checkups, IV therapy, and at-home medical support.',
-    content: `
-      <p>Professional burnout affects mental and physical health. Learn key indicators and effective at-home health solutions to restore your energy and focus.</p>
+      <p>Stem cells are probably one of the most significant breakthroughs in modern regenerative medicine because they have this incredible ability to help repair tissue, renew cells, and aid the healing process within the body.</p>
     `
   },
   {
     id: 4,
+    slug: 'post-surgical-kinematic-alignment-in-tkr',
+    category: 'KNEE-REPLACEMENT',
+    title: 'Post-Surgical Kinematic Alignment in TKR',
+    author: 'Dr. Ulhas Sonar',
+    authorBio: 'Dr. Ulhas Sonar writes on knee kinematics and recovery.',
+    date: 'June 14, 2026',
+    heroImage: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=1200&q=80',
+    tags: ['Knee Replacement', 'Kinematic Alignment'],
+    excerpt: 'Understanding kinematic alignment techniques to preserve ligament balance and natural joint motion.',
+    meta_title: 'Post-Surgical Kinematic Alignment in TKR | CORx Healthcare Blog Dubai',
+    meta_description: 'Understand kinematic alignment techniques to preserve ligament balance and natural joint motion for knee replacement patients.',
+    content: `<p>Understanding kinematic alignment techniques to preserve ligament balance and natural joint motion for knee replacement patients.</p>`
+  },
+  {
+    id: 5,
+    slug: 'patient-specific-implants-3d-precision',
+    category: 'TKR IMPLANTS',
+    title: 'Patient-Specific Implants & 3D Precision',
+    author: 'Dr. Ulhas Sonar',
+    authorBio: 'Dr. Ulhas Sonar writes on custom surgical implants.',
+    date: 'June 25, 2026',
+    heroImage: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=1200&q=80',
+    tags: ['Implants', '3D Precision'],
+    excerpt: 'Discover how 3D anatomical modeling and patient-specific TKR implant designs improve longevity.',
+    meta_title: 'Patient-Specific Implants & 3D Precision | CORx Healthcare Blog Dubai',
+    meta_description: 'Discover how 3D anatomical modeling and patient-specific TKR implant designs improve longevity and patient comfort.',
+    content: `<p>Discover how 3D anatomical modeling and patient-specific TKR implant designs improve longevity and patient comfort.</p>`
+  },
+  {
+    id: 6,
+    slug: 'recovery-timeline-rehabilitation-milestones',
+    category: 'TOTAL KNEE REPLACEMENT (TKR)',
+    title: 'Recovery Timeline & Rehabilitation Milestones',
+    author: 'Dr. Ulhas Sonar',
+    authorBio: 'Dr. Ulhas Sonar writes on rehabilitation and patient recovery.',
+    date: 'July 02, 2026',
+    heroImage: 'https://images.unsplash.com/photo-1581056771107-24ca5f033842?w=1200&q=80',
+    tags: ['Rehabilitation', 'Recovery'],
+    excerpt: 'A complete guide to post-operative knee recovery, milestone achievements, and physical therapy.',
+    meta_title: 'Recovery Timeline & Rehabilitation Milestones | CORx Healthcare Blog Dubai',
+    meta_description: 'A complete guide to post-operative knee recovery, milestone achievements, home nursing support, and physical therapy exercises.',
+    content: `<p>A complete guide to post-operative knee recovery, milestone achievements, home nursing support, and physical therapy exercises.</p>`
+  },
+  {
+    id: 7,
     slug: 'doctor-at-home-vs-hospital-visit',
     category: 'Doctor on Call',
     title: "Doctor at Home vs Hospital Visit: What's Better in 2026?",
@@ -73,12 +151,10 @@ const staticBlogDatabase = [
     excerpt: 'Compare on-demand home doctor visits with emergency room waiting times in Dubai for speed, comfort, safety, and clinical outcomes.',
     meta_title: "Doctor at Home vs Hospital Visit: What's Better? | CORx Healthcare",
     meta_description: 'Find out why booking a 24/7 doctor on call in Dubai provides fast, comfortable, and hospital-grade medical care in the comfort of your home.',
-    content: `
-      <p>Comparing home physician visits against hospital ER waiting rooms. Discover why calling a doctor directly to your doorstep in Dubai is fast, comfortable, and safe.</p>
-    `
+    content: `<p>Comparing home physician visits against hospital ER waiting rooms.</p>`
   },
   {
-    id: 5,
+    id: 8,
     slug: 'managing-chronic-conditions-with-home-healthcare',
     category: 'Home Nursing',
     title: 'Managing Chronic Conditions With Home Healthcare Support',
@@ -90,9 +166,22 @@ const staticBlogDatabase = [
     excerpt: 'How personalized home nursing and clinical monitoring empower patients with hypertension, diabetes, and cardiovascular conditions in Dubai.',
     meta_title: 'Managing Chronic Conditions with Home Healthcare | CORx Healthcare',
     meta_description: 'Discover how dedicated home nurses in Dubai manage chronic illnesses with regular vitals monitoring, medication support, and doctor oversight.',
-    content: `
-      <p>Managing long-term illness requires structured clinical monitoring, medication oversight, and compassionate nursing assistance right in the comfort of your home.</p>
-    `
+    content: `<p>Managing long-term illness requires structured clinical monitoring.</p>`
+  },
+  {
+    id: 9,
+    slug: 'burnout-in-working-professionals-signs-solutions',
+    category: 'Home Healthcare',
+    title: 'Burnout in Working Professionals: Signs & Solutions',
+    author: 'Corx',
+    authorBio: 'Corx writes on wellness, executive health assessment, and preventative medicine.',
+    date: 'March 18, 2026',
+    heroImage: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1200&q=80',
+    tags: ['Healthcare', 'Wellness', 'Workplace Health'],
+    excerpt: 'Recognize the critical signs of executive burnout and discover medical and lifestyle solutions to restore energy and cognitive performance.',
+    meta_title: 'Burnout in Working Professionals: Signs & Solutions | CORx Healthcare',
+    meta_description: 'Learn how to identify and manage professional burnout in Dubai. Explore executive wellness checkups, IV therapy, and at-home medical support.',
+    content: `<p>Professional burnout affects mental and physical health.</p>`
   }
 ];
 
@@ -154,12 +243,12 @@ export function getStaticServiceData(slug) {
     staticServicesData[alt1] ||
     staticServicesData[alt2] ||
     staticServicesData[altNoHyphen] ||
-    (clean.includes('nurs') ? staticServicesData['nursing'] : null) ||
-    (clean.includes('iv') ? staticServicesData['iv-therapy'] : null) ||
-    (clean.includes('doctor') ? staticServicesData['doctor-on-call'] : null) ||
-    (clean.includes('elder') ? staticServicesData['elderly-care'] : null) ||
-    (clean.includes('lab') ? staticServicesData['lab-services'] : null) ||
-    (clean.includes('physio') ? staticServicesData['physiotherapy'] : null) ||
+    (clean.startsWith('nurs') || clean.endsWith('nursing') ? staticServicesData['nursing'] : null) ||
+    (clean === 'iv' || clean.startsWith('iv-') ? staticServicesData['iv-therapy'] : null) ||
+    (clean.startsWith('doctor') || clean.endsWith('doctor') ? staticServicesData['doctor-on-call'] : null) ||
+    (clean.startsWith('elder') ? staticServicesData['elderly-care'] : null) ||
+    (clean.startsWith('lab') || clean.endsWith('lab') ? staticServicesData['lab-services'] : null) ||
+    (clean === 'physio' || clean === 'physiotherapy' || clean.startsWith('physiotherapy-') ? staticServicesData['physiotherapy'] : null) ||
     {}
   );
 }
@@ -262,15 +351,22 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://127.0.0.1:8000'
 export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://127.0.0.1:8000') {
   if (!slugOrId) return null;
   const target = slugOrId.toString().toLowerCase().trim();
+  const cleanTarget = target.replace(/^the-/, '');
 
   let post = staticBlogDatabase.find(
-    p => p.slug === target || p.id.toString() === target || slugifyText(p.title) === target
+    p => p.slug === target ||
+         p.slug.replace(/^the-/, '') === cleanTarget ||
+         p.id.toString() === target ||
+         slugifyText(p.title) === target ||
+         slugifyText(p.title).replace(/^the-/, '') === cleanTarget
   );
 
   // If not found in detailed static blogs, check rawBlogList
   if (!post) {
     const rawPost = rawBlogList.find(
-      p => p.id.toString() === target || slugifyText(p.title) === target
+      p => p.id.toString() === target ||
+           slugifyText(p.title) === target ||
+           slugifyText(p.title).replace(/^the-/, '') === cleanTarget
     );
     if (rawPost) {
       post = {
@@ -291,7 +387,12 @@ export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://127.0.0.1:
 
   // Attempt to fetch fresh data from backend
   const baseUrl = resolveBackendUrl(apiBaseUrl);
-  const data = await safeFetchJson(`${baseUrl}/api/blogs/${target}/`, 1200);
+  let data = await safeFetchJson(`${baseUrl}/api/blogs/${target}/`, 1200);
+  if (!data) {
+    const alt = target.startsWith('the-') ? target.replace(/^the-/, '') : `the-${target}`;
+    data = await safeFetchJson(`${baseUrl}/api/blogs/${alt}/`, 1200);
+  }
+
   if (data && data.title) {
     post = {
       id: data.id || (post ? post.id : 1),
@@ -311,7 +412,11 @@ export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://127.0.0.1:
   }
 
   if (!post) {
-    post = staticBlogDatabase[0];
+    post = staticBlogDatabase.find(p => p.slug.includes(cleanTarget) || cleanTarget.includes(p.slug.replace(/^the-/, '')));
+  }
+
+  if (!post) {
+    return null;
   }
 
   const postSlug = post.slug || slugifyText(post.title);
@@ -326,7 +431,7 @@ export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://127.0.0.1:
     ogDescription: pageDesc,
     ogImage: postImage,
     ogType: 'article',
-    canonicalUrl: `${BASE_SITE_URL}/blog/${postSlug}`,
+    canonicalUrl: `${BASE_SITE_URL}/${postSlug}`,
     schema: {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
@@ -348,7 +453,7 @@ export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://127.0.0.1:
       datePublished: post.date || '2026-05-22',
       mainEntityOfPage: {
         '@type': 'WebPage',
-        '@id': `${BASE_SITE_URL}/blog/${postSlug}`,
+        '@id': `${BASE_SITE_URL}/${postSlug}`,
       },
     },
   };
@@ -697,7 +802,22 @@ export async function matchRouteAndLoadSEO(pathname, backendUrl = 'http://127.0.
     };
   }
 
-  // 12. Service Detail Routes (/services/:slug, /services/:parent/:slug, /lab-test-at-home, etc.)
+  // 12. Check if single segment matches a blog post directly (e.g. /:slug -> /what-is-physiotherapy-a-comprehensive-guide)
+  if (segments.length === 1 && !first.includes('.') && !first.startsWith('api')) {
+    const directBlog = await loadBlogPostData(first, backendUrl);
+    if (directBlog) {
+      return {
+        statusCode: 200,
+        initialData: {
+          isBlogDetail: true,
+          blogPost: directBlog.blogPost,
+        },
+        seo: directBlog.seo,
+      };
+    }
+  }
+
+  // 13. Service Detail Routes (/services/:slug, /services/:parent/:slug, /lab-test-at-home, etc.)
   let targetServiceSlug = null;
   if ((first === 'services' || first === 'service') && segments.length >= 2) {
     targetServiceSlug = segments[segments.length - 1].toLowerCase();

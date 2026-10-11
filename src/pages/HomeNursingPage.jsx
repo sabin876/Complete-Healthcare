@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ServiceHighlightsBar from '../components/ServiceHighlightsBar';
+import SEO from '../components/SEO';
+import { useSSRData } from '../context/SSRDataContext';
 import {
   Container,
   Section,
@@ -612,6 +614,11 @@ export default function HomeNursingPage() {
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden">
+      <SEO
+        title="Home Nursing Services in Dubai | CORx Healthcare"
+        description="DHA-licensed home nursing in Dubai available 24/7. Expert nurses for post-operative recovery, wound care, injections, medication, and chronic illness care at home."
+        canonical="https://corx.ae/home-nursing"
+      />
 
       {/* ══════════════════════════════════════════════════════════════
           SECTION 1 — HERO

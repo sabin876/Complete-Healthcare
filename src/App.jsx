@@ -14,6 +14,9 @@ import Blog from './pages/Blog';
 import BlogDetails from './pages/BlogDetails';
 import Team from './pages/Team';
 import ServicePage from './pages/ServicePage';
+import ElderlyCareHomePage from './pages/ElderlyCareHomePage';
+import HomeNursingPage from './pages/HomeNursingPage';
+import IVTherapyPage from './pages/IVTherapyPage';
 import Dashboard from './pages/Dashboard';
 import PortalLogin from './pages/PortalLogin';
 import StaffDashboard from './pages/StaffDashboard';
@@ -22,6 +25,38 @@ import Career from './pages/Career';
 import NotFound from './pages/NotFound';
 import Sitemap from './pages/Sitemap';
 import SocialMedia from './pages/SocialMedia';
+import { useSSRData } from './context/SSRDataContext';
+
+const knownBlogSlugs = new Set([
+  'what-is-physiotherapy-a-comprehensive-guide',
+  'steps-in-total-knee-replacement',
+  'the-evolution-of-tkr-implants',
+  'evolution-of-tkr-implants',
+  'alignment-concept-total-knee-replacement',
+  'advantages-of-stem-cells-regenerative-medicine-supports-healing-and-recovery',
+  'post-surgical-kinematic-alignment-in-tkr',
+  'patient-specific-implants-3d-precision',
+  'recovery-timeline-rehabilitation-milestones',
+  'doctor-at-home-vs-hospital-visit',
+  'managing-chronic-conditions-with-home-healthcare',
+  'burnout-in-working-professionals-signs-solutions',
+]);
+
+const DynamicSlugHandler = () => {
+  const { slug } = useParams();
+  const ssrData = useSSRData();
+  const cleanSlug = (slug || '').toLowerCase().trim();
+
+  if (ssrData?.isBlogDetail) {
+    return <BlogDetails />;
+  }
+
+  if (knownBlogSlugs.has(cleanSlug) || cleanSlug.startsWith('what-is-') || cleanSlug.startsWith('steps-in-') || cleanSlug.includes('tkr-') || cleanSlug.includes('timeline-') || cleanSlug.includes('burnout-')) {
+    return <BlogDetails />;
+  }
+
+  return <ServicePage />;
+};
 
 const ServiceRedirect = () => {
   const { serviceSlug } = useParams();
@@ -62,14 +97,26 @@ const AnimatedRoutes = () => {
         <Route path="/about-us/" element={<About />} />
         <Route path="/lab-test-at-home" element={<ServicePage serviceId="lab-test-at-home" />} />
         <Route path="/lab-test-at-home/" element={<ServicePage serviceId="lab-test-at-home" />} />
-        <Route path="/home-nursing" element={<ServicePage serviceId="home-nursing" />} />
-        <Route path="/home-nursing/" element={<ServicePage serviceId="home-nursing" />} />
-        <Route path="/elderly-home-care" element={<ServicePage serviceId="elderly-home-care" />} />
-        <Route path="/elderly-home-care/" element={<ServicePage serviceId="elderly-home-care" />} />
-        <Route path="/elderly-care" element={<Navigate to="/elderly-home-care" replace />} />
-        <Route path="/elderly-care/" element={<Navigate to="/elderly-home-care" replace />} />
-        <Route path="/iv-therapy" element={<ServicePage serviceId="iv-therapy" />} />
-        <Route path="/iv-therapy/" element={<ServicePage serviceId="iv-therapy" />} />
+        <Route path="/home-nursing" element={<HomeNursingPage />} />
+        <Route path="/home-nursing/" element={<HomeNursingPage />} />
+        <Route path="/nursing" element={<HomeNursingPage />} />
+        <Route path="/nursing/" element={<HomeNursingPage />} />
+        <Route path="/services/home-nursing" element={<HomeNursingPage />} />
+        <Route path="/services/home-nursing/" element={<HomeNursingPage />} />
+        <Route path="/services/nursing" element={<HomeNursingPage />} />
+        <Route path="/services/nursing/" element={<HomeNursingPage />} />
+        <Route path="/elderly-home-care" element={<ElderlyCareHomePage />} />
+        <Route path="/elderly-home-care/" element={<ElderlyCareHomePage />} />
+        <Route path="/elderly-care" element={<ElderlyCareHomePage />} />
+        <Route path="/elderly-care/" element={<ElderlyCareHomePage />} />
+        <Route path="/services/elderly-home-care" element={<ElderlyCareHomePage />} />
+        <Route path="/services/elderly-home-care/" element={<ElderlyCareHomePage />} />
+        <Route path="/services/elderly-care" element={<ElderlyCareHomePage />} />
+        <Route path="/services/elderly-care/" element={<ElderlyCareHomePage />} />
+        <Route path="/iv-therapy" element={<IVTherapyPage />} />
+        <Route path="/iv-therapy/" element={<IVTherapyPage />} />
+        <Route path="/services/iv-therapy" element={<IVTherapyPage />} />
+        <Route path="/services/iv-therapy/" element={<IVTherapyPage />} />
         <Route path="/doctor-on-call" element={<ServicePage serviceId="doctor-on-call" />} />
         <Route path="/doctor-on-call/" element={<ServicePage serviceId="doctor-on-call" />} />
         <Route path="/physiotherapy-at-home-in-dubai" element={<ServicePage serviceId="physiotherapy-at-home-in-dubai" />} />
@@ -106,9 +153,9 @@ const AnimatedRoutes = () => {
         <Route path="/service/:serviceSlug" element={<ServiceRedirect />} />
         <Route path="/service/:serviceSlug/" element={<ServiceRedirect />} />
 
-        {/* Dynamic Fallback Route for database-created services */}
-        <Route path="/:slug" element={<ServicePage />} />
-        <Route path="/:slug/" element={<ServicePage />} />
+        {/* Dynamic Fallback Route for database-created services and direct blog posts */}
+        <Route path="/:slug" element={<DynamicSlugHandler />} />
+        <Route path="/:slug/" element={<DynamicSlugHandler />} />
 
         {/* 404 Error Page */}
         <Route path="/404" element={<NotFound />} />

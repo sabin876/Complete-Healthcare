@@ -430,7 +430,7 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     def get_object(self):
         from django.utils.text import slugify
         queryset = self.filter_queryset(self.get_queryset())
-        lookup_val = str(self.kwargs.get('pk', '')).strip().lower().strip('/')
+        lookup_val = str(self.kwargs.get('pk', '') or self.kwargs.get(self.lookup_field, '')).strip().lower().strip('/')
         if not lookup_val:
             return super().get_object()
 
@@ -443,58 +443,36 @@ class BlogPostViewSet(viewsets.ModelViewSet):
 
         # 2. Exact slug matching
         for item in queryset:
-            item_slug = (item.slug or '').strip().lower()
-            if item_slug and (item_slug == lookup_val or item_slug.strip('/') == lookup_val):
+            item_slug = (item.slug or '').strip().lower().strip('/')
+            if item_slug and item_slug == lookup_val:
                 self.check_object_permissions(self.request, item)
                 return item
 
-        # 3. Slugified title matching
+        # 3. Slug without/with leading 'the-'
+        clean_lookup = lookup_val.replace('the-', '')
+        for item in queryset:
+            item_slug = (item.slug or '').strip().lower().strip('/')
+            if item_slug and item_slug.replace('the-', '') == clean_lookup:
+                self.check_object_permissions(self.request, item)
+                return item
+
+        # 4. Slugified title matching
         for item in queryset:
             title_slug = slugify(item.title or '').strip().lower()
-            if title_slug and (title_slug == lookup_val or title_slug.strip('/') == lookup_val):
+            if title_slug and (title_slug == lookup_val or title_slug.replace('the-', '') == clean_lookup):
                 self.check_object_permissions(self.request, item)
                 return item
 
-        # 4. Partial substring matching
-        if len(lookup_val) >= 3:
+        # 5. Partial substring / prefix matching
+        if len(lookup_val) >= 4:
             for item in queryset:
                 item_slug = (item.slug or slugify(item.title or '')).strip().lower()
-                if item_slug and (item_slug in lookup_val or lookup_val in item_slug):
+                if item_slug and (item_slug.startswith(lookup_val) or lookup_val.startswith(item_slug) or item_slug in lookup_val or lookup_val in item_slug):
                     self.check_object_permissions(self.request, item)
                     return item
 
         from django.http import Http404
-        raise Http404("Blog post not found")
-
-    def get_object(self):
-        """Support lookup by numeric ID or by slug."""
-        from django.utils.text import slugify as django_slugify
-        queryset = self.filter_queryset(self.get_queryset())
-        lookup = self.kwargs.get(self.lookup_field, '')
-        lookup_str = str(lookup).strip()
-
-        # Numeric ID lookup
-        if lookup_str.isdigit():
-            obj = queryset.filter(id=int(lookup_str)).first()
-            if obj:
-                self.check_object_permissions(self.request, obj)
-                return obj
-
-        # Slug-based lookup — match stored slug or auto-generated slug from title
-        obj = queryset.filter(slug=lookup_str).first()
-        if not obj:
-            for item in queryset:
-                generated = django_slugify(item.title or f'post-{item.id}')
-                if generated == lookup_str:
-                    obj = item
-                    break
-
-        if obj:
-            self.check_object_permissions(self.request, obj)
-            return obj
-
-        from django.http import Http404
-        raise Http404(f"Blog post '{lookup_str}' not found.")
+        raise Http404(f"Blog post '{lookup_val}' not found.")
 
 
 from rest_framework.decorators import api_view, action

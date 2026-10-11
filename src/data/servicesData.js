@@ -750,6 +750,38 @@ servicesData['manual-therapy'] = {
 // Aliases for API database slugs
 servicesData['docotor-on-call'] = servicesData['doctor-on-call'];
 servicesData['home-nursing'] = servicesData['nursing'];
+servicesData['elderly-care'] = {
+  title: "Elderly Home Care in Dubai",
+  eyebrow: "Compassionate, DHA-Licensed Elderly Care at Home",
+  tagline: "Comprehensive in-home care for seniors: personal care, companionship, nursing, dementia support, and 24/7 assistance across Dubai.",
+  description: "Our DHA-licensed nurses and compassionate caregivers provide tailored elderly care in the comfort of your loved one's home in Dubai. From daily living assistance to specialized dementia care and 24/7 live-in support, we ensure dignity, safety, and peace of mind.",
+  icon: "Heart",
+  themeColor: "#08709d",
+  floatingBadge: {
+    title: "Dedicated Senior Care",
+    desc: "Compassionate 24/7 care and assistance for elderly loved ones."
+  },
+  benefits: [
+    { title: "DHA-Licensed Caregivers", desc: "Qualified nurses & senior care assistants" },
+    { title: "Tailored Care Plans", desc: "Customized to your loved one's physical & medical needs" },
+    { title: "24/7 & Live-in Options", desc: "Flexible hourly visits, overnight care, or full live-in support" },
+    { title: "Regular Health Monitoring", desc: "Vitals tracking, medication management & doctor oversight" }
+  ],
+  faqs: [
+    {
+      q: "What types of elderly care do you offer in Dubai?",
+      a: "We offer daily living assistance, personal care (bathing, grooming), companionship, clinical home nursing, dementia and Alzheimer's care, stroke recovery support, palliative care, and 24/7 live-in elderly care."
+    },
+    {
+      q: "Are your caregivers and nurses DHA-licensed?",
+      a: "Yes. All our clinical nurses and care assistants are licensed by the Dubai Health Authority (DHA) and have specialized geriatric training."
+    },
+    {
+      q: "Can I arrange for a live-in elderly caregiver?",
+      a: "Yes. We offer flexible arrangements including 12-hour day/night shifts and 24/7 live-in care to support seniors who require continuous assistance."
+    }
+  ]
+};
 servicesData['elderly-home-care'] = servicesData['elderly-care'];
 servicesData['lab-test-at-home-dubai'] = servicesData['lab-services'];
 servicesData['lab-test-at-home'] = servicesData['lab-services'];

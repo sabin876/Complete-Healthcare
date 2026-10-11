@@ -27,7 +27,7 @@ function getBackendUrl() {
 function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo }) {
   let html = htmlTemplate.includes('<!--ssr-outlet-->')
     ? htmlTemplate.replace('<!--ssr-outlet-->', renderedHtml || '')
-    : htmlTemplate.replace('<div id="root"></div>', `<div id="root">${renderedHtml || ''}</div>`);
+    : htmlTemplate.replace(/<div id="root">[\s\S]*?<\/div>/, `<div id="root">${renderedHtml || ''}</div>`);
 
   // 1. Inject serialized initialData for React client hydration
   const serialized = initialData ? JSON.stringify(initialData).replace(/</g, '\\u003c') : 'null';
@@ -46,7 +46,10 @@ function injectMetaAndInitialData(htmlTemplate, { renderedHtml, initialData, seo
   const activeOgDesc = seo?.ogDescription || activeDesc;
   const activeOgImage = seo?.ogImage || 'https://corx.ae/og-image.jpg';
   const activeOgType = seo?.ogType || 'website';
-  const activeCanonical = seo?.canonicalUrl || 'https://corx.ae/';
+  let activeCanonical = seo?.canonicalUrl || 'https://corx.ae/';
+  if (!isProduction && activeCanonical.startsWith('https://corx.ae')) {
+    activeCanonical = activeCanonical.replace('https://corx.ae', `http://localhost:${port}`);
+  }
 
   const headTags = [
     `<title>${escapeHtml(activeTitle)}</title>`,
@@ -211,7 +214,7 @@ async function createServer() {
 }
 
 createServer().then(({ app }) => {
-  app.listen(port, () => {
+  app.listen(port, '0.0.0.0', () => {
     console.log(`Server running at http://localhost:${port}`);
   });
 });
