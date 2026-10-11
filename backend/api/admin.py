@@ -1713,12 +1713,32 @@ class BlogPostAdminForm(forms.ModelForm):
     meta_title = forms.CharField(
         widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 14.5px; padding: 10px 14px; border-radius: 8px;', 'placeholder': 'e.g. Expert Health Tips | CORx Healthcare Dubai'}),
         required=False,
-        help_text="Custom SEO & OpenGraph Title Tag (Recommended 50-60 characters)"
+        help_text="Custom SEO Title Tag (Recommended 50-60 characters)"
     )
     meta_description = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 14px; padding: 10px 14px; border-radius: 8px; font-family: inherit;', 'placeholder': 'e.g. Discover expert medical guidance from CORx Healthcare on preventive care and clinical wellness in Dubai.'}),
         required=False,
-        help_text="Custom SEO & OpenGraph Meta Description (Recommended 140-160 characters)"
+        help_text="Custom SEO Meta Description (Recommended 140-160 characters)"
+    )
+    og_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 14.5px; padding: 10px 14px; border-radius: 8px;', 'placeholder': 'e.g. Expert Health Tips | CORx Healthcare'}),
+        required=False,
+        help_text="Custom OpenGraph / Social Sharing Title (leave blank to fallback to SEO Title)"
+    )
+    og_description = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 14px; padding: 10px 14px; border-radius: 8px; font-family: inherit;', 'placeholder': 'e.g. Read about expert medical advice on home physiotherapy and clinical care across Dubai.'}),
+        required=False,
+        help_text="Custom OpenGraph / Social Sharing Description (leave blank to fallback to Meta Description)"
+    )
+    og_image = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 14px; padding: 10px 14px; border-radius: 8px;', 'placeholder': 'e.g. https://images.unsplash.com/... or cloud image URL'}),
+        required=False,
+        help_text="Social sharing preview image URL (leave blank to fallback to Cover Image)"
+    )
+    og_image_file = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={'style': 'font-size: 14px; padding: 6px;'}),
+        required=False,
+        help_text="Upload custom social preview image file from your computer (Recommended: 1200x630px)"
     )
 
     class Meta:
@@ -1929,7 +1949,7 @@ class BlogPostAdmin(SafeLogAdminMixin, admin.ModelAdmin):
             'fields': ('content',)
         }),
         ('🔍 SEO & OpenGraph Meta Tags', {
-            'fields': ('meta_title', 'meta_description')
+            'fields': ('meta_title', 'meta_description', 'og_title', 'og_description', 'og_image', 'og_image_file')
         }),
         ('🕒 Metadata', {
             'fields': ('created_at', 'updated_at'),

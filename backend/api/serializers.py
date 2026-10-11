@@ -185,7 +185,9 @@ class BlogPostSerializer(serializers.ModelSerializer):
         model = BlogPost
         fields = [
             'id', 'title', 'slug', 'tag', 'date', 'author', 'image', 'image_file',
-            'excerpt', 'read_time', 'content', 'created_at', 'updated_at'
+            'excerpt', 'read_time', 'content', 'meta_title', 'meta_description',
+            'og_title', 'og_description', 'og_image', 'og_image_file',
+            'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
 
@@ -197,12 +199,23 @@ class BlogPostSerializer(serializers.ModelSerializer):
             return obj.image_file.url
         return obj.image or 'https://images.unsplash.com/photo-1580281657527-47f249e8f4df?q=80&w=800&auto=format&fit=crop'
 
+    def get_og_image_url(self, obj):
+        if obj.og_image_file:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.og_image_file.url)
+            return obj.og_image_file.url
+        return obj.og_image or ''
+
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         # Always expose `tag` as the category value for frontend compatibility
         ret['tag'] = instance.category or ''
         # Return computed image URL on reads
         ret['image'] = self.get_image_url(instance)
+        # Return computed og_image URL
+        computed_og_img = self.get_og_image_url(instance)
+        ret['og_image'] = computed_og_img if computed_og_img else ret['image']
         # Auto-generate slug if blank
         if not ret.get('slug'):
             ret['slug'] = slugify(instance.title or f'post-{instance.id}')

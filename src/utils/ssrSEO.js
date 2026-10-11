@@ -408,6 +408,9 @@ export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://127.0.0.1:
       excerpt: data.excerpt || (post ? post.excerpt : ''),
       meta_title: data.meta_title || '',
       meta_description: data.meta_description || '',
+      og_title: data.og_title || '',
+      og_description: data.og_description || '',
+      og_image: data.og_image || '',
     };
   }
 
@@ -422,13 +425,13 @@ export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://127.0.0.1:
   const postSlug = post.slug || slugifyText(post.title);
   const pageTitle = post.meta_title || `${post.title} | CORx Healthcare Blog Dubai`;
   const pageDesc = post.meta_description || post.excerpt || `Read ${post.title} on CORx Healthcare Blog Dubai.`;
-  const postImage = post.heroImage || post.image_file || post.image || DEFAULT_OG_IMAGE;
+  const postImage = post.og_image || post.heroImage || post.image_file || post.image || DEFAULT_OG_IMAGE;
 
   const seo = {
     title: pageTitle,
     description: pageDesc,
-    ogTitle: pageTitle,
-    ogDescription: pageDesc,
+    ogTitle: post.og_title || pageTitle,
+    ogDescription: post.og_description || pageDesc,
     ogImage: postImage,
     ogType: 'article',
     canonicalUrl: `${BASE_SITE_URL}/${postSlug}`,

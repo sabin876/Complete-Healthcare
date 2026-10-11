@@ -9,6 +9,8 @@ export function SEO({
   description,
   canonical,
   ogImage,
+  ogTitle: propOgTitle,
+  ogDescription: propOgDesc,
   ogType = 'website',
   robots,
   schema,
@@ -65,22 +67,22 @@ export function SEO({
     }
 
     // 4. OpenGraph Tags (Strictly Single Tag for each property)
-    const ogTitle = title;
-    const ogDesc = description;
-    if (ogTitle) {
+    const effectiveOgTitle = propOgTitle || title;
+    const effectiveOgDesc = propOgDesc || description;
+    if (effectiveOgTitle) {
       updateMetaStrict(
         'meta[property="og:title"], meta[name="og:title"]',
         'property',
         'og:title',
-        ogTitle
+        effectiveOgTitle
       );
     }
-    if (ogDesc) {
+    if (effectiveOgDesc) {
       updateMetaStrict(
         'meta[property="og:description"], meta[name="og:description"]',
         'property',
         'og:description',
-        ogDesc
+        effectiveOgDesc
       );
     }
     if (ogType) {
@@ -114,20 +116,20 @@ export function SEO({
       'twitter:card',
       'summary_large_image'
     );
-    if (ogTitle) {
+    if (effectiveOgTitle) {
       updateMetaStrict(
         'meta[name="twitter:title"], meta[property="twitter:title"]',
         'name',
         'twitter:title',
-        ogTitle
+        effectiveOgTitle
       );
     }
-    if (ogDesc) {
+    if (effectiveOgDesc) {
       updateMetaStrict(
         'meta[name="twitter:description"], meta[property="twitter:description"]',
         'name',
         'twitter:description',
-        ogDesc
+        effectiveOgDesc
       );
     }
     updateMetaStrict(

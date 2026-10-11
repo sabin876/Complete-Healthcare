@@ -317,7 +317,10 @@ export default function BlogDetails() {
               content: data.content || `<p>${data.excerpt || data.title}</p>`,
               excerpt: data.excerpt || undefined,
               meta_title: data.meta_title || '',
-              meta_description: data.meta_description || ''
+              meta_description: data.meta_description || '',
+              og_title: data.og_title || '',
+              og_description: data.og_description || '',
+              og_image: data.og_image || ''
             });
           }
         })
@@ -329,8 +332,10 @@ export default function BlogDetails() {
 
   const pageTitle = post?.meta_title || (post?.title ? `${post.title} | CORx Healthcare Blog Dubai` : 'CORx Home Healthcare Blog');
   const pageDesc = post?.meta_description || post?.excerpt || (post?.title ? `Read ${post.title} on CORx Home Healthcare Blog.` : 'Explore the CORx Home Healthcare Blog for expert health tips, home care advice, and wellness guides.');
+  const ogTitle = post?.og_title || pageTitle;
+  const ogDesc = post?.og_description || pageDesc;
   const postSlug = post?.slug || slugifyTitle(post?.title || 'article');
-  const postImage = post?.heroImage || 'https://corx.ae/og-image.jpg';
+  const postImage = post?.og_image || post?.heroImage || 'https://corx.ae/og-image.jpg';
 
   const blogSchema = {
     '@context': 'https://schema.org',
@@ -366,6 +371,8 @@ export default function BlogDetails() {
       <SEO
         title={pageTitle}
         description={pageDesc}
+        ogTitle={ogTitle}
+        ogDescription={ogDesc}
         canonical={`https://corx.ae/${postSlug}`}
         ogImage={postImage}
         ogType="article"

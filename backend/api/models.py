@@ -282,8 +282,35 @@ class BlogPost(models.Model):
     excerpt = models.TextField(blank=True, default='')
     read_time = models.CharField(max_length=50, default='5 min read')
     content = models.TextField(blank=True, default='')
-    meta_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom SEO & OpenGraph Title Tag for this Blog Post")
-    meta_description = models.TextField(blank=True, default='', help_text="Custom SEO & OpenGraph Meta Description for this Blog Post")
+    meta_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom SEO Title Tag for this Blog Post")
+    meta_description = models.TextField(blank=True, default='', help_text="Custom SEO Meta Description for this Blog Post")
+    og_title = models.CharField(
+        max_length=300, 
+        blank=True, 
+        default='', 
+        verbose_name="OG Title", 
+        help_text="Custom OpenGraph / Social Sharing Title (leave blank to use Meta Title)"
+    )
+    og_description = models.TextField(
+        blank=True, 
+        default='', 
+        verbose_name="OG Description", 
+        help_text="Custom OpenGraph / Social Sharing Description (leave blank to use Meta Description)"
+    )
+    og_image = models.CharField(
+        max_length=500, 
+        blank=True, 
+        default='', 
+        verbose_name="OG Image URL", 
+        help_text="Social sharing preview image URL (leave blank to use Cover Image)"
+    )
+    og_image_file = models.FileField(
+        upload_to='blog_images/', 
+        null=True, 
+        blank=True, 
+        verbose_name="Upload OG Image File", 
+        help_text="Upload custom social preview image file from your computer"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
