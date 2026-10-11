@@ -352,8 +352,35 @@ class Service(models.Model):
     why_choose_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom Heading for Why Choose CORx Healthcare / Reasons Section")
     why_choose_desc = models.TextField(blank=True, default='', help_text="Custom Heading Description for Why Choose CORx Healthcare / Reasons Section")
     steps = models.JSONField(default=list, blank=True)  # [{title, desc}]
-    meta_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom SEO & OpenGraph Title Tag for this Service Page")
-    meta_description = models.TextField(blank=True, default='', help_text="Custom SEO & OpenGraph Meta Description for this Service Page")
+    meta_title = models.CharField(max_length=300, blank=True, default='', help_text="Custom SEO Title Tag for this Service Page")
+    meta_description = models.TextField(blank=True, default='', help_text="Custom SEO Meta Description for this Service Page")
+    og_title = models.CharField(
+        max_length=300, 
+        blank=True, 
+        default='', 
+        verbose_name="OG Title", 
+        help_text="Custom OpenGraph / Social Sharing Title (leave blank to use Meta Title)"
+    )
+    og_description = models.TextField(
+        blank=True, 
+        default='', 
+        verbose_name="OG Description", 
+        help_text="Custom OpenGraph / Social Sharing Description (leave blank to use Meta Description)"
+    )
+    og_image = models.CharField(
+        max_length=500, 
+        blank=True, 
+        default='', 
+        verbose_name="OG Image URL", 
+        help_text="Social sharing preview image URL (leave blank to use Service Image)"
+    )
+    og_image_file = models.FileField(
+        upload_to='service_images/', 
+        null=True, 
+        blank=True, 
+        verbose_name="Upload OG Image File", 
+        help_text="Upload custom social preview image file from your computer"
+    )
     schema_markup = models.TextField(blank=True, default='', verbose_name="Custom JSON-LD Schema", help_text="Custom JSON-LD Schema for this Service (e.g. JSON {...} or <script type='application/ld+json'>{...}</script>)")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

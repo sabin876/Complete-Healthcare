@@ -1306,6 +1306,82 @@ fieldset.module > .description {
                 </div>
             </div>
 
+            <!-- OpenGraph (OG) & Social Sharing Section -->
+            <div style="margin-top: 10px; margin-bottom: 24px; padding: 22px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 18px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; color: #0f172a;">
+                        <i class="fas fa-share-nodes" style="color: #08709d; font-size: 16px;"></i>
+                        <span>OpenGraph (OG) & Social Sharing Metadata</span>
+                        <span style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 3px 10px; border-radius: 12px; font-weight: 800;">WhatsApp, Facebook, LinkedIn</span>
+                    </div>
+                </div>
+
+                <!-- Row 1: OG Title & OG Description -->
+                <div class="service-fields-row-2">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_og_title">
+                            <span class="service-label-text">
+                                <i class="fas fa-heading" style="color: #08709d;"></i>
+                                <span>OG Title (Social Preview)</span>
+                            </span>
+                            <button type="button" id="btn-copy-seo-to-og" class="service-quick-btn">
+                                <i class="fas fa-copy"></i> Copy SEO Title
+                            </button>
+                        </label>
+                        {{ adminform.form.og_title }}
+                        <div class="service-help">
+                            <span id="og-title-count">0 / 60 chars (Leave blank to use Meta Title)</span>
+                        </div>
+                    </div>
+
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_og_description">
+                            <span class="service-label-text">
+                                <i class="fas fa-align-left" style="color: #08709d;"></i>
+                                <span>OG Description (Social Preview)</span>
+                            </span>
+                            <button type="button" id="btn-copy-desc-to-og" class="service-quick-btn">
+                                <i class="fas fa-copy"></i> Copy SEO Desc
+                            </button>
+                        </label>
+                        {{ adminform.form.og_description }}
+                        <div class="service-help">
+                            <span id="og-desc-count">0 / 160 chars (Leave blank to use Meta Description)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: OG Image URL & OG Image File Upload -->
+                <div class="service-fields-row-2" style="margin-top: 14px; margin-bottom: 0;">
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_og_image">
+                            <span class="service-label-text">
+                                <i class="fas fa-image" style="color: #08709d;"></i>
+                                <span>OG Image URL</span>
+                            </span>
+                            <button type="button" id="btn-copy-hero-to-og" class="service-quick-btn">
+                                <i class="fas fa-copy"></i> Use Hero Image
+                            </button>
+                        </label>
+                        {{ adminform.form.og_image }}
+                        <div class="service-help">External image URL for social media cards (leave blank to use Service Hero Image)</div>
+                    </div>
+
+                    <div class="service-form-group">
+                        <label class="service-label" for="id_og_image_file">
+                            <span class="service-label-text">
+                                <i class="fas fa-cloud-arrow-up" style="color: #08709d;"></i>
+                                <span>Or Upload OG Image File</span>
+                            </span>
+                        </label>
+                        <div class="service-media-card" style="padding: 10px;">
+                            {{ adminform.form.og_image_file }}
+                            <div class="service-help" style="margin-top: 6px;">Recommended: 1200x630px JPG, PNG, or WebP</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Google Search Snippet Live Preview -->
             <div class="google-serp-card">
                 <div class="google-serp-header">
@@ -1313,12 +1389,38 @@ fieldset.module > .description {
                         <i class="fas fa-hospital"></i>
                     </div>
                     <div>
-                        <div class="google-serp-domain">corxhealthcare.com</div>
-                        <div class="google-serp-path" id="serp-breadcrumb">https://corxhealthcare.com › services › service-slug</div>
+                        <div class="google-serp-domain">corx.ae</div>
+                        <div class="google-serp-path" id="serp-breadcrumb">https://corx.ae › service-slug</div>
                     </div>
                 </div>
                 <div class="google-serp-title" id="serp-title-display">Service Title | CORx Healthcare Dubai</div>
                 <div class="google-serp-desc" id="serp-desc-display">Explore professional healthcare and clinical solutions at your doorstep in Dubai with CORx Healthcare.</div>
+            </div>
+
+            <!-- Social Share Card Mockup Preview -->
+            <div style="margin-top: 16px; margin-bottom: 20px;">
+                <div class="service-label" style="margin-bottom: 10px;">
+                    <span class="service-label-text">
+                        <i class="fab fa-facebook" style="color: #1877f2;"></i>
+                        <i class="fab fa-linkedin" style="color: #0a66c2; margin-left: 2px;"></i>
+                        <i class="fab fa-whatsapp" style="color: #25d366; margin-left: 2px;"></i>
+                        <span style="margin-left: 4px;">Social Media & OpenGraph Live Share Card</span>
+                    </span>
+                </div>
+                <div style="max-width: 580px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
+                    <div style="width: 100%; height: 260px; background: #0f172a; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <img id="og-preview-card-img" src="" alt="OG Social Preview" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
+                        <div id="og-preview-card-placeholder" style="color: #94a3b8; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-image" style="font-size: 20px;"></i>
+                            <span>No Social Image Assigned (Defaults to Hero Image)</span>
+                        </div>
+                    </div>
+                    <div style="padding: 14px 18px; background: #f8fafc; border-top: 1px solid #f1f5f9;">
+                        <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">CORX.AE</div>
+                        <div id="og-preview-card-title" style="font-size: 15px; font-weight: 800; color: #0f172a; line-height: 1.35; margin-bottom: 4px;">Social Share Headline</div>
+                        <div id="og-preview-card-desc" style="font-size: 12px; color: #64748b; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Social share summary description will display here when shared on WhatsApp, Facebook, LinkedIn, or Twitter...</div>
+                    </div>
+                </div>
             </div>
 
             <!-- JSON-LD Schema Markup in SEO Section -->
@@ -1533,7 +1635,11 @@ fieldset.module > .description {
     }
 
     // Image preview helper
+    let currentServiceImageSrc = '';
+    let currentOgImageSrc = '';
+
     function updateImagePreview(src) {
+        currentServiceImageSrc = src;
         const previewImg = document.getElementById('service-image-preview-img');
         const placeholder = document.getElementById('service-image-placeholder');
         if (src) {
@@ -1546,6 +1652,29 @@ fieldset.module > .description {
             if (previewImg) previewImg.style.display = 'none';
             if (placeholder) placeholder.style.display = 'block';
         }
+
+        // Keep OG preview synced if no dedicated OG image is set
+        if (!currentOgImageSrc) {
+            updateOgImagePreview('');
+        }
+    }
+
+    function updateOgImagePreview(src) {
+        currentOgImageSrc = src;
+        const ogCardImg = document.getElementById('og-preview-card-img');
+        const ogPlaceholder = document.getElementById('og-preview-card-placeholder');
+
+        const effectiveSrc = currentOgImageSrc || currentServiceImageSrc;
+        if (effectiveSrc) {
+            if (ogCardImg) {
+                ogCardImg.src = effectiveSrc;
+                ogCardImg.style.display = 'block';
+            }
+            if (ogPlaceholder) ogPlaceholder.style.display = 'none';
+        } else {
+            if (ogCardImg) ogCardImg.style.display = 'none';
+            if (ogPlaceholder) ogPlaceholder.style.display = 'flex';
+        }
     }
 
     // Live SERP Preview Updater
@@ -1556,13 +1685,26 @@ fieldset.module > .description {
         const metaTitleVal = (document.getElementById('id_meta_title')?.value || '').trim() || (titleVal ? `${titleVal} | CORx Healthcare Dubai` : 'Service Title | CORx Healthcare Dubai');
         const metaDescVal = (document.getElementById('id_meta_description')?.value || '').trim() || taglineVal || 'Explore professional healthcare and clinical solutions at your doorstep in Dubai with CORx Healthcare.';
 
+        // OG values with fallbacks to SEO Title & Meta Description
+        const ogTitleInputVal = (document.getElementById('id_og_title')?.value || '').trim();
+        const ogTitleVal = ogTitleInputVal || metaTitleVal;
+        const ogDescInputVal = (document.getElementById('id_og_description')?.value || '').trim();
+        const ogDescVal = ogDescInputVal || metaDescVal;
+
         const serpBreadcrumb = document.getElementById('serp-breadcrumb');
         const serpTitle = document.getElementById('serp-title-display');
         const serpDesc = document.getElementById('serp-desc-display');
 
-        if (serpBreadcrumb) serpBreadcrumb.textContent = `https://corxhealthcare.com › services › ${slugVal}`;
+        if (serpBreadcrumb) serpBreadcrumb.textContent = `https://corx.ae › ${slugVal}`;
         if (serpTitle) serpTitle.textContent = metaTitleVal;
         if (serpDesc) serpDesc.textContent = metaDescVal;
+
+        // Update Social Share / OpenGraph Preview Card
+        const ogPreviewTitle = document.getElementById('og-preview-card-title');
+        const ogPreviewDesc = document.getElementById('og-preview-card-desc');
+        if (ogPreviewTitle) ogPreviewTitle.textContent = ogTitleVal;
+        if (ogPreviewDesc) ogPreviewDesc.textContent = ogDescVal;
+        updateOgImagePreview(currentOgImageSrc);
 
         // Checklists
         updateChecklistItem('check-title', Boolean(titleVal));
@@ -1613,6 +1755,22 @@ fieldset.module > .description {
             const len = metaDescInput.value.length;
             seoDescCount.textContent = `${len} / 160 chars ${len >= 135 && len <= 160 ? '✓ Ideal' : ''}`;
             seoDescCount.style.color = (len >= 135 && len <= 160) ? '#16a34a' : (len > 165 ? '#dc2626' : '#64748b');
+        }
+
+        const ogTitleInput = document.getElementById('id_og_title');
+        const ogTitleCount = document.getElementById('og-title-count');
+        if (ogTitleInput && ogTitleCount) {
+            const len = ogTitleInput.value.length;
+            ogTitleCount.textContent = `${len} / 60 chars ${len > 0 ? (len <= 60 ? '✓ Good' : '⚠ Long') : '(Leave blank to use Meta Title)'}`;
+            ogTitleCount.style.color = (len > 0 && len <= 60) ? '#16a34a' : (len > 60 ? '#dc2626' : '#64748b');
+        }
+
+        const ogDescInput = document.getElementById('id_og_description');
+        const ogDescCount = document.getElementById('og-desc-count');
+        if (ogDescInput && ogDescCount) {
+            const len = ogDescInput.value.length;
+            ogDescCount.textContent = `${len} / 160 chars ${len > 0 ? (len <= 160 ? '✓ Good' : '⚠ Long') : '(Leave blank to use Meta Description)'}`;
+            ogDescCount.style.color = (len > 0 && len <= 160) ? '#16a34a' : (len > 160 ? '#dc2626' : '#64748b');
         }
     }
 
@@ -1730,6 +1888,7 @@ fieldset.module > .description {
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         updateImagePreview(e.target.result);
+                        refreshLivePreviews();
                     };
                     reader.readAsDataURL(file);
                 }
@@ -1764,10 +1923,111 @@ fieldset.module > .description {
             });
         }
 
+        // Copy SEO Title to OG Title
+        const btnCopySeoToOg = document.getElementById('btn-copy-seo-to-og');
+        const ogTitleInput = document.getElementById('id_og_title');
+        if (btnCopySeoToOg && ogTitleInput) {
+            btnCopySeoToOg.addEventListener('click', function() {
+                const srcVal = (metaTitleInput?.value || '').trim() || (titleInput?.value ? `${titleInput.value} | CORx Healthcare Dubai` : '');
+                ogTitleInput.value = srcVal;
+                updateCounters();
+                refreshLivePreviews();
+            });
+        }
+
+        // Copy SEO Description to OG Description
+        const btnCopyDescToOg = document.getElementById('btn-copy-desc-to-og');
+        const ogDescInput = document.getElementById('id_og_description');
+        if (btnCopyDescToOg && ogDescInput) {
+            btnCopyDescToOg.addEventListener('click', function() {
+                const srcVal = (metaDescInput?.value || '').trim() || (taglineInput?.value || '').trim();
+                ogDescInput.value = srcVal;
+                updateCounters();
+                refreshLivePreviews();
+            });
+        }
+
+        // Copy Hero Image to OG Image
+        const btnCopyHeroToOg = document.getElementById('btn-copy-hero-to-og');
+        const ogImageInput = document.getElementById('id_og_image');
+        if (btnCopyHeroToOg && ogImageInput) {
+            btnCopyHeroToOg.addEventListener('click', function() {
+                if (currentServiceImageSrc) {
+                    ogImageInput.value = currentServiceImageSrc;
+                    updateOgImagePreview(currentServiceImageSrc);
+                    refreshLivePreviews();
+                } else {
+                    showAlert('No service hero image uploaded in Step 1 to copy!');
+                }
+            });
+        }
+
+        // OG Image URL input
+        if (ogImageInput) {
+            ogImageInput.addEventListener('input', function() {
+                if (this.value && this.value.trim() !== '') {
+                    updateOgImagePreview(this.value.trim());
+                } else if (!ogImageFileInput || !ogImageFileInput.files[0]) {
+                    updateOgImagePreview('');
+                }
+                refreshLivePreviews();
+            });
+            if (ogImageInput.value && ogImageInput.value.trim() !== '') {
+                updateOgImagePreview(ogImageInput.value.trim());
+            }
+        }
+
+        // OG Image File upload input
+        const ogImageFileInput = document.getElementById('id_og_image_file');
+        if (ogImageFileInput) {
+            ogImageFileInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        updateOgImagePreview(e.target.result);
+                        refreshLivePreviews();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Check if existing file link is present for og_image_file
+            const ogFileLink = ogImageFileInput.closest('.service-media-card')?.querySelector('a');
+            if (ogFileLink && ogFileLink.href && (!ogImageInput || !ogImageInput.value)) {
+                updateOgImagePreview(ogFileLink.href);
+            }
+        }
+
+        // Listeners for live counters and preview on OG inputs
+        if (ogTitleInput) {
+            ogTitleInput.addEventListener('input', function() {
+                updateCounters();
+                refreshLivePreviews();
+            });
+        }
+        if (ogDescInput) {
+            ogDescInput.addEventListener('input', function() {
+                updateCounters();
+                refreshLivePreviews();
+            });
+        }
+
         // Input listeners for live counters
         if (taglineInput) taglineInput.addEventListener('input', updateCounters);
-        if (metaTitleInput) metaTitleInput.addEventListener('input', updateCounters);
-        if (metaDescInput) metaDescInput.addEventListener('input', updateCounters);
+        if (metaTitleInput) metaTitleInput.addEventListener('input', function() {
+            updateCounters();
+            refreshLivePreviews();
+        });
+        if (metaDescInput) metaDescInput.addEventListener('input', function() {
+            updateCounters();
+            refreshLivePreviews();
+        });
+
+        updateCounters();
+    });
+})();
+</script>
 
         updateCounters();
     });

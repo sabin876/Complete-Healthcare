@@ -18,6 +18,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FAQ from '../components/FAQ';
 import SEO from '../components/SEO';
+import { API_BASE_URL } from '../config/api';
 
 import hero2 from '../assets/hero/hero2.png';
 import hero3 from '../assets/hero/hero3.png';
@@ -571,14 +572,35 @@ const Home = () => {
   const [selectedDept, setSelectedDept] = useState("All");
   const [diffImageIndex, setDiffImageIndex] = useState(0);
 
-  const titleText = "CORX Healthcare: Home Health Care Services in Dubai *24/7";
-  const descText = "Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.";
+  const [homeData, setHomeData] = useState(null);
 
-  const homeSchema = {
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${API_BASE_URL}/api/homepage/`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (isMounted && data) {
+          setHomeData(data);
+        }
+      })
+      .catch((err) => console.debug('Homepage data load error:', err));
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const titleText = homeData?.meta_title?.trim() || "CORX Healthcare: Home Health Care Services in Dubai *24/7";
+  const descText = homeData?.meta_description?.trim() || "Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.";
+  const homeOgTitle = homeData?.og_title?.trim() || titleText;
+  const homeOgDesc = homeData?.og_description?.trim() || descText;
+  const homeOgImage = homeData?.og_image?.trim() || "https://corx.ae/og-image.jpg";
+
+  const defaultHomeSchema = {
     '@context': 'https://schema.org',
     '@type': 'MedicalBusiness',
     name: 'CORx Healthcare',
-    url: 'https://corx.ae/',
+    url: homeData?.canonical_url?.trim() || 'https://corx.ae/',
     logo: 'https://corx.ae/favicon.webp',
     description: descText,
     telephone: '+97143320776',
@@ -596,6 +618,18 @@ const Home = () => {
       closes: '23:59',
     },
   };
+
+  const parsedCustomSchema = (() => {
+    if (!homeData?.schema_markup) return null;
+    try {
+      const cleaned = homeData.schema_markup.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '').trim();
+      return JSON.parse(cleaned);
+    } catch {
+      return null;
+    }
+  })();
+
+  const activeSchema = parsedCustomSchema || defaultHomeSchema;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -652,9 +686,11 @@ const Home = () => {
       <SEO
         title={titleText}
         description={descText}
-        canonical="https://corx.ae/"
-        ogImage="https://corx.ae/og-image.jpg"
-        schema={homeSchema}
+        canonical={homeData?.canonical_url?.trim() || "https://corx.ae/"}
+        ogTitle={homeOgTitle}
+        ogDescription={homeOgDesc}
+        ogImage={homeOgImage}
+        schema={activeSchema}
       />
       {/* Hero Slider */}
       <section className="relative min-h-[95vh] flex items-center py-20 md:py-28 overflow-hidden bg-black">

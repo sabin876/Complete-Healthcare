@@ -180,6 +180,9 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
     lab_columns: (Array.isArray(validBackendData.lab_columns) && validBackendData.lab_columns.length > 0) ? validBackendData.lab_columns : (staticFallback.lab_columns || []),
     schema_markup: validBackendData.schema_markup || staticFallback.schema_markup,
     schema: validBackendData.schema || staticFallback.schema,
+    og_title: validBackendData.og_title || staticFallback.og_title,
+    og_description: validBackendData.og_description || staticFallback.og_description,
+    og_image: validBackendData.og_image || staticFallback.og_image,
   } : staticFallback;
 
   const rawSchema = validBackendData?.schema || validBackendData?.schema_markup;
@@ -199,13 +202,15 @@ export async function loadServiceData(slug, apiBaseUrl = 'http://localhost:8000'
 
   const pageTitle = validBackendData?.meta_title || staticFallback.meta_title || `${mergedData.title || cleanSlug} | CORx Healthcare Dubai`;
   const pageDesc = validBackendData?.meta_description || staticFallback.meta_description || mergedData.description || '24/7 DHA-licensed healthcare services at home in Dubai by CORx Healthcare.';
-  const serviceImageUrl = mergedData?.image_file || mergedData?.image || 'https://corx.ae/og-image.jpg';
+  const ogTitle = validBackendData?.og_title || staticFallback.og_title || pageTitle;
+  const ogDesc = validBackendData?.og_description || staticFallback.og_description || pageDesc;
+  const serviceImageUrl = validBackendData?.og_image || mergedData?.og_image || mergedData?.image_file || mergedData?.image || 'https://corx.ae/og-image.jpg';
 
   const seo = {
     title: pageTitle,
     description: pageDesc,
-    ogTitle: pageTitle,
-    ogDescription: pageDesc,
+    ogTitle: ogTitle,
+    ogDescription: ogDesc,
     ogImage: serviceImageUrl,
     ogType: 'website',
     canonicalUrl: `https://corx.ae/${cleanSlug}`,

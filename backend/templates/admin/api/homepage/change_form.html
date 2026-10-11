@@ -576,13 +576,29 @@ fieldset.module > .description {
                     </div>
 
                     <div class="homepage-form-group">
-                        <label class="homepage-label">OpenGraph Title (Optional)</label>
+                        <label class="homepage-label" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>OpenGraph Title (Optional)</span>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span id="home-og-title-count" style="font-size: 11px; color: #64748b; font-weight: 600;">0 / 60 chars</span>
+                                <button type="button" id="btn-copy-home-seo-to-og" style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #0f172a; font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 8px; cursor: pointer;">
+                                    <i class="fas fa-copy"></i> Copy SEO Title
+                                </button>
+                            </div>
+                        </label>
                         {{ adminform.form.og_title }}
                         <div class="homepage-help">Custom title for social cards. Leave empty to automatically use the Meta Title.</div>
                     </div>
 
                     <div class="homepage-form-group">
-                        <label class="homepage-label">OpenGraph Description (Optional)</label>
+                        <label class="homepage-label" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>OpenGraph Description (Optional)</span>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span id="home-og-desc-count" style="font-size: 11px; color: #64748b; font-weight: 600;">0 / 160 chars</span>
+                                <button type="button" id="btn-copy-home-desc-to-og" style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #0f172a; font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 8px; cursor: pointer;">
+                                    <i class="fas fa-copy"></i> Copy SEO Desc
+                                </button>
+                            </div>
+                        </label>
                         {{ adminform.form.og_description }}
                         <div class="homepage-help">Custom description for social cards. Leave empty to automatically use the Meta Description.</div>
                     </div>
@@ -597,6 +613,32 @@ fieldset.module > .description {
                             <label class="homepage-label">Upload OG Image File</label>
                             {{ adminform.form.og_image_file }}
                             <div class="homepage-help">Upload a local media file from your computer (optional).</div>
+                        </div>
+                    </div>
+
+                    <!-- Live Social Card Mockup Preview for Homepage -->
+                    <div style="margin-top: 16px; margin-bottom: 20px;">
+                        <div class="homepage-label" style="margin-bottom: 10px;">
+                            <span style="display: flex; align-items: center; gap: 6px;">
+                                <i class="fab fa-facebook" style="color: #1877f2;"></i>
+                                <i class="fab fa-linkedin" style="color: #0a66c2;"></i>
+                                <i class="fab fa-whatsapp" style="color: #25d366;"></i>
+                                <span>Social Media &amp; OpenGraph Live Share Card</span>
+                            </span>
+                        </div>
+                        <div style="max-width: 580px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
+                            <div style="width: 100%; height: 260px; background: #0f172a; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                <img id="home-og-preview-img" src="" alt="OG Social Preview" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
+                                <div id="home-og-preview-placeholder" style="color: #94a3b8; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-image" style="font-size: 20px;"></i>
+                                    <span>Defaulting to https://corx.ae/og-image.webp</span>
+                                </div>
+                            </div>
+                            <div style="padding: 14px 18px; background: #f8fafc; border-top: 1px solid #f1f5f9;">
+                                <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">CORX.AE</div>
+                                <div id="home-og-preview-title" style="font-size: 15px; font-weight: 800; color: #0f172a; line-height: 1.35; margin-bottom: 4px;">CORX Healthcare: Home Health Care Services in Dubai *24/7</div>
+                                <div id="home-og-preview-desc" style="font-size: 12px; color: #64748b; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -746,25 +788,73 @@ function prevHomepageStep() {
     }
 }
 
-// Live SERP Preview Bindings
+// Live SERP Preview & OG Bindings
 document.addEventListener('DOMContentLoaded', function() {
     const titleInput = document.querySelector('input[name="meta_title"]');
     const descInput = document.querySelector('textarea[name="meta_description"]');
     const urlInput = document.querySelector('input[name="canonical_url"]');
 
+    const ogTitleInput = document.querySelector('input[name="og_title"]');
+    const ogDescInput = document.querySelector('textarea[name="og_description"]');
+    const ogImageInput = document.querySelector('input[name="og_image"]');
+    const ogImageFileInput = document.querySelector('input[name="og_image_file"]');
+
     const liveTitle = document.getElementById('serp-live-title');
     const liveDesc = document.getElementById('serp-live-desc');
     const liveUrl = document.getElementById('serp-live-url');
 
+    const ogLiveTitle = document.getElementById('home-og-preview-title');
+    const ogLiveDesc = document.getElementById('home-og-preview-desc');
+    const ogLiveImg = document.getElementById('home-og-preview-img');
+    const ogLivePlaceholder = document.getElementById('home-og-preview-placeholder');
+
+    const ogTitleCount = document.getElementById('home-og-title-count');
+    const ogDescCount = document.getElementById('home-og-desc-count');
+
+    let currentHomeOgSrc = '';
+
+    function updateOgCounters() {
+        if (ogTitleInput && ogTitleCount) {
+            const len = ogTitleInput.value.length;
+            ogTitleCount.textContent = `${len} / 60 chars ${len > 0 ? (len <= 60 ? '✓ Good' : '⚠ Long') : '(Defaults to Meta Title)'}`;
+            ogTitleCount.style.color = (len > 0 && len <= 60) ? '#16a34a' : (len > 60 ? '#dc2626' : '#64748b');
+        }
+        if (ogDescInput && ogDescCount) {
+            const len = ogDescInput.value.length;
+            ogDescCount.textContent = `${len} / 160 chars ${len > 0 ? (len <= 160 ? '✓ Good' : '⚠ Long') : '(Defaults to Meta Description)'}`;
+            ogDescCount.style.color = (len > 0 && len <= 160) ? '#16a34a' : (len > 160 ? '#dc2626' : '#64748b');
+        }
+    }
+
+    function refreshHomeSocialPreview() {
+        const effTitle = (ogTitleInput?.value || '').trim() || (titleInput?.value || '').trim() || 'CORX Healthcare: Home Health Care Services in Dubai *24/7';
+        const effDesc = (ogDescInput?.value || '').trim() || (descInput?.value || '').trim() || 'Get premium home health care services in Dubai with Corx Healthcare. Book expert doctors and nurses for physiotherapy, IV therapy, lab tests & elder care, available 24/7.';
+        
+        if (ogLiveTitle) ogLiveTitle.textContent = effTitle;
+        if (ogLiveDesc) ogLiveDesc.textContent = effDesc;
+
+        const effImg = currentHomeOgSrc || (ogImageInput?.value || '').trim() || 'https://corx.ae/og-image.webp';
+        if (effImg && ogLiveImg && ogLivePlaceholder) {
+            ogLiveImg.src = effImg;
+            ogLiveImg.style.display = 'block';
+            ogLivePlaceholder.style.display = 'none';
+        } else if (ogLiveImg && ogLivePlaceholder) {
+            ogLiveImg.style.display = 'none';
+            ogLivePlaceholder.style.display = 'flex';
+        }
+    }
+
     if (titleInput && liveTitle) {
         titleInput.addEventListener('input', function() {
             liveTitle.textContent = this.value || 'CORX Healthcare: Home Health Care Services in Dubai *24/7';
+            refreshHomeSocialPreview();
         });
     }
 
     if (descInput && liveDesc) {
         descInput.addEventListener('input', function() {
             liveDesc.textContent = this.value || 'Get premium home health care services in Dubai with Corx Healthcare...';
+            refreshHomeSocialPreview();
         });
     }
 
@@ -773,6 +863,63 @@ document.addEventListener('DOMContentLoaded', function() {
             liveUrl.textContent = this.value || 'https://corx.ae/';
         });
     }
+
+    if (ogTitleInput) {
+        ogTitleInput.addEventListener('input', function() {
+            updateOgCounters();
+            refreshHomeSocialPreview();
+        });
+    }
+
+    if (ogDescInput) {
+        ogDescInput.addEventListener('input', function() {
+            updateOgCounters();
+            refreshHomeSocialPreview();
+        });
+    }
+
+    if (ogImageInput) {
+        ogImageInput.addEventListener('input', function() {
+            currentHomeOgSrc = this.value.trim();
+            refreshHomeSocialPreview();
+        });
+    }
+
+    if (ogImageFileInput) {
+        ogImageFileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentHomeOgSrc = e.target.result;
+                    refreshHomeSocialPreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Copy Buttons
+    const btnCopyTitle = document.getElementById('btn-copy-home-seo-to-og');
+    if (btnCopyTitle && ogTitleInput && titleInput) {
+        btnCopyTitle.addEventListener('click', function() {
+            ogTitleInput.value = titleInput.value.trim();
+            updateOgCounters();
+            refreshHomeSocialPreview();
+        });
+    }
+
+    const btnCopyDesc = document.getElementById('btn-copy-home-desc-to-og');
+    if (btnCopyDesc && ogDescInput && descInput) {
+        btnCopyDesc.addEventListener('click', function() {
+            ogDescInput.value = descInput.value.trim();
+            updateOgCounters();
+            refreshHomeSocialPreview();
+        });
+    }
+
+    updateOgCounters();
+    refreshHomeSocialPreview();
 });
 </script>
 {% endblock %}

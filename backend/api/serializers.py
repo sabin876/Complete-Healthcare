@@ -289,7 +289,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'benefits_title', 'benefits', 'benefits_image_file', 'benefits_image', 
             'understanding_title', 'understanding_intro', 'understanding_items', 'understanding_image_file', 'understanding_image',
             'faqs', 'faq_title', 'faq_description', 'locations', 'features', 'indications', 'indications_title', 'indications_description', 'lab_columns', 'lab_columns_title', 'lab_columns_description', 'reasons', 'why_choose_title', 'why_choose_desc', 'steps',
-            'meta_title', 'meta_description', 'schema_markup', 'schema',
+            'meta_title', 'meta_description', 'og_title', 'og_description', 'og_image', 'og_image_file', 'schema_markup', 'schema',
             'about_section_title', 'about_description', 'indications_section_title', 'comprehensive_section_title', 'faq_section_title',
             'created_at', 'updated_at'
         ]
@@ -356,6 +356,23 @@ class ServiceSerializer(serializers.ModelSerializer):
         except Exception:
             pass
         return getattr(obj, 'understanding_image', '') or ''
+
+    def get_og_image_url(self, obj):
+        try:
+            if getattr(obj, 'og_image_file', None) and hasattr(obj.og_image_file, 'url') and obj.og_image_file.name:
+                request = self.context.get('request')
+                if request:
+                    return request.build_absolute_uri(obj.og_image_file.url)
+                return obj.og_image_file.url
+        except Exception:
+            pass
+        return getattr(obj, 'og_image', '') or ''
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        computed_og_img = self.get_og_image_url(instance)
+        ret['og_image'] = computed_og_img if computed_og_img else ret.get('image', '')
+        return ret
 
     def _get_badge_field(self, obj, key):
         badge = getattr(obj, 'floating_badge', None)

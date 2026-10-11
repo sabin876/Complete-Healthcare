@@ -187,7 +187,7 @@ export function SEO({
     } else {
       scriptEls.forEach(el => el.remove());
     }
-  }, [title, description, canonical, ogImage, ogType, robots, schema]);
+  }, [title, description, canonical, ogImage, propOgTitle, propOgDesc, ogType, robots, schema]);
 
   return null;
 }

@@ -551,7 +551,9 @@ function LabServicesLanding({ slug = 'lab-services' }) {
 
   const pageTitle = mergedData?.meta_title || (mergedData?.title ? `${mergedData.title} in Dubai | CORx Healthcare` : 'CORx Healthcare: Home Healthcare Services in Dubai, UAE');
   const pageDesc = mergedData?.meta_description || mergedData?.description || mergedData?.tagline || 'Professional, reliable, and on-demand DHA-certified medical care at your doorstep across Dubai.';
-  const serviceOgImage = mergedData?.image_file || mergedData?.image || 'https://corx.ae/og-image.jpg';
+  const ogTitle = mergedData?.og_title || pageTitle;
+  const ogDesc = mergedData?.og_description || pageDesc;
+  const serviceOgImage = mergedData?.og_image || mergedData?.image_file || mergedData?.image || 'https://corx.ae/og-image.jpg';
 
   const serviceSchema = (() => {
     const raw = mergedData?.schema || mergedData?.schema_markup || serviceData?.schema || serviceData?.schema_markup;
@@ -829,6 +831,8 @@ function LabServicesLanding({ slug = 'lab-services' }) {
         title={pageTitle}
         description={pageDesc}
         canonical={`https://corx.ae/${slug}`}
+        ogTitle={ogTitle}
+        ogDescription={ogDesc}
         ogImage={serviceOgImage}
         schema={serviceSchema}
       />

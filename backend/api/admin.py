@@ -1521,6 +1521,37 @@ class ServiceAdminForm(forms.ModelForm):
         help_text="Interactive Builder for Numbered Condition Stages (e.g. 1. Freezing Stage, 2. Frozen Stage, 3. Thawing Stage)"
     )
 
+    meta_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 14.5px; padding: 10px 14px; border-radius: 8px;', 'placeholder': 'e.g. Home Physiotherapy in Dubai | CORx Healthcare'}),
+        required=False,
+        help_text="Custom SEO Title Tag (Recommended 50-60 characters)"
+    )
+    meta_description = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 14px; padding: 10px 14px; border-radius: 8px; font-family: inherit;', 'placeholder': 'e.g. DHA-licensed physical therapists bring personalized exercise and rehabilitation to your home across Dubai.'}),
+        required=False,
+        help_text="Custom SEO Meta Description (Recommended 140-160 characters)"
+    )
+    og_title = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 14.5px; padding: 10px 14px; border-radius: 8px;', 'placeholder': 'e.g. Home Physiotherapy in Dubai | CORx Healthcare'}),
+        required=False,
+        help_text="Custom OpenGraph / Social Sharing Title (leave blank to fallback to SEO Title)"
+    )
+    og_description = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'style': 'width: 100%; max-width: 950px; font-size: 14px; padding: 10px 14px; border-radius: 8px; font-family: inherit;', 'placeholder': 'e.g. Receive compassionate clinical physiotherapy and rehabilitation at home in Dubai.'}),
+        required=False,
+        help_text="Custom OpenGraph / Social Sharing Description (leave blank to fallback to Meta Description)"
+    )
+    og_image = forms.CharField(
+        widget=forms.TextInput(attrs={'style': 'width: 100%; max-width: 950px; font-size: 14px; padding: 10px 14px; border-radius: 8px;', 'placeholder': 'e.g. https://images.unsplash.com/... or cloud image URL'}),
+        required=False,
+        help_text="Social sharing preview image URL (leave blank to fallback to Service Hero Image)"
+    )
+    og_image_file = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={'style': 'font-size: 14px; padding: 6px;'}),
+        required=False,
+        help_text="Upload custom social preview image file from your computer (Recommended: 1200x630px)"
+    )
+
     def clean_floating_badge(self):
         val = self.cleaned_data.get('floating_badge')
         if not val or val == '':
@@ -1893,7 +1924,7 @@ class ServiceAdmin(SafeLogAdminMixin, admin.ModelAdmin):
             'fields': ('title', 'slug', 'parent', 'theme_color', 'icon', 'image_file')
         }),
         ('🔍 SEO & OpenGraph Meta Tags', {
-            'fields': ('meta_title', 'meta_description'),
+            'fields': ('meta_title', 'meta_description', 'og_title', 'og_description', 'og_image', 'og_image_file'),
             'description': 'Custom SEO Title and Meta Description for search engines and social media sharing previews.',
         }),
         ('✨ Hero Section Content', {

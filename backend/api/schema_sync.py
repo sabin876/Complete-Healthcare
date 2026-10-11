@@ -50,6 +50,18 @@ def auto_sync_schema():
                 if 'schema_markup' not in cols:
                     safe_execute(cursor, f"ALTER TABLE api_service ADD COLUMN schema_markup {text_type}")
 
+                if 'og_title' not in cols:
+                    safe_execute(cursor, "ALTER TABLE api_service ADD COLUMN og_title VARCHAR(300) NOT NULL DEFAULT ''")
+
+                if 'og_description' not in cols:
+                    safe_execute(cursor, f"ALTER TABLE api_service ADD COLUMN og_description {text_type}")
+
+                if 'og_image' not in cols:
+                    safe_execute(cursor, "ALTER TABLE api_service ADD COLUMN og_image VARCHAR(500) NOT NULL DEFAULT ''")
+
+                if 'og_image_file' not in cols:
+                    safe_execute(cursor, "ALTER TABLE api_service ADD COLUMN og_image_file VARCHAR(100) NULL")
+
             # -----------------------------------------------------------------
             # Table: api_blogpost
             # -----------------------------------------------------------------

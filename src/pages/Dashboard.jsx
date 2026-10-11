@@ -50,6 +50,11 @@ export default function Dashboard() {
   const [subSlug, setSubSlug] = useState('');
   const [subTagline, setSubTagline] = useState('');
   const [subDescription, setSubDescription] = useState('');
+  const [subMetaTitle, setSubMetaTitle] = useState('');
+  const [subMetaDesc, setSubMetaDesc] = useState('');
+  const [subOgTitle, setSubOgTitle] = useState('');
+  const [subOgDesc, setSubOgDesc] = useState('');
+  const [subOgImage, setSubOgImage] = useState('');
   const [editingService, setEditingService] = useState(null); // null = create mode, object = edit mode
   const [serviceDeleteConfirm, setServiceDeleteConfirm] = useState(null); // id of service pending delete
 
@@ -66,6 +71,11 @@ export default function Dashboard() {
     setSubSlug('');
     setSubTagline('');
     setSubDescription('');
+    setSubMetaTitle('');
+    setSubMetaDesc('');
+    setSubOgTitle('');
+    setSubOgDesc('');
+    setSubOgImage('');
     if (parentServices.length > 0) {
       setSelectedParentId(parentServices[0].id.toString());
     }
@@ -77,6 +87,11 @@ export default function Dashboard() {
     setSubSlug(service.slug || '');
     setSubTagline(service.tagline || '');
     setSubDescription(service.description || '');
+    setSubMetaTitle(service.meta_title || '');
+    setSubMetaDesc(service.meta_description || '');
+    setSubOgTitle(service.og_title || '');
+    setSubOgDesc(service.og_description || '');
+    setSubOgImage(service.og_image || service.image_file || service.image || '');
     if (service.parent) {
       setSelectedParentId(service.parent.toString());
     }
@@ -155,6 +170,8 @@ export default function Dashboard() {
   const [homeHeroTitle, setHomeHeroTitle]       = useState('');
   const [homeHeroEyebrow, setHomeHeroEyebrow]   = useState('');
   const [homeHeroTagline, setHomeHeroTagline]   = useState('');
+  const [homeOgTitle, setHomeOgTitle]           = useState('');
+  const [homeOgDesc, setHomeOgDesc]             = useState('');
   const [homeOgImage, setHomeOgImage]           = useState('');
   const [homeSchema, setHomeSchema]             = useState('');
   const [homeFaqEyebrow, setHomeFaqEyebrow]     = useState('⊙ Common Questions');
@@ -185,6 +202,8 @@ export default function Dashboard() {
         setHomeHeroTitle(data.hero_title || '');
         setHomeHeroEyebrow(data.hero_eyebrow || '');
         setHomeHeroTagline(data.hero_tagline || '');
+        setHomeOgTitle(data.og_title || '');
+        setHomeOgDesc(data.og_description || '');
         setHomeOgImage(data.og_image || '');
         setHomeSchema(data.schema_markup || '');
         setHomeFaqEyebrow(data.faq_eyebrow || '⊙ Common Questions');
@@ -241,6 +260,8 @@ export default function Dashboard() {
           hero_title: homeHeroTitle.trim(),
           hero_eyebrow: homeHeroEyebrow.trim(),
           hero_tagline: homeHeroTagline.trim(),
+          og_title: homeOgTitle.trim(),
+          og_description: homeOgDesc.trim(),
           og_image: homeOgImage.trim(),
           schema_markup: homeSchema.trim(),
           faq_eyebrow: homeFaqEyebrow.trim(),
@@ -741,6 +762,11 @@ export default function Dashboard() {
       title: subTitle.trim(),
       tagline: subTagline.trim(),
       description: subDescription.trim() || subTagline.trim() || subTitle.trim(),
+      meta_title: subMetaTitle.trim(),
+      meta_description: subMetaDesc.trim(),
+      og_title: subOgTitle.trim(),
+      og_description: subOgDesc.trim(),
+      og_image: subOgImage.trim(),
       parent: parseInt(selectedParentId, 10),
       floating_badge: { title: 'Sub-Service', desc: subTagline.trim() || subTitle.trim() },
     };
@@ -1526,6 +1552,178 @@ export default function Dashboard() {
                         onChange={(e) => setSubDescription(e.target.value)}
                         className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs leading-relaxed focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner transition-all placeholder-slate-500 resize-y"
                       />
+                    </div>
+
+                    {/* ── SEO & OpenGraph Meta Tags ── */}
+                    <div className="pt-4 border-t border-slate-800/80 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-400 flex items-center gap-1.5">
+                          <Globe size={13} />
+                          <span>SEO & OpenGraph Meta Tags</span>
+                        </p>
+                        <span className="text-[9px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
+                          Search & Social
+                        </span>
+                      </div>
+
+                      {/* SEO Meta Title */}
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                            <FileText size={13} className="text-cyan-400" /><span>SEO Meta Title</span>
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setSubMetaTitle(subTitle ? `${subTitle} in Dubai | CORx Healthcare` : '')}
+                              className="text-[10px] font-mono text-cyan-400 hover:text-cyan-300 underline cursor-pointer"
+                              title="Auto-generate title"
+                            >
+                              Auto Title
+                            </button>
+                            <span className="text-[10px] text-slate-500 font-mono">{subMetaTitle.length}/60 chars</span>
+                          </div>
+                        </div>
+                        <input
+                          type="text"
+                          value={subMetaTitle}
+                          onChange={(e) => setSubMetaTitle(e.target.value)}
+                          placeholder={subTitle ? `${subTitle} in Dubai | CORx Healthcare` : 'e.g. Night Care Nurse in Dubai | CORx Healthcare'}
+                          className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner transition-all placeholder-slate-500"
+                        />
+                      </div>
+
+                      {/* SEO Meta Description */}
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                            <AlignLeft size={13} className="text-cyan-400" /><span>SEO Meta Description</span>
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setSubMetaDesc(subTagline || subDescription || '')}
+                              className="text-[10px] font-mono text-cyan-400 hover:text-cyan-300 underline cursor-pointer"
+                              title="Copy Tagline / Description"
+                            >
+                              Auto Desc
+                            </button>
+                            <span className="text-[10px] text-slate-500 font-mono">{subMetaDesc.length}/160 chars</span>
+                          </div>
+                        </div>
+                        <textarea
+                          rows={2}
+                          value={subMetaDesc}
+                          onChange={(e) => setSubMetaDesc(e.target.value)}
+                          placeholder={subTagline || 'Professional, reliable, and on-demand DHA-certified medical care across Dubai...'}
+                          className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs leading-relaxed focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 shadow-inner transition-all placeholder-slate-500 resize-none"
+                        />
+                      </div>
+
+                      {/* OG Title */}
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                            <Tag size={13} className="text-indigo-400" /><span>OpenGraph Title (Social Media)</span>
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setSubOgTitle(subMetaTitle || subTitle || '')}
+                              className="text-[10px] font-mono text-indigo-400 hover:text-indigo-300 underline cursor-pointer"
+                              title="Copy SEO Title"
+                            >
+                              Copy SEO Title
+                            </button>
+                            <span className="text-[10px] text-slate-500 font-mono">{subOgTitle.length}/60 chars</span>
+                          </div>
+                        </div>
+                        <input
+                          type="text"
+                          value={subOgTitle}
+                          onChange={(e) => setSubOgTitle(e.target.value)}
+                          placeholder={subMetaTitle || subTitle || 'Leave empty to inherit SEO Meta Title'}
+                          className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-indigo-400 shadow-inner transition-all placeholder-slate-500"
+                        />
+                      </div>
+
+                      {/* OG Description */}
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                            <AlignLeft size={13} className="text-indigo-400" /><span>OpenGraph Description (Social Media)</span>
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setSubOgDesc(subMetaDesc || subTagline || '')}
+                              className="text-[10px] font-mono text-indigo-400 hover:text-indigo-300 underline cursor-pointer"
+                              title="Copy SEO Description"
+                            >
+                              Copy SEO Desc
+                            </button>
+                            <span className="text-[10px] text-slate-500 font-mono">{subOgDesc.length}/160 chars</span>
+                          </div>
+                        </div>
+                        <textarea
+                          rows={2}
+                          value={subOgDesc}
+                          onChange={(e) => setSubOgDesc(e.target.value)}
+                          placeholder={subMetaDesc || subTagline || 'Leave empty to inherit SEO Meta Description'}
+                          className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs leading-relaxed focus:outline-none focus:border-indigo-400 shadow-inner transition-all placeholder-slate-500 resize-none"
+                        />
+                      </div>
+
+                      {/* OG Image URL */}
+                      <div>
+                        <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-2">
+                          <ImageIcon size={13} className="text-indigo-400" /><span>OpenGraph Image URL</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={subOgImage}
+                          onChange={(e) => setSubOgImage(e.target.value)}
+                          placeholder="https://corx.ae/og-image.jpg"
+                          className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-indigo-400 shadow-inner transition-all placeholder-slate-500"
+                        />
+                      </div>
+
+                      {/* Mini Live Social Card Preview */}
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
+                            <ImageIcon size={11} className="text-indigo-400" />
+                            Live Social Sharing Preview
+                          </span>
+                          <span className="text-[9px] font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full border border-indigo-500/20">
+                            WhatsApp / FB / X
+                          </span>
+                        </div>
+                        <div className="rounded-2xl overflow-hidden border border-slate-700/80 bg-[#070d1a] shadow-lg">
+                          <div className="h-28 bg-slate-800 relative flex items-center justify-center overflow-hidden">
+                            {subOgImage ? (
+                              <img src={subOgImage} alt="OG Preview" className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="flex flex-col items-center justify-center text-slate-500">
+                                <ImageIcon size={24} />
+                                <span className="text-[9px] mt-1 font-mono">corx.ae/og-image.jpg</span>
+                              </div>
+                            )}
+                            <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-white font-mono text-[9px]">
+                              corx.ae/{subSlug || 'service'}
+                            </div>
+                          </div>
+                          <div className="p-3 bg-[#091124]">
+                            <div className="text-[9px] font-mono uppercase text-cyan-400 tracking-wider">corx.ae</div>
+                            <div className="font-bold text-xs text-white truncate mt-0.5">
+                              {subOgTitle || subMetaTitle || (subTitle ? `${subTitle} in Dubai | CORx Healthcare` : 'Service Title')}
+                            </div>
+                            <div className="text-[11px] text-slate-400 line-clamp-2 mt-1 leading-normal">
+                              {subOgDesc || subMetaDesc || subTagline || 'Professional, reliable, and on-demand DHA-certified medical care at your doorstep across Dubai.'}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Submit Button */}
@@ -2481,9 +2679,63 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    {/* Social OpenGraph Image */}
+                    {/* Social OpenGraph Media */}
                     <div className="pt-3 border-t border-slate-800/80 space-y-3">
-                      <p className="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-500">Social OpenGraph Media</p>
+                      <p className="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-500">Social OpenGraph Media (WhatsApp, Facebook, Twitter)</p>
+
+                      {/* OG Title */}
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                            <Tag size={13} className="text-blue-400" /><span>OG Title (Social Card)</span>
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setHomeOgTitle(homeMetaTitle)}
+                              className="text-[10px] font-mono text-blue-400 hover:text-blue-300 underline cursor-pointer"
+                              title="Copy SEO Meta Title"
+                            >
+                              Copy SEO Title
+                            </button>
+                            <span className="text-[10px] text-slate-500 font-mono">{homeOgTitle.length}/60 chars</span>
+                          </div>
+                        </div>
+                        <input
+                          type="text"
+                          value={homeOgTitle}
+                          onChange={(e) => setHomeOgTitle(e.target.value)}
+                          placeholder={homeMetaTitle || "Leave empty to use SEO Meta Title"}
+                          className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-blue-400 shadow-inner transition-all placeholder-slate-500"
+                        />
+                      </div>
+
+                      {/* OG Description */}
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                            <AlignLeft size={13} className="text-blue-400" /><span>OG Description (Social Card)</span>
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setHomeOgDesc(homeMetaDesc)}
+                              className="text-[10px] font-mono text-blue-400 hover:text-blue-300 underline cursor-pointer"
+                              title="Copy SEO Meta Description"
+                            >
+                              Copy SEO Desc
+                            </button>
+                            <span className="text-[10px] text-slate-500 font-mono">{homeOgDesc.length}/160 chars</span>
+                          </div>
+                        </div>
+                        <textarea
+                          rows={2}
+                          value={homeOgDesc}
+                          onChange={(e) => setHomeOgDesc(e.target.value)}
+                          placeholder={homeMetaDesc || "Leave empty to use SEO Meta Description"}
+                          className="w-full px-4 py-3 rounded-2xl border border-slate-700/80 bg-[#060c19] text-white text-xs font-semibold focus:outline-none focus:border-blue-400 shadow-inner transition-all placeholder-slate-500 resize-none leading-relaxed"
+                        />
+                      </div>
 
                       <div>
                         <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-2">
@@ -2789,10 +3041,10 @@ export default function Dashboard() {
                         <div className="p-4 bg-[#091124]">
                           <div className="text-[10px] font-mono uppercase text-slate-400 tracking-wider">corx.ae</div>
                           <div className="font-bold text-xs text-white truncate mt-0.5">
-                            {homeMetaTitle || 'CORX Healthcare: Home Health Care Services in Dubai *24/7'}
+                            {homeOgTitle || homeMetaTitle || 'CORX Healthcare: Home Health Care Services in Dubai *24/7'}
                           </div>
                           <div className="text-[11px] text-slate-400 line-clamp-2 mt-1 leading-normal">
-                            {homeMetaDesc || 'Get premium home health care services in Dubai with Corx Healthcare.'}
+                            {homeOgDesc || homeMetaDesc || 'Get premium home health care services in Dubai with Corx Healthcare.'}
                           </div>
                         </div>
                       </div>
