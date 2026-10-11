@@ -227,8 +227,8 @@ export default function Contact() {
   return (
     <div style={styles.page}>
       <SEO
-        title="Book an Appointment | Contact CORx Home Healthcare Dubai 24/7"
-        description="Book an appointment with CORx Home Healthcare in Dubai. Contact our 24/7 medical team for doctor home visits, nursing, lab tests, and physiotherapy."
+        title="Book an Appointment | Home Nursing | Home Physiotherapy Dubai"
+        description="Book an appointment with Corx Home Healthcare in Dubai for personalized home care services as per schedule doctor visits, nursing, lab tests"
         canonical="https://corx.ae/contact-us"
       />
       {/* Header */}

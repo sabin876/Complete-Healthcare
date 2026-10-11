@@ -26,7 +26,7 @@ async function verifyAllPages() {
 
   for (const route of testRoutes) {
     try {
-      const res = await fetch('http://127.0.0.1:5173' + route);
+      const res = await fetch('http://localhost:5173' + route);
       const html = await res.text();
 
       // Counts
