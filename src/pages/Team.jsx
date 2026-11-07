@@ -35,6 +35,7 @@ import mariecrisPhoto from '../assets/Mariecris Godinez.png';
 import manasaPhoto from '../assets/manasa Vadde.png';
 import sajiniPhoto from '../assets/sajini Babu.png';
 import vinayataPhoto from '../assets/vinayata m .png';
+import seharPhoto from '../assets/Sehar Bano.png';
 
 const doctorsData = [
   {
@@ -59,7 +60,7 @@ const doctorsData = [
     department: "Physiotherapy",
     nmcNo: "PT-003",
     degree: "DHA Certified Physiotherapist",
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+    image: seharPhoto
   },
   {
     name: "Manju Kumari",
