@@ -28,6 +28,41 @@ import SocialMedia from './pages/SocialMedia';
 import { useSSRData } from './context/SSRDataContext';
 
 const knownBlogSlugs = new Set([
+  'advantages-of-stem-cells',
+  'health-insurance-status-with-emirates-id',
+  'benefits-of-home-health-care',
+  'top-10-benefits-of-physiotherapy',
+  'benefits-of-iv-therapy',
+  'benefits-of-vitamin-c',
+  'physiotherapy-exercises-for-lower-back-pain',
+  'physical-therapy-for-stroke-patients-at-home',
+  'sleep-apnea-headache',
+  'home-remedy-for-sprained-ankle-pain',
+  'how-to-do-physiotherapy-at-home-for-shoulder-pain',
+  'what-is-at-home-iv-therapy-popular-iv-therapy',
+  'cost-of-elderly-home-care-in-dubai',
+  'frozen-shoulder-physical-therapy-dubai',
+  'physiotherapy-at-your-doorstep-expert-care-anytime',
+  'flu-vaccination-services-at-home-protect-your-fami',
+  'best-physiotherapy-services-in-dubai-restore-your',
+  'the-benefits-of-home-nursing-services-in-dubai-car',
+  'how-iv-therapy-is-changing-healthcare-in-dubai-boo',
+  'elderly-care-services-in-dubai-providing-comfort-a',
+  'how-corx-healthcare-is-revolutionizing-doctor-on-c',
+  'hydration-energy-the-role-of-iv-drips-in-dubais-wellness-trend',
+  'chronic-pain-solutions-in-dubai-how-physiotherapy',
+  'why-home-physiotherapy-is-the-future-of-recovery',
+  'holistic-healing-physiotherapy-plus-lifestyle-support-at-home',
+  'why-post-surgery-home-care-essential',
+  'why-home-healthcare-is-becoming-essential-in-dubai',
+  'what-to-expect-from-a-doctor-at-home-visit',
+  'pediatric-home-healthcare-ensuring-comfort-for-children',
+  'the-complete-guide-to-iv-therapy-at-home',
+  '10-signs-your-loved-one-might-need-home-nursing-care',
+  'managing-chronic-conditions-with-home-healthcare-support',
+  'doctor-at-home-vs-hospital-visit-whats-better-in-2026',
+  'burnout-in-working-professionals-signs-solutions',
+  'what-is-physiotherapy',
   'what-is-physiotherapy-a-comprehensive-guide',
   'steps-in-total-knee-replacement',
   'the-evolution-of-tkr-implants',
@@ -39,19 +74,79 @@ const knownBlogSlugs = new Set([
   'recovery-timeline-rehabilitation-milestones',
   'doctor-at-home-vs-hospital-visit',
   'managing-chronic-conditions-with-home-healthcare',
-  'burnout-in-working-professionals-signs-solutions',
+]);
+
+const knownServices = new Set([
+  'lab-test-at-home',
+  'lab-services',
+  'doctor-on-call',
+  'home-nursing',
+  'nursing',
+  'elderly-care',
+  'elderly-home-care',
+  'iv-therapy',
+  'iv-drip',
+  'iv-therapy-iv-drip',
+  'physiotherapy-at-home-in-dubai',
+  'physiotherapy',
+  'palliative-care',
+  'night-care-nurse',
+  'injection-at-home',
+  'wound-care',
+  'oxygen-therapy',
+  'doctor-at-home',
+  'doctor-at-office',
+  'doctor-at-hotel',
+  'frozen-shoulder-physiotherapy-treatment',
+  'pediatric-physiotherapy',
+  'joint-pain-treatment',
+  'manual-therapy',
 ]);
 
 const DynamicSlugHandler = () => {
   const { slug } = useParams();
   const ssrData = useSSRData();
   const cleanSlug = (slug || '').toLowerCase().trim();
+  const [dynamicBlogSlugs, setDynamicBlogSlugs] = React.useState(new Set());
+
+  React.useEffect(() => {
+    fetch(`${API_BASE_URL}/api/blogs/`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (Array.isArray(data)) {
+          const slugs = new Set(data.map(b => (b.slug || '').toLowerCase().trim()).filter(Boolean));
+          setDynamicBlogSlugs(slugs);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   if (ssrData?.isBlogDetail) {
     return <BlogDetails />;
   }
 
-  if (knownBlogSlugs.has(cleanSlug) || cleanSlug.startsWith('what-is-') || cleanSlug.startsWith('steps-in-') || cleanSlug.includes('tkr-') || cleanSlug.includes('timeline-') || cleanSlug.includes('burnout-')) {
+  if (ssrData?.serviceData && !ssrData?.isBlogDetail) {
+    return <ServicePage />;
+  }
+
+  if (knownServices.has(cleanSlug)) {
+    return <ServicePage />;
+  }
+
+  if (
+    knownBlogSlugs.has(cleanSlug) ||
+    dynamicBlogSlugs.has(cleanSlug) ||
+    cleanSlug.startsWith('what-is-') ||
+    cleanSlug.startsWith('steps-in-') ||
+    cleanSlug.startsWith('benefits-of-') ||
+    cleanSlug.startsWith('how-to-') ||
+    cleanSlug.startsWith('why-') ||
+    cleanSlug.includes('insurance') ||
+    cleanSlug.includes('tkr-') ||
+    cleanSlug.includes('timeline-') ||
+    cleanSlug.includes('burnout-') ||
+    cleanSlug.includes('stem-cell')
+  ) {
     return <BlogDetails />;
   }
 

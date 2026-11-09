@@ -125,12 +125,19 @@ async function getRoutesToPrerender(backendUrl) {
   }
 
   try {
-    const blogsData = await safeFetchJson(`${backendUrl}/api/blogs/`, 2000);
-    const blogs = Array.isArray(blogsData) ? blogsData : (blogsData?.results || []);
+    let blogsData = await safeFetchJson(`${backendUrl}/api/blogs/`, 2000);
+    let blogs = Array.isArray(blogsData) ? blogsData : (blogsData?.results || []);
+    if (blogs.length === 0) {
+      const liveBlogs = await safeFetchJson('https://api.corx.ae/api/blogs/', 3000);
+      if (Array.isArray(liveBlogs) && liveBlogs.length > 0) {
+        blogs = liveBlogs;
+      }
+    }
     for (const b of blogs) {
       const slug = b.slug || slugifyText(b.title);
       if (slug) {
         routes.add(`/blog/${slug}`);
+        routes.add(`/${slug}`);
       }
     }
   } catch (e) {

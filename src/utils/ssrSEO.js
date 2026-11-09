@@ -392,6 +392,9 @@ export async function loadBlogPostData(slugOrId, apiBaseUrl = 'http://127.0.0.1:
     const alt = target.startsWith('the-') ? target.replace(/^the-/, '') : `the-${target}`;
     data = await safeFetchJson(`${baseUrl}/api/blogs/${alt}/`, 1200);
   }
+  if (!data && !baseUrl.includes('corx.ae')) {
+    data = await safeFetchJson(`https://api.corx.ae/api/blogs/${target}/`, 1500);
+  }
 
   if (data && data.title) {
     post = {

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { API_BASE_URL } from "../config/api";
 import ivTherapyImg from "../assets/iv_therapy_home.png";
-import labServicesImg from "../assets/lab_services_home.png";
+import labServicesImg from "../assets/lab_services_home.jpg";
 
 const services = [
   {
@@ -77,7 +77,7 @@ const services = [
       </svg>
     ),
     image: labServicesImg,
-    video: "https://cdn.pixabay.com/video/2017/01/01/6973-197914400_large.mp4"
+    video: null
   },
 ];
 
@@ -117,23 +117,37 @@ function ServiceCard({ service, index }) {
     >
       {/* Image Area */}
       <div style={{ position: "relative", height: "190px", overflow: "hidden" }}>
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={service.image}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            transform: hovered ? "scale(1.08)" : "scale(1)",
-            transition: "transform 0.8s cubic-bezier(0.21, 1.02, 0.47, 0.98)",
-          }}
-        >
-          <source src={service.video} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        {service.video ? (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={service.image}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transform: hovered ? "scale(1.08)" : "scale(1)",
+              transition: "transform 0.8s cubic-bezier(0.21, 1.02, 0.47, 0.98)",
+            }}
+          >
+            <source src={service.video} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        ) : (
+          <img
+            src={service.image}
+            alt={service.title}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transform: hovered ? "scale(1.08)" : "scale(1)",
+              transition: "transform 0.8s cubic-bezier(0.21, 1.02, 0.47, 0.98)",
+            }}
+          />
+        )}
 
         {/* Hover Dark Vignette overlay */}
         <div 
