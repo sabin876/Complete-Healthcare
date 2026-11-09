@@ -702,18 +702,18 @@ export default function BlogDetails() {
 
         {/* Breadcrumb */}
         <div className="breadcrumb">
-          <Link to="/">Home</Link> / <Link to="/blog">Blog</Link> / <Link to="/blog">{post.category}</Link> / {post.title}
+          <Link to="/">Home</Link> / <Link to="/blog">Blog</Link> / <Link to="/blog">{post?.category || "Healthcare"}</Link> / {post?.title || "Article"}
         </div>
 
         <article className="article-card">
-          <h1 className="article-title">{post.title}</h1>
+          <h1 className="article-title">{post?.title || "Healthcare Article"}</h1>
           <div className="article-meta">
-            By <strong>{post.author}</strong> • {post.date} • {post.category}
+            By <strong>{post?.author || "CORx Healthcare"}</strong> • {post?.date || "2026"} • {post?.category || "Healthcare"}
           </div>
 
           <img 
-            src={post.heroImage || getCategoryFallbackImage(post?.category)} 
-            alt={post.title} 
+            src={post?.heroImage || getCategoryFallbackImage(post?.category)} 
+            alt={post?.title || "CORx Healthcare Article"} 
             className="article-hero"
             onError={(e) => {
               e.currentTarget.onerror = null;
@@ -723,12 +723,12 @@ export default function BlogDetails() {
 
           <div 
             className="article-body" 
-            dangerouslySetInnerHTML={{ __html: post.content }} 
+            dangerouslySetInnerHTML={{ __html: post?.content || `<p>${post?.excerpt || post?.title || ''}</p>` }} 
           />
 
           <div className="tags">
             <span className="label">TAGS:</span>
-            {post.tags && post.tags.map((tag, i) => (
+            {Array.isArray(post?.tags) && post.tags.map((tag, i) => (
               <span key={i} className="tag">#{tag}</span>
             ))}
           </div>
@@ -742,21 +742,21 @@ export default function BlogDetails() {
           </div>
 
           <div className="author-box">
-            <div className="author-avatar">{(post.author && post.author.charAt(0)) || "C"}</div>
+            <div className="author-avatar">{(post?.author && post.author.charAt(0)) || "C"}</div>
             <div>
-              <h4>Written by {post.author}</h4>
-              <p>{post.authorBio}</p>
+              <h4>Written by {post?.author || "CORx Healthcare"}</h4>
+              <p>{post?.authorBio || "Medical insights curated by our clinical healthcare team in Dubai."}</p>
             </div>
           </div>
 
           <div className="post-nav">
-            <Link to={`/${prevPost.slug || slugifyTitle(prevPost.title) || prevPost.id}`} className="prev">
+            <Link to={`/${prevPost?.slug || slugifyTitle(prevPost?.title || '') || prevPost?.id || ''}`} className="prev">
               <span className="dir">← Previous</span>
-              <span className="title">{prevPost.title}</span>
+              <span className="title">{prevPost?.title}</span>
             </Link>
-            <Link to={`/${nextPost.slug || slugifyTitle(nextPost.title) || nextPost.id}`} className="next">
+            <Link to={`/${nextPost?.slug || slugifyTitle(nextPost?.title || '') || nextPost?.id || ''}`} className="next">
               <span className="dir">Next →</span>
-              <span className="title">{nextPost.title}</span>
+              <span className="title">{nextPost?.title}</span>
             </Link>
           </div>
         </article>
@@ -782,7 +782,7 @@ export default function BlogDetails() {
                 <li key={item.id}>
                   <Link 
                     to={`/${item.slug || slugifyTitle(item.title) || item.id}`}
-                    className={item.id === post.id ? "current" : ""}
+                    className={item.id === post?.id ? "current" : ""}
                   >
                     {item.title}
                   </Link>

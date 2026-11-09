@@ -26,6 +26,7 @@ import NotFound from './pages/NotFound';
 import Sitemap from './pages/Sitemap';
 import SocialMedia from './pages/SocialMedia';
 import { useSSRData } from './context/SSRDataContext';
+import { API_BASE_URL } from './config/api';
 
 const knownBlogSlugs = new Set([
   'advantages-of-stem-cells',
@@ -110,15 +111,23 @@ const DynamicSlugHandler = () => {
   const [dynamicBlogSlugs, setDynamicBlogSlugs] = React.useState(new Set());
 
   React.useEffect(() => {
-    fetch(`${API_BASE_URL}/api/blogs/`)
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (Array.isArray(data)) {
-          const slugs = new Set(data.map(b => (b.slug || '').toLowerCase().trim()).filter(Boolean));
-          setDynamicBlogSlugs(slugs);
-        }
-      })
-      .catch(() => {});
+    let isMounted = true;
+    try {
+      const baseUrl = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'https://api.corx.ae';
+      fetch(`${baseUrl}/api/blogs/`)
+        .then(res => (res && res.ok ? res.json() : null))
+        .then(data => {
+          if (isMounted && Array.isArray(data)) {
+            const slugs = new Set(data.map(b => (b.slug || '').toLowerCase().trim()).filter(Boolean));
+            setDynamicBlogSlugs(slugs);
+          }
+        })
+        .catch(() => {});
+    } catch (_) {}
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (ssrData?.isBlogDetail) {

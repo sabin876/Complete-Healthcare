@@ -18,7 +18,8 @@ export function SEO({
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // 1. Strict Document Title & Title Element Deduplication
+    try {
+      // 1. Strict Document Title & Title Element Deduplication
     if (title) {
       document.title = title;
       const titleEls = document.querySelectorAll('title');
@@ -187,6 +188,9 @@ export function SEO({
     } else {
       scriptEls.forEach(el => el.remove());
     }
+  } catch (err) {
+    console.warn('[SEO] Warning updating tags:', err);
+  }
   }, [title, description, canonical, ogImage, propOgTitle, propOgDesc, ogType, robots, schema]);
 
   return null;

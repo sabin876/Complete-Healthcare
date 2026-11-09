@@ -125,20 +125,34 @@ async function getRoutesToPrerender(backendUrl) {
   }
 
   try {
-    let blogsData = await safeFetchJson(`${backendUrl}/api/blogs/`, 2000);
-    let blogs = Array.isArray(blogsData) ? blogsData : (blogsData?.results || []);
-    if (blogs.length === 0) {
-      const liveBlogs = await safeFetchJson('https://api.corx.ae/api/blogs/', 3000);
-      if (Array.isArray(liveBlogs) && liveBlogs.length > 0) {
-        blogs = liveBlogs;
+    const allBlogsMap = new Map();
+
+    // 1. Fetch from live production API first
+    try {
+      const liveBlogs = await safeFetchJson('https://api.corx.ae/api/blogs/', 5000);
+      if (Array.isArray(liveBlogs)) {
+        for (const b of liveBlogs) {
+          const s = b.slug || slugifyText(b.title);
+          if (s) allBlogsMap.set(s, b);
+        }
       }
+    } catch (_) {}
+
+    // 2. Merge from local backend if available
+    if (backendUrl && !backendUrl.includes('api.corx.ae')) {
+      try {
+        const localBlogsData = await safeFetchJson(`${backendUrl}/api/blogs/`, 2000);
+        const localBlogs = Array.isArray(localBlogsData) ? localBlogsData : (localBlogsData?.results || []);
+        for (const b of localBlogs) {
+          const s = b.slug || slugifyText(b.title);
+          if (s && !allBlogsMap.has(s)) allBlogsMap.set(s, b);
+        }
+      } catch (_) {}
     }
-    for (const b of blogs) {
-      const slug = b.slug || slugifyText(b.title);
-      if (slug) {
-        routes.add(`/blog/${slug}`);
-        routes.add(`/${slug}`);
-      }
+
+    for (const [slug] of allBlogsMap) {
+      routes.add(`/blog/${slug}`);
+      routes.add(`/${slug}`);
     }
   } catch (e) {
     console.log('[prerender] Backend blogs not reachable; using static blogs list.');
