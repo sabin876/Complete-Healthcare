@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { API_BASE_URL } from "../config/api";
 import ivTherapyImg from "../assets/iv_therapy_home.png";
 import labServicesImg from "../assets/lab_services_home.jpg";
+import labTestVideo from "../assets/lab test at home.mp4";
 
 const services = [
   {
@@ -66,7 +67,7 @@ const services = [
   },
   {
     id: 6,
-    title: "Lab Services",
+    title: "Lab Services | Blood Test at Home",
     description: "Corx Healthcare Offers Convenient 24/7 Lab Testing Right at Your Doorstep in Dubai.",
     accent: "#E2D1F9",
     path: "/lab-test-at-home",
@@ -77,7 +78,7 @@ const services = [
       </svg>
     ),
     image: labServicesImg,
-    video: null
+    video: labTestVideo
   },
 ];
 
@@ -119,6 +120,7 @@ function ServiceCard({ service, index }) {
       <div style={{ position: "relative", height: "190px", overflow: "hidden" }}>
         {service.video ? (
           <video
+            key={service.video}
             autoPlay
             muted
             loop
@@ -248,7 +250,20 @@ export default function ExploreServices() {
           const mainParents = data.filter(item => item.parent === null || !item.parent);
           const listToDisplay = mainParents.length > 0 ? mainParents : data;
           setServiceList(listToDisplay.map((item, index) => {
-            const defaultItem = services.find(s => s.path.includes(item.slug) || item.slug.includes(s.path.split('/').pop())) || services[index % services.length];
+            const defaultItem = services.find(s => {
+              const sSlug = s.path.split('/').filter(Boolean).pop();
+              return (
+                s.path.includes(item.slug) ||
+                item.slug.includes(sSlug) ||
+                (item.slug.includes('lab') && sSlug.includes('lab')) ||
+                (item.slug.includes('iv') && sSlug.includes('iv')) ||
+                (item.slug.includes('nurs') && sSlug.includes('nurs')) ||
+                (item.slug.includes('doctor') && sSlug.includes('doctor')) ||
+                (item.slug.includes('elder') && sSlug.includes('elder')) ||
+                (item.slug.includes('physio') && sSlug.includes('physio'))
+              );
+            }) || services[index % services.length];
+
             return {
               id: item.id || index + 1,
               title: item.title || defaultItem.title,
