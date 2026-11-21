@@ -20,6 +20,8 @@ import {
   MessageSquare,
   ArrowRight
 } from 'lucide-react';
+import elderlyVideo from '../assets/Elderly home age.mp4';
+import elderlyPoster from '../assets/services/elderly.png';
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -235,83 +237,32 @@ function HeroBackgroundAnimation() {
   );
 }
 
-// ─── HERO ILLUSTRATION ───────────────────────────────────────────────────────
+// ─── HERO ILLUSTRATION & VIDEO CARD ──────────────────────────────────────────
 
 function ElderlyIllustration() {
   return (
-    <div className="relative w-full max-w-[460px] mx-auto flex items-center justify-center">
-      <div className="absolute w-80 h-80 bg-[#08709d]/5 rounded-full blur-[100px] pointer-events-none" />
-      <div className="relative w-full bg-gradient-to-tr from-[#08709d]/10 via-[#08709d]/3 to-transparent p-5 rounded-3xl border border-[#08709d]/10 shadow-lg">
-        <div className="relative bg-white rounded-2xl border border-gray-100 p-8 shadow-sm overflow-hidden flex flex-col items-center justify-center min-h-[360px]">
-          <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
-          <div className="absolute -bottom-16 -left-16 w-40 h-40 bg-[#08709d]/5 rounded-full blur-2xl pointer-events-none" />
-
-          <svg
-            width="240"
-            height="220"
-            viewBox="0 0 240 220"
-            fill="none"
-            className="relative z-10 w-[85%] h-auto drop-shadow-md"
+    <div className="relative w-full max-w-[480px] mx-auto flex items-center justify-center">
+      <div className="absolute w-80 h-80 bg-[#08709d]/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="relative w-full bg-gradient-to-tr from-[#08709d]/15 via-[#08709d]/5 to-transparent p-3 sm:p-4 rounded-3xl border border-[#08709d]/15 shadow-xl overflow-hidden">
+        <div className="relative bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex items-center justify-center aspect-[4/3] sm:aspect-[16/11]">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={elderlyPoster}
+            className="w-full h-full object-cover"
           >
-            <circle cx="120" cy="110" r="100" fill="#08709d" fillOpacity="0.04" />
+            <source src={elderlyVideo} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
 
-            {/* ELDERLY PERSON (left) */}
-            <rect x="42" y="118" width="46" height="50" rx="10" fill="#1a294a" />
-            <rect x="52" y="118" width="10" height="50" rx="4" fill="#08709d" fillOpacity="0.35" />
-            <rect x="57" y="110" width="16" height="10" rx="4" fill="#f3c9a0" />
-            <circle cx="65" cy="94" r="20" fill="#f3c9a0" />
-            <path d="M45 90c0-22 11-28 20-28s20 6 20 28H45z" fill="#e2e8f0" />
-            <path d="M59 98c0 6 12 6 12 0" stroke="#1a294a" strokeWidth="2" fill="none" strokeLinecap="round" />
-            <circle cx="61" cy="93" r="1.5" fill="#1a294a" />
-            <circle cx="70" cy="93" r="1.5" fill="#1a294a" />
-            <rect x="57" y="89" width="9" height="6" rx="3" stroke="#08709d" strokeWidth="1.5" fill="none" />
-            <rect x="68" y="89" width="9" height="6" rx="3" stroke="#08709d" strokeWidth="1.5" fill="none" />
-            <line x1="66" y1="92" x2="68" y2="92" stroke="#08709d" strokeWidth="1.5" />
-            <path d="M42 130 Q30 142 34 158" stroke="#f3c9a0" strokeWidth="9" strokeLinecap="round" fill="none" />
-            <line x1="34" y1="158" x2="28" y2="188" stroke="#94a3b8" strokeWidth="4" strokeLinecap="round" />
-            <ellipse cx="28" cy="190" rx="6" ry="3" fill="#64748b" />
-            <path d="M88 132 Q100 128 108 136" stroke="#f3c9a0" strokeWidth="9" strokeLinecap="round" fill="none" />
-            <rect x="47" y="166" width="16" height="36" rx="7" fill="#334155" />
-            <rect x="66" y="166" width="16" height="36" rx="7" fill="#334155" />
-            <ellipse cx="55" cy="202" rx="10" ry="5" fill="#1e293b" />
-            <ellipse cx="74" cy="202" rx="10" ry="5" fill="#1e293b" />
-
-            {/* CAREGIVER / NURSE (right) */}
-            <rect x="138" y="115" width="50" height="56" rx="11" fill="#08709d" />
-            <rect x="156" y="122" width="14" height="5" rx="2" fill="white" fillOpacity="0.9" />
-            <rect x="161" y="117" width="5" height="14" rx="2" fill="white" fillOpacity="0.9" />
-            <rect x="156" y="107" width="16" height="10" rx="4" fill="#f5c9a5" />
-            <circle cx="164" cy="91" r="21" fill="#f5c9a5" />
-            <path d="M143 87c0-24 11-30 21-30s21 6 21 30h-42z" fill="#1a294a" />
-            <circle cx="164" cy="57" r="7" fill="#1a294a" />
-            <path d="M148 82 h32 l-4-8 h-24z" fill="white" fillOpacity="0.85" />
-            <line x1="148" y1="78" x2="180" y2="78" stroke="#08709d" strokeWidth="2" />
-            <path d="M157 97c0 7 14 7 14 0" stroke="#1a294a" strokeWidth="2" fill="none" strokeLinecap="round" />
-            <circle cx="160" cy="91" r="1.5" fill="#1a294a" />
-            <circle cx="169" cy="91" r="1.5" fill="#1a294a" />
-            <path d="M138 130 Q120 130 108 136" stroke="#f5c9a5" strokeWidth="9" strokeLinecap="round" fill="none" />
-            <ellipse cx="108" cy="136" rx="9" ry="7" fill="#22c55e" fillOpacity="0.25" stroke="#22c55e" strokeWidth="1.5" />
-            <path d="M188 128 Q200 138 196 155" stroke="#f5c9a5" strokeWidth="9" strokeLinecap="round" fill="none" />
-            <rect x="190" y="150" width="22" height="28" rx="4" fill="white" stroke="#08709d" strokeWidth="2" />
-            <line x1="194" y1="158" x2="208" y2="158" stroke="#08709d" strokeWidth="1.5" strokeLinecap="round" />
-            <line x1="194" y1="164" x2="208" y2="164" stroke="#08709d" strokeWidth="1.5" strokeLinecap="round" />
-            <line x1="194" y1="170" x2="202" y2="170" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" />
-            <rect x="143" y="169" width="17" height="33" rx="7" fill="#065679" />
-            <rect x="163" y="169" width="17" height="33" rx="7" fill="#065679" />
-            <ellipse cx="151" cy="202" rx="11" ry="5" fill="#1e293b" />
-            <ellipse cx="171" cy="202" rx="11" ry="5" fill="#1e293b" />
-
-            {/* Joined hands / care symbol */}
-            <path d="M108 105 c0-5 7-9 7-3 c0-6 7-2 7 3 l-7 9z" fill="#22c55e" fillOpacity="0.7" />
-
-            {/* Ground shadow */}
-            <ellipse cx="116" cy="208" rx="80" ry="7" fill="#e2e8f0" fillOpacity="0.5" />
-          </svg>
-
-          <div className="mt-4 inline-flex items-center gap-2 bg-[#08709d]/10 px-3.5 py-1 rounded-full border border-[#08709d]/20">
+        <div className="mt-3 flex items-center justify-center">
+          <div className="inline-flex items-center gap-2 bg-[#08709d]/10 px-3.5 py-1 rounded-full border border-[#08709d]/20">
             <span className="w-2 h-2 rounded-full bg-[#08709d] animate-pulse" />
             <span className="text-xs font-bold text-[#08709d] uppercase">
-              DHA-Licensed · Compassionate Senior Care
+              DHA-Licensed &bull; Compassionate Senior Care
             </span>
           </div>
         </div>

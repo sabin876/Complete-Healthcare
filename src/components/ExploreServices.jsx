@@ -9,6 +9,8 @@ import homeNursingVideo from "../assets/Home Nursing.mp4";
 import physioVideo from "../assets/Physio Video.mp4";
 import physioImg from "../assets/services/physio.png";
 import nursingImg from "../assets/services/nursing.png";
+import elderlyVideo from "../assets/Elderly home age.mp4";
+import elderlyImg from "../assets/services/elderly.png";
 
 const services = [
   {
@@ -84,8 +86,8 @@ const services = [
         <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
       </svg>
     ),
-    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&q=80",
-    video: "https://cdn.pixabay.com/video/2016/10/24/6096-188704568_large.mp4"
+    image: elderlyImg,
+    video: elderlyVideo
   },
   {
     id: 6,
