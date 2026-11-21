@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { API_BASE_URL } from "../config/api";
@@ -11,6 +11,8 @@ import physioImg from "../assets/services/physio.png";
 import nursingImg from "../assets/services/nursing.png";
 import elderlyVideo from "../assets/Elderly home age.mp4";
 import elderlyImg from "../assets/services/elderly.png";
+import ivTherapyVideo from "../assets/IV therapy and IV Drip.mp4";
+import doctorOnCallVideo from "../assets/doctor_on_call.mp4";
 
 const services = [
   {
@@ -45,7 +47,7 @@ const services = [
       </svg>
     ),
     image: ivTherapyImg,
-    video: "https://cdn.pixabay.com/video/2022/12/18/143434-782373973_large.mp4"
+    video: ivTherapyVideo
   },
   {
     id: 3,
@@ -73,7 +75,7 @@ const services = [
       </svg>
     ),
     image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80",
-    video: "https://cdn.pixabay.com/video/2020/09/13/49808-458438856_large.mp4"
+    video: doctorOnCallVideo
   },
   {
     id: 5,
@@ -109,6 +111,66 @@ const services = [
 function ServiceCard({ service, index }) {
   const navigate = useNavigate();
   const [hovered, setHovered] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Hard-enforce muted properties for browser autoplay policies
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const playVideo = () => {
+      const promise = video.play();
+      if (promise !== undefined) {
+        promise.catch(() => {
+          // Autoplay was blocked; will resume on first user interaction
+        });
+      }
+    };
+
+    // Immediate attempt
+    playVideo();
+
+    // IntersectionObserver: smoothly play when in view, pause when offscreen to preserve 60fps GPU performance
+    let observer;
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              playVideo();
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      observer.observe(video);
+    }
+
+    // Safety fallback for strict mobile browser policies (e.g. iOS low power mode)
+    const handleFirstInteraction = () => {
+      playVideo();
+      window.removeEventListener("touchstart", handleFirstInteraction);
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("scroll", handleFirstInteraction);
+    };
+
+    window.addEventListener("touchstart", handleFirstInteraction, { passive: true, once: true });
+    window.addEventListener("click", handleFirstInteraction, { passive: true, once: true });
+    window.addEventListener("scroll", handleFirstInteraction, { passive: true, once: true });
+
+    return () => {
+      if (observer) observer.disconnect();
+      window.removeEventListener("touchstart", handleFirstInteraction);
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("scroll", handleFirstInteraction);
+    };
+  }, [service.video]);
 
   return (
     <motion.div
@@ -137,25 +199,32 @@ function ServiceCard({ service, index }) {
           : "0 10px 30px -5px rgba(0, 0, 0, 0.03)",
         cursor: "pointer",
         position: "relative",
-        transition: "border-color 0.4s ease, box-shadow 0.4s ease"
+        transition: "border-color 0.4s ease, box-shadow 0.4s ease",
+        transform: "translateZ(0)"
       }}
     >
       {/* Image Area */}
-      <div style={{ position: "relative", height: "190px", overflow: "hidden" }}>
+      <div style={{ position: "relative", height: "190px", overflow: "hidden", transform: "translateZ(0)" }}>
         {service.video ? (
           <video
+            ref={videoRef}
             key={service.video}
             autoPlay
             muted
             loop
             playsInline
+            webkit-playsinline="true"
+            preload="auto"
             poster={service.image}
             style={{
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              transform: hovered ? "scale(1.08)" : "scale(1)",
-              transition: "transform 0.8s cubic-bezier(0.21, 1.02, 0.47, 0.98)",
+              transform: hovered ? "scale(1.06) translateZ(0)" : "scale(1) translateZ(0)",
+              transition: "transform 0.7s cubic-bezier(0.21, 1.02, 0.47, 0.98)",
+              willChange: "transform",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
             }}
           >
             <source src={service.video} type="video/mp4" />
@@ -169,8 +238,11 @@ function ServiceCard({ service, index }) {
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              transform: hovered ? "scale(1.08)" : "scale(1)",
-              transition: "transform 0.8s cubic-bezier(0.21, 1.02, 0.47, 0.98)",
+              transform: hovered ? "scale(1.06) translateZ(0)" : "scale(1) translateZ(0)",
+              transition: "transform 0.7s cubic-bezier(0.21, 1.02, 0.47, 0.98)",
+              willChange: "transform",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
             }}
           />
         )}
