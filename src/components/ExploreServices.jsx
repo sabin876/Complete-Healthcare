@@ -35,8 +35,8 @@ const services = [
   },
   {
     id: 2,
-    title: "IV Therapy",
-    description: "Discover Convenient 24/7 IV Therapy Services Right at Your Doorstep with Us.",
+    title: "IV Therapy & IV Drip",
+    description: "Discover Convenient 24/7 IV Therapy & IV Drip Services Right at Your Doorstep with Us.",
     accent: "#F5DEB3",
     path: "/iv-therapy",
     icon: (

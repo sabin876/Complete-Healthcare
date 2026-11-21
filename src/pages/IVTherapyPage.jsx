@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import ServiceHighlightsBar from '../components/ServiceHighlightsBar';
 import SEO from '../components/SEO';
 import { useSSRData } from '../context/SSRDataContext';
+import ivTherapyVideo from '../assets/IV therapy and IV Drip.mp4';
+import ivPoster from '../assets/iv_therapy_home.png';
+import dhaLogo from '../assets/Dubai_Health_Authority_log.png';
 import {
   Container,
   Section,
@@ -372,55 +375,49 @@ function HeroBackgroundAnimation() {
 }
 
 function IVDripIllustration() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
+  }, []);
+
   return (
-    <div className="relative w-full max-w-[460px] mx-auto flex items-center justify-center">
-      <div className="absolute w-80 h-80 bg-[#08709d]/5 rounded-full blur-[100px] pointer-events-none" />
-      <div className="relative w-full bg-gradient-to-tr from-[#08709d]/10 via-[#08709d]/3 to-transparent p-5 rounded-3xl border border-[#08709d]/10 shadow-lg">
-        <div className="relative bg-white rounded-2xl border border-gray-100 p-8 shadow-sm overflow-hidden flex flex-col items-center justify-center min-h-[360px]">
-          <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
-          <div className="absolute -bottom-16 -left-16 w-40 h-40 bg-[#08709d]/5 rounded-full blur-2xl pointer-events-none" />
-          <svg
-            width="220"
-            height="260"
-            viewBox="0 0 220 260"
-            fill="none"
-            className="relative z-10 w-[80%] h-auto drop-shadow-md"
-            aria-label="IV Drip Bag Illustration"
+    <div className="relative w-full max-w-[480px] mx-auto flex items-center justify-center">
+      <div className="absolute w-80 h-80 bg-[#08709d]/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="relative w-full bg-gradient-to-tr from-[#08709d]/15 via-[#08709d]/5 to-transparent p-3 sm:p-4 rounded-3xl border border-[#08709d]/15 shadow-xl overflow-hidden">
+        <div className="relative bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex items-center justify-center aspect-[4/3] sm:aspect-[16/11]">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            webkit-playsinline="true"
+            poster={ivPoster}
+            className="w-full h-full object-cover"
           >
-            <circle cx="110" cy="110" r="100" fill="#08709d" fillOpacity="0.04" />
-            <rect x="55" y="20" width="100" height="130" rx="18" fill="#f0f9ff" stroke="#08709d" strokeWidth="2.5" />
-            <rect x="57" y="80" width="96" height="68" rx="0" fill="#08709d" fillOpacity="0.12" />
-            <rect x="57" y="80" width="96" height="2" rx="0" fill="#08709d" fillOpacity="0.35" />
-            <rect x="55" y="20" width="100" height="60" rx="18" fill="#e0f2fe" stroke="#08709d" strokeWidth="2.5" />
-            <circle cx="110" cy="14" r="7" fill="none" stroke="#1a294a" strokeWidth="2.5" />
-            <line x1="110" y1="14" x2="110" y2="22" stroke="#1a294a" strokeWidth="2.5" strokeLinecap="round" />
-            <rect x="100" y="38" width="20" height="6" rx="3" fill="#08709d" />
-            <rect x="107" y="31" width="6" height="20" rx="3" fill="#08709d" />
-            <circle cx="90" cy="100" r="5" fill="#08709d" fillOpacity="0.25" />
-            <circle cx="110" cy="110" r="4" fill="#08709d" fillOpacity="0.2" />
-            <circle cx="130" cy="100" r="5" fill="#08709d" fillOpacity="0.25" />
-            <text x="110" y="135" textAnchor="middle" fontSize="11" fontWeight="700" fill="#08709d" fontFamily="sans-serif">72%</text>
-            <rect x="96" y="148" width="28" height="12" rx="5" fill="#1a294a" />
-            <rect x="103" y="160" width="14" height="6" rx="2" fill="#1a294a" />
-            <path d="M110 166 C110 190, 130 200, 130 220 C130 240, 110 245, 110 258" stroke="#08709d" strokeWidth="3" strokeLinecap="round" fill="none" />
-            <rect x="120" y="195" width="20" height="30" rx="5" fill="#e0f2fe" stroke="#08709d" strokeWidth="2" />
-            <circle cx="130" cy="208" r="4" fill="#08709d" fillOpacity="0.4" />
-            <rect x="103" y="251" width="14" height="8" rx="2" fill="#1a294a" />
-            <path d="M110 259 L107 266 L113 266 Z" fill="#08709d" />
-            <rect x="58" y="88" width="6" height="40" rx="3" fill="#22c55e" fillOpacity="0.5" />
-            <line x1="148" y1="90" x2="154" y2="90" stroke="#08709d" strokeWidth="1.5" strokeOpacity="0.5" />
-            <line x1="148" y1="100" x2="153" y2="100" stroke="#08709d" strokeWidth="1" strokeOpacity="0.4" />
-            <line x1="148" y1="110" x2="154" y2="110" stroke="#08709d" strokeWidth="1.5" strokeOpacity="0.5" />
-            <line x1="148" y1="120" x2="153" y2="120" stroke="#08709d" strokeWidth="1" strokeOpacity="0.4" />
-            <line x1="148" y1="130" x2="154" y2="130" stroke="#08709d" strokeWidth="1.5" strokeOpacity="0.5" />
-            <line x1="148" y1="140" x2="153" y2="140" stroke="#08709d" strokeWidth="1" strokeOpacity="0.4" />
-          </svg>
-          <div className="mt-5 inline-flex items-center gap-2 bg-[#08709d]/10 px-3.5 py-1 rounded-full border border-[#08709d]/20">
-            <span className="w-2 h-2 rounded-full bg-[#08709d] animate-pulse" />
-            <span className="text-xs font-bold text-[#08709d] uppercase tracking-wide">
+            <source src={ivTherapyVideo} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        {/* DHA Badge */}
+        <div className="mt-3.5 flex items-center justify-between px-2">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-xs font-bold text-[#08709d] tracking-wide uppercase">
               DHA-Licensed · Results in 30–60 mins
             </span>
           </div>
+          <img src={dhaLogo} alt="Dubai Health Authority" className="h-6 w-auto object-contain opacity-90" />
         </div>
       </div>
     </div>
