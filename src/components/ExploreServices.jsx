@@ -5,8 +5,30 @@ import { API_BASE_URL } from "../config/api";
 import ivTherapyImg from "../assets/iv_therapy_home.png";
 import labServicesImg from "../assets/lab_services_home.jpg";
 import labTestVideo from "../assets/lab test at home.mp4";
+import homeNursingVideo from "../assets/Home Nursing.mp4";
+import physioVideo from "../assets/Physio Video.mp4";
+import physioImg from "../assets/services/physio.png";
+import nursingImg from "../assets/services/nursing.png";
 
 const services = [
+  {
+    id: 1,
+    title: "Home Physiotherapy",
+    description: "Personalized physiotherapy sessions at home to restore mobility, ease pain, and accelerate recovery in Dubai.",
+    accent: "#A8D8EA",
+    path: "/physiotherapy-at-home-in-dubai",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
+        <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+        <line x1="6" y1="1" x2="6" y2="4" />
+        <line x1="10" y1="1" x2="10" y2="4" />
+        <line x1="14" y1="1" x2="14" y2="4" />
+      </svg>
+    ),
+    image: physioImg,
+    video: physioVideo
+  },
   {
     id: 2,
     title: "IV Therapy",
@@ -34,8 +56,8 @@ const services = [
         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
       </svg>
     ),
-    image: "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=400&q=80",
-    video: "https://cdn.pixabay.com/video/2020/09/13/49815-458438877_large.mp4"
+    image: nursingImg,
+    video: homeNursingVideo
   },
   {
     id: 4,
